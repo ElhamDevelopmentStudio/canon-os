@@ -1,4 +1,18 @@
 export type {
+  Candidate,
+  CandidateAddToLibraryRequest,
+  CandidateAddToLibraryResponse,
+  CandidateCreateRequest,
+  CandidateEvaluateRequest,
+  CandidateEvaluateResponse,
+  CandidateEvaluation,
+  CandidateListResponse,
+  CandidateStatus,
+  CandidateUpdateRequest,
+  EvaluationDecision,
+} from "./candidates";
+export { CANDIDATE_STATUSES, EVALUATION_DECISIONS } from "./candidates";
+export type {
   DashboardCounts,
   DashboardMediaItem,
   DashboardMediaTypeBreakdown,

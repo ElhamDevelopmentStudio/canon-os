@@ -10,6 +10,7 @@ export const API_ROUTES = {
   dashboardSummary: "/dashboard/summary/",
   mediaItems: "/media-items/",
   tasteDimensions: "/taste-dimensions/",
+  candidates: "/candidates/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

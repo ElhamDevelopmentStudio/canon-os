@@ -92,3 +92,18 @@ The response includes:
 - `highestRated`: five highest-rated recent items with `personalRating`.
 - `topTasteSignals`: highest average taste dimension scores with dimension metadata and score counts.
 - `generatedAt`: server timestamp for the summary.
+
+
+## Candidate Evaluator API Contract
+
+Candidate records are user-owned and require an authenticated session. The API supports the MVP evaluator workflow:
+
+- `GET /api/candidates/` lists the current user's candidates with pagination.
+- `POST /api/candidates/` creates a candidate.
+- `GET /api/candidates/{id}/` returns one owned candidate.
+- `PATCH /api/candidates/{id}/` updates candidate metadata or status.
+- `DELETE /api/candidates/{id}/` deletes one owned candidate.
+- `POST /api/candidates/{id}/evaluate/` runs the deterministic evaluator and stores a `CandidateEvaluation`.
+- `POST /api/candidates/{id}/add-to-library/` creates a planned `MediaItem` from the candidate.
+
+Candidate statuses are `unevaluated`, `watch_now`, `sample`, `delay`, and `skip`. Evaluation decisions are `watch_now`, `sample`, `delay`, and `skip`. Scoring details are documented in `docs/candidate-evaluator.md`.

@@ -784,122 +784,122 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M07-SH-001 Define `Candidate` type.
-- [ ] MVP-M07-SH-002 Define `CandidateStatus` enum.
-- [ ] MVP-M07-SH-003 Add status value for unevaluated.
-- [ ] MVP-M07-SH-004 Add status value for watch_now.
-- [ ] MVP-M07-SH-005 Add status value for sample.
-- [ ] MVP-M07-SH-006 Add status value for delay.
-- [ ] MVP-M07-SH-007 Add status value for skip.
-- [ ] MVP-M07-SH-008 Define `CandidateEvaluation` type.
-- [ ] MVP-M07-SH-009 Define `EvaluationDecision` enum.
-- [ ] MVP-M07-SH-010 Define candidate evaluator request type.
-- [ ] MVP-M07-SH-011 Define candidate evaluator response type.
-- [ ] MVP-M07-SH-012 Document candidate evaluator scoring rules.
+- [x] MVP-M07-SH-001 Define `Candidate` type.
+- [x] MVP-M07-SH-002 Define `CandidateStatus` enum.
+- [x] MVP-M07-SH-003 Add status value for unevaluated.
+- [x] MVP-M07-SH-004 Add status value for watch_now.
+- [x] MVP-M07-SH-005 Add status value for sample.
+- [x] MVP-M07-SH-006 Add status value for delay.
+- [x] MVP-M07-SH-007 Add status value for skip.
+- [x] MVP-M07-SH-008 Define `CandidateEvaluation` type.
+- [x] MVP-M07-SH-009 Define `EvaluationDecision` enum.
+- [x] MVP-M07-SH-010 Define candidate evaluator request type.
+- [x] MVP-M07-SH-011 Define candidate evaluator response type.
+- [x] MVP-M07-SH-012 Document candidate evaluator scoring rules.
 
 ### Backend Tasks
 
-- [ ] MVP-M07-BE-001 Create candidates app.
-- [ ] MVP-M07-BE-002 Create Candidate model.
-- [ ] MVP-M07-BE-003 Add owner/user foreign key to Candidate.
-- [ ] MVP-M07-BE-004 Add title field.
-- [ ] MVP-M07-BE-005 Add media type field.
-- [ ] MVP-M07-BE-006 Add release year field.
-- [ ] MVP-M07-BE-007 Add known creator field.
-- [ ] MVP-M07-BE-008 Add premise field.
-- [ ] MVP-M07-BE-009 Add source of interest field.
-- [ ] MVP-M07-BE-010 Add hype level field.
-- [ ] MVP-M07-BE-011 Add expected genericness field.
-- [ ] MVP-M07-BE-012 Add expected time cost field.
-- [ ] MVP-M07-BE-013 Add status field.
-- [ ] MVP-M07-BE-014 Add created at field.
-- [ ] MVP-M07-BE-015 Add updated at field.
-- [ ] MVP-M07-BE-016 Create CandidateEvaluation model.
-- [ ] MVP-M07-BE-017 Add candidate foreign key to evaluation.
-- [ ] MVP-M07-BE-018 Add decision field.
-- [ ] MVP-M07-BE-019 Add confidence score field.
-- [ ] MVP-M07-BE-020 Add likely fit score field.
-- [ ] MVP-M07-BE-021 Add risk score field.
-- [ ] MVP-M07-BE-022 Add reasons_for JSON/text field.
-- [ ] MVP-M07-BE-023 Add reasons_against JSON/text field.
-- [ ] MVP-M07-BE-024 Add best mood field.
-- [ ] MVP-M07-BE-025 Add recommended action field.
-- [ ] MVP-M07-BE-026 Create migrations for candidates.
-- [ ] MVP-M07-BE-027 Create Candidate serializer.
-- [ ] MVP-M07-BE-028 Create CandidateEvaluation serializer.
-- [ ] MVP-M07-BE-029 Create candidate list endpoint.
-- [ ] MVP-M07-BE-030 Create candidate create endpoint.
-- [ ] MVP-M07-BE-031 Create candidate detail endpoint.
-- [ ] MVP-M07-BE-032 Create candidate update endpoint.
-- [ ] MVP-M07-BE-033 Create candidate delete endpoint.
-- [ ] MVP-M07-BE-034 Create evaluator service function.
-- [ ] MVP-M07-BE-035 Implement simple heuristic score using user scores.
-- [ ] MVP-M07-BE-036 Implement genericness penalty.
-- [ ] MVP-M07-BE-037 Implement time cost penalty.
-- [ ] MVP-M07-BE-038 Implement high-confidence favorite type bonus.
-- [ ] MVP-M07-BE-039 Implement decision mapping from score to action.
-- [ ] MVP-M07-BE-040 Create evaluate candidate endpoint.
-- [ ] MVP-M07-BE-041 Register Candidate in Django admin.
-- [ ] MVP-M07-BE-042 Register CandidateEvaluation in Django admin.
-- [ ] MVP-M07-BE-043 Add test for candidate creation.
-- [ ] MVP-M07-BE-044 Add test for candidate evaluation.
-- [ ] MVP-M07-BE-045 Add test for genericness penalty.
-- [ ] MVP-M07-BE-046 Add test for candidate privacy by user.
+- [x] MVP-M07-BE-001 Create candidates app.
+- [x] MVP-M07-BE-002 Create Candidate model.
+- [x] MVP-M07-BE-003 Add owner/user foreign key to Candidate.
+- [x] MVP-M07-BE-004 Add title field.
+- [x] MVP-M07-BE-005 Add media type field.
+- [x] MVP-M07-BE-006 Add release year field.
+- [x] MVP-M07-BE-007 Add known creator field.
+- [x] MVP-M07-BE-008 Add premise field.
+- [x] MVP-M07-BE-009 Add source of interest field.
+- [x] MVP-M07-BE-010 Add hype level field.
+- [x] MVP-M07-BE-011 Add expected genericness field.
+- [x] MVP-M07-BE-012 Add expected time cost field.
+- [x] MVP-M07-BE-013 Add status field.
+- [x] MVP-M07-BE-014 Add created at field.
+- [x] MVP-M07-BE-015 Add updated at field.
+- [x] MVP-M07-BE-016 Create CandidateEvaluation model.
+- [x] MVP-M07-BE-017 Add candidate foreign key to evaluation.
+- [x] MVP-M07-BE-018 Add decision field.
+- [x] MVP-M07-BE-019 Add confidence score field.
+- [x] MVP-M07-BE-020 Add likely fit score field.
+- [x] MVP-M07-BE-021 Add risk score field.
+- [x] MVP-M07-BE-022 Add reasons_for JSON/text field.
+- [x] MVP-M07-BE-023 Add reasons_against JSON/text field.
+- [x] MVP-M07-BE-024 Add best mood field.
+- [x] MVP-M07-BE-025 Add recommended action field.
+- [x] MVP-M07-BE-026 Create migrations for candidates.
+- [x] MVP-M07-BE-027 Create Candidate serializer.
+- [x] MVP-M07-BE-028 Create CandidateEvaluation serializer.
+- [x] MVP-M07-BE-029 Create candidate list endpoint.
+- [x] MVP-M07-BE-030 Create candidate create endpoint.
+- [x] MVP-M07-BE-031 Create candidate detail endpoint.
+- [x] MVP-M07-BE-032 Create candidate update endpoint.
+- [x] MVP-M07-BE-033 Create candidate delete endpoint.
+- [x] MVP-M07-BE-034 Create evaluator service function.
+- [x] MVP-M07-BE-035 Implement simple heuristic score using user scores.
+- [x] MVP-M07-BE-036 Implement genericness penalty.
+- [x] MVP-M07-BE-037 Implement time cost penalty.
+- [x] MVP-M07-BE-038 Implement high-confidence favorite type bonus.
+- [x] MVP-M07-BE-039 Implement decision mapping from score to action.
+- [x] MVP-M07-BE-040 Create evaluate candidate endpoint.
+- [x] MVP-M07-BE-041 Register Candidate in Django admin.
+- [x] MVP-M07-BE-042 Register CandidateEvaluation in Django admin.
+- [x] MVP-M07-BE-043 Add test for candidate creation.
+- [x] MVP-M07-BE-044 Add test for candidate evaluation.
+- [x] MVP-M07-BE-045 Add test for genericness penalty.
+- [x] MVP-M07-BE-046 Add test for candidate privacy by user.
 
 ### Frontend Tasks
 
-- [ ] MVP-M07-FE-001 Create candidate API client file.
-- [ ] MVP-M07-FE-002 Create `useCandidates` SWR hook.
-- [ ] MVP-M07-FE-003 Create candidate evaluation mutation helper.
-- [ ] MVP-M07-FE-004 Create Candidates page skeleton.
-- [ ] MVP-M07-FE-005 Add Candidates page title.
-- [ ] MVP-M07-FE-006 Add New Candidate button.
-- [ ] MVP-M07-FE-007 Create Candidate form card.
-- [ ] MVP-M07-FE-008 Add title field to Candidate form.
-- [ ] MVP-M07-FE-009 Add media type select to Candidate form.
-- [ ] MVP-M07-FE-010 Add release year field to Candidate form.
-- [ ] MVP-M07-FE-011 Add creator field to Candidate form.
-- [ ] MVP-M07-FE-012 Add premise textarea to Candidate form.
-- [ ] MVP-M07-FE-013 Add source of interest field.
-- [ ] MVP-M07-FE-014 Add hype level input.
-- [ ] MVP-M07-FE-015 Add expected genericness input.
-- [ ] MVP-M07-FE-016 Add expected time cost input.
-- [ ] MVP-M07-FE-017 Add Evaluate button.
-- [ ] MVP-M07-FE-018 Add Save Candidate button.
-- [ ] MVP-M07-FE-019 Create Candidate result card.
-- [ ] MVP-M07-FE-020 Add decision badge to result card.
-- [ ] MVP-M07-FE-021 Add confidence score to result card.
-- [ ] MVP-M07-FE-022 Add reasons for list to result card.
-- [ ] MVP-M07-FE-023 Add reasons against list to result card.
-- [ ] MVP-M07-FE-024 Add best mood display to result card.
-- [ ] MVP-M07-FE-025 Add recommended action display.
-- [ ] MVP-M07-FE-026 Add Add To Queue button.
-- [ ] MVP-M07-FE-027 Add Add To Library button.
-- [ ] MVP-M07-FE-028 Add Skip Candidate button.
-- [ ] MVP-M07-FE-029 Create candidate history list.
-- [ ] MVP-M07-FE-030 Add loading state for candidate evaluation.
-- [ ] MVP-M07-FE-031 Add empty state for candidate history.
-- [ ] MVP-M07-FE-032 Add error state for candidate operations.
+- [x] MVP-M07-FE-001 Create candidate API client file.
+- [x] MVP-M07-FE-002 Create `useCandidates` SWR hook.
+- [x] MVP-M07-FE-003 Create candidate evaluation mutation helper.
+- [x] MVP-M07-FE-004 Create Candidates page skeleton.
+- [x] MVP-M07-FE-005 Add Candidates page title.
+- [x] MVP-M07-FE-006 Add New Candidate button.
+- [x] MVP-M07-FE-007 Create Candidate form card.
+- [x] MVP-M07-FE-008 Add title field to Candidate form.
+- [x] MVP-M07-FE-009 Add media type select to Candidate form.
+- [x] MVP-M07-FE-010 Add release year field to Candidate form.
+- [x] MVP-M07-FE-011 Add creator field to Candidate form.
+- [x] MVP-M07-FE-012 Add premise textarea to Candidate form.
+- [x] MVP-M07-FE-013 Add source of interest field.
+- [x] MVP-M07-FE-014 Add hype level input.
+- [x] MVP-M07-FE-015 Add expected genericness input.
+- [x] MVP-M07-FE-016 Add expected time cost input.
+- [x] MVP-M07-FE-017 Add Evaluate button.
+- [x] MVP-M07-FE-018 Add Save Candidate button.
+- [x] MVP-M07-FE-019 Create Candidate result card.
+- [x] MVP-M07-FE-020 Add decision badge to result card.
+- [x] MVP-M07-FE-021 Add confidence score to result card.
+- [x] MVP-M07-FE-022 Add reasons for list to result card.
+- [x] MVP-M07-FE-023 Add reasons against list to result card.
+- [x] MVP-M07-FE-024 Add best mood display to result card.
+- [x] MVP-M07-FE-025 Add recommended action display.
+- [x] MVP-M07-FE-026 Add Add To Queue button.
+- [x] MVP-M07-FE-027 Add Add To Library button.
+- [x] MVP-M07-FE-028 Add Skip Candidate button.
+- [x] MVP-M07-FE-029 Create candidate history list.
+- [x] MVP-M07-FE-030 Add loading state for candidate evaluation.
+- [x] MVP-M07-FE-031 Add empty state for candidate history.
+- [x] MVP-M07-FE-032 Add error state for candidate operations.
 
 ### Integration Tasks
 
-- [ ] MVP-M07-INT-001 Connect Candidate form to candidate create endpoint.
-- [ ] MVP-M07-INT-002 Connect Evaluate button to evaluate endpoint.
-- [ ] MVP-M07-INT-003 Display evaluation result after evaluation.
-- [ ] MVP-M07-INT-004 Save evaluated candidate to candidate history.
-- [ ] MVP-M07-INT-005 Connect Add To Library button to media create endpoint.
-- [ ] MVP-M07-INT-006 Connect Skip Candidate button to candidate status update.
-- [ ] MVP-M07-INT-007 Revalidate candidates after status change.
+- [x] MVP-M07-INT-001 Connect Candidate form to candidate create endpoint.
+- [x] MVP-M07-INT-002 Connect Evaluate button to evaluate endpoint.
+- [x] MVP-M07-INT-003 Display evaluation result after evaluation.
+- [x] MVP-M07-INT-004 Save evaluated candidate to candidate history.
+- [x] MVP-M07-INT-005 Connect Add To Library button to media create endpoint.
+- [x] MVP-M07-INT-006 Connect Skip Candidate button to candidate status update.
+- [x] MVP-M07-INT-007 Revalidate candidates after status change.
 
 ### QA Tasks
 
-- [ ] MVP-M07-QA-001 Create candidate from UI.
-- [ ] MVP-M07-QA-002 Evaluate candidate from UI.
-- [ ] MVP-M07-QA-003 Confirm result has decision and explanation.
-- [ ] MVP-M07-QA-004 Add evaluated candidate to library.
-- [ ] MVP-M07-QA-005 Skip evaluated candidate.
-- [ ] MVP-M07-QA-006 Confirm Candidate page matches wireframe.
-- [ ] MVP-M07-QA-007 Create or update `docs/manual-tests/candidate-evaluator.md`.
+- [x] MVP-M07-QA-001 Create candidate from UI.
+- [x] MVP-M07-QA-002 Evaluate candidate from UI.
+- [x] MVP-M07-QA-003 Confirm result has decision and explanation.
+- [x] MVP-M07-QA-004 Add evaluated candidate to library.
+- [x] MVP-M07-QA-005 Skip evaluated candidate.
+- [x] MVP-M07-QA-006 Confirm Candidate page matches wireframe.
+- [x] MVP-M07-QA-007 Create or update `docs/manual-tests/candidate-evaluator.md`.
 
 ---
 
@@ -2989,7 +2989,7 @@ The MVP is done only when:
 - [ ] A user can add, edit, delete, search, and filter media.
 - [ ] A user can score media by custom taste dimensions.
 - [ ] A user can create aftertaste entries.
-- [ ] A user can evaluate a candidate.
+- [x] A user can evaluate a candidate.
 - [ ] A user can add candidates to queue.
 - [ ] A user can generate a Tonight Mode recommendation.
 - [ ] A user can view a basic Taste Profile.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M06-QA-005.
-**Last completed task name:** Create or update `docs/manual-tests/dashboard.md`.
-**Last completed milestone:** MVP-M06 — Dashboard MVP.
+**Last completed task ID:** MVP-M07-QA-007.
+**Last completed task name:** Create or update `docs/manual-tests/candidate-evaluator.md`.
+**Last completed milestone:** MVP-M07 — Candidate Evaluator MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M07 — Candidate Evaluator MVP.
-**Next recommended task:** MVP-M07-SH-001 Define `Candidate` type.
+**Current milestone:** MVP-M08 — Queue MVP.
+**Next recommended task:** MVP-M08-SH-001 Define `QueueItem` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M06 dashboard is complete. Shared contracts now define `DashboardSummary`, counts, recent media items, media type breakdowns, and top taste signals. Django now has a dashboard service/API endpoint that summarizes owner-scoped media totals, completed/planned/dropped counts, media type counts, recent activity, highest-rated items, and average taste dimension signals. The frontend Dashboard is connected to that endpoint with metric cards, breakdown cards, recent/highest-rated lists, top taste signals, Add Media quick action, Candidate/Tonight quick links, and loading/empty/error states. Manual QA lives in `docs/manual-tests/dashboard.md`.
+MVP-M07 candidate evaluator is complete. Shared contracts define `Candidate`, statuses, `CandidateEvaluation`, evaluation decisions, and add-to-library payloads. Django now has owner-scoped candidate/evaluation models, serializers, endpoints, admin registration, deterministic evaluation scoring with genericness/time penalties and favorite media type bonus, and an add-to-library action. The frontend `/candidates` page is connected with save, evaluate, result explanation, add-to-library, skip, history, and loading/empty/error/success states. Add To Queue is visible but intentionally disabled until MVP-M08. Scoring rules live in `docs/candidate-evaluator.md`; manual QA lives in `docs/manual-tests/candidate-evaluator.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

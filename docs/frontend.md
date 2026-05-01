@@ -111,3 +111,12 @@ Score writes use `upsertMediaScores` from `apps/web/src/features/media/tasteApi.
 The Dashboard page uses `apps/web/src/features/dashboard/dashboardApi.ts` and `useDashboardSummary` to render library metrics, media type breakdowns, recent activity, highest-rated items, and top taste signals.
 Quick actions link to Candidate Evaluator and Tonight Mode, while Add Media opens the shared `MediaFormModal` and revalidates the dashboard summary after save.
 The page includes loading, empty, and error states for the summary endpoint.
+
+
+## Candidate Evaluator UI
+
+- `/candidates` renders the data-backed Candidate Evaluator page.
+- Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`.
+- Candidate labels live in `apps/web/src/features/candidate-evaluator/candidateLabels.ts`.
+- The page supports save, evaluate, add-to-library, skip, result explanation, history selection, loading, empty, error, and success states.
+- Add To Queue is intentionally visible but disabled until MVP-M08 creates the queue API.
