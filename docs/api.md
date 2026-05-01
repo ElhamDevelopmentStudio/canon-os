@@ -1,12 +1,17 @@
 # CanonOS API Notes
 
-The backend API will be implemented under `apps/api` with Django REST Framework. OpenAPI generation, Swagger UI, and Scalar documentation are required for the MVP foundation.
+The backend API is implemented under `apps/api` with Django REST Framework. OpenAPI generation, Swagger UI, and Scalar documentation are part of the foundation.
 
-## Planned Base Paths
+## Current Base Paths
 
 - `/api/health/` for service readiness.
-- `/api/v1/` for versioned product endpoints.
-- `/api/schema/`, `/api/docs/swagger/`, and `/api/docs/scalar/` once API documentation tooling is installed.
+- `/api/schema/` for the generated OpenAPI schema.
+- `/api/docs/swagger/` for Swagger UI.
+- `/api/docs/scalar/` for Scalar API documentation.
+
+## Planned Product Paths
+
+Product endpoints will be introduced under `/api/v1/` as feature modules are implemented.
 
 ## Contract Rule
 

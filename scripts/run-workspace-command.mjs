@@ -42,7 +42,8 @@ if (runnablePackages.length === 0) {
 
 for (const workspacePackage of runnablePackages) {
   console.log(`[canonos] Running '${command}' in ${workspacePackage.name}`);
-  const result = spawnSync('corepack', ['pnpm', '--dir', workspacePackage.dir, 'run', command], {
+  const result = spawnSync('corepack', ['pnpm', '--filter', workspacePackage.name, 'run', command], {
+    cwd: root,
     stdio: 'inherit',
     env: process.env,
   });

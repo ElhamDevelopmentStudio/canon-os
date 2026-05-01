@@ -247,26 +247,26 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Backend Tasks
 
-- [ ] MVP-M01-BE-001 Initialize Django project inside `/apps/api`.
-- [ ] MVP-M01-BE-002 Create backend Python dependency file.
-- [ ] MVP-M01-BE-003 Add Django dependency.
-- [ ] MVP-M01-BE-004 Add Django REST Framework dependency.
-- [ ] MVP-M01-BE-005 Add PostgreSQL driver dependency.
-- [ ] MVP-M01-BE-006 Add Celery dependency.
-- [ ] MVP-M01-BE-007 Add Redis dependency.
-- [ ] MVP-M01-BE-008 Add OpenAPI documentation dependency.
-- [ ] MVP-M01-BE-009 Create environment settings module.
-- [ ] MVP-M01-BE-010 Configure database settings from environment variables.
-- [ ] MVP-M01-BE-011 Configure Redis URL from environment variables.
-- [ ] MVP-M01-BE-012 Configure installed Django apps.
-- [ ] MVP-M01-BE-013 Configure DRF base settings.
-- [ ] MVP-M01-BE-014 Configure backend CORS support.
-- [ ] MVP-M01-BE-015 Add health check app.
-- [ ] MVP-M01-BE-016 Add `/api/health/` endpoint.
-- [ ] MVP-M01-BE-017 Add health check serializer if needed.
-- [ ] MVP-M01-BE-018 Add backend test command.
-- [ ] MVP-M01-BE-019 Add first health check test.
-- [ ] MVP-M01-BE-020 Run initial backend migrations.
+- [x] MVP-M01-BE-001 Initialize Django project inside `/apps/api`.
+- [x] MVP-M01-BE-002 Create backend Python dependency file.
+- [x] MVP-M01-BE-003 Add Django dependency.
+- [x] MVP-M01-BE-004 Add Django REST Framework dependency.
+- [x] MVP-M01-BE-005 Add PostgreSQL driver dependency.
+- [x] MVP-M01-BE-006 Add Celery dependency.
+- [x] MVP-M01-BE-007 Add Redis dependency.
+- [x] MVP-M01-BE-008 Add OpenAPI documentation dependency.
+- [x] MVP-M01-BE-009 Create environment settings module.
+- [x] MVP-M01-BE-010 Configure database settings from environment variables.
+- [x] MVP-M01-BE-011 Configure Redis URL from environment variables.
+- [x] MVP-M01-BE-012 Configure installed Django apps.
+- [x] MVP-M01-BE-013 Configure DRF base settings.
+- [x] MVP-M01-BE-014 Configure backend CORS support.
+- [x] MVP-M01-BE-015 Add health check app.
+- [x] MVP-M01-BE-016 Add `/api/health/` endpoint.
+- [x] MVP-M01-BE-017 Add health check serializer if needed.
+- [x] MVP-M01-BE-018 Add backend test command.
+- [x] MVP-M01-BE-019 Add first health check test.
+- [x] MVP-M01-BE-020 Run initial backend migrations.
 
 ### Frontend Tasks
 
@@ -2974,7 +2974,7 @@ The following rhythm should be used for each coding session.
 - [x] SESSION-005 Run the smallest relevant check during development, then run all available verification gates before marking implementation complete.
 - [x] SESSION-006 Mark completed tasks with `[x]`.
 - [x] SESSION-007 Update the Last Completed Task Summary.
-- [ ] SESSION-008 Mention any blockers under the relevant task using `[!]`.
+- [x] SESSION-008 Mention any blockers under the relevant task using `[!]`.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M01-SH-048.
-**Last completed task name:** Document branch protection rules in `docs/deployment.md`.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation shared/monorepo track is complete.
+**Last completed task ID:** MVP-M01-BE-020.
+**Last completed task name:** Run initial backend migrations.
+**Last completed milestone:** MVP-M01 — Monorepo Foundation backend track is complete.
 **Current phase:** MVP Phase.
 **Current milestone:** MVP-M01 — Monorepo Foundation.
-**Next recommended task:** MVP-M01-BE-001 Initialize Django project inside `/apps/api`.
+**Next recommended task:** MVP-M01-FE-001 Initialize Vite React TypeScript app inside `/apps/web`.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-The shared/monorepo foundation was completed: root README, `.editorconfig`, `.env.example`, pnpm workspace configuration, package scripts, local service runner scripts, documentation placeholders, CI workflow, and branch protection documentation now exist. Root verification gates are wired through workspace discovery so they pass safely until child app/package scripts are introduced.
+The backend foundation was implemented under `apps/api`: Django project/settings, DRF, CORS, OpenAPI/Swagger/Scalar routes, Redis cache/Celery configuration, health app, `/api/health/` endpoint, pytest/ruff tooling, backend package scripts, and the first health endpoint test. Initial Django migrations were run with test settings and the backend verification scripts pass.
 
 ## 9.3 Important Notes For The Next Agent
 

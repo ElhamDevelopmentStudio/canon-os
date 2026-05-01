@@ -15,18 +15,18 @@ const services = {
     setup: 'apps/web has not been initialized with a Vite package yet.',
   },
   api: {
-    cwd: path.join(root, 'apps/api'),
-    readinessFile: 'manage.py',
-    command: 'python3',
-    args: ['manage.py', 'runserver', '0.0.0.0:8000'],
-    setup: 'apps/api has not been initialized with Django manage.py yet.',
+    cwd: root,
+    readinessFile: 'apps/api/package.json',
+    command: 'corepack',
+    args: ['pnpm', '--filter', '@canonos/api', 'dev'],
+    setup: 'apps/api has not been initialized with a backend package yet.',
   },
   worker: {
-    cwd: path.join(root, 'apps/api'),
-    readinessFile: 'manage.py',
-    command: 'python3',
-    args: ['-m', 'celery', '-A', 'config', 'worker', '--loglevel=info'],
-    setup: 'apps/api has not been initialized with Django/Celery settings yet.',
+    cwd: root,
+    readinessFile: 'apps/api/package.json',
+    command: 'corepack',
+    args: ['pnpm', '--filter', '@canonos/api', 'worker'],
+    setup: 'apps/api has not been initialized with a backend package yet.',
   },
 };
 

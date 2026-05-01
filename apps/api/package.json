@@ -1,0 +1,16 @@
+{
+  "name": "@canonos/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CanonOS Django REST API service.",
+  "scripts": {
+    "bootstrap": "python3 scripts/ensure_venv.py",
+    "dev": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py runserver 0.0.0.0:8000",
+    "worker": "python3 scripts/ensure_venv.py && .venv/bin/python -m celery -A config worker --loglevel=info",
+    "lint": "python3 scripts/ensure_venv.py && .venv/bin/python -m ruff check . && .venv/bin/python -m ruff format --check . && .venv/bin/python manage.py check --settings=config.settings.test",
+    "typecheck": "python3 scripts/ensure_venv.py && .venv/bin/python -m compileall -q config canonos && .venv/bin/python manage.py check --settings=config.settings.test",
+    "test": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest",
+    "build": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py check --settings=config.settings.test",
+    "e2e": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest canonos/health/tests/test_health_api.py"
+  }
+}
