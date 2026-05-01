@@ -30,6 +30,7 @@ import {
   evaluationDecisionLabels,
 } from "@/features/candidate-evaluator/candidateLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
+import { createQueueItem } from "@/features/queue/queueApi";
 import { cn } from "@/lib/utils";
 
 type CandidateDraft = {
@@ -64,6 +65,7 @@ export function CandidateEvaluatorPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isLibrarySaving, setIsLibrarySaving] = useState(false);
+  const [isQueueSaving, setIsQueueSaving] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -158,6 +160,27 @@ export function CandidateEvaluatorPage() {
     }
   }
 
+  async function addToQueue() {
+    if (!selectedCandidate || !latestEvaluation) return;
+    setFormError(null);
+    setActionMessage(null);
+    setIsQueueSaving(true);
+    try {
+      await createQueueItem({
+        candidateId: selectedCandidate.id,
+        priority: latestEvaluation.decision === "watch_now" ? "start_soon" : latestEvaluation.decision === "sample" ? "sample_first" : "later",
+        reason: latestEvaluation.recommendedAction,
+        bestMood: latestEvaluation.bestMood,
+        estimatedTimeMinutes: selectedCandidate.expectedTimeCostMinutes,
+      });
+      setActionMessage(`Added “${selectedCandidate.title}” to the queue.`);
+    } catch (caught) {
+      setFormError(caught instanceof Error ? caught.message : "Could not add candidate to queue.");
+    } finally {
+      setIsQueueSaving(false);
+    }
+  }
+
   async function addToLibrary() {
     if (!selectedCandidate) return;
     setFormError(null);
@@ -206,7 +229,9 @@ export function CandidateEvaluatorPage() {
             candidate={selectedCandidate}
             evaluation={latestEvaluation}
             isLibrarySaving={isLibrarySaving}
+            isQueueSaving={isQueueSaving}
             onAddToLibrary={() => void addToLibrary()}
+            onAddToQueue={() => void addToQueue()}
             onSkip={() => void skipCandidate()}
           />
         </div>
@@ -330,13 +355,17 @@ function EvaluationResultCard({
   candidate,
   evaluation,
   isLibrarySaving,
+  isQueueSaving,
   onAddToLibrary,
+  onAddToQueue,
   onSkip,
 }: {
   candidate: Candidate | null;
   evaluation: CandidateEvaluation | null;
   isLibrarySaving: boolean;
+  isQueueSaving: boolean;
   onAddToLibrary: () => void;
+  onAddToQueue: () => void;
   onSkip: () => void;
 }) {
   if (!candidate || !evaluation) {
@@ -379,9 +408,9 @@ function EvaluationResultCard({
         </div>
 
         <div className="flex flex-wrap gap-3">
-          <Button disabled type="button" variant="secondary" title="Queue actions arrive in MVP-M08.">
+          <Button disabled={isQueueSaving} type="button" variant="secondary" onClick={onAddToQueue}>
             <BookOpenCheck aria-hidden="true" className="mr-2 h-4 w-4" />
-            Add To Queue (M08)
+            {isQueueSaving ? "Adding..." : "Add To Queue"}
           </Button>
           <Button disabled={isLibrarySaving} type="button" onClick={onAddToLibrary}>
             <LibraryBig aria-hidden="true" className="mr-2 h-4 w-4" />

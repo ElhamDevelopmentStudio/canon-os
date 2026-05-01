@@ -81,7 +81,7 @@ corepack pnpm --filter @canonos/web run build
 
 ## Health Integration
 
-Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root `.env`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
+Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root `.env` when bypassing the Vite dev server. By default, the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with `VITE_API_PROXY_TARGET`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
 
 ## Auth Integration
 
@@ -120,3 +120,12 @@ The page includes loading, empty, and error states for the summary endpoint.
 - Candidate labels live in `apps/web/src/features/candidate-evaluator/candidateLabels.ts`.
 - The page supports save, evaluate, add-to-library, skip, result explanation, history selection, loading, empty, error, and success states.
 - Add To Queue is intentionally visible but disabled until MVP-M08 creates the queue API.
+
+
+## Queue UI
+
+- `/queue` renders the data-backed Adaptive Queue page.
+- Queue API calls live in `apps/web/src/features/queue/queueApi.ts`.
+- Queue labels live in `apps/web/src/features/queue/queueLabels.ts`.
+- The page supports search, media type filter, priority filter, add/edit modal, remove confirmation, move up/down reorder, loading, empty, error, and success states.
+- Candidate Evaluator `Add To Queue` creates a queue item using the candidate and latest evaluation.

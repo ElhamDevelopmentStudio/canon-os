@@ -909,85 +909,85 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M08-SH-001 Define `QueueItem` type.
-- [ ] MVP-M08-SH-002 Define `QueuePriority` enum.
-- [ ] MVP-M08-SH-003 Define queue item create request.
-- [ ] MVP-M08-SH-004 Define queue item update request.
-- [ ] MVP-M08-SH-005 Document queue API contract.
+- [x] MVP-M08-SH-001 Define `QueueItem` type.
+- [x] MVP-M08-SH-002 Define `QueuePriority` enum.
+- [x] MVP-M08-SH-003 Define queue item create request.
+- [x] MVP-M08-SH-004 Define queue item update request.
+- [x] MVP-M08-SH-005 Document queue API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M08-BE-001 Create queue app or module.
-- [ ] MVP-M08-BE-002 Create QueueItem model.
-- [ ] MVP-M08-BE-003 Add owner/user foreign key to QueueItem.
-- [ ] MVP-M08-BE-004 Add optional media item foreign key.
-- [ ] MVP-M08-BE-005 Add optional candidate foreign key.
-- [ ] MVP-M08-BE-006 Add title snapshot field.
-- [ ] MVP-M08-BE-007 Add media type snapshot field.
-- [ ] MVP-M08-BE-008 Add priority field.
-- [ ] MVP-M08-BE-009 Add reason field.
-- [ ] MVP-M08-BE-010 Add estimated time minutes field.
-- [ ] MVP-M08-BE-011 Add best mood field.
-- [ ] MVP-M08-BE-012 Add queue position field.
-- [ ] MVP-M08-BE-013 Add created at field.
-- [ ] MVP-M08-BE-014 Add updated at field.
-- [ ] MVP-M08-BE-015 Create migration for QueueItem.
-- [ ] MVP-M08-BE-016 Create QueueItem serializer.
-- [ ] MVP-M08-BE-017 Create queue list endpoint.
-- [ ] MVP-M08-BE-018 Create queue create endpoint.
-- [ ] MVP-M08-BE-019 Create queue update endpoint.
-- [ ] MVP-M08-BE-020 Create queue delete endpoint.
-- [ ] MVP-M08-BE-021 Create queue reorder endpoint.
-- [ ] MVP-M08-BE-022 Register QueueItem in Django admin.
-- [ ] MVP-M08-BE-023 Add test for queue create.
-- [ ] MVP-M08-BE-024 Add test for queue reorder.
-- [ ] MVP-M08-BE-025 Add test for queue delete.
+- [x] MVP-M08-BE-001 Create queue app or module.
+- [x] MVP-M08-BE-002 Create QueueItem model.
+- [x] MVP-M08-BE-003 Add owner/user foreign key to QueueItem.
+- [x] MVP-M08-BE-004 Add optional media item foreign key.
+- [x] MVP-M08-BE-005 Add optional candidate foreign key.
+- [x] MVP-M08-BE-006 Add title snapshot field.
+- [x] MVP-M08-BE-007 Add media type snapshot field.
+- [x] MVP-M08-BE-008 Add priority field.
+- [x] MVP-M08-BE-009 Add reason field.
+- [x] MVP-M08-BE-010 Add estimated time minutes field.
+- [x] MVP-M08-BE-011 Add best mood field.
+- [x] MVP-M08-BE-012 Add queue position field.
+- [x] MVP-M08-BE-013 Add created at field.
+- [x] MVP-M08-BE-014 Add updated at field.
+- [x] MVP-M08-BE-015 Create migration for QueueItem.
+- [x] MVP-M08-BE-016 Create QueueItem serializer.
+- [x] MVP-M08-BE-017 Create queue list endpoint.
+- [x] MVP-M08-BE-018 Create queue create endpoint.
+- [x] MVP-M08-BE-019 Create queue update endpoint.
+- [x] MVP-M08-BE-020 Create queue delete endpoint.
+- [x] MVP-M08-BE-021 Create queue reorder endpoint.
+- [x] MVP-M08-BE-022 Register QueueItem in Django admin.
+- [x] MVP-M08-BE-023 Add test for queue create.
+- [x] MVP-M08-BE-024 Add test for queue reorder.
+- [x] MVP-M08-BE-025 Add test for queue delete.
 
 ### Frontend Tasks
 
-- [ ] MVP-M08-FE-001 Create queue API client file.
-- [ ] MVP-M08-FE-002 Create `useQueueItems` SWR hook.
-- [ ] MVP-M08-FE-003 Create Queue page skeleton.
-- [ ] MVP-M08-FE-004 Add Queue page title.
-- [ ] MVP-M08-FE-005 Add Add Queue Item button.
-- [ ] MVP-M08-FE-006 Create queue item card component.
-- [ ] MVP-M08-FE-007 Add priority badge to queue item card.
-- [ ] MVP-M08-FE-008 Add best mood display to queue item card.
-- [ ] MVP-M08-FE-009 Add estimated time display to queue item card.
-- [ ] MVP-M08-FE-010 Add reason display to queue item card.
-- [ ] MVP-M08-FE-011 Add move up button.
-- [ ] MVP-M08-FE-012 Add move down button.
-- [ ] MVP-M08-FE-013 Add edit queue item button.
-- [ ] MVP-M08-FE-014 Add remove queue item button.
-- [ ] MVP-M08-FE-015 Create queue item modal.
-- [ ] MVP-M08-FE-016 Add title field to queue item modal.
-- [ ] MVP-M08-FE-017 Add media type select to queue item modal.
-- [ ] MVP-M08-FE-018 Add priority select to queue item modal.
-- [ ] MVP-M08-FE-019 Add best mood field to queue item modal.
-- [ ] MVP-M08-FE-020 Add estimated time field to queue item modal.
-- [ ] MVP-M08-FE-021 Add reason textarea to queue item modal.
-- [ ] MVP-M08-FE-022 Add save button to queue item modal.
-- [ ] MVP-M08-FE-023 Add empty state to Queue page.
-- [ ] MVP-M08-FE-024 Add loading state to Queue page.
-- [ ] MVP-M08-FE-025 Add error state to Queue page.
+- [x] MVP-M08-FE-001 Create queue API client file.
+- [x] MVP-M08-FE-002 Create `useQueueItems` SWR hook.
+- [x] MVP-M08-FE-003 Create Queue page skeleton.
+- [x] MVP-M08-FE-004 Add Queue page title.
+- [x] MVP-M08-FE-005 Add Add Queue Item button.
+- [x] MVP-M08-FE-006 Create queue item card component.
+- [x] MVP-M08-FE-007 Add priority badge to queue item card.
+- [x] MVP-M08-FE-008 Add best mood display to queue item card.
+- [x] MVP-M08-FE-009 Add estimated time display to queue item card.
+- [x] MVP-M08-FE-010 Add reason display to queue item card.
+- [x] MVP-M08-FE-011 Add move up button.
+- [x] MVP-M08-FE-012 Add move down button.
+- [x] MVP-M08-FE-013 Add edit queue item button.
+- [x] MVP-M08-FE-014 Add remove queue item button.
+- [x] MVP-M08-FE-015 Create queue item modal.
+- [x] MVP-M08-FE-016 Add title field to queue item modal.
+- [x] MVP-M08-FE-017 Add media type select to queue item modal.
+- [x] MVP-M08-FE-018 Add priority select to queue item modal.
+- [x] MVP-M08-FE-019 Add best mood field to queue item modal.
+- [x] MVP-M08-FE-020 Add estimated time field to queue item modal.
+- [x] MVP-M08-FE-021 Add reason textarea to queue item modal.
+- [x] MVP-M08-FE-022 Add save button to queue item modal.
+- [x] MVP-M08-FE-023 Add empty state to Queue page.
+- [x] MVP-M08-FE-024 Add loading state to Queue page.
+- [x] MVP-M08-FE-025 Add error state to Queue page.
 
 ### Integration Tasks
 
-- [ ] MVP-M08-INT-001 Connect Add To Queue from Candidate page to queue create endpoint.
-- [ ] MVP-M08-INT-002 Connect Queue page to queue list endpoint.
-- [ ] MVP-M08-INT-003 Connect queue item edit to update endpoint.
-- [ ] MVP-M08-INT-004 Connect queue item remove to delete endpoint.
-- [ ] MVP-M08-INT-005 Connect move up/down buttons to reorder endpoint.
-- [ ] MVP-M08-INT-006 Revalidate queue after changes.
+- [x] MVP-M08-INT-001 Connect Add To Queue from Candidate page to queue create endpoint.
+- [x] MVP-M08-INT-002 Connect Queue page to queue list endpoint.
+- [x] MVP-M08-INT-003 Connect queue item edit to update endpoint.
+- [x] MVP-M08-INT-004 Connect queue item remove to delete endpoint.
+- [x] MVP-M08-INT-005 Connect move up/down buttons to reorder endpoint.
+- [x] MVP-M08-INT-006 Revalidate queue after changes.
 
 ### QA Tasks
 
-- [ ] MVP-M08-QA-001 Add queue item manually.
-- [ ] MVP-M08-QA-002 Add queue item from candidate evaluation.
-- [ ] MVP-M08-QA-003 Reorder queue items.
-- [ ] MVP-M08-QA-004 Delete queue item.
-- [ ] MVP-M08-QA-005 Confirm Queue page matches wireframe.
-- [ ] MVP-M08-QA-006 Create or update `docs/manual-tests/queue-tonight.md`.
+- [x] MVP-M08-QA-001 Add queue item manually.
+- [x] MVP-M08-QA-002 Add queue item from candidate evaluation.
+- [x] MVP-M08-QA-003 Reorder queue items.
+- [x] MVP-M08-QA-004 Delete queue item.
+- [x] MVP-M08-QA-005 Confirm Queue page matches wireframe.
+- [x] MVP-M08-QA-006 Create or update `docs/manual-tests/queue-tonight.md`.
 
 ---
 
@@ -2990,7 +2990,7 @@ The MVP is done only when:
 - [ ] A user can score media by custom taste dimensions.
 - [ ] A user can create aftertaste entries.
 - [x] A user can evaluate a candidate.
-- [ ] A user can add candidates to queue.
+- [x] A user can add candidates to queue.
 - [ ] A user can generate a Tonight Mode recommendation.
 - [ ] A user can view a basic Taste Profile.
 - [ ] A user can view a useful Dashboard.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M07-QA-007.
-**Last completed task name:** Create or update `docs/manual-tests/candidate-evaluator.md`.
-**Last completed milestone:** MVP-M07 — Candidate Evaluator MVP.
+**Last completed task ID:** MVP-M08-QA-006.
+**Last completed task name:** Create or update `docs/manual-tests/queue-tonight.md`.
+**Last completed milestone:** MVP-M08 — Queue MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M08 — Queue MVP.
-**Next recommended task:** MVP-M08-SH-001 Define `QueueItem` type.
+**Current milestone:** MVP-M09 — Tonight Mode MVP.
+**Next recommended task:** MVP-M09-SH-001 Define `TonightModeRequest` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M07 candidate evaluator is complete. Shared contracts define `Candidate`, statuses, `CandidateEvaluation`, evaluation decisions, and add-to-library payloads. Django now has owner-scoped candidate/evaluation models, serializers, endpoints, admin registration, deterministic evaluation scoring with genericness/time penalties and favorite media type bonus, and an add-to-library action. The frontend `/candidates` page is connected with save, evaluate, result explanation, add-to-library, skip, history, and loading/empty/error/success states. Add To Queue is visible but intentionally disabled until MVP-M08. Scoring rules live in `docs/candidate-evaluator.md`; manual QA lives in `docs/manual-tests/candidate-evaluator.md`.
+MVP-M08 queue is complete. Shared contracts define `QueueItem`, queue priorities, create/update payloads, and reorder payloads. Django now has an owner-scoped queueing app with optional media/candidate links, snapshot fields, priority lanes, queue positions, CRUD, reorder endpoint, admin registration, and tests for create/update/delete/reorder/privacy/OpenAPI. The frontend `/queue` page is connected with search/filter controls, Start Soon / Sample First / Delay lanes, add/edit modal, remove confirmation, move up/down reorder, and loading/empty/error/success states. Candidate Evaluator now sends evaluated candidates to the queue. Queue rules live in `docs/queue.md`; manual QA lives in `docs/manual-tests/queue-tonight.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

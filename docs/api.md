@@ -107,3 +107,17 @@ Candidate records are user-owned and require an authenticated session. The API s
 - `POST /api/candidates/{id}/add-to-library/` creates a planned `MediaItem` from the candidate.
 
 Candidate statuses are `unevaluated`, `watch_now`, `sample`, `delay`, and `skip`. Evaluation decisions are `watch_now`, `sample`, `delay`, and `skip`. Scoring details are documented in `docs/candidate-evaluator.md`.
+
+
+## Queue API Contract
+
+Queue items are user-owned and require an authenticated session. Endpoints:
+
+- `GET /api/queue-items/` lists the current user's queue items with pagination.
+- `POST /api/queue-items/` creates a queue item from a manual title, `mediaItemId`, or `candidateId`.
+- `GET /api/queue-items/{id}/` returns one owned queue item.
+- `PATCH /api/queue-items/{id}/` updates priority, reason, mood, estimated time, or snapshot fields.
+- `DELETE /api/queue-items/{id}/` removes the item from the queue only.
+- `POST /api/queue-items/reorder/` rewrites queue order for the current user.
+
+List filters: `mediaType`, `priority`, and `search`. Queue priorities are `start_soon`, `sample_first`, and `later`. Product rules are documented in `docs/queue.md`.

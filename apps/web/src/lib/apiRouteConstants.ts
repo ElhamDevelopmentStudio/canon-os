@@ -11,6 +11,7 @@ export const API_ROUTES = {
   mediaItems: "/media-items/",
   tasteDimensions: "/taste-dimensions/",
   candidates: "/candidates/",
+  queueItems: "/queue-items/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

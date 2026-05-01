@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "canonos.dashboard",
     "canonos.health",
     "canonos.media",
+    "canonos.queueing",
     "canonos.taste",
 ]
 

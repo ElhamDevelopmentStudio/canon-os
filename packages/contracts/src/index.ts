@@ -39,6 +39,16 @@ export type {
 } from "./media";
 export { CONSUMPTION_STATUSES, MEDIA_TYPES } from "./media";
 export type {
+  QueueItem,
+  QueueItemCreateRequest,
+  QueueItemListResponse,
+  QueueItemUpdateRequest,
+  QueuePriority,
+  QueueReorderRequest,
+  QueueReorderResponse,
+} from "./queue";
+export { QUEUE_PRIORITIES } from "./queue";
+export type {
   DefaultTasteDimension,
   MediaScore,
   MediaScoresBulkUpsertRequest,
