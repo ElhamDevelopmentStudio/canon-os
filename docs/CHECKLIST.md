@@ -484,136 +484,136 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M04-SH-001 Define `MediaType` enum.
-- [ ] MVP-M04-SH-002 Add media type value for movie.
-- [ ] MVP-M04-SH-003 Add media type value for tv_show.
-- [ ] MVP-M04-SH-004 Add media type value for anime.
-- [ ] MVP-M04-SH-005 Add media type value for novel.
-- [ ] MVP-M04-SH-006 Add media type value for audiobook.
-- [ ] MVP-M04-SH-007 Define `ConsumptionStatus` enum.
-- [ ] MVP-M04-SH-008 Add status value for planned.
-- [ ] MVP-M04-SH-009 Add status value for consuming.
-- [ ] MVP-M04-SH-010 Add status value for completed.
-- [ ] MVP-M04-SH-011 Add status value for paused.
-- [ ] MVP-M04-SH-012 Add status value for dropped.
-- [ ] MVP-M04-SH-013 Define `MediaItem` type.
-- [ ] MVP-M04-SH-014 Define `MediaItemCreateRequest` type.
-- [ ] MVP-M04-SH-015 Define `MediaItemUpdateRequest` type.
-- [ ] MVP-M04-SH-016 Define `MediaItemListResponse` type.
-- [ ] MVP-M04-SH-017 Document media library API contract.
+- [x] MVP-M04-SH-001 Define `MediaType` enum.
+- [x] MVP-M04-SH-002 Add media type value for movie.
+- [x] MVP-M04-SH-003 Add media type value for tv_show.
+- [x] MVP-M04-SH-004 Add media type value for anime.
+- [x] MVP-M04-SH-005 Add media type value for novel.
+- [x] MVP-M04-SH-006 Add media type value for audiobook.
+- [x] MVP-M04-SH-007 Define `ConsumptionStatus` enum.
+- [x] MVP-M04-SH-008 Add status value for planned.
+- [x] MVP-M04-SH-009 Add status value for consuming.
+- [x] MVP-M04-SH-010 Add status value for completed.
+- [x] MVP-M04-SH-011 Add status value for paused.
+- [x] MVP-M04-SH-012 Add status value for dropped.
+- [x] MVP-M04-SH-013 Define `MediaItem` type.
+- [x] MVP-M04-SH-014 Define `MediaItemCreateRequest` type.
+- [x] MVP-M04-SH-015 Define `MediaItemUpdateRequest` type.
+- [x] MVP-M04-SH-016 Define `MediaItemListResponse` type.
+- [x] MVP-M04-SH-017 Document media library API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M04-BE-001 Create media app.
-- [ ] MVP-M04-BE-002 Create MediaItem model.
-- [ ] MVP-M04-BE-003 Add owner/user foreign key to MediaItem.
-- [ ] MVP-M04-BE-004 Add title field.
-- [ ] MVP-M04-BE-005 Add original title field.
-- [ ] MVP-M04-BE-006 Add media type field.
-- [ ] MVP-M04-BE-007 Add release year field.
-- [ ] MVP-M04-BE-008 Add country/language field.
-- [ ] MVP-M04-BE-009 Add creator/director/author text field.
-- [ ] MVP-M04-BE-010 Add status field.
-- [ ] MVP-M04-BE-011 Add personal rating field.
-- [ ] MVP-M04-BE-012 Add started date field.
-- [ ] MVP-M04-BE-013 Add completed date field.
-- [ ] MVP-M04-BE-014 Add runtime minutes field.
-- [ ] MVP-M04-BE-015 Add episode count field.
-- [ ] MVP-M04-BE-016 Add page count field.
-- [ ] MVP-M04-BE-017 Add audiobook length minutes field.
-- [ ] MVP-M04-BE-018 Add notes field.
-- [ ] MVP-M04-BE-019 Add created at field.
-- [ ] MVP-M04-BE-020 Add updated at field.
-- [ ] MVP-M04-BE-021 Add database indexes for owner and status.
-- [ ] MVP-M04-BE-022 Add database index for media type.
-- [ ] MVP-M04-BE-023 Add database index for title search.
-- [ ] MVP-M04-BE-024 Create migration for MediaItem.
-- [ ] MVP-M04-BE-025 Create MediaItem serializer.
-- [ ] MVP-M04-BE-026 Create MediaItem list endpoint.
-- [ ] MVP-M04-BE-027 Create MediaItem detail endpoint.
-- [ ] MVP-M04-BE-028 Create MediaItem create endpoint.
-- [ ] MVP-M04-BE-029 Create MediaItem update endpoint.
-- [ ] MVP-M04-BE-030 Create MediaItem delete endpoint.
-- [ ] MVP-M04-BE-031 Add filtering by media type.
-- [ ] MVP-M04-BE-032 Add filtering by status.
-- [ ] MVP-M04-BE-033 Add search by title.
-- [ ] MVP-M04-BE-034 Add ordering by updated date.
-- [ ] MVP-M04-BE-035 Add pagination.
-- [ ] MVP-M04-BE-036 Register MediaItem in Django admin.
-- [ ] MVP-M04-BE-037 Add test for creating media item.
-- [ ] MVP-M04-BE-038 Add test for listing media items.
-- [ ] MVP-M04-BE-039 Add test for updating media item.
-- [ ] MVP-M04-BE-040 Add test for deleting media item.
-- [ ] MVP-M04-BE-041 Add test that users cannot see other users' items.
+- [x] MVP-M04-BE-001 Create media app.
+- [x] MVP-M04-BE-002 Create MediaItem model.
+- [x] MVP-M04-BE-003 Add owner/user foreign key to MediaItem.
+- [x] MVP-M04-BE-004 Add title field.
+- [x] MVP-M04-BE-005 Add original title field.
+- [x] MVP-M04-BE-006 Add media type field.
+- [x] MVP-M04-BE-007 Add release year field.
+- [x] MVP-M04-BE-008 Add country/language field.
+- [x] MVP-M04-BE-009 Add creator/director/author text field.
+- [x] MVP-M04-BE-010 Add status field.
+- [x] MVP-M04-BE-011 Add personal rating field.
+- [x] MVP-M04-BE-012 Add started date field.
+- [x] MVP-M04-BE-013 Add completed date field.
+- [x] MVP-M04-BE-014 Add runtime minutes field.
+- [x] MVP-M04-BE-015 Add episode count field.
+- [x] MVP-M04-BE-016 Add page count field.
+- [x] MVP-M04-BE-017 Add audiobook length minutes field.
+- [x] MVP-M04-BE-018 Add notes field.
+- [x] MVP-M04-BE-019 Add created at field.
+- [x] MVP-M04-BE-020 Add updated at field.
+- [x] MVP-M04-BE-021 Add database indexes for owner and status.
+- [x] MVP-M04-BE-022 Add database index for media type.
+- [x] MVP-M04-BE-023 Add database index for title search.
+- [x] MVP-M04-BE-024 Create migration for MediaItem.
+- [x] MVP-M04-BE-025 Create MediaItem serializer.
+- [x] MVP-M04-BE-026 Create MediaItem list endpoint.
+- [x] MVP-M04-BE-027 Create MediaItem detail endpoint.
+- [x] MVP-M04-BE-028 Create MediaItem create endpoint.
+- [x] MVP-M04-BE-029 Create MediaItem update endpoint.
+- [x] MVP-M04-BE-030 Create MediaItem delete endpoint.
+- [x] MVP-M04-BE-031 Add filtering by media type.
+- [x] MVP-M04-BE-032 Add filtering by status.
+- [x] MVP-M04-BE-033 Add search by title.
+- [x] MVP-M04-BE-034 Add ordering by updated date.
+- [x] MVP-M04-BE-035 Add pagination.
+- [x] MVP-M04-BE-036 Register MediaItem in Django admin.
+- [x] MVP-M04-BE-037 Add test for creating media item.
+- [x] MVP-M04-BE-038 Add test for listing media items.
+- [x] MVP-M04-BE-039 Add test for updating media item.
+- [x] MVP-M04-BE-040 Add test for deleting media item.
+- [x] MVP-M04-BE-041 Add test that users cannot see other users' items.
 
 ### Frontend Tasks
 
-- [ ] MVP-M04-FE-001 Create media API client file.
-- [ ] MVP-M04-FE-002 Create `useMediaItems` SWR hook.
-- [ ] MVP-M04-FE-003 Create `useMediaItem` SWR hook.
-- [ ] MVP-M04-FE-004 Create media mutation helpers.
-- [ ] MVP-M04-FE-005 Create Library page skeleton.
-- [ ] MVP-M04-FE-006 Add Library page title.
-- [ ] MVP-M04-FE-007 Add Library page action bar.
-- [ ] MVP-M04-FE-008 Add Add Media button.
-- [ ] MVP-M04-FE-009 Add media type filter control.
-- [ ] MVP-M04-FE-010 Add status filter control.
-- [ ] MVP-M04-FE-011 Add title search input.
-- [ ] MVP-M04-FE-012 Add Library table/list component.
-- [ ] MVP-M04-FE-013 Add media item row component.
-- [ ] MVP-M04-FE-014 Add media type badge to row.
-- [ ] MVP-M04-FE-015 Add status pill to row.
-- [ ] MVP-M04-FE-016 Add personal rating display to row.
-- [ ] MVP-M04-FE-017 Add updated date display to row.
-- [ ] MVP-M04-FE-018 Add row action menu.
-- [ ] MVP-M04-FE-019 Add Edit action to row action menu.
-- [ ] MVP-M04-FE-020 Add Delete action to row action menu.
-- [ ] MVP-M04-FE-021 Create Add/Edit Media modal.
-- [ ] MVP-M04-FE-022 Add title field to media modal.
-- [ ] MVP-M04-FE-023 Add original title field to media modal.
-- [ ] MVP-M04-FE-024 Add media type select to media modal.
-- [ ] MVP-M04-FE-025 Add release year field to media modal.
-- [ ] MVP-M04-FE-026 Add creator/director/author field to media modal.
-- [ ] MVP-M04-FE-027 Add status select to media modal.
-- [ ] MVP-M04-FE-028 Add personal rating field to media modal.
-- [ ] MVP-M04-FE-029 Add notes field to media modal.
-- [ ] MVP-M04-FE-030 Add save button to media modal.
-- [ ] MVP-M04-FE-031 Add cancel button to media modal.
-- [ ] MVP-M04-FE-032 Add delete confirmation dialog.
-- [ ] MVP-M04-FE-033 Create Media Detail page skeleton.
-- [ ] MVP-M04-FE-034 Add detail header section.
-- [ ] MVP-M04-FE-035 Add detail metadata section.
-- [ ] MVP-M04-FE-036 Add detail notes section.
-- [ ] MVP-M04-FE-037 Add edit button on detail page.
-- [ ] MVP-M04-FE-038 Add delete button on detail page.
-- [ ] MVP-M04-FE-039 Add loading state to Library page.
-- [ ] MVP-M04-FE-040 Add empty state to Library page.
-- [ ] MVP-M04-FE-041 Add error state to Library page.
+- [x] MVP-M04-FE-001 Create media API client file.
+- [x] MVP-M04-FE-002 Create `useMediaItems` SWR hook.
+- [x] MVP-M04-FE-003 Create `useMediaItem` SWR hook.
+- [x] MVP-M04-FE-004 Create media mutation helpers.
+- [x] MVP-M04-FE-005 Create Library page skeleton.
+- [x] MVP-M04-FE-006 Add Library page title.
+- [x] MVP-M04-FE-007 Add Library page action bar.
+- [x] MVP-M04-FE-008 Add Add Media button.
+- [x] MVP-M04-FE-009 Add media type filter control.
+- [x] MVP-M04-FE-010 Add status filter control.
+- [x] MVP-M04-FE-011 Add title search input.
+- [x] MVP-M04-FE-012 Add Library table/list component.
+- [x] MVP-M04-FE-013 Add media item row component.
+- [x] MVP-M04-FE-014 Add media type badge to row.
+- [x] MVP-M04-FE-015 Add status pill to row.
+- [x] MVP-M04-FE-016 Add personal rating display to row.
+- [x] MVP-M04-FE-017 Add updated date display to row.
+- [x] MVP-M04-FE-018 Add row action menu.
+- [x] MVP-M04-FE-019 Add Edit action to row action menu.
+- [x] MVP-M04-FE-020 Add Delete action to row action menu.
+- [x] MVP-M04-FE-021 Create Add/Edit Media modal.
+- [x] MVP-M04-FE-022 Add title field to media modal.
+- [x] MVP-M04-FE-023 Add original title field to media modal.
+- [x] MVP-M04-FE-024 Add media type select to media modal.
+- [x] MVP-M04-FE-025 Add release year field to media modal.
+- [x] MVP-M04-FE-026 Add creator/director/author field to media modal.
+- [x] MVP-M04-FE-027 Add status select to media modal.
+- [x] MVP-M04-FE-028 Add personal rating field to media modal.
+- [x] MVP-M04-FE-029 Add notes field to media modal.
+- [x] MVP-M04-FE-030 Add save button to media modal.
+- [x] MVP-M04-FE-031 Add cancel button to media modal.
+- [x] MVP-M04-FE-032 Add delete confirmation dialog.
+- [x] MVP-M04-FE-033 Create Media Detail page skeleton.
+- [x] MVP-M04-FE-034 Add detail header section.
+- [x] MVP-M04-FE-035 Add detail metadata section.
+- [x] MVP-M04-FE-036 Add detail notes section.
+- [x] MVP-M04-FE-037 Add edit button on detail page.
+- [x] MVP-M04-FE-038 Add delete button on detail page.
+- [x] MVP-M04-FE-039 Add loading state to Library page.
+- [x] MVP-M04-FE-040 Add empty state to Library page.
+- [x] MVP-M04-FE-041 Add error state to Library page.
 
 ### Integration Tasks
 
-- [ ] MVP-M04-INT-001 Connect Library page to media list endpoint.
-- [ ] MVP-M04-INT-002 Connect Add Media modal to create endpoint.
-- [ ] MVP-M04-INT-003 Connect Edit Media modal to update endpoint.
-- [ ] MVP-M04-INT-004 Connect Delete action to delete endpoint.
-- [ ] MVP-M04-INT-005 Connect filters to backend query parameters.
-- [ ] MVP-M04-INT-006 Connect search input to backend search parameter.
-- [ ] MVP-M04-INT-007 Revalidate SWR list after create.
-- [ ] MVP-M04-INT-008 Revalidate SWR list after update.
-- [ ] MVP-M04-INT-009 Revalidate SWR list after delete.
-- [ ] MVP-M04-INT-010 Confirm Media Detail page loads backend data.
+- [x] MVP-M04-INT-001 Connect Library page to media list endpoint.
+- [x] MVP-M04-INT-002 Connect Add Media modal to create endpoint.
+- [x] MVP-M04-INT-003 Connect Edit Media modal to update endpoint.
+- [x] MVP-M04-INT-004 Connect Delete action to delete endpoint.
+- [x] MVP-M04-INT-005 Connect filters to backend query parameters.
+- [x] MVP-M04-INT-006 Connect search input to backend search parameter.
+- [x] MVP-M04-INT-007 Revalidate SWR list after create.
+- [x] MVP-M04-INT-008 Revalidate SWR list after update.
+- [x] MVP-M04-INT-009 Revalidate SWR list after delete.
+- [x] MVP-M04-INT-010 Confirm Media Detail page loads backend data.
 
 ### QA Tasks
 
-- [ ] MVP-M04-QA-001 Create media item from UI.
-- [ ] MVP-M04-QA-002 Edit media item from UI.
-- [ ] MVP-M04-QA-003 Delete media item from UI.
-- [ ] MVP-M04-QA-004 Search media item from UI.
-- [ ] MVP-M04-QA-005 Filter media items by type from UI.
-- [ ] MVP-M04-QA-006 Filter media items by status from UI.
-- [ ] MVP-M04-QA-007 Confirm media endpoints appear in OpenAPI docs.
-- [ ] MVP-M04-QA-008 Confirm Library page matches low-fidelity wireframe.
-- [ ] MVP-M04-QA-009 Create or update `docs/manual-tests/media-library.md`.
+- [x] MVP-M04-QA-001 Create media item from UI.
+- [x] MVP-M04-QA-002 Edit media item from UI.
+- [x] MVP-M04-QA-003 Delete media item from UI.
+- [x] MVP-M04-QA-004 Search media item from UI.
+- [x] MVP-M04-QA-005 Filter media items by type from UI.
+- [x] MVP-M04-QA-006 Filter media items by status from UI.
+- [x] MVP-M04-QA-007 Confirm media endpoints appear in OpenAPI docs.
+- [x] MVP-M04-QA-008 Confirm Library page matches low-fidelity wireframe.
+- [x] MVP-M04-QA-009 Create or update `docs/manual-tests/media-library.md`.
 
 ---
 
@@ -642,7 +642,7 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [ ] MVP-M05-SH-017 Add default dimension for regret score.
 - [ ] MVP-M05-SH-018 Document scoring definitions in `/docs/product-scoring.md`.
 
-### Backend Tasks
+### Backend Tasksdjango rest 
 
 - [ ] MVP-M05-BE-001 Create TasteDimension model.
 - [ ] MVP-M05-BE-002 Add owner/user foreign key to TasteDimension.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M03-QA-007.
-**Last completed task name:** Create or update `docs/manual-tests/auth.md`.
-**Last completed milestone:** MVP-M03 — Authentication And User Foundation.
+**Last completed task ID:** MVP-M04-QA-009.
+**Last completed task name:** Create or update `docs/manual-tests/media-library.md`.
+**Last completed milestone:** MVP-M04 — Core Media Library Data Model.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M04 — Core Media Library Data Model.
-**Next recommended task:** MVP-M04-SH-001 Define `MediaType` enum.
+**Current milestone:** MVP-M05 — Taste Dimensions And Personal Scores.
+**Next recommended task:** MVP-M05-SH-001 Define `TasteDimension` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M03 authentication and user foundation is complete. Shared auth contracts were added in `packages/contracts`, Django now has a `canonos.accounts` app with user profile model/migration/admin, session-auth endpoints for CSRF/register/login/logout/current user/profile update, and API/OpenAPI tests. The frontend now has auth API helpers, Zustand session state, protected/public route guards, login/register pages, logout in the header, and app boot session loading. `docs/api.md`, `docs/frontend.md`, and `docs/manual-tests/auth.md` document the flow.
+MVP-M04 core media library is complete. Shared media contracts now define media types, consumption statuses, media item requests, and paginated responses. Django now has an authenticated owner-scoped `MediaItem` model, migration, admin, serializer, CRUD API, filtering by media type/status, title/creator/notes search, ordering, pagination, and ownership tests. The frontend now has media API hooks/mutations, a connected Library page, add/edit media modal, delete confirmation, media detail page, filters/search, loading/empty/error states, and manual tests in `docs/manual-tests/media-library.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

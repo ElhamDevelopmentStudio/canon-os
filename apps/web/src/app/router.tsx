@@ -5,13 +5,16 @@ import { APP_ROUTES } from "@/app/routeConstants";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { LibraryPage } from "@/pages/LibraryPage";
 import { LoginPage } from "@/pages/LoginPage";
+import { MediaDetailPage } from "@/pages/MediaDetailPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 
 export const protectedRouteChildren: RouteObject[] = [
   { index: true, element: <DashboardPage /> },
-  { path: APP_ROUTES.library.slice(1), element: <PlaceholderPage route={APP_ROUTES.library} /> },
+  { path: APP_ROUTES.library.slice(1), element: <LibraryPage /> },
+  { path: "library/:mediaId", element: <MediaDetailPage /> },
   { path: APP_ROUTES.candidates.slice(1), element: <PlaceholderPage route={APP_ROUTES.candidates} /> },
   { path: APP_ROUTES.tonight.slice(1), element: <PlaceholderPage route={APP_ROUTES.tonight} /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <PlaceholderPage route={APP_ROUTES.tasteProfile} /> },

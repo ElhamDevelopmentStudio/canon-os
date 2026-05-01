@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "canonos.accounts",
     "canonos.health",
+    "canonos.media",
 ]
 
 MIDDLEWARE = [
@@ -139,6 +140,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 25,
+    "COERCE_DECIMAL_TO_STRING": False,
 }
 
 SPECTACULAR_SETTINGS = {

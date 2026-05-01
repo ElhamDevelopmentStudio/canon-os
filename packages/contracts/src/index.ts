@@ -7,3 +7,13 @@ export type {
   RegisterRequest,
   UserProfile,
 } from "./auth";
+export type {
+  ConsumptionStatus,
+  MediaItem,
+  MediaItemCreateRequest,
+  MediaItemFilters,
+  MediaItemListResponse,
+  MediaItemUpdateRequest,
+  MediaType,
+} from "./media";
+export { CONSUMPTION_STATUSES, MEDIA_TYPES } from "./media";

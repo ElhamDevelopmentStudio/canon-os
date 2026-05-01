@@ -1,6 +1,7 @@
 export const APP_ROUTES = {
   dashboard: "/",
   library: "/library",
+  mediaDetail: "/library/:mediaId",
   candidates: "/candidates",
   tonight: "/tonight",
   tasteProfile: "/taste-profile",

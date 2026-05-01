@@ -90,3 +90,12 @@ Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root
 - `PublicRoute` redirects authenticated users away from login/register and back to the dashboard.
 - Session state lives in `apps/web/src/stores/authStore.ts` and stores the current user plus CSRF token metadata only; Django owns the actual session cookie.
 - Auth API calls live in `apps/web/src/features/auth/authApi.ts` and use the shared Axios client with credentials and CSRF header support.
+
+## Media Library UI
+
+- `/library` renders the data-backed Library page.
+- `/library/:mediaId` renders the Media Detail page.
+- Library data calls live in `apps/web/src/features/media/mediaApi.ts`.
+- Shared media labels live in `apps/web/src/features/media/mediaLabels.ts`.
+- Add/Edit media uses `apps/web/src/features/media/MediaFormModal.tsx` and the shared form/feedback components.
+- The Library page must keep loading, empty, error, success, search, filter, create, edit, and delete states visible and consistent with the shared design system.

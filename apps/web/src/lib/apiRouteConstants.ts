@@ -7,6 +7,7 @@ export const API_ROUTES = {
   authLogout: "/auth/logout/",
   authMe: "/auth/me/",
   authProfile: "/auth/profile/",
+  mediaItems: "/media-items/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

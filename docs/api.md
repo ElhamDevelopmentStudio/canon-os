@@ -49,3 +49,23 @@ Auth endpoints:
 Request/response contracts live in `packages/contracts/src/auth.ts`. Frontend auth calls live in `apps/web/src/features/auth/authApi.ts`, and session state lives in `apps/web/src/stores/authStore.ts`.
 
 The MVP uses Django's built-in user model with email as username. This keeps the early app simple while the schema still uses profile/user-owned records so future multi-user support can evolve without rewriting feature data models.
+
+## Media Library API Contract
+
+Media library records are user-owned. Every media endpoint requires an authenticated session and only returns items owned by the current user.
+
+Endpoints:
+
+- `GET /api/media-items/` lists the current user's media items with pagination.
+- `POST /api/media-items/` creates a media item owned by the current user.
+- `GET /api/media-items/{id}/` returns one owned media item.
+- `PATCH /api/media-items/{id}/` updates one owned media item.
+- `DELETE /api/media-items/{id}/` deletes one owned media item.
+
+List filters:
+
+- `mediaType`: one of `movie`, `tv_show`, `anime`, `novel`, `audiobook`.
+- `status`: one of `planned`, `consuming`, `completed`, `paused`, `dropped`.
+- `search`: case-insensitive search over title, original title, creator, and notes.
+
+Shared TypeScript contracts live in `packages/contracts/src/media.ts`. The frontend client and SWR hooks live in `apps/web/src/features/media/mediaApi.ts`.

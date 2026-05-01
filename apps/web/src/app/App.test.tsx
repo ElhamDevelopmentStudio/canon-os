@@ -80,7 +80,7 @@ describe("App", () => {
       APP_ROUTES.settings,
     ]);
     expect(new Set(navRoutes).size).toBe(navRoutes.length);
-    expect(protectedRouteChildren).toHaveLength(APP_NAVIGATION.length);
+    expect(protectedRouteChildren.length).toBeGreaterThanOrEqual(APP_NAVIGATION.length);
   });
 
   it("redirects unauthenticated app routes to login", async () => {
