@@ -270,30 +270,30 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Frontend Tasks
 
-- [ ] MVP-M01-FE-001 Initialize Vite React TypeScript app inside `/apps/web`.
-- [ ] MVP-M01-FE-002 Add Tailwind CSS.
-- [ ] MVP-M01-FE-003 Configure Tailwind content paths.
-- [ ] MVP-M01-FE-004 Add shadcn/ui setup.
-- [ ] MVP-M01-FE-005 Add Axios dependency.
-- [ ] MVP-M01-FE-006 Add SWR dependency.
-- [ ] MVP-M01-FE-007 Add Zustand dependency.
-- [ ] MVP-M01-FE-008 Add React Router dependency.
-- [ ] MVP-M01-FE-009 Create frontend environment variable file example.
-- [ ] MVP-M01-FE-010 Create `src/app` directory.
-- [ ] MVP-M01-FE-011 Create `src/pages` directory.
-- [ ] MVP-M01-FE-012 Create `src/components` directory.
-- [ ] MVP-M01-FE-013 Create `src/components/layout` directory.
-- [ ] MVP-M01-FE-014 Create `src/components/ui` directory.
-- [ ] MVP-M01-FE-015 Create `src/features` directory.
-- [ ] MVP-M01-FE-016 Create `src/lib` directory.
-- [ ] MVP-M01-FE-017 Create `src/stores` directory.
-- [ ] MVP-M01-FE-018 Create `src/types` directory.
-- [ ] MVP-M01-FE-019 Create `src/routes` directory.
-- [ ] MVP-M01-FE-020 Add base CSS reset through Tailwind.
-- [ ] MVP-M01-FE-021 Add placeholder app shell.
-- [ ] MVP-M01-FE-022 Add temporary home page.
-- [ ] MVP-M01-FE-023 Add frontend test command placeholder.
-- [ ] MVP-M01-FE-024 Confirm Vite dev server starts.
+- [x] MVP-M01-FE-001 Initialize Vite React TypeScript app inside `/apps/web`.
+- [x] MVP-M01-FE-002 Add Tailwind CSS.
+- [x] MVP-M01-FE-003 Configure Tailwind content paths.
+- [x] MVP-M01-FE-004 Add shadcn/ui setup.
+- [x] MVP-M01-FE-005 Add Axios dependency.
+- [x] MVP-M01-FE-006 Add SWR dependency.
+- [x] MVP-M01-FE-007 Add Zustand dependency.
+- [x] MVP-M01-FE-008 Add React Router dependency.
+- [x] MVP-M01-FE-009 Create frontend environment variable file example.
+- [x] MVP-M01-FE-010 Create `src/app` directory.
+- [x] MVP-M01-FE-011 Create `src/pages` directory.
+- [x] MVP-M01-FE-012 Create `src/components` directory.
+- [x] MVP-M01-FE-013 Create `src/components/layout` directory.
+- [x] MVP-M01-FE-014 Create `src/components/ui` directory.
+- [x] MVP-M01-FE-015 Create `src/features` directory.
+- [x] MVP-M01-FE-016 Create `src/lib` directory.
+- [x] MVP-M01-FE-017 Create `src/stores` directory.
+- [x] MVP-M01-FE-018 Create `src/types` directory.
+- [x] MVP-M01-FE-019 Create `src/routes` directory.
+- [x] MVP-M01-FE-020 Add base CSS reset through Tailwind.
+- [x] MVP-M01-FE-021 Add placeholder app shell.
+- [x] MVP-M01-FE-022 Add temporary home page.
+- [x] MVP-M01-FE-023 Add frontend test command placeholder.
+- [x] MVP-M01-FE-024 Confirm Vite dev server starts.
 
 ### Integration Tasks
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M01-BE-020.
-**Last completed task name:** Run initial backend migrations.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation backend track is complete.
+**Last completed task ID:** MVP-M01-FE-024.
+**Last completed task name:** Confirm Vite dev server starts.
+**Last completed milestone:** MVP-M01 — Monorepo Foundation frontend track is complete.
 **Current phase:** MVP Phase.
 **Current milestone:** MVP-M01 — Monorepo Foundation.
-**Next recommended task:** MVP-M01-FE-001 Initialize Vite React TypeScript app inside `/apps/web`.
+**Next recommended task:** MVP-M01-INT-001 Create frontend Axios instance.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-The backend foundation was implemented under `apps/api`: Django project/settings, DRF, CORS, OpenAPI/Swagger/Scalar routes, Redis cache/Celery configuration, health app, `/api/health/` endpoint, pytest/ruff tooling, backend package scripts, and the first health endpoint test. Initial Django migrations were run with test settings and the backend verification scripts pass.
+The frontend foundation was implemented under `apps/web`: Vite React TypeScript app, Tailwind configuration, shadcn/ui-compatible component setup, Axios/SWR/Zustand/React Router dependencies, frontend `.env.example`, source directory structure, accessible placeholder app shell, temporary dashboard home page with API health status, and a Vitest smoke test. The Vite dev server was confirmed to start locally.
 
 ## 9.3 Important Notes For The Next Agent
 
