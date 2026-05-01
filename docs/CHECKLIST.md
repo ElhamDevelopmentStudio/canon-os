@@ -205,44 +205,44 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M01-SH-008 Create `/packages/api-client` directory.
 - [x] MVP-M01-SH-009 Create `/docs` directory.
 - [x] MVP-M01-SH-010 Create `/infra` directory.
-- [ ] MVP-M01-SH-011 Create root `README.md`.
-- [ ] MVP-M01-SH-012 Add project overview to root `README.md`.
-- [ ] MVP-M01-SH-013 Add stack overview to root `README.md`.
-- [ ] MVP-M01-SH-014 Add local development instructions placeholder to root `README.md`.
+- [x] MVP-M01-SH-011 Create root `README.md`.
+- [x] MVP-M01-SH-012 Add project overview to root `README.md`.
+- [x] MVP-M01-SH-013 Add stack overview to root `README.md`.
+- [x] MVP-M01-SH-014 Add local development instructions placeholder to root `README.md`.
 - [x] MVP-M01-SH-015 Create root `.gitignore`.
 - [x] MVP-M01-SH-016 Add frontend ignore rules to `.gitignore`.
 - [x] MVP-M01-SH-017 Add Python ignore rules to `.gitignore`.
 - [x] MVP-M01-SH-018 Add environment file ignore rules to `.gitignore`.
-- [ ] MVP-M01-SH-019 Create root `.editorconfig`.
-- [ ] MVP-M01-SH-020 Create root `.env.example`.
-- [ ] MVP-M01-SH-021 Add frontend environment variables to `.env.example`.
-- [ ] MVP-M01-SH-022 Add backend environment variables to `.env.example`.
-- [ ] MVP-M01-SH-023 Add PostgreSQL variables to `.env.example`.
-- [ ] MVP-M01-SH-024 Add Redis variables to `.env.example`.
-- [ ] MVP-M01-SH-025 Add Celery variables to `.env.example`.
-- [ ] MVP-M01-SH-026 Create root task runner documentation section.
+- [x] MVP-M01-SH-019 Create root `.editorconfig`.
+- [x] MVP-M01-SH-020 Create root `.env.example`.
+- [x] MVP-M01-SH-021 Add frontend environment variables to `.env.example`.
+- [x] MVP-M01-SH-022 Add backend environment variables to `.env.example`.
+- [x] MVP-M01-SH-023 Add PostgreSQL variables to `.env.example`.
+- [x] MVP-M01-SH-024 Add Redis variables to `.env.example`.
+- [x] MVP-M01-SH-025 Add Celery variables to `.env.example`.
+- [x] MVP-M01-SH-026 Create root task runner documentation section.
 - [x] MVP-M01-SH-027 Decide package manager for frontend workspace.
-- [ ] MVP-M01-SH-028 Add `pnpm-workspace.yaml` workspace configuration.
-- [ ] MVP-M01-SH-029 Add script for running frontend app.
-- [ ] MVP-M01-SH-030 Add script for running backend app.
-- [ ] MVP-M01-SH-031 Add script for running backend worker.
-- [ ] MVP-M01-SH-032 Add script for running all local services.
-- [ ] MVP-M01-SH-033 Add script for stopping all local services.
-- [ ] MVP-M01-SH-034 Add `docs/architecture.md` placeholder.
-- [ ] MVP-M01-SH-035 Add `docs/api.md` placeholder.
-- [ ] MVP-M01-SH-036 Add `docs/frontend.md` placeholder.
-- [ ] MVP-M01-SH-037 Add `docs/backend.md` placeholder.
-- [ ] MVP-M01-SH-038 Add `docs/testing.md` placeholder.
-- [ ] MVP-M01-SH-039 Add `docs/deployment.md` placeholder.
-- [ ] MVP-M01-SH-040 Create root `package.json`.
-- [ ] MVP-M01-SH-041 Add root `lint` script.
-- [ ] MVP-M01-SH-042 Add root `typecheck` script.
-- [ ] MVP-M01-SH-043 Add root `test` script.
-- [ ] MVP-M01-SH-044 Add root `build` script.
-- [ ] MVP-M01-SH-045 Add root `e2e` script.
-- [ ] MVP-M01-SH-046 Create `.github/workflows` directory.
-- [ ] MVP-M01-SH-047 Add GitHub Actions CI workflow for lint, typecheck, tests, build, and E2E.
-- [ ] MVP-M01-SH-048 Document branch protection rules in `docs/deployment.md`.
+- [x] MVP-M01-SH-028 Add `pnpm-workspace.yaml` workspace configuration.
+- [x] MVP-M01-SH-029 Add script for running frontend app.
+- [x] MVP-M01-SH-030 Add script for running backend app.
+- [x] MVP-M01-SH-031 Add script for running backend worker.
+- [x] MVP-M01-SH-032 Add script for running all local services.
+- [x] MVP-M01-SH-033 Add script for stopping all local services.
+- [x] MVP-M01-SH-034 Add `docs/architecture.md` placeholder.
+- [x] MVP-M01-SH-035 Add `docs/api.md` placeholder.
+- [x] MVP-M01-SH-036 Add `docs/frontend.md` placeholder.
+- [x] MVP-M01-SH-037 Add `docs/backend.md` placeholder.
+- [x] MVP-M01-SH-038 Add `docs/testing.md` placeholder.
+- [x] MVP-M01-SH-039 Add `docs/deployment.md` placeholder.
+- [x] MVP-M01-SH-040 Create root `package.json`.
+- [x] MVP-M01-SH-041 Add root `lint` script.
+- [x] MVP-M01-SH-042 Add root `typecheck` script.
+- [x] MVP-M01-SH-043 Add root `test` script.
+- [x] MVP-M01-SH-044 Add root `build` script.
+- [x] MVP-M01-SH-045 Add root `e2e` script.
+- [x] MVP-M01-SH-046 Create `.github/workflows` directory.
+- [x] MVP-M01-SH-047 Add GitHub Actions CI workflow for lint, typecheck, tests, build, and E2E.
+- [x] MVP-M01-SH-048 Document branch protection rules in `docs/deployment.md`.
 - [x] MVP-M01-SH-049 Create `docs/manual-tests` directory and template.
 
 ### Backend Tasks
@@ -2967,13 +2967,13 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 The following rhythm should be used for each coding session.
 
-- [ ] SESSION-001 Read the current milestone section.
-- [ ] SESSION-002 Read the Last Completed Task Summary at the bottom of this document.
-- [ ] SESSION-003 Select the next unchecked task in the current milestone.
-- [ ] SESSION-004 Complete exactly that task or a very small group of tightly related tasks.
-- [ ] SESSION-005 Run the smallest relevant check during development, then run all available verification gates before marking implementation complete.
-- [ ] SESSION-006 Mark completed tasks with `[x]`.
-- [ ] SESSION-007 Update the Last Completed Task Summary.
+- [x] SESSION-001 Read the current milestone section.
+- [x] SESSION-002 Read the Last Completed Task Summary at the bottom of this document.
+- [x] SESSION-003 Select the next unchecked task in the current milestone.
+- [x] SESSION-004 Complete exactly that task or a very small group of tightly related tasks.
+- [x] SESSION-005 Run the smallest relevant check during development, then run all available verification gates before marking implementation complete.
+- [x] SESSION-006 Mark completed tasks with `[x]`.
+- [x] SESSION-007 Update the Last Completed Task Summary.
 - [ ] SESSION-008 Mention any blockers under the relevant task using `[!]`.
 
 ---
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CHECKLIST-MAINT-001 and MVP-M01-SH-000.
-**Last completed task name:** Fixed checklist readiness gaps and initialized Git repository.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation is partially complete.
+**Last completed task ID:** MVP-M01-SH-048.
+**Last completed task name:** Document branch protection rules in `docs/deployment.md`.
+**Last completed milestone:** MVP-M01 — Monorepo Foundation shared/monorepo track is complete.
 **Current phase:** MVP Phase.
 **Current milestone:** MVP-M01 — Monorepo Foundation.
-**Next recommended task:** MVP-M01-SH-011 Create root `README.md`.
+**Next recommended task:** MVP-M01-BE-001 Initialize Django project inside `/apps/api`.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-The checklist was normalized to the SDS/current repository structure (`apps/web`, `apps/api`, `packages/contracts`, `packages/api-client`, `packages/config`). It now includes strict verification gates, manual test documentation requirements, resolved implementation defaults, Git/CI/branch protection tasks, and an MVP import/export/backup milestone. Existing foundation directories, `.gitignore`, package-manager decision, and the manual test template were marked complete because they exist in the repository.
+The shared/monorepo foundation was completed: root README, `.editorconfig`, `.env.example`, pnpm workspace configuration, package scripts, local service runner scripts, documentation placeholders, CI workflow, and branch protection documentation now exist. Root verification gates are wired through workspace discovery so they pass safely until child app/package scripts are introduced.
 
 ## 9.3 Important Notes For The Next Agent
 

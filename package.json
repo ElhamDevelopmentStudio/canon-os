@@ -1,0 +1,22 @@
+{
+  "name": "canonos",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal media intelligence system monorepo.",
+  "packageManager": "pnpm@10.33.1",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "lint": "node --check scripts/run-workspace-command.mjs && node --check scripts/service-command.mjs && node --check scripts/dev-all.mjs && node --check scripts/stop-local-services.mjs && node --check scripts/test-root-foundation.mjs && node scripts/run-workspace-command.mjs lint",
+    "typecheck": "node scripts/run-workspace-command.mjs typecheck",
+    "test": "node scripts/test-root-foundation.mjs && node scripts/run-workspace-command.mjs test",
+    "build": "node scripts/run-workspace-command.mjs build",
+    "e2e": "node scripts/run-workspace-command.mjs e2e",
+    "dev:web": "node scripts/service-command.mjs web",
+    "dev:api": "node scripts/service-command.mjs api",
+    "dev:worker": "node scripts/service-command.mjs worker",
+    "dev:all": "node scripts/dev-all.mjs",
+    "stop:all": "node scripts/stop-local-services.mjs"
+  }
+}
