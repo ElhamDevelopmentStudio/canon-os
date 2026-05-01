@@ -8,6 +8,8 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 20_000,
   withCredentials: true,
+  xsrfCookieName: "csrftoken",
+  xsrfHeaderName: "X-CSRFToken",
 });
 
 api.interceptors.response.use(

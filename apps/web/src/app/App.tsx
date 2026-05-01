@@ -1,9 +1,12 @@
+import { useMemo } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import { AppProviders } from "@/app/providers";
-import { router } from "@/app/router";
+import { createAppRouter } from "@/app/router";
 
 export function App() {
+  const router = useMemo(() => createAppRouter(), []);
+
   return (
     <AppProviders>
       <RouterProvider router={router} future={{ v7_startTransition: true }} />

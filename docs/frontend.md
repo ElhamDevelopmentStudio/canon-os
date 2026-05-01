@@ -82,3 +82,11 @@ corepack pnpm --filter @canonos/web run build
 ## Health Integration
 
 Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root `.env`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
+
+## Auth Integration
+
+- Public routes: `/login` and `/register`.
+- Protected app routes render only after `ProtectedRoute` confirms `GET /api/auth/me/` succeeds.
+- `PublicRoute` redirects authenticated users away from login/register and back to the dashboard.
+- Session state lives in `apps/web/src/stores/authStore.ts` and stores the current user plus CSRF token metadata only; Django owns the actual session cookie.
+- Auth API calls live in `apps/web/src/features/auth/authApi.ts` and use the shared Axios client with credentials and CSRF header support.

@@ -7,6 +7,8 @@ export const APP_ROUTES = {
   aftertasteLog: "/aftertaste-log",
   queue: "/queue",
   settings: "/settings",
+  login: "/login",
+  register: "/register",
 } as const;
 
 export type AppRouteKey = keyof typeof APP_ROUTES;

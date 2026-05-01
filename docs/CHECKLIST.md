@@ -401,80 +401,80 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M03-SH-001 Define `UserProfile` type in shared types.
-- [ ] MVP-M03-SH-002 Define `AuthSession` type in shared types.
-- [ ] MVP-M03-SH-003 Define `LoginRequest` type.
-- [ ] MVP-M03-SH-004 Define `RegisterRequest` type.
-- [ ] MVP-M03-SH-005 Define `AuthResponse` type.
-- [ ] MVP-M03-SH-006 Document auth flow in `/docs/api.md`.
+- [x] MVP-M03-SH-001 Define `UserProfile` type in shared types.
+- [x] MVP-M03-SH-002 Define `AuthSession` type in shared types.
+- [x] MVP-M03-SH-003 Define `LoginRequest` type.
+- [x] MVP-M03-SH-004 Define `RegisterRequest` type.
+- [x] MVP-M03-SH-005 Define `AuthResponse` type.
+- [x] MVP-M03-SH-006 Document auth flow in `/docs/api.md`.
 
 ### Backend Tasks
 
-- [ ] MVP-M03-BE-001 Create accounts app.
-- [ ] MVP-M03-BE-002 Configure custom user model if needed.
-- [ ] MVP-M03-BE-003 Create user profile model.
-- [ ] MVP-M03-BE-004 Add profile display name field.
-- [ ] MVP-M03-BE-005 Add profile timezone field.
-- [ ] MVP-M03-BE-006 Add profile preferred language field.
-- [ ] MVP-M03-BE-007 Create migration for profile model.
-- [ ] MVP-M03-BE-008 Create user profile serializer.
-- [ ] MVP-M03-BE-009 Create current user endpoint.
-- [ ] MVP-M03-BE-010 Create profile update endpoint.
-- [ ] MVP-M03-BE-011 Add token or session authentication configuration.
-- [ ] MVP-M03-BE-012 Create register endpoint.
-- [ ] MVP-M03-BE-013 Create login endpoint.
-- [ ] MVP-M03-BE-014 Create logout endpoint.
-- [ ] MVP-M03-BE-015 Add permission class for authenticated endpoints.
-- [ ] MVP-M03-BE-016 Add test for registration.
-- [ ] MVP-M03-BE-017 Add test for login.
-- [ ] MVP-M03-BE-018 Add test for current user endpoint.
-- [ ] MVP-M03-BE-019 Add test for profile update endpoint.
-- [ ] MVP-M03-BE-020 Register profile model in Django admin.
+- [x] MVP-M03-BE-001 Create accounts app.
+- [x] MVP-M03-BE-002 Configure custom user model if needed.
+- [x] MVP-M03-BE-003 Create user profile model.
+- [x] MVP-M03-BE-004 Add profile display name field.
+- [x] MVP-M03-BE-005 Add profile timezone field.
+- [x] MVP-M03-BE-006 Add profile preferred language field.
+- [x] MVP-M03-BE-007 Create migration for profile model.
+- [x] MVP-M03-BE-008 Create user profile serializer.
+- [x] MVP-M03-BE-009 Create current user endpoint.
+- [x] MVP-M03-BE-010 Create profile update endpoint.
+- [x] MVP-M03-BE-011 Add token or session authentication configuration.
+- [x] MVP-M03-BE-012 Create register endpoint.
+- [x] MVP-M03-BE-013 Create login endpoint.
+- [x] MVP-M03-BE-014 Create logout endpoint.
+- [x] MVP-M03-BE-015 Add permission class for authenticated endpoints.
+- [x] MVP-M03-BE-016 Add test for registration.
+- [x] MVP-M03-BE-017 Add test for login.
+- [x] MVP-M03-BE-018 Add test for current user endpoint.
+- [x] MVP-M03-BE-019 Add test for profile update endpoint.
+- [x] MVP-M03-BE-020 Register profile model in Django admin.
 
 ### Frontend Tasks
 
-- [ ] MVP-M03-FE-001 Create auth API client file.
-- [ ] MVP-M03-FE-002 Create auth Zustand store.
-- [ ] MVP-M03-FE-003 Add current user field to auth store.
-- [ ] MVP-M03-FE-004 Add auth token/session field to auth store if needed.
-- [ ] MVP-M03-FE-005 Add login action to auth store.
-- [ ] MVP-M03-FE-006 Add logout action to auth store.
-- [ ] MVP-M03-FE-007 Add register action to auth store.
-- [ ] MVP-M03-FE-008 Create Login page skeleton.
-- [ ] MVP-M03-FE-009 Add email field to Login page.
-- [ ] MVP-M03-FE-010 Add password field to Login page.
-- [ ] MVP-M03-FE-011 Add login submit button.
-- [ ] MVP-M03-FE-012 Add login error message state.
-- [ ] MVP-M03-FE-013 Create Register page skeleton.
-- [ ] MVP-M03-FE-014 Add email field to Register page.
-- [ ] MVP-M03-FE-015 Add password field to Register page.
-- [ ] MVP-M03-FE-016 Add display name field to Register page.
-- [ ] MVP-M03-FE-017 Add register submit button.
-- [ ] MVP-M03-FE-018 Add auth route guard component.
-- [ ] MVP-M03-FE-019 Add public route guard component.
-- [ ] MVP-M03-FE-020 Add logout button to header user menu.
-- [ ] MVP-M03-FE-021 Add loading state while current user loads.
-- [ ] MVP-M03-FE-022 Add redirect after successful login.
-- [ ] MVP-M03-FE-023 Add redirect after successful registration.
+- [x] MVP-M03-FE-001 Create auth API client file.
+- [x] MVP-M03-FE-002 Create auth Zustand store.
+- [x] MVP-M03-FE-003 Add current user field to auth store.
+- [x] MVP-M03-FE-004 Add auth token/session field to auth store if needed.
+- [x] MVP-M03-FE-005 Add login action to auth store.
+- [x] MVP-M03-FE-006 Add logout action to auth store.
+- [x] MVP-M03-FE-007 Add register action to auth store.
+- [x] MVP-M03-FE-008 Create Login page skeleton.
+- [x] MVP-M03-FE-009 Add email field to Login page.
+- [x] MVP-M03-FE-010 Add password field to Login page.
+- [x] MVP-M03-FE-011 Add login submit button.
+- [x] MVP-M03-FE-012 Add login error message state.
+- [x] MVP-M03-FE-013 Create Register page skeleton.
+- [x] MVP-M03-FE-014 Add email field to Register page.
+- [x] MVP-M03-FE-015 Add password field to Register page.
+- [x] MVP-M03-FE-016 Add display name field to Register page.
+- [x] MVP-M03-FE-017 Add register submit button.
+- [x] MVP-M03-FE-018 Add auth route guard component.
+- [x] MVP-M03-FE-019 Add public route guard component.
+- [x] MVP-M03-FE-020 Add logout button to header user menu.
+- [x] MVP-M03-FE-021 Add loading state while current user loads.
+- [x] MVP-M03-FE-022 Add redirect after successful login.
+- [x] MVP-M03-FE-023 Add redirect after successful registration.
 
 ### Integration Tasks
 
-- [ ] MVP-M03-INT-001 Connect login form to login endpoint.
-- [ ] MVP-M03-INT-002 Connect register form to register endpoint.
-- [ ] MVP-M03-INT-003 Connect logout button to logout endpoint.
-- [ ] MVP-M03-INT-004 Connect app boot to current user endpoint.
-- [ ] MVP-M03-INT-005 Confirm unauthenticated users cannot access app pages.
-- [ ] MVP-M03-INT-006 Confirm authenticated users cannot access login/register unnecessarily.
+- [x] MVP-M03-INT-001 Connect login form to login endpoint.
+- [x] MVP-M03-INT-002 Connect register form to register endpoint.
+- [x] MVP-M03-INT-003 Connect logout button to logout endpoint.
+- [x] MVP-M03-INT-004 Connect app boot to current user endpoint.
+- [x] MVP-M03-INT-005 Confirm unauthenticated users cannot access app pages.
+- [x] MVP-M03-INT-006 Confirm authenticated users cannot access login/register unnecessarily.
 
 ### QA Tasks
 
-- [ ] MVP-M03-QA-001 Test registration from UI.
-- [ ] MVP-M03-QA-002 Test login from UI.
-- [ ] MVP-M03-QA-003 Test logout from UI.
-- [ ] MVP-M03-QA-004 Test refresh while logged in.
-- [ ] MVP-M03-QA-005 Test refresh while logged out.
-- [ ] MVP-M03-QA-006 Confirm auth endpoints appear in OpenAPI docs.
-- [ ] MVP-M03-QA-007 Create or update `docs/manual-tests/auth.md`.
+- [x] MVP-M03-QA-001 Test registration from UI.
+- [x] MVP-M03-QA-002 Test login from UI.
+- [x] MVP-M03-QA-003 Test logout from UI.
+- [x] MVP-M03-QA-004 Test refresh while logged in.
+- [x] MVP-M03-QA-005 Test refresh while logged out.
+- [x] MVP-M03-QA-006 Confirm auth endpoints appear in OpenAPI docs.
+- [x] MVP-M03-QA-007 Create or update `docs/manual-tests/auth.md`.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M02-QA-006.
-**Last completed task name:** Verify shared error state renders correctly.
-**Last completed milestone:** MVP-M02 — Shared Design System And Global Layout.
+**Last completed task ID:** MVP-M03-QA-007.
+**Last completed task name:** Create or update `docs/manual-tests/auth.md`.
+**Last completed milestone:** MVP-M03 — Authentication And User Foundation.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M03 — Authentication And User Foundation.
-**Next recommended task:** MVP-M03-SH-001 Define `UserProfile` type in shared types.
+**Current milestone:** MVP-M04 — Core Media Library Data Model.
+**Next recommended task:** MVP-M04-SH-001 Define `MediaType` enum.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M02 shared design system and global layout is complete. The frontend now uses a shared `AppShell` with persistent sidebar, responsive mobile navigation, top header, shared layout primitives, feedback states, badges, form wrappers, route/API constants, and navigation config. Placeholder product pages all render through the shared shell. The API now exposes `GET /api/` plus tested OpenAPI/Swagger/Scalar documentation entry points. Manual shell testing is documented in `docs/manual-tests/app-shell.md`, and full lint/typecheck/test/build/e2e gates passed.
+MVP-M03 authentication and user foundation is complete. Shared auth contracts were added in `packages/contracts`, Django now has a `canonos.accounts` app with user profile model/migration/admin, session-auth endpoints for CSRF/register/login/logout/current user/profile update, and API/OpenAPI tests. The frontend now has auth API helpers, Zustand session state, protected/public route guards, login/register pages, logout in the header, and app boot session loading. `docs/api.md`, `docs/frontend.md`, and `docs/manual-tests/auth.md` document the flow.
 
 ## 9.3 Important Notes For The Next Agent
 

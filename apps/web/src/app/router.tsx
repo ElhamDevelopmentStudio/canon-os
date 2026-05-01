@@ -1,25 +1,47 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
 
-import { APP_ROUTES } from "@/app/routeConstants";
 import { AppLayout } from "@/app/layouts/AppLayout";
+import { APP_ROUTES } from "@/app/routeConstants";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { PublicRoute } from "@/components/auth/PublicRoute";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { LoginPage } from "@/pages/LoginPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
+import { RegisterPage } from "@/pages/RegisterPage";
+
+export const protectedRouteChildren: RouteObject[] = [
+  { index: true, element: <DashboardPage /> },
+  { path: APP_ROUTES.library.slice(1), element: <PlaceholderPage route={APP_ROUTES.library} /> },
+  { path: APP_ROUTES.candidates.slice(1), element: <PlaceholderPage route={APP_ROUTES.candidates} /> },
+  { path: APP_ROUTES.tonight.slice(1), element: <PlaceholderPage route={APP_ROUTES.tonight} /> },
+  { path: APP_ROUTES.tasteProfile.slice(1), element: <PlaceholderPage route={APP_ROUTES.tasteProfile} /> },
+  { path: APP_ROUTES.aftertasteLog.slice(1), element: <PlaceholderPage route={APP_ROUTES.aftertasteLog} /> },
+  { path: APP_ROUTES.queue.slice(1), element: <PlaceholderPage route={APP_ROUTES.queue} /> },
+  { path: APP_ROUTES.settings.slice(1), element: <PlaceholderPage route={APP_ROUTES.settings} /> },
+];
 
 export const appRoutes: RouteObject[] = [
   {
-    path: APP_ROUTES.dashboard,
-    element: <AppLayout />,
+    element: <PublicRoute />,
     children: [
-      { index: true, element: <DashboardPage /> },
-      { path: APP_ROUTES.library.slice(1), element: <PlaceholderPage route={APP_ROUTES.library} /> },
-      { path: APP_ROUTES.candidates.slice(1), element: <PlaceholderPage route={APP_ROUTES.candidates} /> },
-      { path: APP_ROUTES.tonight.slice(1), element: <PlaceholderPage route={APP_ROUTES.tonight} /> },
-      { path: APP_ROUTES.tasteProfile.slice(1), element: <PlaceholderPage route={APP_ROUTES.tasteProfile} /> },
-      { path: APP_ROUTES.aftertasteLog.slice(1), element: <PlaceholderPage route={APP_ROUTES.aftertasteLog} /> },
-      { path: APP_ROUTES.queue.slice(1), element: <PlaceholderPage route={APP_ROUTES.queue} /> },
-      { path: APP_ROUTES.settings.slice(1), element: <PlaceholderPage route={APP_ROUTES.settings} /> },
+      { path: APP_ROUTES.login, element: <LoginPage /> },
+      { path: APP_ROUTES.register, element: <RegisterPage /> },
+    ],
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: APP_ROUTES.dashboard,
+        element: <AppLayout />,
+        children: protectedRouteChildren,
+      },
     ],
   },
 ];
 
-export const router = createBrowserRouter(appRoutes);
+export function createAppRouter() {
+  return createBrowserRouter(appRoutes);
+}
+
+export const router = createAppRouter();

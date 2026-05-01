@@ -2,10 +2,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import { App } from "@/app/App";
 import { APP_NAVIGATION } from "@/app/navigation";
 import { APP_ROUTES } from "@/app/routeConstants";
-import { appRoutes } from "@/app/router";
-import { App } from "@/app/App";
+import { protectedRouteChildren } from "@/app/router";
+import { useAuthStore } from "@/stores/authStore";
 
 vi.mock("@/lib/health", () => ({
   useHealthCheck: () => ({
@@ -16,14 +17,27 @@ vi.mock("@/lib/health", () => ({
   }),
 }));
 
+const authenticatedUser = {
+  id: 1,
+  email: "reader@example.com",
+  username: "reader@example.com",
+  profile: {
+    id: 1,
+    displayName: "Canon Reader",
+    timezone: "UTC",
+    preferredLanguage: "en",
+  },
+};
+
 describe("App", () => {
   beforeEach(() => {
     window.localStorage.clear();
     window.history.pushState({}, "", "/");
     document.documentElement.className = "";
+    useAuthStore.setState({ currentUser: authenticatedUser, status: "authenticated", error: null, csrfToken: null });
   });
 
-  it("renders the shared CanonOS app shell", async () => {
+  it("renders the shared CanonOS app shell for authenticated users", async () => {
     render(<App />);
 
     expect(screen.getByRole("link", { name: /canonos dashboard/i })).toBeInTheDocument();
@@ -32,6 +46,8 @@ describe("App", () => {
     expect(screen.getByRole("main")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /choose better media/i })).toBeInTheDocument();
     expect(screen.getByText(/canonos-api is ok/i)).toBeInTheDocument();
+    expect(screen.getByText(/canon reader/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /log out/i })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /recheck health/i })).toBeInTheDocument();
 
     for (const item of APP_NAVIGATION) {
@@ -64,6 +80,29 @@ describe("App", () => {
       APP_ROUTES.settings,
     ]);
     expect(new Set(navRoutes).size).toBe(navRoutes.length);
-    expect(appRoutes[0].children).toHaveLength(APP_NAVIGATION.length);
+    expect(protectedRouteChildren).toHaveLength(APP_NAVIGATION.length);
+  });
+
+  it("redirects unauthenticated app routes to login", async () => {
+    useAuthStore.setState({ currentUser: null, status: "unauthenticated", error: null, csrfToken: null });
+    window.history.pushState({}, "", APP_ROUTES.library);
+
+    render(<App />);
+
+    expect(await screen.findByRole("heading", { name: /log in/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+  });
+
+  it("renders register form for unauthenticated users", async () => {
+    useAuthStore.setState({ currentUser: null, status: "unauthenticated", error: null, csrfToken: null });
+    window.history.pushState({}, "", APP_ROUTES.register);
+
+    render(<App />);
+
+    expect(await screen.findByRole("heading", { name: /create account/i })).toBeInTheDocument();
+    expect(screen.getByLabelText(/display name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
   });
 });

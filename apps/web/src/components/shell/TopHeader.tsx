@@ -1,12 +1,23 @@
-import { Moon, Sun } from "lucide-react";
+import { LogOut, Moon, Sun } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
+import { APP_ROUTES } from "@/app/routeConstants";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/stores/appStore";
+import { useAuthStore } from "@/stores/authStore";
 
 export function TopHeader() {
   const themeMode = useAppStore((state) => state.themeMode);
   const toggleThemeMode = useAppStore((state) => state.toggleThemeMode);
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    await logout();
+    navigate(APP_ROUTES.login, { replace: true });
+  }
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-background/85 px-4 py-3 backdrop-blur sm:px-6 lg:px-8">
@@ -19,6 +30,11 @@ export function TopHeader() {
         </a>
         <CommandSearchInput className="hidden max-w-md flex-1 md:block" />
         <div className="ml-auto flex items-center gap-2">
+          {currentUser ? (
+            <span className="hidden max-w-48 truncate text-sm text-muted-foreground sm:inline" title={currentUser.email}>
+              {currentUser.profile.displayName}
+            </span>
+          ) : null}
           <Button aria-label="Toggle theme mode" size="sm" type="button" variant="secondary" onClick={toggleThemeMode}>
             {themeMode === "dark" ? (
               <Sun aria-hidden="true" className="h-4 w-4" />
@@ -26,6 +42,10 @@ export function TopHeader() {
               <Moon aria-hidden="true" className="h-4 w-4" />
             )}
             <span className="ml-2 hidden sm:inline">{themeMode === "dark" ? "Light" : "Dark"}</span>
+          </Button>
+          <Button aria-label="Log out" size="sm" type="button" variant="ghost" onClick={() => void handleLogout()}>
+            <LogOut aria-hidden="true" className="h-4 w-4" />
+            <span className="ml-2 hidden sm:inline">Log out</span>
           </Button>
         </div>
       </div>

@@ -1,6 +1,12 @@
 export const API_ROUTES = {
   root: "/",
   health: "/health/",
+  authCsrf: "/auth/csrf/",
+  authRegister: "/auth/register/",
+  authLogin: "/auth/login/",
+  authLogout: "/auth/logout/",
+  authMe: "/auth/me/",
+  authProfile: "/auth/profile/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

@@ -31,3 +31,21 @@ When an API response shape changes, update serializers, shared contracts, fronte
 - `GET /api/docs/swagger/` opens Swagger UI.
 - `GET /api/docs/scalar/` opens Scalar API Reference.
 
+
+## Authentication Flow
+
+CanonOS uses Django session authentication for the browser app. The frontend does not store bearer tokens in `localStorage`; Django owns the HTTP-only session cookie and Axios sends credentials with each API request.
+
+Auth endpoints:
+
+- `GET /api/auth/csrf/` sets/returns a CSRF token for unsafe requests.
+- `POST /api/auth/register/` creates a user, creates a `UserProfile`, logs the user in, and returns the auth session.
+- `POST /api/auth/login/` validates email/password credentials, logs the user in, and returns the auth session.
+- `POST /api/auth/logout/` clears the current session.
+- `GET /api/auth/me/` returns the authenticated user and profile for app bootstrap.
+- `GET /api/auth/profile/` returns the current profile.
+- `PATCH /api/auth/profile/` updates `displayName`, `timezone`, and/or `preferredLanguage`.
+
+Request/response contracts live in `packages/contracts/src/auth.ts`. Frontend auth calls live in `apps/web/src/features/auth/authApi.ts`, and session state lives in `apps/web/src/stores/authStore.ts`.
+
+The MVP uses Django's built-in user model with email as username. This keeps the early app simple while the schema still uses profile/user-owned records so future multi-user support can evolve without rewriting feature data models.

@@ -11,13 +11,40 @@ export class ApiError extends Error {
   }
 }
 
+function firstMessage(value: unknown): string | null {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const message = firstMessage(item);
+      if (message) return message;
+    }
+  }
+  if (typeof value === "object" && value) {
+    if ("message" in value) {
+      const message = firstMessage((value as { message?: unknown }).message);
+      if (message) return message;
+    }
+    if ("detail" in value) {
+      const message = firstMessage((value as { detail?: unknown }).detail);
+      if (message) return message;
+    }
+    if ("non_field_errors" in value) {
+      const message = firstMessage((value as { non_field_errors?: unknown }).non_field_errors);
+      if (message) return message;
+    }
+    for (const nested of Object.values(value)) {
+      const message = firstMessage(nested);
+      if (message) return message;
+    }
+  }
+  return null;
+}
+
 export function normalizeApiError(error: unknown): ApiError {
   if (axios.isAxiosError(error)) {
-    const message =
-      typeof error.response?.data === "object" && error.response.data && "error" in error.response.data
-        ? String((error.response.data as { error?: { message?: unknown } }).error?.message ?? error.message)
-        : error.message;
-
+    const message = firstMessage(error.response?.data) ?? error.message;
     return new ApiError(message, error.response?.status);
   }
 
