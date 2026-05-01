@@ -11,6 +11,35 @@ jobs:
   verify:
     name: Verify CanonOS
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: canonos
+          POSTGRES_USER: canonos
+          POSTGRES_PASSWORD: canonos
+        ports:
+          - 15432:5432
+        options: >-
+          --health-cmd "pg_isready -U canonos -d canonos"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 16379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://canonos:canonos@localhost:15432/canonos
+      REDIS_URL: redis://localhost:16379/0
+      CELERY_BROKER_URL: redis://localhost:16379/0
+      CELERY_RESULT_BACKEND: redis://localhost:16379/1
 
     steps:
       - name: Checkout

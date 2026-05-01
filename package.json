@@ -17,6 +17,9 @@
     "dev:api": "node scripts/service-command.mjs api",
     "dev:worker": "node scripts/service-command.mjs worker",
     "dev:all": "node scripts/dev-all.mjs",
-    "stop:all": "node scripts/stop-local-services.mjs"
+    "stop:all": "node scripts/stop-local-services.mjs",
+    "compose:dev": "docker compose -f infra/docker-compose.dev.yml up -d postgres redis",
+    "compose:dev:down": "docker compose -f infra/docker-compose.dev.yml down",
+    "compose:dev:logs": "docker compose -f infra/docker-compose.dev.yml logs -f postgres redis"
   }
 }

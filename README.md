@@ -38,7 +38,13 @@ The repository is being built module by module from `docs/CHECKLIST.md`. The roo
    cp .env.example .env
    ```
 
-2. Adjust database, Redis, Django, and frontend URLs for your local machine.
+2. Start local dependency services with Docker:
+
+   ```bash
+   corepack pnpm compose:dev
+   ```
+
+3. The default development ports are `15432` for PostgreSQL and `16379` for Redis so they do not conflict with host-installed services on `5432` or `6379`. Adjust `.env` if needed.
 
 ### Root Commands
 
@@ -78,12 +84,16 @@ corepack pnpm --filter @canonos/web run test
 After starting local dependencies, these checks should pass:
 
 ```bash
-pg_isready -h 127.0.0.1 -p 5432
+pg_isready -h 127.0.0.1 -p 15432
 apps/api/.venv/bin/python - <<'PY'
 from redis import Redis
-assert Redis.from_url("redis://localhost:6379/0").ping() is True
+assert Redis.from_url("redis://localhost:16379/0").ping() is True
 PY
-curl http://127.0.0.1:8000/api/health/
+DATABASE_URL=postgresql://canonos:canonos@localhost:15432/canonos \
+REDIS_URL=redis://localhost:16379/0 \
+DJANGO_SETTINGS_MODULE=config.settings.local \
+apps/api/.venv/bin/python apps/api/manage.py migrate --noinput
+corepack pnpm e2e
 ```
 
 The frontend should be configured with `VITE_API_BASE_URL=http://localhost:8000/api` so the temporary home page can show backend health.

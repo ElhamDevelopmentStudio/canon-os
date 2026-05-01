@@ -9,8 +9,8 @@
     "worker": "python3 scripts/ensure_venv.py && .venv/bin/python -m celery -A config worker --loglevel=info",
     "lint": "python3 scripts/ensure_venv.py && .venv/bin/python -m ruff check . && .venv/bin/python -m ruff format --check . && .venv/bin/python manage.py check --settings=config.settings.test",
     "typecheck": "python3 scripts/ensure_venv.py && .venv/bin/python -m compileall -q config canonos && .venv/bin/python manage.py check --settings=config.settings.test",
-    "test": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest",
+    "test": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest -m \"not e2e\"",
     "build": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py check --settings=config.settings.test",
-    "e2e": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest canonos/health/tests/test_health_api.py"
+    "e2e": "python3 scripts/ensure_venv.py && DATABASE_URL=${DATABASE_URL:-postgresql://canonos:canonos@localhost:15432/canonos} REDIS_URL=${REDIS_URL:-redis://localhost:16379/0} CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://localhost:16379/0} CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://localhost:16379/1} .venv/bin/python -m pytest --ds=config.settings.local canonos/health/tests/test_health_api.py canonos/health/tests/test_infrastructure_e2e.py"
   }
 }

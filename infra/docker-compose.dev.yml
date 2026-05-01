@@ -1,0 +1,39 @@
+name: canonos-dev
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: canonos-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-canonos}
+      POSTGRES_USER: ${POSTGRES_USER:-canonos}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-canonos}
+    ports:
+      - "${POSTGRES_HOST_PORT:-15432}:5432"
+    volumes:
+      - canonos_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: canonos-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_HOST_PORT:-16379}:6379"
+    volumes:
+      - canonos_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  canonos_postgres_data:
+  canonos_redis_data:

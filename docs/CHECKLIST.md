@@ -2827,15 +2827,15 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M21-INF-001 Create Dockerfile for backend.
 - [ ] CP-M21-INF-002 Create Dockerfile for frontend.
 - [ ] CP-M21-INF-003 Create Dockerfile or command for Celery worker.
-- [ ] CP-M21-INF-004 Create local Docker Compose file.
-- [ ] CP-M21-INF-005 Add PostgreSQL service to Compose.
-- [ ] CP-M21-INF-006 Add Redis service to Compose.
+- [x] CP-M21-INF-004 Create local Docker Compose file.
+- [x] CP-M21-INF-005 Add PostgreSQL service to Compose.
+- [x] CP-M21-INF-006 Add Redis service to Compose.
 - [ ] CP-M21-INF-007 Add backend service to Compose.
 - [ ] CP-M21-INF-008 Add frontend service to Compose.
 - [ ] CP-M21-INF-009 Add Celery worker service to Compose.
 - [ ] CP-M21-INF-010 Add Celery beat service if scheduled tasks are used.
 - [ ] CP-M21-INF-011 Add RabbitMQ service only if required.
-- [ ] CP-M21-INF-012 Add environment variable documentation for Docker.
+- [x] CP-M21-INF-012 Add environment variable documentation for Docker.
 - [ ] CP-M21-INF-013 Add production deployment checklist.
 - [ ] CP-M21-INF-014 Add database backup instructions.
 - [ ] CP-M21-INF-015 Add static/media file handling instructions.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M01-QA-006.
-**Last completed task name:** Confirm root README has enough setup instructions for another agent.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation is complete.
+**Last completed task ID:** CP-M21-INF-006 and CP-M21-INF-012 (completed early as local dependency infrastructure).
+**Last completed task name:** Add PostgreSQL/Redis local Docker Compose services and Docker env documentation.
+**Last completed milestone:** MVP-M01 remains complete; selected CP-M21 local dependency infrastructure tasks are complete early.
 **Current phase:** MVP Phase.
 **Current milestone:** MVP-M02 — Shared Design System And Global Layout.
 **Next recommended task:** MVP-M02-SH-001 Add low-fidelity wireframe document references to `/docs/frontend.md`.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M01 QA was completed. Backend startup, frontend startup, PostgreSQL readiness, Redis ping, and the health endpoint were verified locally. The README now includes app-specific commands and foundation smoke checks so another agent can reproduce the setup. QA evidence was also recorded in `docs/testing.md`.
+Local dependency infrastructure was added because the project should use Dockerized PostgreSQL and Redis for reproducible integration/e2e checks while keeping Django and Vite local. `infra/docker-compose.dev.yml` starts PostgreSQL 15 on host port `15432` and Redis 7 on host port `16379`. Migrations and `corepack pnpm e2e` were run successfully against those Docker services. README, deployment, and testing docs now explain the Docker-backed workflow.
 
 ## 9.3 Important Notes For The Next Agent
 
