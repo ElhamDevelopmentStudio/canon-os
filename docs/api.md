@@ -80,3 +80,15 @@ Media item scores are available at `GET /api/media-items/{mediaId}/scores/` and 
 The bulk payload is `{ "scores": [{ "dimensionId": "uuid", "score": 8.5, "note": "Optional reason" }] }`.
 Use `score: null` to clear an existing score for that dimension.
 Media detail responses also include a `scores` array so the detail page can render the scorecard from one item fetch.
+
+## Dashboard API Contract
+
+`GET /api/dashboard/summary/` returns the authenticated user's dashboard overview.
+The response includes:
+
+- `counts`: total, completed, planned, and dropped media counts.
+- `mediaTypeBreakdown`: count by media type.
+- `recentActivity`: five most recently updated media items.
+- `highestRated`: five highest-rated recent items with `personalRating`.
+- `topTasteSignals`: highest average taste dimension scores with dimension metadata and score counts.
+- `generatedAt`: server timestamp for the summary.

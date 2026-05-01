@@ -30,6 +30,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", ApiRootView.as_view(), name="api-root"),
     path("api/auth/", include("canonos.accounts.urls")),
+    path("api/", include("canonos.dashboard.urls")),
     path("api/health/", include("canonos.health.urls")),
     path("api/", include("canonos.media.urls")),
     path("api/", include("canonos.taste.urls")),

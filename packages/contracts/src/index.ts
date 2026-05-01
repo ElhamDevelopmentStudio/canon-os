@@ -1,4 +1,11 @@
 export type {
+  DashboardCounts,
+  DashboardMediaItem,
+  DashboardMediaTypeBreakdown,
+  DashboardSummary,
+  DashboardTopTasteSignal,
+} from "./dashboard";
+export type {
   AuthResponse,
   AuthSession,
   AuthUser,

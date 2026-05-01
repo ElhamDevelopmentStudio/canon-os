@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "canonos.accounts",
+    "canonos.dashboard",
     "canonos.health",
     "canonos.media",
     "canonos.taste",

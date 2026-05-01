@@ -718,63 +718,63 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M06-SH-001 Define `DashboardSummary` type.
-- [ ] MVP-M06-SH-002 Define dashboard count fields.
-- [ ] MVP-M06-SH-003 Define recent activity item type.
-- [ ] MVP-M06-SH-004 Define top taste signal type.
-- [ ] MVP-M06-SH-005 Document dashboard API contract.
+- [x] MVP-M06-SH-001 Define `DashboardSummary` type.
+- [x] MVP-M06-SH-002 Define dashboard count fields.
+- [x] MVP-M06-SH-003 Define recent activity item type.
+- [x] MVP-M06-SH-004 Define top taste signal type.
+- [x] MVP-M06-SH-005 Document dashboard API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M06-BE-001 Create dashboard app or dashboard service module.
-- [ ] MVP-M06-BE-002 Add total media count query.
-- [ ] MVP-M06-BE-003 Add completed media count query.
-- [ ] MVP-M06-BE-004 Add planned media count query.
-- [ ] MVP-M06-BE-005 Add dropped media count query.
-- [ ] MVP-M06-BE-006 Add count by media type query.
-- [ ] MVP-M06-BE-007 Add recent updated media query.
-- [ ] MVP-M06-BE-008 Add highest rated recent items query.
-- [ ] MVP-M06-BE-009 Add average score by taste dimension query.
-- [ ] MVP-M06-BE-010 Add dashboard summary serializer.
-- [ ] MVP-M06-BE-011 Create dashboard summary endpoint.
-- [ ] MVP-M06-BE-012 Add test for dashboard summary endpoint.
-- [ ] MVP-M06-BE-013 Add test for empty dashboard summary.
+- [x] MVP-M06-BE-001 Create dashboard app or dashboard service module.
+- [x] MVP-M06-BE-002 Add total media count query.
+- [x] MVP-M06-BE-003 Add completed media count query.
+- [x] MVP-M06-BE-004 Add planned media count query.
+- [x] MVP-M06-BE-005 Add dropped media count query.
+- [x] MVP-M06-BE-006 Add count by media type query.
+- [x] MVP-M06-BE-007 Add recent updated media query.
+- [x] MVP-M06-BE-008 Add highest rated recent items query.
+- [x] MVP-M06-BE-009 Add average score by taste dimension query.
+- [x] MVP-M06-BE-010 Add dashboard summary serializer.
+- [x] MVP-M06-BE-011 Create dashboard summary endpoint.
+- [x] MVP-M06-BE-012 Add test for dashboard summary endpoint.
+- [x] MVP-M06-BE-013 Add test for empty dashboard summary.
 
 ### Frontend Tasks
 
-- [ ] MVP-M06-FE-001 Create dashboard API client file.
-- [ ] MVP-M06-FE-002 Create `useDashboardSummary` SWR hook.
-- [ ] MVP-M06-FE-003 Create Dashboard page skeleton.
-- [ ] MVP-M06-FE-004 Add Dashboard page title.
-- [ ] MVP-M06-FE-005 Add total library metric card.
-- [ ] MVP-M06-FE-006 Add completed count metric card.
-- [ ] MVP-M06-FE-007 Add planned count metric card.
-- [ ] MVP-M06-FE-008 Add dropped count metric card.
-- [ ] MVP-M06-FE-009 Add media type breakdown card.
-- [ ] MVP-M06-FE-010 Add recent activity card.
-- [ ] MVP-M06-FE-011 Add top taste signals card.
-- [ ] MVP-M06-FE-012 Add quick action button for Add Media.
-- [ ] MVP-M06-FE-013 Add quick action button for Evaluate Candidate.
-- [ ] MVP-M06-FE-014 Add quick action button for Tonight Mode.
-- [ ] MVP-M06-FE-015 Add loading state to Dashboard.
-- [ ] MVP-M06-FE-016 Add empty state to Dashboard.
-- [ ] MVP-M06-FE-017 Add error state to Dashboard.
+- [x] MVP-M06-FE-001 Create dashboard API client file.
+- [x] MVP-M06-FE-002 Create `useDashboardSummary` SWR hook.
+- [x] MVP-M06-FE-003 Create Dashboard page skeleton.
+- [x] MVP-M06-FE-004 Add Dashboard page title.
+- [x] MVP-M06-FE-005 Add total library metric card.
+- [x] MVP-M06-FE-006 Add completed count metric card.
+- [x] MVP-M06-FE-007 Add planned count metric card.
+- [x] MVP-M06-FE-008 Add dropped count metric card.
+- [x] MVP-M06-FE-009 Add media type breakdown card.
+- [x] MVP-M06-FE-010 Add recent activity card.
+- [x] MVP-M06-FE-011 Add top taste signals card.
+- [x] MVP-M06-FE-012 Add quick action button for Add Media.
+- [x] MVP-M06-FE-013 Add quick action button for Evaluate Candidate.
+- [x] MVP-M06-FE-014 Add quick action button for Tonight Mode.
+- [x] MVP-M06-FE-015 Add loading state to Dashboard.
+- [x] MVP-M06-FE-016 Add empty state to Dashboard.
+- [x] MVP-M06-FE-017 Add error state to Dashboard.
 
 ### Integration Tasks
 
-- [ ] MVP-M06-INT-001 Connect Dashboard page to dashboard summary endpoint.
-- [ ] MVP-M06-INT-002 Connect Add Media quick action to media modal or page.
-- [ ] MVP-M06-INT-003 Connect Evaluate Candidate quick action to Candidate page.
-- [ ] MVP-M06-INT-004 Connect Tonight Mode quick action to Tonight Mode page.
-- [ ] MVP-M06-INT-005 Confirm dashboard updates after adding media.
+- [x] MVP-M06-INT-001 Connect Dashboard page to dashboard summary endpoint.
+- [x] MVP-M06-INT-002 Connect Add Media quick action to media modal or page.
+- [x] MVP-M06-INT-003 Connect Evaluate Candidate quick action to Candidate page.
+- [x] MVP-M06-INT-004 Connect Tonight Mode quick action to Tonight Mode page.
+- [x] MVP-M06-INT-005 Confirm dashboard updates after adding media.
 
 ### QA Tasks
 
-- [ ] MVP-M06-QA-001 Confirm empty dashboard renders correctly.
-- [ ] MVP-M06-QA-002 Confirm dashboard with media renders correctly.
-- [ ] MVP-M06-QA-003 Confirm metric counts are accurate.
-- [ ] MVP-M06-QA-004 Confirm Dashboard page matches wireframe layout.
-- [ ] MVP-M06-QA-005 Create or update `docs/manual-tests/dashboard.md`.
+- [x] MVP-M06-QA-001 Confirm empty dashboard renders correctly.
+- [x] MVP-M06-QA-002 Confirm dashboard with media renders correctly.
+- [x] MVP-M06-QA-003 Confirm metric counts are accurate.
+- [x] MVP-M06-QA-004 Confirm Dashboard page matches wireframe layout.
+- [x] MVP-M06-QA-005 Create or update `docs/manual-tests/dashboard.md`.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M05-QA-006.
-**Last completed task name:** Create or update `docs/manual-tests/taste.md`.
-**Last completed milestone:** MVP-M05 — Taste Dimensions And Personal Scores.
+**Last completed task ID:** MVP-M06-QA-005.
+**Last completed task name:** Create or update `docs/manual-tests/dashboard.md`.
+**Last completed milestone:** MVP-M06 — Dashboard MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M06 — Dashboard MVP.
-**Next recommended task:** MVP-M06-SH-001 Define `DashboardSummary` type.
+**Current milestone:** MVP-M07 — Candidate Evaluator MVP.
+**Next recommended task:** MVP-M07-SH-001 Define `Candidate` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M05 taste scoring is complete. Shared contracts now define `TasteDimension`, `MediaScore`, the 0-10 score range, and the default score dimensions. Django now has owner-scoped `TasteDimension` and `MediaScore` models, migrations, admin registration, serializers, default-dimension seeding on registration, dimensions and nested media score APIs, score validation, OpenAPI coverage, and tests. The frontend now loads taste dimensions, renders the scorecard in Add/Edit Media and Media Detail, saves score notes and bulk score updates, validates invalid scores, highlights genericness/regret/memorability signals, and documents manual QA in `docs/manual-tests/taste.md`.
+MVP-M06 dashboard is complete. Shared contracts now define `DashboardSummary`, counts, recent media items, media type breakdowns, and top taste signals. Django now has a dashboard service/API endpoint that summarizes owner-scoped media totals, completed/planned/dropped counts, media type counts, recent activity, highest-rated items, and average taste dimension signals. The frontend Dashboard is connected to that endpoint with metric cards, breakdown cards, recent/highest-rated lists, top taste signals, Add Media quick action, Candidate/Tonight quick links, and loading/empty/error states. Manual QA lives in `docs/manual-tests/dashboard.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

@@ -8,9 +8,16 @@ import { APP_ROUTES } from "@/app/routeConstants";
 import { protectedRouteChildren } from "@/app/router";
 import { useAuthStore } from "@/stores/authStore";
 
-vi.mock("@/lib/health", () => ({
-  useHealthCheck: () => ({
-    data: { status: "ok", service: "canonos-api", version: "0.1.0" },
+vi.mock("@/features/dashboard/dashboardApi", () => ({
+  useDashboardSummary: () => ({
+    data: {
+      counts: { totalMedia: 0, completedMedia: 0, plannedMedia: 0, droppedMedia: 0 },
+      mediaTypeBreakdown: [],
+      recentActivity: [],
+      highestRated: [],
+      topTasteSignals: [],
+      generatedAt: "2026-01-03T00:00:00Z",
+    },
     error: undefined,
     isLoading: false,
     mutate: vi.fn(),
@@ -44,14 +51,15 @@ describe("App", () => {
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: /primary navigation/i })).toBeInTheDocument();
     expect(screen.getByRole("main")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /choose better media/i })).toBeInTheDocument();
-    expect(screen.getByText(/canonos-api is ok/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /private media command center/i })).toBeInTheDocument();
+    expect(screen.getByText(/ready for its first media item/i)).toBeInTheDocument();
     expect(screen.getByText(/canon reader/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /log out/i })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /recheck health/i })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: /add media/i }).length).toBeGreaterThan(0);
 
     for (const item of APP_NAVIGATION) {
-      expect(screen.getByRole("link", { name: item.label })).toHaveAttribute("href", item.route);
+      const matchingLinks = screen.getAllByRole("link", { name: item.label });
+      expect(matchingLinks.some((link) => link.getAttribute("href") === item.route)).toBe(true);
     }
   });
 

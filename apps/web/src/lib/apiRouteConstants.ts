@@ -7,6 +7,7 @@ export const API_ROUTES = {
   authLogout: "/auth/logout/",
   authMe: "/auth/me/",
   authProfile: "/auth/profile/",
+  dashboardSummary: "/dashboard/summary/",
   mediaItems: "/media-items/",
   tasteDimensions: "/taste-dimensions/",
   schema: "/schema/",

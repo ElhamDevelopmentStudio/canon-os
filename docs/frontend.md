@@ -105,3 +105,9 @@ Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root
 Media Add/Edit and Media Detail now use `apps/web/src/features/media/DimensionScoreGrid.tsx` for dimensional scores.
 The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 score range, saves score notes, and highlights genericness, regret, and memorability signals.
 Score writes use `upsertMediaScores` from `apps/web/src/features/media/tasteApi.ts` after media create/update or from the detail page Save scores button.
+
+## Dashboard UI
+
+The Dashboard page uses `apps/web/src/features/dashboard/dashboardApi.ts` and `useDashboardSummary` to render library metrics, media type breakdowns, recent activity, highest-rated items, and top taste signals.
+Quick actions link to Candidate Evaluator and Tonight Mode, while Add Media opens the shared `MediaFormModal` and revalidates the dashboard summary after save.
+The page includes loading, empty, and error states for the summary endpoint.

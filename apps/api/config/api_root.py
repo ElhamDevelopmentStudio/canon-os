@@ -22,6 +22,7 @@ class ApiRootView(APIView):
                     "endpoints": {
                         "health": "/api/health/",
                         "auth": "/api/auth/",
+                        "dashboard_summary": "/api/dashboard/summary/",
                         "media_items": "/api/media-items/",
                         "taste_dimensions": "/api/taste-dimensions/",
                         "schema": "/api/schema/",
@@ -31,6 +32,11 @@ class ApiRootView(APIView):
                     "mvp_modules": [
                         {"name": "health", "status": "available", "path": "/api/health/"},
                         {"name": "auth", "status": "available", "path": "/api/auth/me/"},
+                        {
+                            "name": "dashboard",
+                            "status": "available",
+                            "path": "/api/dashboard/summary/",
+                        },
                         {"name": "library", "status": "available", "path": "/api/media-items/"},
                         {"name": "taste", "status": "available", "path": "/api/taste-dimensions/"},
                         {"name": "candidates", "status": "planned", "path": None},
@@ -52,6 +58,7 @@ class ApiRootView(APIView):
                 "endpoints": {
                     "health": "/api/health/",
                     "auth": "/api/auth/",
+                    "dashboard_summary": "/api/dashboard/summary/",
                     "media_items": "/api/media-items/",
                     "taste_dimensions": "/api/taste-dimensions/",
                     "schema": "/api/schema/",
@@ -61,6 +68,11 @@ class ApiRootView(APIView):
                 "mvp_modules": [
                     {"name": "health", "status": "available", "path": "/api/health/"},
                     {"name": "auth", "status": "available", "path": "/api/auth/me/"},
+                    {
+                        "name": "dashboard",
+                        "status": "available",
+                        "path": "/api/dashboard/summary/",
+                    },
                     {"name": "library", "status": "available", "path": "/api/media-items/"},
                     {"name": "taste", "status": "available", "path": "/api/taste-dimensions/"},
                     {"name": "candidates", "status": "planned", "path": None},
