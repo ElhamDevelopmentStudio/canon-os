@@ -12,6 +12,7 @@ export const API_ROUTES = {
   dashboardSummary: "/dashboard/summary/",
   mediaItems: "/media-items/",
   tasteDimensions: "/taste-dimensions/",
+  tasteProfile: "/taste-profile/",
   candidates: "/candidates/",
   queueItems: "/queue-items/",
   tonightMode: "/queue/tonight/",

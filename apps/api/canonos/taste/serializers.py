@@ -54,3 +54,62 @@ class MediaScoreUpsertSerializer(serializers.Serializer):
 
 class MediaScoresBulkUpsertSerializer(serializers.Serializer):
     scores = MediaScoreUpsertSerializer(many=True)
+
+
+class TasteSignalSerializer(serializers.Serializer):
+    dimensionSlug = serializers.CharField()
+    dimensionName = serializers.CharField()
+    dimensionDirection = serializers.ChoiceField(choices=TasteDimension.Direction.choices)
+    averageScore = serializers.FloatField()
+    scoreCount = serializers.IntegerField()
+    evidenceLabel = serializers.CharField()
+
+
+class NegativeTasteSignalSerializer(serializers.Serializer):
+    slug = serializers.ChoiceField(choices=["genericness", "regret_score"])
+    label = serializers.CharField()
+    warningCount = serializers.IntegerField()
+    averageScore = serializers.FloatField(allow_null=True)
+    evidenceLabel = serializers.CharField()
+
+
+class MediumPreferenceSerializer(serializers.Serializer):
+    mediaType = serializers.CharField()
+    averageRating = serializers.FloatField(allow_null=True)
+    mediaCount = serializers.IntegerField()
+    completedCount = serializers.IntegerField()
+    scoreCount = serializers.IntegerField()
+
+
+class TasteProfileEvidenceCountsSerializer(serializers.Serializer):
+    mediaCount = serializers.IntegerField()
+    scoredMediaCount = serializers.IntegerField()
+    scoreCount = serializers.IntegerField()
+    aftertasteCount = serializers.IntegerField()
+
+
+class TasteProfileInfluentialWorkSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    title = serializers.CharField()
+    mediaType = serializers.CharField()
+    personalRating = serializers.FloatField(allow_null=True)
+    stayedWithMeScore = serializers.IntegerField(allow_null=True)
+    worthTime = serializers.BooleanField(allow_null=True)
+    feltGeneric = serializers.BooleanField(allow_null=True)
+    appetiteEffect = serializers.CharField(allow_null=True)
+    updatedAt = serializers.DateTimeField()
+
+
+class TasteProfileSummarySerializer(serializers.Serializer):
+    generatedSummary = serializers.CharField()
+    isEmpty = serializers.BooleanField()
+    confidence = serializers.ChoiceField(choices=["low", "medium", "high"])
+    evidenceCounts = TasteProfileEvidenceCountsSerializer()
+    strongestDimensions = TasteSignalSerializer(many=True)
+    weakestDimensions = TasteSignalSerializer(many=True)
+    negativeSignals = NegativeTasteSignalSerializer(many=True)
+    mediumPreferences = MediumPreferenceSerializer(many=True)
+    strongestMediumPreference = MediumPreferenceSerializer(allow_null=True)
+    weakestMediumPreference = MediumPreferenceSerializer(allow_null=True)
+    recentlyInfluentialWorks = TasteProfileInfluentialWorkSerializer(many=True)
+    generatedAt = serializers.DateTimeField()

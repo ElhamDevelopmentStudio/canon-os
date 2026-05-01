@@ -66,6 +66,7 @@ Tests must:
 - Queue: create, list, edit, reorder, delete.
 - Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, and defer queue item.
 - Aftertaste Log: create a completed media item, load prompts, create aftertaste, edit aftertaste, verify latest aftertaste on Media Detail, and delete aftertaste.
+- Taste Profile: load empty profile, create scored media, add aftertaste evidence, reload profile, verify summary/red flags/influential works, and refresh.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions

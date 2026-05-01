@@ -152,3 +152,22 @@ List filter:
 The create/update payload uses `mediaItemId`, `worthTime`, `stayedWithMeScore` (`0` to `10`), `feltAlive`, `feltGeneric`, `completionReason`, `whatWorked`, `whatFailed`, `finalThoughts`, and `appetiteEffect`. Appetite effects are `more_like_this`, `less_like_this`, `only_in_mood`, and `no_change`.
 
 Media detail responses include `latestAftertaste` so the detail page can show the newest reflection without making a second request. Shared TypeScript contracts live in `packages/contracts/src/aftertaste.ts`; the frontend client and SWR hooks live in `apps/web/src/features/aftertaste/aftertasteApi.ts`.
+
+## Taste Profile API Contract
+
+`GET /api/taste-profile/` returns the authenticated user's current Taste Profile summary. The endpoint is deterministic and recalculates from owned library items, media scores, and aftertaste entries on each request.
+
+The response includes:
+
+- `generatedSummary`: a cautious natural-language profile summary.
+- `isEmpty`: true when no scores or aftertaste evidence exists yet.
+- `confidence`: `low`, `medium`, or `high` based on score and aftertaste evidence volume.
+- `evidenceCounts`: media, scored media, score, and aftertaste counts.
+- `strongestDimensions`: highest average positive taste dimensions.
+- `weakestDimensions`: lowest positive dimensions plus high-scoring negative dimensions.
+- `negativeSignals`: genericness and regret warning counts, including both scorecard and aftertaste signals.
+- `mediumPreferences`: average rating, completed count, and score count by media type.
+- `strongestMediumPreference` and `weakestMediumPreference`: rated medium tendencies when enough rating data exists.
+- `recentlyInfluentialWorks`: recent aftertaste entries and high-rated works that support the current profile.
+
+The endpoint is user-scoped and must not include another user's media, scores, or aftertaste entries. Shared TypeScript contracts live in `packages/contracts/src/taste.ts`; the frontend SWR hook lives in `apps/web/src/features/taste-profile/tasteProfileApi.ts`.

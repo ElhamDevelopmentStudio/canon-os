@@ -1180,61 +1180,61 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M11-SH-001 Define `TasteProfileSummary` type.
-- [ ] MVP-M11-SH-002 Define `TasteSignal` type.
-- [ ] MVP-M11-SH-003 Define `NegativeTasteSignal` type.
-- [ ] MVP-M11-SH-004 Define `MediumPreference` type.
-- [ ] MVP-M11-SH-005 Document taste profile API contract.
+- [x] MVP-M11-SH-001 Define `TasteProfileSummary` type.
+- [x] MVP-M11-SH-002 Define `TasteSignal` type.
+- [x] MVP-M11-SH-003 Define `NegativeTasteSignal` type.
+- [x] MVP-M11-SH-004 Define `MediumPreference` type.
+- [x] MVP-M11-SH-005 Document taste profile API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M11-BE-001 Create taste profile service module.
-- [ ] MVP-M11-BE-002 Compute average rating by media type.
-- [ ] MVP-M11-BE-003 Compute average taste dimension score.
-- [ ] MVP-M11-BE-004 Compute high-value dimensions.
-- [ ] MVP-M11-BE-005 Compute low-value dimensions.
-- [ ] MVP-M11-BE-006 Compute high genericness warning count.
-- [ ] MVP-M11-BE-007 Compute high regret warning count.
-- [ ] MVP-M11-BE-008 Compute strongest medium preference.
-- [ ] MVP-M11-BE-009 Compute weakest medium preference.
-- [ ] MVP-M11-BE-010 Generate simple natural-language taste summary.
-- [ ] MVP-M11-BE-011 Create taste profile endpoint.
-- [ ] MVP-M11-BE-012 Add test for empty taste profile.
-- [ ] MVP-M11-BE-013 Add test for taste profile with scored media.
-- [ ] MVP-M11-BE-014 Add test for high genericness detection.
+- [x] MVP-M11-BE-001 Create taste profile service module.
+- [x] MVP-M11-BE-002 Compute average rating by media type.
+- [x] MVP-M11-BE-003 Compute average taste dimension score.
+- [x] MVP-M11-BE-004 Compute high-value dimensions.
+- [x] MVP-M11-BE-005 Compute low-value dimensions.
+- [x] MVP-M11-BE-006 Compute high genericness warning count.
+- [x] MVP-M11-BE-007 Compute high regret warning count.
+- [x] MVP-M11-BE-008 Compute strongest medium preference.
+- [x] MVP-M11-BE-009 Compute weakest medium preference.
+- [x] MVP-M11-BE-010 Generate simple natural-language taste summary.
+- [x] MVP-M11-BE-011 Create taste profile endpoint.
+- [x] MVP-M11-BE-012 Add test for empty taste profile.
+- [x] MVP-M11-BE-013 Add test for taste profile with scored media.
+- [x] MVP-M11-BE-014 Add test for high genericness detection.
 
 ### Frontend Tasks
 
-- [ ] MVP-M11-FE-001 Create taste profile API client file.
-- [ ] MVP-M11-FE-002 Create `useTasteProfile` SWR hook.
-- [ ] MVP-M11-FE-003 Create Taste Profile page skeleton.
-- [ ] MVP-M11-FE-004 Add Taste Profile page title.
-- [ ] MVP-M11-FE-005 Add generated summary card.
-- [ ] MVP-M11-FE-006 Add strongest dimensions card.
-- [ ] MVP-M11-FE-007 Add weakest dimensions card.
-- [ ] MVP-M11-FE-008 Add medium preference card.
-- [ ] MVP-M11-FE-009 Add genericness warning card.
-- [ ] MVP-M11-FE-010 Add regret warning card.
-- [ ] MVP-M11-FE-011 Add recently influential works card.
-- [ ] MVP-M11-FE-012 Add Refresh Profile button.
-- [ ] MVP-M11-FE-013 Add loading state to Taste Profile page.
-- [ ] MVP-M11-FE-014 Add empty state to Taste Profile page.
-- [ ] MVP-M11-FE-015 Add error state to Taste Profile page.
+- [x] MVP-M11-FE-001 Create taste profile API client file.
+- [x] MVP-M11-FE-002 Create `useTasteProfile` SWR hook.
+- [x] MVP-M11-FE-003 Create Taste Profile page skeleton.
+- [x] MVP-M11-FE-004 Add Taste Profile page title.
+- [x] MVP-M11-FE-005 Add generated summary card.
+- [x] MVP-M11-FE-006 Add strongest dimensions card.
+- [x] MVP-M11-FE-007 Add weakest dimensions card.
+- [x] MVP-M11-FE-008 Add medium preference card.
+- [x] MVP-M11-FE-009 Add genericness warning card.
+- [x] MVP-M11-FE-010 Add regret warning card.
+- [x] MVP-M11-FE-011 Add recently influential works card.
+- [x] MVP-M11-FE-012 Add Refresh Profile button.
+- [x] MVP-M11-FE-013 Add loading state to Taste Profile page.
+- [x] MVP-M11-FE-014 Add empty state to Taste Profile page.
+- [x] MVP-M11-FE-015 Add error state to Taste Profile page.
 
 ### Integration Tasks
 
-- [ ] MVP-M11-INT-001 Connect Taste Profile page to endpoint.
-- [ ] MVP-M11-INT-002 Connect Refresh Profile button to revalidate SWR.
-- [ ] MVP-M11-INT-003 Confirm Taste Profile changes after scoring media.
-- [ ] MVP-M11-INT-004 Confirm Taste Profile changes after aftertaste entries.
+- [x] MVP-M11-INT-001 Connect Taste Profile page to endpoint.
+- [x] MVP-M11-INT-002 Connect Refresh Profile button to revalidate SWR.
+- [x] MVP-M11-INT-003 Confirm Taste Profile changes after scoring media.
+- [x] MVP-M11-INT-004 Confirm Taste Profile changes after aftertaste entries.
 
 ### QA Tasks
 
-- [ ] MVP-M11-QA-001 Confirm empty profile shows helpful onboarding.
-- [ ] MVP-M11-QA-002 Confirm profile with data shows meaningful summary.
-- [ ] MVP-M11-QA-003 Confirm Refresh Profile button works.
-- [ ] MVP-M11-QA-004 Confirm Taste Profile page matches wireframe.
-- [ ] MVP-M11-QA-005 Create or update `docs/manual-tests/taste.md`.
+- [x] MVP-M11-QA-001 Confirm empty profile shows helpful onboarding.
+- [x] MVP-M11-QA-002 Confirm profile with data shows meaningful summary.
+- [x] MVP-M11-QA-003 Confirm Refresh Profile button works.
+- [x] MVP-M11-QA-004 Confirm Taste Profile page matches wireframe.
+- [x] MVP-M11-QA-005 Create or update `docs/manual-tests/taste.md`.
 
 ---
 
@@ -2992,7 +2992,7 @@ The MVP is done only when:
 - [x] A user can evaluate a candidate.
 - [x] A user can add candidates to queue.
 - [x] A user can generate a Tonight Mode recommendation.
-- [ ] A user can view a basic Taste Profile.
+- [x] A user can view a basic Taste Profile.
 - [ ] A user can view a useful Dashboard.
 - [ ] A user can update basic Settings.
 - [ ] A user can import a CSV or JSON media history with validation preview.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M10-QA-006.
-**Last completed task name:** Create or update `docs/manual-tests/aftertaste-log.md`.
-**Last completed milestone:** MVP-M10 — Aftertaste Log MVP.
+**Last completed task ID:** MVP-M11-QA-005.
+**Last completed task name:** Create or update `docs/manual-tests/taste.md`.
+**Last completed milestone:** MVP-M11 — Taste Profile MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M11 — Taste Profile MVP.
-**Next recommended task:** MVP-M11-SH-001 Define `TasteProfileSummary` type.
+**Current milestone:** MVP-M12 — Settings MVP.
+**Next recommended task:** MVP-M12-SH-001 Define `UserSettings` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M10 Aftertaste Log is complete. Shared contracts now define aftertaste entries, create/update payloads, appetite effects, prompts, and media-detail `latestAftertaste`. Django exposes user-owned `GET/POST/PATCH/DELETE /api/aftertaste/`, `GET /api/aftertaste/prompts/`, persists `AftertasteEntry`, registers admin support, protects media ownership, and includes the latest aftertaste entry on media detail responses. The frontend `/aftertaste-log` page is connected to the real API with loading, empty, error, create, edit, delete, prompt, and success states, and Media Detail now surfaces the latest reflection. Browser e2e covers create/edit/media-detail/delete, and manual QA lives in `docs/manual-tests/aftertaste-log.md`.
+MVP-M11 Taste Profile is complete. Shared contracts now define `TasteProfileSummary`, positive/negative taste signals, medium preferences, evidence counts, confidence, and influential works. Django exposes `GET /api/taste-profile/`, recalculates from owned media, scorecards, and aftertaste entries, computes high/low dimensions, genericness/regret warnings, medium preferences, confidence, and a cautious generated summary. The frontend `/taste-profile` page is connected to the real API with loading, empty, error, refresh, metric, summary, signal, red-flag, medium, and influential-work states. Browser e2e covers empty profile, scored media, aftertaste-driven changes, and refresh; manual QA lives in `docs/manual-tests/taste.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

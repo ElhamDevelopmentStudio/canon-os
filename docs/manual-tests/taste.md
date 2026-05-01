@@ -1,6 +1,6 @@
-# Manual Test: Taste Scores
+# Manual Test: Taste Scores and Taste Profile
 
-## Happy path
+## Taste scoring happy path
 
 1. Sign in and open Library.
    - Expected: The Library page loads without an error.
@@ -15,15 +15,32 @@
 6. Change one score and select Save scores.
    - Expected: The updated score remains visible after refresh.
 
+## Taste Profile happy path
+
+1. Create at least one completed media item with a personal rating and several taste scores.
+   - Expected: The item appears in Library with its scorecard saved.
+2. Add an Aftertaste Log entry for that media item.
+   - Expected: The entry appears in Aftertaste Log and on the media detail page.
+3. Open **Taste Profile** from the sidebar.
+   - Expected: The page shows metric cards, generated summary, strongest dimensions, weakest dimensions, medium preference, red flags, and recently influential works.
+4. Select **Refresh Profile**.
+   - Expected: The profile request runs again and the visible data remains consistent.
+
 ## Error path
 
 1. Open Add Media or a media detail scorecard.
 2. Enter `10.5` in any score field.
    - Expected: The page shows a validation message and does not save the invalid score.
 
-## Edge case
+## Empty profile edge case
+
+1. Register a new account.
+2. Open **Taste Profile** before adding scores or aftertaste entries.
+   - Expected: The page shows a helpful empty state asking for scored media and reflections.
+
+## Score removal edge case
 
 1. Clear a previously saved score and save the scorecard.
    - Expected: The score is removed from that media item while other scores remain unchanged.
-2. Register a new account and open Add Media.
-   - Expected: The default score dimensions are available for the new user.
+2. Reopen **Taste Profile**.
+   - Expected: The profile recalculates from the remaining saved scores and aftertaste entries.

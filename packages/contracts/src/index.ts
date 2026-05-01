@@ -66,6 +66,13 @@ export type {
   MediaScoreUpsert,
   TasteDimension,
   TasteDimensionDirection,
+  TasteProfileConfidence,
+  TasteProfileEvidenceCounts,
+  TasteProfileInfluentialWork,
+  TasteProfileSummary,
+  TasteSignal,
+  NegativeTasteSignal,
+  MediumPreference,
 } from "./taste";
 export {
   DEFAULT_TASTE_DIMENSIONS,

@@ -121,3 +121,65 @@ export type MediaScoresBulkUpsertRequest = {
 export type MediaScoresResponse = {
   results: MediaScore[];
 };
+
+
+export type TasteProfileConfidence = "low" | "medium" | "high";
+
+export type TasteSignal = {
+  dimensionSlug: string;
+  dimensionName: string;
+  dimensionDirection: TasteDimensionDirection;
+  averageScore: number;
+  scoreCount: number;
+  evidenceLabel: string;
+};
+
+export type NegativeTasteSignal = {
+  slug: "genericness" | "regret_score";
+  label: string;
+  warningCount: number;
+  averageScore: number | null;
+  evidenceLabel: string;
+};
+
+export type MediumPreference = {
+  mediaType: import("./media").MediaType;
+  averageRating: number | null;
+  mediaCount: number;
+  completedCount: number;
+  scoreCount: number;
+};
+
+export type TasteProfileEvidenceCounts = {
+  mediaCount: number;
+  scoredMediaCount: number;
+  scoreCount: number;
+  aftertasteCount: number;
+};
+
+export type TasteProfileInfluentialWork = {
+  id: string;
+  title: string;
+  mediaType: import("./media").MediaType;
+  personalRating: number | null;
+  stayedWithMeScore: number | null;
+  worthTime: boolean | null;
+  feltGeneric: boolean | null;
+  appetiteEffect: import("./aftertaste").AftertasteAppetiteEffect | null;
+  updatedAt: string;
+};
+
+export type TasteProfileSummary = {
+  generatedSummary: string;
+  isEmpty: boolean;
+  confidence: TasteProfileConfidence;
+  evidenceCounts: TasteProfileEvidenceCounts;
+  strongestDimensions: TasteSignal[];
+  weakestDimensions: TasteSignal[];
+  negativeSignals: NegativeTasteSignal[];
+  mediumPreferences: MediumPreference[];
+  strongestMediumPreference: MediumPreference | null;
+  weakestMediumPreference: MediumPreference | null;
+  recentlyInfluentialWorks: TasteProfileInfluentialWork[];
+  generatedAt: string;
+};

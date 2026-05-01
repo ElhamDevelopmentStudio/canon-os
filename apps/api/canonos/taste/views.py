@@ -15,8 +15,9 @@ from .serializers import (
     MediaScoresBulkUpsertSerializer,
     MediaScoreSerializer,
     TasteDimensionSerializer,
+    TasteProfileSummarySerializer,
 )
-from .services import seed_default_taste_dimensions
+from .services import build_taste_profile_summary, seed_default_taste_dimensions
 
 
 class TasteDimensionListView(APIView):
@@ -73,3 +74,14 @@ class MediaScoresView(APIView):
             {"results": MediaScoreSerializer(scores, many=True).data},
             status=status.HTTP_200_OK,
         )
+
+
+class TasteProfileSummaryView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        responses=TasteProfileSummarySerializer,
+        summary="Get current user's Taste Profile summary",
+    )
+    def get(self, request):  # noqa: ANN001, ANN201
+        return Response(build_taste_profile_summary(request.user))
