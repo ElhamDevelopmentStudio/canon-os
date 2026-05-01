@@ -10,7 +10,21 @@ corepack pnpm build
 corepack pnpm e2e
 ```
 
-As modules are initialized, their package-level scripts must be wired into the root commands. User-facing features must also update the matching manual test document under `docs/manual-tests/`.
+User-facing features must also update the matching manual test document under `docs/manual-tests/`.
+
+## MVP Test Coverage Summary
+
+| Area | Automated coverage | Manual docs |
+| --- | --- | --- |
+| Auth/session | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/auth.md` |
+| Dashboard | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/dashboard.md` |
+| Media Library and detail | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/media-library.md` |
+| Taste scoring/profile | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/taste-profile.md` |
+| Candidate Evaluator | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/candidate-evaluator.md` |
+| Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight-mode.md` |
+| Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
+| Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
+| API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
 
 ## Browser-to-Backend E2E Contract
 
@@ -68,6 +82,7 @@ Tests must:
 - Aftertaste Log: create a completed media item, load prompts, create aftertaste, edit aftertaste, verify latest aftertaste on Media Detail, and delete aftertaste.
 - Taste Profile: load empty profile, create scored media, add aftertaste evidence, reload profile, verify summary/red flags/influential works, and refresh.
 - Settings: update profile/display/recommendation preferences, persist after refresh, apply theme, feed Tonight Mode defaults, and surface Candidate Evaluator settings.
+- Import/export: CSV preview/confirm, invalid-row no-write behavior, JSON export download, and media/ratings CSV export download through Settings.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions
@@ -83,6 +98,32 @@ Tests must:
 
 The browser e2e web server command runs migrations before starting Django. If ports `8000` or `5173` are already occupied, stop local dev servers first or set `PLAYWRIGHT_REUSE_SERVERS=1` only when you intentionally want to reuse already-running API/web processes.
 
+## API Documentation Checks
+
+Validate OpenAPI generation with:
+
+```bash
+cd apps/api
+.venv/bin/python manage.py spectacular --file /tmp/canonos-schema.yml --settings=config.settings.test --validate
+```
+
+Swagger and Scalar should load locally at:
+
+- `http://localhost:8000/api/docs/swagger/`
+- `http://localhost:8000/api/docs/scalar/`
+
+## CI Gate
+
+`.github/workflows/ci.yml` runs the same required gates on pull requests and pushes to `main`/`master`:
+
+1. `corepack pnpm lint`
+2. `corepack pnpm typecheck`
+3. `corepack pnpm test`
+4. `corepack pnpm build`
+5. `corepack pnpm e2e`
+
+CI starts PostgreSQL 15 and Redis 7 services before verification.
+
 ## MVP-M01 QA Evidence
 
 Foundation QA checks verified during MVP-M01:
@@ -92,5 +133,3 @@ Foundation QA checks verified during MVP-M01:
 - PostgreSQL: `pg_isready -h 127.0.0.1 -p 5432` reported accepting connections.
 - Redis: Python Redis client returned `PONG` for `redis://localhost:6379/0`.
 - Health endpoint: `GET /api/health/` returned `{"status":"ok","service":"canonos-api","version":"0.1.0"}`.
-
-- Import/export browser e2e verifies CSV preview/confirm, invalid-row no-write behavior, JSON export download, and media/ratings CSV export download through Settings.

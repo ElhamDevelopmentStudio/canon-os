@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from canonos.media.models import MediaItem
@@ -98,6 +99,7 @@ class CandidateSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "latestEvaluation", "createdAt", "updatedAt"]
 
+    @extend_schema_field(CandidateEvaluationSerializer(allow_null=True))
     def get_latestEvaluation(self, obj: Candidate):  # noqa: ANN201, N802
         evaluation = obj.evaluations.order_by("-created_at").first()
         return CandidateEvaluationSerializer(evaluation).data if evaluation else None

@@ -12,7 +12,11 @@ from .services import build_dashboard_summary
 class DashboardSummaryView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses=DashboardSummarySerializer, summary="Get dashboard summary")
+    @extend_schema(
+        responses=DashboardSummarySerializer,
+        summary="Get dashboard summary",
+        description="Return private dashboard metrics and current taste signals.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         serializer = DashboardSummarySerializer(build_dashboard_summary(request.user))
         return Response(serializer.data)

@@ -30,13 +30,25 @@ from .serializers import (
             OpenApiParameter("search", str, description="Search title, reason, or best mood."),
         ],
         summary="List current user's queue items",
+        description="List owner-scoped queue items with filters and search.",
     ),
-    retrieve=extend_schema(summary="Get current user's queue item"),
-    create=extend_schema(summary="Create queue item"),
-    partial_update=extend_schema(summary="Update queue item"),
-    destroy=extend_schema(summary="Delete queue item"),
+    retrieve=extend_schema(
+        summary="Get current user's queue item", description="Fetch one owner-scoped queue item."
+    ),
+    create=extend_schema(
+        summary="Create queue item",
+        description="Create a queue item directly or from a linked media item/candidate.",
+    ),
+    partial_update=extend_schema(
+        summary="Update queue item",
+        description="Patch queue title, priority, timing, reason, and linked item fields.",
+    ),
+    destroy=extend_schema(
+        summary="Delete queue item", description="Remove one owner-scoped queue item."
+    ),
 )
 class QueueItemViewSet(viewsets.ModelViewSet):
+    queryset = QueueItem.objects.none()
     serializer_class = QueueItemSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
@@ -72,6 +84,7 @@ class QueueItemViewSet(viewsets.ModelViewSet):
         request=QueueReorderSerializer,
         responses={200: QueueReorderResponseSerializer},
         summary="Reorder queue items",
+        description="Persist a user-owned queue order from an ordered list of queue item IDs.",
     )
     @action(detail=False, methods=["post"])
     def reorder(self, request):  # noqa: ANN001, ANN201
@@ -120,6 +133,7 @@ class TonightModeView(APIView):
         request=TonightModeRequestSerializer,
         responses={201: TonightModeResponseSerializer},
         summary="Generate Tonight Mode recommendations",
+        description="Generate recommendations from queue, planned media, and settings.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
         from .services import TonightContext, generate_tonight_recommendations

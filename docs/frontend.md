@@ -14,13 +14,30 @@ The web app lives in `apps/web` and uses React, Vite, TypeScript, Tailwind CSS, 
 - Navigation config: `apps/web/src/app/navigation.ts`
 - API route constants: `apps/web/src/lib/apiRouteConstants.ts`
 - API client: `apps/web/src/lib/api.ts`
-- Health API function and SWR hook: `apps/web/src/lib/health.ts`
 - Tailwind globals: `apps/web/src/styles/globals.css`
 - shadcn/ui config: `apps/web/components.json`
 
+## MVP Page List
+
+All product pages are registered in `apps/web/src/app/routeConstants.ts` and rendered through `apps/web/src/app/router.tsx`.
+
+| Route | Page | API-backed responsibilities |
+| --- | --- | --- |
+| `/` | Dashboard | Authenticated overview, dashboard summary, recent activity, quick media create. |
+| `/library` | Media Library | Create, list, filter, edit, and delete user-owned media. |
+| `/library/:mediaId` | Media Detail | Read one media item, update taste scores, show latest aftertaste. |
+| `/candidates` | Candidate Evaluator | Create/update/evaluate candidates, add candidates to library or queue. |
+| `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
+| `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
+| `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
+| `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items. |
+| `/settings` | Settings | Update profile/settings and run import/export flows. |
+| `/login` | Login | Public login form. Redirects authenticated users to `/`. |
+| `/register` | Register | Public registration form. Redirects authenticated users to `/`. |
+
 ## Low-Fidelity Wireframe References
 
-The first design-system pass is grounded in the Lo-Fi documents that already live beside the feature folders. Treat them as implementation references before creating any new screen-specific layout:
+Treat the existing Lo-Fi documents as implementation references before creating new screen-specific layout:
 
 - Shared layout and navigation: `apps/web/src/components/shell/docs/01_SHARED_LAYOUT_AND_NAVIGATION.md`
 - Shared UI component rules: `apps/web/src/components/ui/docs/02_SHARED_COMPONENTS_AND_UI_RULES.md`
@@ -28,15 +45,16 @@ The first design-system pass is grounded in the Lo-Fi documents that already liv
 - Page and route map: `apps/web/src/features/shared/03_PAGE_LIST_AND_ROUTING_MAP.md`
 - Feature-level page sketches: `apps/web/src/features/**/<number>_*.md`
 
-## Route Naming Convention
+## Shared Layout Rules
 
-- Route constants live in `apps/web/src/app/routeConstants.ts` as `APP_ROUTES`.
-- Constant keys use camelCase and describe product areas, for example `tasteProfile` and `aftertasteLog`.
-- URL paths use lowercase kebab-case, for example `/taste-profile` and `/aftertaste-log`.
-- The dashboard remains `/`.
-- New pages must be registered through the shared router and must render inside `AppShell`; no page should create its own sidebar or top header.
+- Every authenticated app page renders inside `AppShell`; do not create feature-specific sidebars or top headers.
+- Navigation items live only in `apps/web/src/app/navigation.ts` and routes live only in `APP_ROUTES`.
+- Page content should use shared layout primitives from `src/components/layout` for headers, grids, cards, panels, and responsive spacing.
+- Primary page actions belong in the page header area; secondary/destructive actions stay close to their affected record.
+- Mobile width must preserve the same feature coverage as desktop: no hidden primary action may become unreachable.
+- Use semantic landmarks and headings so Playwright and assistive technology can find pages by accessible roles.
 
-## Shared Component Naming Convention
+## Shared Component Rules
 
 - Shared React components use PascalCase file names and PascalCase exports.
 - Layout primitives live in `src/components/layout`.
@@ -45,7 +63,8 @@ The first design-system pass is grounded in the Lo-Fi documents that already liv
 - Form primitives live in `src/components/forms`.
 - Data display components live in `src/components/data-display`.
 - shadcn-compatible low-level UI primitives live in `src/components/ui`.
-- Feature-specific components should stay inside the relevant `src/features/<feature-name>` folder until reused by at least two product areas.
+- Feature-specific components stay in `src/features/<feature-name>` until reused by at least two product areas.
+- Prefer accessible roles, labels, headings, and button text over `data-testid`. Add a test id only when no semantic selector is practical.
 
 ## Frontend Feature Folder Convention
 
@@ -54,13 +73,43 @@ The first design-system pass is grounded in the Lo-Fi documents that already liv
 - Data-backed feature code should group API hooks, local components, and tests close to the feature.
 - Shared reusable code must move out to `src/components`, `src/lib`, or `src/stores` before a second feature duplicates it.
 
-## API Client Naming Convention
+## API Client Usage Pattern
 
-- Root Axios setup lives in `apps/web/src/lib/api.ts`.
-- Stable backend path constants live in `apps/web/src/lib/apiRouteConstants.ts`.
-- Feature API files should use `<feature>Api.ts`, for example `mediaApi.ts` or `authApi.ts`.
-- SWR hooks should use `use<Resource>` naming, for example `useHealthCheck` and `useMediaItems`.
-- Mutation helpers should use verb-first names, for example `createMediaItem` and `updateProfile`.
+- Root Axios setup lives in `apps/web/src/lib/api.ts` and is the only place that configures `baseURL`, `withCredentials`, CSRF header handling, and response normalization.
+- Stable backend path constants live in `apps/web/src/lib/apiRouteConstants.ts`; feature code should not hardcode `/api/...` strings.
+- Feature API files use `<feature>Api.ts`, for example `mediaApi.ts`, `candidateApi.ts`, or `settingsApi.ts`.
+- Mutation helpers use verb-first names, for example `createMediaItem`, `updateProfile`, and `deleteQueueItem`.
+- Browser e2e must call the real Vite app and shared Axios client. Do not mock frontend API modules in Playwright tests.
+
+## SWR Usage Pattern
+
+- SWR hooks use `use<Resource>` names, for example `useDashboardSummary`, `useMediaItems`, and `useTasteDimensions`.
+- Keep SWR keys stable and derived from `API_ROUTES` plus explicit filter/search parameters.
+- Mutations should revalidate the smallest affected SWR keys first; revalidate broader dashboard/profile keys only when the mutation changes aggregate data.
+- Pages must expose loading, success, empty, and error states for data-backed areas where practical.
+- Use browser e2e for the user-facing happy path and at least one practical empty or error state for every new API-backed page.
+
+## Zustand Usage Pattern
+
+- Zustand stores are for client UI/session state only. Django owns authenticated session truth through cookies.
+- Auth state lives in `apps/web/src/stores/authStore.ts` and stores the current user plus CSRF token metadata only; never seed this store in browser e2e.
+- Feature stores should stay small, serializable, and UI-focused. Server-owned data belongs in SWR/API responses, not long-lived client stores.
+- A store action that triggers a backend write should call a feature API helper and then revalidate SWR keys rather than duplicating cache state.
+
+## Form Handling Pattern
+
+- Forms should prefer accessible labels, helper text, and inline validation messages.
+- Submit buttons must show pending state and must be disabled while a write is in flight.
+- Server validation errors should remain visible near the relevant field or at the top of the form when field mapping is not possible.
+- Unsafe methods (`POST`, `PATCH`, `DELETE`) must go through the shared Axios client so browser CSRF and session cookies are exercised.
+- Create/edit modals should reset after success and preserve user input after validation failures.
+
+## Error Handling Pattern
+
+- Use shared feedback components for page-level errors, inline form errors, empty states, loading states, and confirmation dialogs.
+- API errors should be translated into user-friendly copy without hiding diagnostic detail from logs/tests.
+- Browser e2e fails on unexpected console errors and failed `/api/` responses. Explicitly allow only the expected error responses in tests.
+- Destructive actions require a confirmation affordance and should revalidate affected lists after success.
 
 ## UI Requirements
 
@@ -77,57 +126,51 @@ corepack pnpm --filter @canonos/web run lint
 corepack pnpm --filter @canonos/web run typecheck
 corepack pnpm --filter @canonos/web run test
 corepack pnpm --filter @canonos/web run build
+corepack pnpm --filter @canonos/web run e2e
 ```
 
-## Health Integration
+## API Integration
 
-Set `VITE_API_BASE_URL=http://localhost:8000/api` in the root `.env` when bypassing the Vite dev server. The Vite config loads frontend environment variables from the repository root only; when `VITE_API_BASE_URL` is omitted, the shared client uses `/api` and the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with root `VITE_API_PROXY_TARGET`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
+Set `VITE_API_BASE_URL=http://localhost:8000/api` in the root `.env` when bypassing the Vite dev server. The Vite config loads frontend environment variables from the repository root only; when `VITE_API_BASE_URL` is omitted, the shared client uses `/api` and the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with root `VITE_API_PROXY_TARGET`.
 
 Because the shared Axios client sends cookies with `withCredentials: true`, direct `localhost:5173` to `localhost:8000` requests also require backend credentialed CORS with root `DJANGO_CORS_ALLOW_CREDENTIALS=true`.
 
-## Auth Integration
+## Feature Notes
+
+### Auth Integration
 
 - Public routes: `/login` and `/register`.
 - Protected app routes render only after `ProtectedRoute` confirms `GET /api/auth/me/` returns an authenticated session.
 - `PublicRoute` redirects authenticated users away from login/register and back to the dashboard.
-- Session state lives in `apps/web/src/stores/authStore.ts` and stores the current user plus CSRF token metadata only; Django owns the actual session cookie.
 - Auth API calls live in `apps/web/src/features/auth/authApi.ts` and use the shared Axios client with credentials and CSRF header support.
 
-## Media Library UI
+### Dashboard UI
 
-- `/library` renders the data-backed Library page.
-- `/library/:mediaId` renders the Media Detail page.
-- Library data calls live in `apps/web/src/features/media/mediaApi.ts`.
+The Dashboard page uses `apps/web/src/features/dashboard/dashboardApi.ts` and `useDashboardSummary` to render library metrics, media type breakdowns, recent activity, highest-rated items, and top taste signals. Quick actions link to Candidate Evaluator and Tonight Mode, while Add Media opens the shared `MediaFormModal` and revalidates the dashboard summary after save.
+
+### Media Library UI
+
+- Library API calls live in `apps/web/src/features/media/mediaApi.ts`.
 - Shared media labels live in `apps/web/src/features/media/mediaLabels.ts`.
-- Add/Edit media uses `apps/web/src/features/media/MediaFormModal.tsx` and the shared form/feedback components.
-- The Library page must keep loading, empty, error, success, search, filter, create, edit, and delete states visible and consistent with the shared design system.
+- Add/Edit media uses `apps/web/src/features/media/MediaFormModal.tsx` and shared form/feedback components.
+- Media Detail uses `apps/web/src/features/media/DimensionScoreGrid.tsx` for dimensional scores.
 
-## Taste Scorecard UI
+### Taste Scorecard UI
 
-Media Add/Edit and Media Detail now use `apps/web/src/features/media/DimensionScoreGrid.tsx` for dimensional scores.
-The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 score range, saves score notes, and highlights genericness, regret, and memorability signals.
-Score writes use `upsertMediaScores` from `apps/web/src/features/media/tasteApi.ts` after media create/update or from the detail page Save scores button.
+The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 score range, saves score notes, and highlights genericness, regret, and memorability signals. Score writes use `upsertMediaScores` from `apps/web/src/features/media/tasteApi.ts`.
 
-## Dashboard UI
+### Candidate Evaluator UI
 
-The Dashboard page uses `apps/web/src/features/dashboard/dashboardApi.ts` and `useDashboardSummary` to render library metrics, media type breakdowns, recent activity, highest-rated items, and top taste signals.
-Quick actions link to Candidate Evaluator and Tonight Mode, while Add Media opens the shared `MediaFormModal` and revalidates the dashboard summary after save.
-The page includes loading, empty, and error states for the summary endpoint.
+Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`. The page supports save, evaluate, add-to-library, add-to-queue, skip, result explanation, history selection, loading, empty, error, and success states.
 
+### Queue And Tonight Mode UI
 
-## Candidate Evaluator UI
+Queue API calls live in `apps/web/src/features/queue/queueApi.ts`. The Queue page supports search, filters, add/edit modal, remove confirmation, move up/down reorder, loading, empty, error, and success states. Tonight Mode uses queue and settings defaults to generate deterministic recommendations and supports starting, queueing, and deferring recommendations.
 
-- `/candidates` renders the data-backed Candidate Evaluator page.
-- Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`.
-- Candidate labels live in `apps/web/src/features/candidate-evaluator/candidateLabels.ts`.
-- The page supports save, evaluate, add-to-library, skip, result explanation, history selection, loading, empty, error, and success states.
-- Add To Queue is intentionally visible but disabled until MVP-M08 creates the queue API.
+### Aftertaste And Taste Profile UI
 
+Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi.ts`. Taste Profile reads aggregate backend signals and should never recompute recommendation truth on the client.
 
-## Queue UI
+### Settings And Portability UI
 
-- `/queue` renders the data-backed Adaptive Queue page.
-- Queue API calls live in `apps/web/src/features/queue/queueApi.ts`.
-- Queue labels live in `apps/web/src/features/queue/queueLabels.ts`.
-- The page supports search, media type filter, priority filter, add/edit modal, remove confirmation, move up/down reorder, loading, empty, error, and success states.
-- Candidate Evaluator `Add To Queue` creates a queue item using the candidate and latest evaluation.
+Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. The Settings page owns profile preferences, recommendation defaults, theme preferences, import preview/confirm, JSON export, and media/ratings CSV export. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.

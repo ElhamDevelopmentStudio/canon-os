@@ -1390,53 +1390,53 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Backend Tasks
 
-- [ ] MVP-M14-BE-001 Confirm all MVP endpoints have serializers.
-- [ ] MVP-M14-BE-002 Confirm all MVP endpoints appear in OpenAPI schema.
-- [ ] MVP-M14-BE-003 Add endpoint descriptions for auth endpoints.
-- [ ] MVP-M14-BE-004 Add endpoint descriptions for media endpoints.
-- [ ] MVP-M14-BE-005 Add endpoint descriptions for scores endpoints.
-- [ ] MVP-M14-BE-006 Add endpoint descriptions for candidates endpoints.
-- [ ] MVP-M14-BE-007 Add endpoint descriptions for queue endpoints.
-- [ ] MVP-M14-BE-008 Add endpoint descriptions for Tonight Mode endpoint.
-- [ ] MVP-M14-BE-009 Add endpoint descriptions for aftertaste endpoints.
-- [ ] MVP-M14-BE-010 Add endpoint descriptions for settings endpoint.
-- [ ] MVP-M14-BE-011 Add endpoint descriptions for import/export endpoints.
-- [ ] MVP-M14-BE-012 Confirm Swagger UI loads successfully.
-- [ ] MVP-M14-BE-013 Confirm Scalar docs load successfully.
+- [x] MVP-M14-BE-001 Confirm all MVP endpoints have serializers.
+- [x] MVP-M14-BE-002 Confirm all MVP endpoints appear in OpenAPI schema.
+- [x] MVP-M14-BE-003 Add endpoint descriptions for auth endpoints.
+- [x] MVP-M14-BE-004 Add endpoint descriptions for media endpoints.
+- [x] MVP-M14-BE-005 Add endpoint descriptions for scores endpoints.
+- [x] MVP-M14-BE-006 Add endpoint descriptions for candidates endpoints.
+- [x] MVP-M14-BE-007 Add endpoint descriptions for queue endpoints.
+- [x] MVP-M14-BE-008 Add endpoint descriptions for Tonight Mode endpoint.
+- [x] MVP-M14-BE-009 Add endpoint descriptions for aftertaste endpoints.
+- [x] MVP-M14-BE-010 Add endpoint descriptions for settings endpoint.
+- [x] MVP-M14-BE-011 Add endpoint descriptions for import/export endpoints.
+- [x] MVP-M14-BE-012 Confirm Swagger UI loads successfully.
+- [x] MVP-M14-BE-013 Confirm Scalar docs load successfully.
 
 ### Frontend Tasks
 
-- [ ] MVP-M14-FE-001 Add frontend page list to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-002 Add shared layout rules to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-003 Add shared component rules to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-004 Add SWR usage pattern to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-005 Add Zustand usage pattern to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-006 Add API client usage pattern to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-007 Add form handling pattern to `/docs/frontend.md`.
-- [ ] MVP-M14-FE-008 Add error handling pattern to `/docs/frontend.md`.
+- [x] MVP-M14-FE-001 Add frontend page list to `/docs/frontend.md`.
+- [x] MVP-M14-FE-002 Add shared layout rules to `/docs/frontend.md`.
+- [x] MVP-M14-FE-003 Add shared component rules to `/docs/frontend.md`.
+- [x] MVP-M14-FE-004 Add SWR usage pattern to `/docs/frontend.md`.
+- [x] MVP-M14-FE-005 Add Zustand usage pattern to `/docs/frontend.md`.
+- [x] MVP-M14-FE-006 Add API client usage pattern to `/docs/frontend.md`.
+- [x] MVP-M14-FE-007 Add form handling pattern to `/docs/frontend.md`.
+- [x] MVP-M14-FE-008 Add error handling pattern to `/docs/frontend.md`.
 
 ### Shared Tasks
 
-- [ ] MVP-M14-SH-001 Update root README with MVP features.
-- [ ] MVP-M14-SH-002 Update root README with local setup steps.
-- [ ] MVP-M14-SH-003 Update root README with service URLs.
-- [ ] MVP-M14-SH-004 Update root README with testing commands.
-- [ ] MVP-M14-SH-005 Update root README with API docs URL.
-- [ ] MVP-M14-SH-006 Update architecture doc with MVP module diagram in text form.
-- [ ] MVP-M14-SH-007 Update backend doc with app/module list.
-- [ ] MVP-M14-SH-008 Update testing doc with MVP test coverage.
-- [ ] MVP-M14-SH-009 Update README with import/export and backup basics.
-- [ ] MVP-M14-SH-010 Add GitHub Actions CI workflow if not completed in MVP-M01.
-- [ ] MVP-M14-SH-011 Document branch protection and PR checklist requirements.
+- [x] MVP-M14-SH-001 Update root README with MVP features.
+- [x] MVP-M14-SH-002 Update root README with local setup steps.
+- [x] MVP-M14-SH-003 Update root README with service URLs.
+- [x] MVP-M14-SH-004 Update root README with testing commands.
+- [x] MVP-M14-SH-005 Update root README with API docs URL.
+- [x] MVP-M14-SH-006 Update architecture doc with MVP module diagram in text form.
+- [x] MVP-M14-SH-007 Update backend doc with app/module list.
+- [x] MVP-M14-SH-008 Update testing doc with MVP test coverage.
+- [x] MVP-M14-SH-009 Update README with import/export and backup basics.
+- [x] MVP-M14-SH-010 Add GitHub Actions CI workflow if not completed in MVP-M01.
+- [x] MVP-M14-SH-011 Document branch protection and PR checklist requirements.
 
 ### QA Tasks
 
-- [ ] MVP-M14-QA-001 Have a fresh agent follow README setup steps.
-- [ ] MVP-M14-QA-002 Confirm no hidden setup knowledge is required.
-- [ ] MVP-M14-QA-003 Confirm API docs are reachable from local environment.
-- [ ] MVP-M14-QA-004 Confirm frontend and backend docs agree on routes.
-- [ ] MVP-M14-QA-005 Confirm CI runs lint, typecheck, tests, build, and E2E.
-- [ ] MVP-M14-QA-006 Confirm branch protection requirements are documented for repository admins.
+- [x] MVP-M14-QA-001 Have a fresh agent follow README setup steps.
+- [x] MVP-M14-QA-002 Confirm no hidden setup knowledge is required.
+- [x] MVP-M14-QA-003 Confirm API docs are reachable from local environment.
+- [x] MVP-M14-QA-004 Confirm frontend and backend docs agree on routes.
+- [x] MVP-M14-QA-005 Confirm CI runs lint, typecheck, tests, build, and E2E.
+- [x] MVP-M14-QA-006 Confirm branch protection requirements are documented for repository admins.
 
 ---
 
@@ -3043,8 +3043,8 @@ This section must always be updated at the end of each coding session. It exists
 **Last completed task name:** Create or update `docs/manual-tests/settings-portability.md`.
 **Last completed milestone:** MVP-M13 — Import / Export MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M14 — MVP API Documentation And Developer Experience.
-**Next recommended task:** MVP-M14-BE-001 Confirm all MVP endpoints have serializers.
+**Current milestone:** MVP-M15 — MVP Testing, Bug Fixing, And Acceptance.
+**Next recommended task:** MVP-M15-BE-001 Run all backend tests.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 

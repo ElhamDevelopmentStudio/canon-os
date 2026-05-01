@@ -15,13 +15,27 @@ from .serializers import AftertasteEntrySerializer, AftertastePromptSerializer
     list=extend_schema(
         parameters=[OpenApiParameter("mediaItemId", str, description="Filter by media item.")],
         summary="List current user's aftertaste entries",
+        description="List owner-scoped reflections, optionally filtered by media item.",
     ),
-    retrieve=extend_schema(summary="Get current user's aftertaste entry"),
-    create=extend_schema(summary="Create aftertaste entry"),
-    partial_update=extend_schema(summary="Update aftertaste entry"),
-    destroy=extend_schema(summary="Delete aftertaste entry"),
+    retrieve=extend_schema(
+        summary="Get current user's aftertaste entry",
+        description="Fetch one owner-scoped aftertaste reflection.",
+    ),
+    create=extend_schema(
+        summary="Create aftertaste entry",
+        description="Create a reflection linked to one of the authenticated user's media items.",
+    ),
+    partial_update=extend_schema(
+        summary="Update aftertaste entry",
+        description="Patch reflection scores, notes, and appetite effect.",
+    ),
+    destroy=extend_schema(
+        summary="Delete aftertaste entry",
+        description="Delete one owner-scoped aftertaste reflection.",
+    ),
 )
 class AftertasteEntryViewSet(viewsets.ModelViewSet):
+    queryset = AftertasteEntry.objects.none()
     serializer_class = AftertasteEntrySerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
@@ -45,6 +59,7 @@ class AftertastePromptView(APIView):
     @extend_schema(
         responses={200: AftertastePromptSerializer(many=True)},
         summary="List default aftertaste prompts",
+        description="Return the fixed prompt set used by the Aftertaste Log UI.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(DEFAULT_AFTERTASTE_PROMPTS)

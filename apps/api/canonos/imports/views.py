@@ -26,6 +26,7 @@ class ImportPreviewView(APIView):
         request=ImportPreviewRequestSerializer,
         responses={201: ImportBatchSerializer},
         summary="Preview CSV or JSON import before committing it",
+        description="Validate an import preview without changing library data.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
         serializer = ImportPreviewRequestSerializer(data=request.data)
@@ -47,8 +48,10 @@ class ImportConfirmView(APIView):
     permission_classes = [IsAuthenticated]
 
     @extend_schema(
+        request=None,
         responses={200: ImportBatchSerializer},
         summary="Commit a previously validated import preview",
+        description="Confirm a valid import preview inside a database transaction.",
     )
     def post(self, request, batch_id):  # noqa: ANN001, ANN201
         batch = (
@@ -72,6 +75,7 @@ class ExportRequestView(APIView):
         request=ExportRequestSerializer,
         responses={201: ExportResultSerializer},
         summary="Create a JSON or CSV export for current user's data",
+        description="Create a downloadable JSON backup or media/rating CSV export.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
         serializer = ExportRequestSerializer(data=request.data)
@@ -88,7 +92,11 @@ class ExportRequestView(APIView):
 class ExportDownloadView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses={200: bytes}, summary="Download a completed export")
+    @extend_schema(
+        responses={200: bytes},
+        summary="Download a completed export",
+        description="Download an owner-scoped completed export as JSON or CSV.",
+    )
     def get(self, request, export_id):  # noqa: ANN001, ANN201
         job = ExportJob.objects.filter(owner=request.user, id=export_id).first()
         if job is None:

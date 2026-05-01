@@ -35,7 +35,12 @@ class CsrfTokenView(APIView):
     authentication_classes: list[type] = []
     permission_classes = [AllowAny]
 
-    @extend_schema(auth=[], responses=AuthSessionSerializer, summary="Get CSRF token")
+    @extend_schema(
+        auth=[],
+        responses=AuthSessionSerializer,
+        summary="Get CSRF token",
+        description="Set the csrftoken cookie and return current session state.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 
@@ -49,6 +54,7 @@ class RegisterView(APIView):
         request=RegisterSerializer,
         responses=AuthSessionSerializer,
         summary="Register user",
+        description="Create account defaults and start an authenticated session.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
         serializer = RegisterSerializer(data=request.data)
@@ -66,7 +72,11 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
 
     @extend_schema(
-        auth=[], request=LoginSerializer, responses=AuthSessionSerializer, summary="Login user"
+        auth=[],
+        request=LoginSerializer,
+        responses=AuthSessionSerializer,
+        summary="Login user",
+        description="Authenticate by email/password and set the session cookie.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
         serializer = LoginSerializer(data=request.data)
@@ -78,7 +88,12 @@ class LoginView(APIView):
 class LogoutView(APIView):
     permission_classes = [IsAuthenticatedUser]
 
-    @extend_schema(responses=AuthSessionSerializer, summary="Logout current user")
+    @extend_schema(
+        request=None,
+        responses=AuthSessionSerializer,
+        summary="Logout current user",
+        description="Clear the session and return anonymous state with a fresh CSRF token.",
+    )
     def post(self, request):  # noqa: ANN001, ANN201
         logout(request)
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
@@ -87,7 +102,12 @@ class LogoutView(APIView):
 class CurrentUserView(APIView):
     permission_classes = [AllowAny]
 
-    @extend_schema(auth=[], responses=AuthSessionSerializer, summary="Get current auth session")
+    @extend_schema(
+        auth=[],
+        responses=AuthSessionSerializer,
+        summary="Get current auth session",
+        description="Return auth state and current user/profile when logged in.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 
@@ -106,7 +126,11 @@ class CurrentUserProfileView(APIView):
         )
         return profile
 
-    @extend_schema(responses=UserProfileSerializer, summary="Get current user profile")
+    @extend_schema(
+        responses=UserProfileSerializer,
+        summary="Get current user profile",
+        description="Return the authenticated user's editable display profile and locale defaults.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(UserProfileSerializer(self.get_profile(request)).data)
 
@@ -114,6 +138,7 @@ class CurrentUserProfileView(APIView):
         request=ProfileUpdateSerializer,
         responses=UserProfileSerializer,
         summary="Update current user profile",
+        description="Patch display name, timezone, and preferred language.",
     )
     def patch(self, request):  # noqa: ANN001, ANN201
         profile = self.get_profile(request)
@@ -138,7 +163,11 @@ class CurrentUserSettingsView(APIView):
         )
         return settings
 
-    @extend_schema(responses=UserSettingsSerializer, summary="Get current user settings")
+    @extend_schema(
+        responses=UserSettingsSerializer,
+        summary="Get current user settings",
+        description="Return profile, display preference, and recommendation defaults.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(UserSettingsSerializer(self.get_settings(request)).data)
 
@@ -146,6 +175,7 @@ class CurrentUserSettingsView(APIView):
         request=UserSettingsSerializer,
         responses=UserSettingsSerializer,
         summary="Update current user settings",
+        description="Patch profile, theme, and recommendation defaults.",
     )
     def patch(self, request):  # noqa: ANN001, ANN201
         settings = self.get_settings(request)

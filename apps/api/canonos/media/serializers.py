@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from .models import MediaItem
@@ -80,12 +81,14 @@ class MediaItemSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id", "createdAt", "updatedAt"]
 
+    @extend_schema_field(serializers.ListField(child=serializers.DictField()))
     def get_scores(self, obj: MediaItem):  # noqa: ANN201
         from canonos.taste.serializers import MediaScoreSerializer
 
         scores = obj.scores.select_related("taste_dimension").all()
         return MediaScoreSerializer(scores, many=True).data
 
+    @extend_schema_field(serializers.DictField(allow_null=True))
     def get_latestAftertaste(self, obj: MediaItem):  # noqa: ANN201, N802
         from canonos.aftertaste.serializers import AftertasteEntrySerializer
 

@@ -33,13 +33,27 @@ from .services import evaluate_candidate
             ),
         ],
         summary="List current user's candidates",
+        description="List owner-scoped candidates with filters and search.",
     ),
-    retrieve=extend_schema(summary="Get current user's candidate"),
-    create=extend_schema(summary="Create candidate"),
-    partial_update=extend_schema(summary="Update candidate"),
-    destroy=extend_schema(summary="Delete candidate"),
+    retrieve=extend_schema(
+        summary="Get current user's candidate",
+        description="Fetch one owner-scoped candidate and its latest evaluation.",
+    ),
+    create=extend_schema(
+        summary="Create candidate",
+        description="Create a candidate to evaluate before committing it to the media library.",
+    ),
+    partial_update=extend_schema(
+        summary="Update candidate",
+        description="Patch candidate metadata, premise, status, and expectation fields.",
+    ),
+    destroy=extend_schema(
+        summary="Delete candidate",
+        description="Delete one owner-scoped candidate and its evaluation history.",
+    ),
 )
 class CandidateViewSet(viewsets.ModelViewSet):
+    queryset = Candidate.objects.none()
     serializer_class = CandidateSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
@@ -70,6 +84,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
         request=None,
         responses={200: CandidateEvaluateResponseSerializer},
         summary="Evaluate a saved candidate",
+        description="Run deterministic fit/risk scoring for a saved candidate.",
     )
     @action(detail=True, methods=["post"])
     def evaluate(self, request, pk=None):  # noqa: ANN001, ANN201
@@ -87,6 +102,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
         request=CandidateAddToLibrarySerializer,
         responses={201: CandidateAddToLibraryResponseSerializer},
         summary="Add candidate to the media library",
+        description="Create a media item from a saved candidate and source notes.",
     )
     @action(detail=True, methods=["post"], url_path="add-to-library")
     def add_to_library(self, request, pk=None):  # noqa: ANN001, ANN201

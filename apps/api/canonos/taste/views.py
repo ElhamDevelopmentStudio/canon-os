@@ -23,7 +23,11 @@ from .services import build_taste_profile_summary, seed_default_taste_dimensions
 class TasteDimensionListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    @extend_schema(responses=TasteDimensionSerializer(many=True), summary="List taste dimensions")
+    @extend_schema(
+        responses=TasteDimensionSerializer(many=True),
+        summary="List taste dimensions",
+        description="Ensure and return the scorecard dimensions for media scoring.",
+    )
     def get(self, request):  # noqa: ANN001, ANN201
         seed_default_taste_dimensions(request.user)
         dimensions = TasteDimension.objects.filter(owner=request.user).order_by("name")
@@ -36,7 +40,11 @@ class MediaScoresView(APIView):
     def get_media_item(self, request, media_id):  # noqa: ANN001, ANN201
         return get_object_or_404(MediaItem, id=media_id, owner=request.user)
 
-    @extend_schema(responses=MediaScoreSerializer(many=True), summary="List media scores")
+    @extend_schema(
+        responses=MediaScoreSerializer(many=True),
+        summary="List media scores",
+        description="Return all dimensional taste scores for one owner-scoped media item.",
+    )
     def get(self, request, media_id):  # noqa: ANN001, ANN201
         media_item = self.get_media_item(request, media_id)
         scores = MediaScore.objects.filter(media_item=media_item).select_related("taste_dimension")
@@ -46,6 +54,7 @@ class MediaScoresView(APIView):
         request=MediaScoresBulkUpsertSerializer,
         responses=MediaScoreSerializer(many=True),
         summary="Bulk upsert media scores",
+        description="Bulk create, update, or delete dimensional scores.",
     )
     @transaction.atomic
     def put(self, request, media_id):  # noqa: ANN001, ANN201
@@ -82,6 +91,7 @@ class TasteProfileSummaryView(APIView):
     @extend_schema(
         responses=TasteProfileSummarySerializer,
         summary="Get current user's Taste Profile summary",
+        description="Build the deterministic Taste Profile summary from evidence.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(build_taste_profile_summary(request.user))

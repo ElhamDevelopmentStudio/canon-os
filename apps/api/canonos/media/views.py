@@ -21,13 +21,27 @@ from .serializers import MediaItemSerializer
             ),
         ],
         summary="List current user's media items",
+        description="List owner-scoped media with filters and search.",
     ),
-    retrieve=extend_schema(summary="Get current user's media item"),
-    create=extend_schema(summary="Create media item"),
-    partial_update=extend_schema(summary="Update media item"),
-    destroy=extend_schema(summary="Delete media item"),
+    retrieve=extend_schema(
+        summary="Get current user's media item",
+        description="Fetch one media item with scores and latest aftertaste.",
+    ),
+    create=extend_schema(
+        summary="Create media item",
+        description="Create a media library item owned by the authenticated user.",
+    ),
+    partial_update=extend_schema(
+        summary="Update media item",
+        description="Patch editable media metadata, status, rating, notes, and consumption fields.",
+    ),
+    destroy=extend_schema(
+        summary="Delete media item",
+        description="Delete one media item and dependent score/aftertaste records.",
+    ),
 )
 class MediaItemViewSet(viewsets.ModelViewSet):
+    queryset = MediaItem.objects.none()
     serializer_class = MediaItemSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
