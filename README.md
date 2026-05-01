@@ -77,7 +77,10 @@ corepack pnpm --filter @canonos/api run bootstrap
 corepack pnpm --filter @canonos/api run test
 corepack pnpm --filter @canonos/web run dev
 corepack pnpm --filter @canonos/web run test
+corepack pnpm --filter @canonos/web run e2e  # Playwright browser-to-backend tests
 ```
+
+`corepack pnpm e2e` starts Dockerized PostgreSQL/Redis, starts Django on `localhost:8000`, starts Vite on `localhost:5173`, and runs real Playwright browser flows against the API. Keep frontend env in the root `.env`; do not create `apps/web/.env`.
 
 ### Foundation Smoke Checks
 

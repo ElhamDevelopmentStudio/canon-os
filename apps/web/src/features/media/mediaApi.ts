@@ -21,6 +21,13 @@ function mediaListKey(filters: MediaItemFilters = {}) {
   return `${API_ROUTES.mediaItems}${query ? `?${query}` : ""}`;
 }
 
+function isMediaListCacheKey(key: unknown): key is string {
+  return (
+    typeof key === "string" &&
+    (key === API_ROUTES.mediaItems || key.startsWith(`${API_ROUTES.mediaItems}?`))
+  );
+}
+
 function normalizeMediaItem(item: MediaItem): MediaItem {
   return {
     ...item,
@@ -64,5 +71,5 @@ export async function updateMediaItem(id: string, request: MediaItemUpdateReques
 export async function deleteMediaItem(id: string): Promise<void> {
   await getCsrfToken();
   await api.delete(`${API_ROUTES.mediaItems}${id}/`);
-  await globalMutate((key) => typeof key === "string" && key.startsWith(API_ROUTES.mediaItems));
+  await globalMutate(isMediaListCacheKey);
 }

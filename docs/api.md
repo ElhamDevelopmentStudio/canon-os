@@ -123,3 +123,7 @@ Queue items are user-owned and require an authenticated session. Endpoints:
 - `POST /api/queue-items/reorder/` rewrites queue order for the current user.
 
 List filters: `mediaType`, `priority`, and `search`. Queue priorities are `start_soon`, `sample_first`, and `later`. Product rules are documented in `docs/queue.md`.
+
+## E2E Coverage Rule
+
+Every new API endpoint must be covered through a real browser e2e user flow when a UI exists. If the endpoint is intentionally API-only or the UI has not shipped yet, add an API-only e2e exception to `docs/testing.md` and cover it with Playwright's request client or backend e2e tests. Serializer/API contract changes still require unit/API tests; mocked frontend tests do not replace browser-to-backend e2e coverage.

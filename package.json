@@ -8,11 +8,11 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "lint": "node --check scripts/run-workspace-command.mjs && node --check scripts/service-command.mjs && node --check scripts/dev-all.mjs && node --check scripts/stop-local-services.mjs && node --check scripts/test-root-foundation.mjs && node scripts/run-workspace-command.mjs lint",
+    "lint": "node --check scripts/run-workspace-command.mjs && node --check scripts/service-command.mjs && node --check scripts/dev-all.mjs && node --check scripts/stop-local-services.mjs && node --check scripts/test-root-foundation.mjs && node --check scripts/run-with-root-env.mjs && node scripts/run-workspace-command.mjs lint",
     "typecheck": "node scripts/run-workspace-command.mjs typecheck",
     "test": "node scripts/test-root-foundation.mjs && node scripts/run-workspace-command.mjs test",
     "build": "node scripts/run-workspace-command.mjs build",
-    "e2e": "node scripts/run-workspace-command.mjs e2e",
+    "e2e": "corepack pnpm compose:dev && node scripts/run-workspace-command.mjs e2e",
     "dev:web": "node scripts/service-command.mjs web",
     "dev:api": "node scripts/service-command.mjs api",
     "dev:worker": "node scripts/service-command.mjs worker",
