@@ -8,6 +8,7 @@ export const API_ROUTES = {
   authMe: "/auth/me/",
   authProfile: "/auth/profile/",
   mediaItems: "/media-items/",
+  tasteDimensions: "/taste-dimensions/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

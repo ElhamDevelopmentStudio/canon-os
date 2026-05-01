@@ -1,3 +1,5 @@
+import type { MediaScore } from "./taste";
+
 export const MEDIA_TYPES = ["movie", "tv_show", "anime", "novel", "audiobook"] as const;
 export type MediaType = (typeof MEDIA_TYPES)[number];
 
@@ -23,6 +25,7 @@ export type MediaItem = {
   notes: string;
   createdAt: string;
   updatedAt: string;
+  scores?: MediaScore[];
 };
 
 export type MediaItemCreateRequest = {

@@ -1,11 +1,17 @@
-import type { MediaItemListResponse } from "@canonos/contracts";
+import type { MediaItemListResponse, TasteDimension } from "@canonos/contracts";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createMediaItem, deleteMediaItem, useMediaItems } from "@/features/media/mediaApi";
+import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
 import { LibraryPage } from "@/pages/LibraryPage";
+
+vi.mock("@/features/media/tasteApi", () => ({
+  upsertMediaScores: vi.fn(),
+  useTasteDimensions: vi.fn(),
+}));
 
 vi.mock("@/features/media/mediaApi", () => ({
   createMediaItem: vi.fn(),
@@ -45,6 +51,19 @@ const sampleList: MediaItemListResponse = {
 const mockedUseMediaItems = vi.mocked(useMediaItems);
 const mockedCreateMediaItem = vi.mocked(createMediaItem);
 const mockedDeleteMediaItem = vi.mocked(deleteMediaItem);
+const mockedUseTasteDimensions = vi.mocked(useTasteDimensions);
+const mockedUpsertMediaScores = vi.mocked(upsertMediaScores);
+
+const sampleDimensions: TasteDimension[] = [
+  {
+    id: "6cc99274-279b-4cf7-8dd0-623ed19798e1",
+    name: "Story depth",
+    slug: "story_depth",
+    description: "How layered the story is.",
+    direction: "positive",
+    isDefault: true,
+  },
+];
 
 function renderLibrary() {
   render(
@@ -57,6 +76,14 @@ function renderLibrary() {
 describe("LibraryPage", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    mockedUseTasteDimensions.mockReturnValue({
+      data: sampleDimensions,
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useTasteDimensions>);
+    mockedUpsertMediaScores.mockResolvedValue({ results: [] });
     mockedUseMediaItems.mockReturnValue({
       data: sampleList,
       error: undefined,
@@ -91,10 +118,16 @@ describe("LibraryPage", () => {
     const dialog = screen.getByRole("dialog", { name: /add media/i });
     await user.type(within(dialog).getByLabelText(/^title$/i), "Mushishi");
     await user.selectOptions(within(dialog).getByLabelText(/media type/i), "anime");
+    await user.clear(within(dialog).getByLabelText(/^score$/i));
+    await user.type(within(dialog).getByLabelText(/^score$/i), "8.5");
     await user.click(within(dialog).getByRole("button", { name: /save media/i }));
 
     expect(mockedCreateMediaItem).toHaveBeenCalledWith(
       expect.objectContaining({ title: "Mushishi", mediaType: "anime" }),
+    );
+    expect(mockedUpsertMediaScores).toHaveBeenCalledWith(
+      sampleList.results[0].id,
+      { scores: [{ dimensionId: sampleDimensions[0].id, note: "", score: 8.5 }] },
     );
 
     await user.click(screen.getByRole("button", { name: /delete stalker/i }));

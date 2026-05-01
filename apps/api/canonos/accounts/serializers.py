@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
+from canonos.taste.services import seed_default_taste_dimensions
+
 from .models import UserProfile
 
 
@@ -47,6 +49,7 @@ class RegisterSerializer(serializers.Serializer):
             username=email, email=email, password=validated_data["password"]
         )
         UserProfile.objects.create(user=user, display_name=validated_data["displayName"])
+        seed_default_taste_dimensions(user)
         return user
 
 

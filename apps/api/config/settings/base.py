@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "canonos.accounts",
     "canonos.health",
     "canonos.media",
+    "canonos.taste",
 ]
 
 MIDDLEWARE = [

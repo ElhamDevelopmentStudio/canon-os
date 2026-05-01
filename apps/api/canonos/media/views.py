@@ -33,9 +33,15 @@ class MediaItemViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):  # noqa: ANN201
-        queryset = MediaItem.objects.filter(owner=self.request.user).order_by(
-            "-updated_at",
-            "title",
+        queryset = (
+            MediaItem.objects.filter(owner=self.request.user)
+            .prefetch_related(
+                "scores__taste_dimension",
+            )
+            .order_by(
+                "-updated_at",
+                "title",
+            )
         )
         media_type = self.request.query_params.get("mediaType")
         status = self.request.query_params.get("status")

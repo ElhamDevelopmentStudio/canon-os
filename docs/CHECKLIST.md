@@ -623,92 +623,92 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M05-SH-001 Define `TasteDimension` type.
-- [ ] MVP-M05-SH-002 Define `MediaScore` type.
-- [ ] MVP-M05-SH-003 Define score range as 0 to 10.
-- [ ] MVP-M05-SH-004 Define default taste dimensions list.
-- [ ] MVP-M05-SH-005 Add default dimension for story depth.
-- [ ] MVP-M05-SH-006 Add default dimension for character depth.
-- [ ] MVP-M05-SH-007 Add default dimension for atmosphere.
-- [ ] MVP-M05-SH-008 Add default dimension for originality.
-- [ ] MVP-M05-SH-009 Add default dimension for dialogue.
-- [ ] MVP-M05-SH-010 Add default dimension for emotional impact.
-- [ ] MVP-M05-SH-011 Add default dimension for intellectual impact.
-- [ ] MVP-M05-SH-012 Add default dimension for pacing.
-- [ ] MVP-M05-SH-013 Add default dimension for ending quality.
-- [ ] MVP-M05-SH-014 Add default dimension for memorability.
-- [ ] MVP-M05-SH-015 Add default dimension for rewatch/read value.
-- [ ] MVP-M05-SH-016 Add default dimension for genericness.
-- [ ] MVP-M05-SH-017 Add default dimension for regret score.
-- [ ] MVP-M05-SH-018 Document scoring definitions in `/docs/product-scoring.md`.
+- [x] MVP-M05-SH-001 Define `TasteDimension` type.
+- [x] MVP-M05-SH-002 Define `MediaScore` type.
+- [x] MVP-M05-SH-003 Define score range as 0 to 10.
+- [x] MVP-M05-SH-004 Define default taste dimensions list.
+- [x] MVP-M05-SH-005 Add default dimension for story depth.
+- [x] MVP-M05-SH-006 Add default dimension for character depth.
+- [x] MVP-M05-SH-007 Add default dimension for atmosphere.
+- [x] MVP-M05-SH-008 Add default dimension for originality.
+- [x] MVP-M05-SH-009 Add default dimension for dialogue.
+- [x] MVP-M05-SH-010 Add default dimension for emotional impact.
+- [x] MVP-M05-SH-011 Add default dimension for intellectual impact.
+- [x] MVP-M05-SH-012 Add default dimension for pacing.
+- [x] MVP-M05-SH-013 Add default dimension for ending quality.
+- [x] MVP-M05-SH-014 Add default dimension for memorability.
+- [x] MVP-M05-SH-015 Add default dimension for rewatch/read value.
+- [x] MVP-M05-SH-016 Add default dimension for genericness.
+- [x] MVP-M05-SH-017 Add default dimension for regret score.
+- [x] MVP-M05-SH-018 Document scoring definitions in `/docs/product-scoring.md`.
 
 ### Backend Tasksdjango rest 
 
-- [ ] MVP-M05-BE-001 Create TasteDimension model.
-- [ ] MVP-M05-BE-002 Add owner/user foreign key to TasteDimension.
-- [ ] MVP-M05-BE-003 Add dimension name field.
-- [ ] MVP-M05-BE-004 Add dimension slug field.
-- [ ] MVP-M05-BE-005 Add dimension description field.
-- [ ] MVP-M05-BE-006 Add dimension direction field.
-- [ ] MVP-M05-BE-007 Add is default field.
-- [ ] MVP-M05-BE-008 Create MediaScore model.
-- [ ] MVP-M05-BE-009 Add media item foreign key to MediaScore.
-- [ ] MVP-M05-BE-010 Add taste dimension foreign key to MediaScore.
-- [ ] MVP-M05-BE-011 Add score value field.
-- [ ] MVP-M05-BE-012 Add score note field.
-- [ ] MVP-M05-BE-013 Add unique constraint for media item and dimension.
-- [ ] MVP-M05-BE-014 Create migrations for scoring models.
-- [ ] MVP-M05-BE-015 Create seed function for default taste dimensions.
-- [ ] MVP-M05-BE-016 Run default dimensions creation on user registration.
-- [ ] MVP-M05-BE-017 Create TasteDimension serializer.
-- [ ] MVP-M05-BE-018 Create MediaScore serializer.
-- [ ] MVP-M05-BE-019 Create dimensions list endpoint.
-- [ ] MVP-M05-BE-020 Create media scores list endpoint.
-- [ ] MVP-M05-BE-021 Create media scores bulk upsert endpoint.
-- [ ] MVP-M05-BE-022 Add scores to media detail response.
-- [ ] MVP-M05-BE-023 Register TasteDimension in Django admin.
-- [ ] MVP-M05-BE-024 Register MediaScore in Django admin.
-- [ ] MVP-M05-BE-025 Add test for default dimension creation.
-- [ ] MVP-M05-BE-026 Add test for listing dimensions.
-- [ ] MVP-M05-BE-027 Add test for bulk score update.
-- [ ] MVP-M05-BE-028 Add test that score values cannot exceed range.
+- [x] MVP-M05-BE-001 Create TasteDimension model.
+- [x] MVP-M05-BE-002 Add owner/user foreign key to TasteDimension.
+- [x] MVP-M05-BE-003 Add dimension name field.
+- [x] MVP-M05-BE-004 Add dimension slug field.
+- [x] MVP-M05-BE-005 Add dimension description field.
+- [x] MVP-M05-BE-006 Add dimension direction field.
+- [x] MVP-M05-BE-007 Add is default field.
+- [x] MVP-M05-BE-008 Create MediaScore model.
+- [x] MVP-M05-BE-009 Add media item foreign key to MediaScore.
+- [x] MVP-M05-BE-010 Add taste dimension foreign key to MediaScore.
+- [x] MVP-M05-BE-011 Add score value field.
+- [x] MVP-M05-BE-012 Add score note field.
+- [x] MVP-M05-BE-013 Add unique constraint for media item and dimension.
+- [x] MVP-M05-BE-014 Create migrations for scoring models.
+- [x] MVP-M05-BE-015 Create seed function for default taste dimensions.
+- [x] MVP-M05-BE-016 Run default dimensions creation on user registration.
+- [x] MVP-M05-BE-017 Create TasteDimension serializer.
+- [x] MVP-M05-BE-018 Create MediaScore serializer.
+- [x] MVP-M05-BE-019 Create dimensions list endpoint.
+- [x] MVP-M05-BE-020 Create media scores list endpoint.
+- [x] MVP-M05-BE-021 Create media scores bulk upsert endpoint.
+- [x] MVP-M05-BE-022 Add scores to media detail response.
+- [x] MVP-M05-BE-023 Register TasteDimension in Django admin.
+- [x] MVP-M05-BE-024 Register MediaScore in Django admin.
+- [x] MVP-M05-BE-025 Add test for default dimension creation.
+- [x] MVP-M05-BE-026 Add test for listing dimensions.
+- [x] MVP-M05-BE-027 Add test for bulk score update.
+- [x] MVP-M05-BE-028 Add test that score values cannot exceed range.
 
 ### Frontend Tasks
 
-- [ ] MVP-M05-FE-001 Create taste API client file.
-- [ ] MVP-M05-FE-002 Create `useTasteDimensions` SWR hook.
-- [ ] MVP-M05-FE-003 Create media scores API client functions.
-- [ ] MVP-M05-FE-004 Create dimension score row component.
-- [ ] MVP-M05-FE-005 Create dimension score grid component.
-- [ ] MVP-M05-FE-006 Add dimension score grid to Add/Edit Media modal.
-- [ ] MVP-M05-FE-007 Add dimension score grid to Media Detail page.
-- [ ] MVP-M05-FE-008 Add score note input to dimension score row.
-- [ ] MVP-M05-FE-009 Add score save behavior to media modal.
-- [ ] MVP-M05-FE-010 Add score save behavior to Media Detail page.
-- [ ] MVP-M05-FE-011 Add genericness score visual indicator.
-- [ ] MVP-M05-FE-012 Add regret score visual indicator.
-- [ ] MVP-M05-FE-013 Add memorability score visual indicator.
-- [ ] MVP-M05-FE-014 Add score validation messages.
-- [ ] MVP-M05-FE-015 Add loading state for dimensions.
-- [ ] MVP-M05-FE-016 Add fallback state if dimensions are missing.
+- [x] MVP-M05-FE-001 Create taste API client file.
+- [x] MVP-M05-FE-002 Create `useTasteDimensions` SWR hook.
+- [x] MVP-M05-FE-003 Create media scores API client functions.
+- [x] MVP-M05-FE-004 Create dimension score row component.
+- [x] MVP-M05-FE-005 Create dimension score grid component.
+- [x] MVP-M05-FE-006 Add dimension score grid to Add/Edit Media modal.
+- [x] MVP-M05-FE-007 Add dimension score grid to Media Detail page.
+- [x] MVP-M05-FE-008 Add score note input to dimension score row.
+- [x] MVP-M05-FE-009 Add score save behavior to media modal.
+- [x] MVP-M05-FE-010 Add score save behavior to Media Detail page.
+- [x] MVP-M05-FE-011 Add genericness score visual indicator.
+- [x] MVP-M05-FE-012 Add regret score visual indicator.
+- [x] MVP-M05-FE-013 Add memorability score visual indicator.
+- [x] MVP-M05-FE-014 Add score validation messages.
+- [x] MVP-M05-FE-015 Add loading state for dimensions.
+- [x] MVP-M05-FE-016 Add fallback state if dimensions are missing.
 
 ### Integration Tasks
 
-- [ ] MVP-M05-INT-001 Fetch dimensions when media modal opens.
-- [ ] MVP-M05-INT-002 Submit scores after media item create.
-- [ ] MVP-M05-INT-003 Submit scores after media item update.
-- [ ] MVP-M05-INT-004 Load existing scores on detail page.
-- [ ] MVP-M05-INT-005 Revalidate media detail after score update.
-- [ ] MVP-M05-INT-006 Confirm scores appear in API response.
+- [x] MVP-M05-INT-001 Fetch dimensions when media modal opens.
+- [x] MVP-M05-INT-002 Submit scores after media item create.
+- [x] MVP-M05-INT-003 Submit scores after media item update.
+- [x] MVP-M05-INT-004 Load existing scores on detail page.
+- [x] MVP-M05-INT-005 Revalidate media detail after score update.
+- [x] MVP-M05-INT-006 Confirm scores appear in API response.
 
 ### QA Tasks
 
-- [ ] MVP-M05-QA-001 Create completed media with dimension scores.
-- [ ] MVP-M05-QA-002 Edit scores for existing media.
-- [ ] MVP-M05-QA-003 Confirm invalid scores are rejected.
-- [ ] MVP-M05-QA-004 Confirm default dimensions exist for new user.
-- [ ] MVP-M05-QA-005 Confirm scoring UI matches shared design style.
-- [ ] MVP-M05-QA-006 Create or update `docs/manual-tests/taste.md`.
+- [x] MVP-M05-QA-001 Create completed media with dimension scores.
+- [x] MVP-M05-QA-002 Edit scores for existing media.
+- [x] MVP-M05-QA-003 Confirm invalid scores are rejected.
+- [x] MVP-M05-QA-004 Confirm default dimensions exist for new user.
+- [x] MVP-M05-QA-005 Confirm scoring UI matches shared design style.
+- [x] MVP-M05-QA-006 Create or update `docs/manual-tests/taste.md`.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M04-QA-009.
-**Last completed task name:** Create or update `docs/manual-tests/media-library.md`.
-**Last completed milestone:** MVP-M04 — Core Media Library Data Model.
+**Last completed task ID:** MVP-M05-QA-006.
+**Last completed task name:** Create or update `docs/manual-tests/taste.md`.
+**Last completed milestone:** MVP-M05 — Taste Dimensions And Personal Scores.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M05 — Taste Dimensions And Personal Scores.
-**Next recommended task:** MVP-M05-SH-001 Define `TasteDimension` type.
+**Current milestone:** MVP-M06 — Dashboard MVP.
+**Next recommended task:** MVP-M06-SH-001 Define `DashboardSummary` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M04 core media library is complete. Shared media contracts now define media types, consumption statuses, media item requests, and paginated responses. Django now has an authenticated owner-scoped `MediaItem` model, migration, admin, serializer, CRUD API, filtering by media type/status, title/creator/notes search, ordering, pagination, and ownership tests. The frontend now has media API hooks/mutations, a connected Library page, add/edit media modal, delete confirmation, media detail page, filters/search, loading/empty/error states, and manual tests in `docs/manual-tests/media-library.md`.
+MVP-M05 taste scoring is complete. Shared contracts now define `TasteDimension`, `MediaScore`, the 0-10 score range, and the default score dimensions. Django now has owner-scoped `TasteDimension` and `MediaScore` models, migrations, admin registration, serializers, default-dimension seeding on registration, dimensions and nested media score APIs, score validation, OpenAPI coverage, and tests. The frontend now loads taste dimensions, renders the scorecard in Add/Edit Media and Media Detail, saves score notes and bulk score updates, validates invalid scores, highlights genericness/regret/memorability signals, and documents manual QA in `docs/manual-tests/taste.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

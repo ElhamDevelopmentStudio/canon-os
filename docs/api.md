@@ -69,3 +69,14 @@ List filters:
 - `search`: case-insensitive search over title, original title, creator, and notes.
 
 Shared TypeScript contracts live in `packages/contracts/src/media.ts`. The frontend client and SWR hooks live in `apps/web/src/features/media/mediaApi.ts`.
+
+## Taste Scoring API Contract
+
+Taste dimensions are user-owned defaults seeded at registration and available from `GET /api/taste-dimensions/`.
+Each dimension has `id`, `name`, `slug`, `description`, `direction`, and `isDefault`.
+Scores use the documented `0` to `10` range from `docs/product-scoring.md`.
+
+Media item scores are available at `GET /api/media-items/{mediaId}/scores/` and can be bulk saved with `PUT /api/media-items/{mediaId}/scores/`.
+The bulk payload is `{ "scores": [{ "dimensionId": "uuid", "score": 8.5, "note": "Optional reason" }] }`.
+Use `score: null` to clear an existing score for that dimension.
+Media detail responses also include a `scores` array so the detail page can render the scorecard from one item fetch.

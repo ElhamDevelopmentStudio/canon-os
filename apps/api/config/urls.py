@@ -32,6 +32,7 @@ urlpatterns = [
     path("api/auth/", include("canonos.accounts.urls")),
     path("api/health/", include("canonos.health.urls")),
     path("api/", include("canonos.media.urls")),
+    path("api/", include("canonos.taste.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("api/docs/scalar/", scalar_docs, name="scalar-docs"),

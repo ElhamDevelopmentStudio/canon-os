@@ -51,6 +51,7 @@ class MediaItemSerializer(serializers.ModelSerializer):
     )
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
+    scores = serializers.SerializerMethodField()
 
     class Meta:
         model = MediaItem
@@ -73,5 +74,12 @@ class MediaItemSerializer(serializers.ModelSerializer):
             "notes",
             "createdAt",
             "updatedAt",
+            "scores",
         ]
         read_only_fields = ["id", "createdAt", "updatedAt"]
+
+    def get_scores(self, obj: MediaItem):  # noqa: ANN201
+        from canonos.taste.serializers import MediaScoreSerializer
+
+        scores = obj.scores.select_related("taste_dimension").all()
+        return MediaScoreSerializer(scores, many=True).data

@@ -99,3 +99,9 @@ Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root
 - Shared media labels live in `apps/web/src/features/media/mediaLabels.ts`.
 - Add/Edit media uses `apps/web/src/features/media/MediaFormModal.tsx` and the shared form/feedback components.
 - The Library page must keep loading, empty, error, success, search, filter, create, edit, and delete states visible and consistent with the shared design system.
+
+## Taste Scorecard UI
+
+Media Add/Edit and Media Detail now use `apps/web/src/features/media/DimensionScoreGrid.tsx` for dimensional scores.
+The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 score range, saves score notes, and highlights genericness, regret, and memorability signals.
+Score writes use `upsertMediaScores` from `apps/web/src/features/media/tasteApi.ts` after media create/update or from the detail page Save scores button.
