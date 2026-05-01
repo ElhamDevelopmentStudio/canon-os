@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
-from django.views.decorators.csrf import ensure_csrf_cookie
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import AllowAny
@@ -36,7 +35,6 @@ class CsrfTokenView(APIView):
     permission_classes = [AllowAny]
 
     @extend_schema(auth=[], responses=AuthSessionSerializer, summary="Get CSRF token")
-    @ensure_csrf_cookie
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 

@@ -11,6 +11,19 @@ from canonos.accounts.models import UserProfile
 pytestmark = pytest.mark.django_db
 
 
+def test_csrf_endpoint_returns_token_cookie_and_cors_headers() -> None:
+    response = APIClient().get(reverse("auth-csrf"), HTTP_ORIGIN="http://localhost:5173")
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["authenticated"] is False
+    assert payload["user"] is None
+    assert payload["csrfToken"]
+    assert "csrftoken" in response.cookies
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+    assert response.headers["access-control-allow-credentials"] == "true"
+
+
 def test_registration_creates_user_profile_and_session() -> None:
     client = APIClient()
 
