@@ -14,6 +14,7 @@ Confirm a user can register, log in, stay signed in after refresh, and log out s
 
 1. Go to `/register`.
    - Expected: The Create account page opens with display name, email, and password fields.
+   - Expected: The session check request returns an unauthenticated session without showing an error.
 2. Enter a display name, a new email, and a password with at least 8 characters, then submit.
    - Expected: You are redirected to the dashboard and your display name appears in the header.
 3. Click `Log out` in the header.

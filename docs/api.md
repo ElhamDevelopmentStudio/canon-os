@@ -34,7 +34,7 @@ When an API response shape changes, update serializers, shared contracts, fronte
 
 ## Authentication Flow
 
-CanonOS uses Django session authentication for the browser app. The frontend does not store bearer tokens in `localStorage`; Django owns the HTTP-only session cookie and Axios sends credentials with each API request.
+CanonOS uses Django session authentication for the browser app. The frontend does not store bearer tokens in `localStorage`; Django owns the HTTP-only `sessionid` cookie and Axios sends credentials with each API request.
 
 Auth endpoints:
 
@@ -42,7 +42,7 @@ Auth endpoints:
 - `POST /api/auth/register/` creates a user, creates a `UserProfile`, logs the user in, and returns the auth session.
 - `POST /api/auth/login/` validates email/password credentials, logs the user in, and returns the auth session.
 - `POST /api/auth/logout/` clears the current session.
-- `GET /api/auth/me/` returns the authenticated user and profile for app bootstrap.
+- `GET /api/auth/me/` returns the current auth session for app bootstrap. Anonymous users receive `authenticated: false` instead of an error; authenticated users receive their user and profile.
 - `GET /api/auth/profile/` returns the current profile.
 - `PATCH /api/auth/profile/` updates `displayName`, `timezone`, and/or `preferredLanguage`.
 

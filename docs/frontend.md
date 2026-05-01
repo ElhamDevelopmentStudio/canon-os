@@ -81,12 +81,12 @@ corepack pnpm --filter @canonos/web run build
 
 ## Health Integration
 
-Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root `.env` when bypassing the Vite dev server. By default, the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with `VITE_API_PROXY_TARGET`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
+Set `VITE_API_BASE_URL=http://localhost:8000/api` in the root `.env` when bypassing the Vite dev server. The Vite config loads frontend environment variables from the repository root only; when `VITE_API_BASE_URL` is omitted, the shared client uses `/api` and the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with root `VITE_API_PROXY_TARGET`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
 
 ## Auth Integration
 
 - Public routes: `/login` and `/register`.
-- Protected app routes render only after `ProtectedRoute` confirms `GET /api/auth/me/` succeeds.
+- Protected app routes render only after `ProtectedRoute` confirms `GET /api/auth/me/` returns an authenticated session.
 - `PublicRoute` redirects authenticated users away from login/register and back to the dashboard.
 - Session state lives in `apps/web/src/stores/authStore.ts` and stores the current user plus CSRF token metadata only; Django owns the actual session cookie.
 - Auth API calls live in `apps/web/src/features/auth/authApi.ts` and use the shared Axios client with credentials and CSRF header support.

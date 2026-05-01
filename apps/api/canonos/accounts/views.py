@@ -86,9 +86,9 @@ class LogoutView(APIView):
 
 
 class CurrentUserView(APIView):
-    permission_classes = [IsAuthenticatedUser]
+    permission_classes = [AllowAny]
 
-    @extend_schema(responses=AuthSessionSerializer, summary="Get current authenticated user")
+    @extend_schema(auth=[], responses=AuthSessionSerializer, summary="Get current auth session")
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 

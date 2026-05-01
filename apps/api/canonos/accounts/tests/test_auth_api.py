@@ -54,10 +54,13 @@ def test_login_returns_current_user_session() -> None:
     assert payload["user"]["profile"]["timezone"] == "UTC"
 
 
-def test_current_user_endpoint_requires_authentication_and_returns_profile() -> None:
+def test_current_user_endpoint_returns_session_state_and_profile() -> None:
     client = APIClient()
     anonymous_response = client.get(reverse("auth-me"))
-    assert anonymous_response.status_code == status.HTTP_403_FORBIDDEN
+    assert anonymous_response.status_code == status.HTTP_200_OK
+    anonymous_payload = anonymous_response.json()
+    assert anonymous_payload["authenticated"] is False
+    assert anonymous_payload["user"] is None
 
     user = User.objects.create_user(
         username="reader@example.com", email="reader@example.com", password="strong-password"
