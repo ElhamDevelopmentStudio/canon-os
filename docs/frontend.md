@@ -10,7 +10,7 @@ The web app lives in `apps/web` and uses React, Vite, TypeScript, Tailwind CSS, 
 - Layout shell: `apps/web/src/app/layouts/AppLayout.tsx`
 - Temporary home page: `apps/web/src/pages/HomePage.tsx`
 - API client: `apps/web/src/lib/api.ts`
-- Health hook: `apps/web/src/lib/health.ts`
+- Health API function and SWR hook: `apps/web/src/lib/health.ts`
 - Tailwind globals: `apps/web/src/styles/globals.css`
 - shadcn/ui config: `apps/web/components.json`
 
@@ -29,3 +29,7 @@ corepack pnpm --filter @canonos/web run typecheck
 corepack pnpm --filter @canonos/web run test
 corepack pnpm --filter @canonos/web run build
 ```
+
+## Health Integration
+
+Set `VITE_API_BASE_URL=http://localhost:8000/api` in `apps/web/.env` or the root `.env`. The temporary home page calls `GET /health/` through the shared Axios client and displays loading, success, and error states.

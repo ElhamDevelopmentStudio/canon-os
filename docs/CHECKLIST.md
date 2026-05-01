@@ -297,12 +297,12 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Integration Tasks
 
-- [ ] MVP-M01-INT-001 Create frontend Axios instance.
-- [ ] MVP-M01-INT-002 Read API base URL from environment variable.
-- [ ] MVP-M01-INT-003 Create frontend health check API function.
-- [ ] MVP-M01-INT-004 Add temporary health status display to home page.
-- [ ] MVP-M01-INT-005 Confirm frontend can call backend health endpoint locally.
-- [ ] MVP-M01-INT-006 Add CORS fix if frontend cannot reach backend.
+- [x] MVP-M01-INT-001 Create frontend Axios instance.
+- [x] MVP-M01-INT-002 Read API base URL from environment variable.
+- [x] MVP-M01-INT-003 Create frontend health check API function.
+- [x] MVP-M01-INT-004 Add temporary health status display to home page.
+- [x] MVP-M01-INT-005 Confirm frontend can call backend health endpoint locally.
+- [x] MVP-M01-INT-006 Add CORS fix if frontend cannot reach backend.
 
 ### QA Tasks
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M01-FE-024.
-**Last completed task name:** Confirm Vite dev server starts.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation frontend track is complete.
+**Last completed task ID:** MVP-M01-INT-006.
+**Last completed task name:** Add CORS fix if frontend cannot reach backend.
+**Last completed milestone:** MVP-M01 — Monorepo Foundation integration track is complete.
 **Current phase:** MVP Phase.
 **Current milestone:** MVP-M01 — Monorepo Foundation.
-**Next recommended task:** MVP-M01-INT-001 Create frontend Axios instance.
+**Next recommended task:** MVP-M01-QA-001 Confirm backend starts without errors.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-The frontend foundation was implemented under `apps/web`: Vite React TypeScript app, Tailwind configuration, shadcn/ui-compatible component setup, Axios/SWR/Zustand/React Router dependencies, frontend `.env.example`, source directory structure, accessible placeholder app shell, temporary dashboard home page with API health status, and a Vitest smoke test. The Vite dev server was confirmed to start locally.
+The frontend/backend health integration was formalized: the shared Axios client exposes `API_BASE_URL`, the health API has an explicit `getHealthCheck()` function plus SWR hook, the home page displays API health from the configured backend URL, and tests cover the health client. The running Django API returned `/api/health/` successfully with `Origin: http://localhost:5173`, including the expected CORS allow-origin header.
 
 ## 9.3 Important Notes For The Next Agent
 

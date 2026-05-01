@@ -1,6 +1,7 @@
 import { AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { API_BASE_URL } from "@/lib/api";
 import { useHealthCheck } from "@/lib/health";
 
 export function HomePage() {
@@ -33,7 +34,7 @@ export function HomePage() {
               </span>
             </div>
             <p className="mt-2 text-sm text-muted-foreground">
-              {error ? error.message : "Health check reads from VITE_API_BASE_URL."}
+              {error ? error.message : `Health check reads from ${API_BASE_URL}.`}
             </p>
             <Button className="mt-4 w-full" type="button" onClick={() => void mutate()}>
               Recheck health
