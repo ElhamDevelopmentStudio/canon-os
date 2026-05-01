@@ -30,6 +30,57 @@ Build CanonOS end-to-end with clean, reusable code, excellent UX, and complete f
 6. If all checks pass, commit automatically using commit rules below.
 7. Report what changed, what was tested, and any known risk.
 
+## Sub-Agent Orchestration Rules
+
+Use sub-agents for parallel work, but keep one owner agent responsible for final quality.
+
+### When to Use Sub-Agents
+
+- Use sub-agents when work can be split into independent parts (for example: backend API, frontend UI, tests, docs).
+- Do not use sub-agents for tiny single-file edits unless it improves speed clearly.
+- Do not split tightly coupled refactors that need constant shared context.
+
+### Recommended Sub-Agent Roles
+
+1. Planner sub-agent
+   - Break work into vertical slices with acceptance criteria.
+   - Identify dependencies and safe parallel groups.
+2. Implementer sub-agent(s)
+   - Build one slice end-to-end (code + tests).
+3. Reviewer sub-agent
+   - Check correctness, duplication, architecture fit, and code simplicity.
+4. QA sub-agent
+   - Validate verification commands, UX states, and manual test docs.
+
+### Parallelization Rules
+
+- Parallelize only independent tasks.
+- Each sub-agent must own a clearly scoped area (specific folder/module/feature).
+- Avoid overlapping edits in the same files when running in parallel.
+- If overlap is unavoidable, serialize work and re-run verification after integration.
+
+### Required Handoff Format (Sub-Agent -> Owner Agent)
+
+Each sub-agent must return:
+
+1. Scope completed.
+2. Files changed.
+3. Tests added/updated.
+4. Risks/open questions.
+5. Exact verification run and results.
+
+### Owner Agent Responsibilities
+
+The owner agent must:
+
+1. Integrate all sub-agent work.
+2. Remove duplication and dead code after merge.
+3. Resolve conflicts and re-run full verification gates.
+4. Ensure manual test docs were added/updated for each changed feature.
+5. Create the final commit following commit rules.
+
+No sub-agent result is considered complete until the owner agent validates it against all gates in this file.
+
 ## Commit Rules (Mandatory)
 
 After a task is complete and verified, create a commit automatically.
