@@ -35,3 +35,12 @@
    - Expected: Reset Changes is enabled.
 2. Click **Reset Changes**.
    - Expected: All controls return to the last saved values and Save Settings becomes disabled.
+
+## Import/export portability checks
+
+1. Open **Settings** and find **Import and export**.
+   - Expected: Import preview, confirm import, export request, and download controls are visible.
+2. Preview a valid CSV import.
+   - Expected: Valid, invalid, duplicate, and warning counts are shown before any data is saved.
+3. Request JSON and CSV exports.
+   - Expected: Both formats can be downloaded from Settings.

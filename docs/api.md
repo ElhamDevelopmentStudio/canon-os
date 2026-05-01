@@ -187,3 +187,58 @@ The response includes:
 - `recentlyInfluentialWorks`: recent aftertaste entries and high-rated works that support the current profile.
 
 The endpoint is user-scoped and must not include another user's media, scores, or aftertaste entries. Shared TypeScript contracts live in `packages/contracts/src/taste.ts`; the frontend SWR hook lives in `apps/web/src/features/taste-profile/tasteProfileApi.ts`.
+
+## Import / Export API Contract
+
+CanonOS supports local data portability through authenticated, CSRF-protected endpoints. Browser flows must preview imports before writing data and must offer export before future destructive account actions.
+
+### Supported CSV import columns
+
+CSV import is media-first for the MVP. The header row may include:
+
+- Required: `title`, `media_type` or `mediaType`.
+- Optional core fields: `status`, `personal_rating`/`personalRating`, `release_year`/`releaseYear`, `creator`, `notes`, `original_title`/`originalTitle`, `country_language`/`countryLanguage`.
+- Optional progress fields: `started_date`/`startedDate`, `completed_date`/`completedDate`.
+- Optional shape fields: `runtime_minutes`/`runtimeMinutes`, `episode_count`/`episodeCount`, `page_count`/`pageCount`, `audiobook_length_minutes`/`audiobookLengthMinutes`.
+- Optional score fields: `score_<taste_dimension_slug>` and `score_note_<taste_dimension_slug>`.
+
+`media_type` accepts `movie`, `tv_show`, `anime`, `novel`, and `audiobook`, plus common labels like `film`, `tv show`, `series`, `book`, and `audio book`. `status` defaults to `planned` and accepts `planned`, `consuming`, `completed`, `paused`, and `dropped`, plus common aliases like `finished`, `watching`, and `on hold`.
+
+### Full-fidelity JSON export/import format
+
+`POST /api/exports/` with `{ "format": "json" }` creates a JSON document shaped as:
+
+```json
+{
+  "version": "canonos.export.v1",
+  "exportedAt": "2026-05-02T00:00:00Z",
+  "user": { "email": "reader@example.com" },
+  "data": {
+    "profile": { "displayName": "Reader", "timezone": "UTC", "preferredLanguage": "en" },
+    "settings": { "defaultMediaTypes": ["movie"], "defaultRiskTolerance": "medium" },
+    "tasteDimensions": [],
+    "mediaItems": [],
+    "candidates": [],
+    "queueItems": [],
+    "tonightModeSessions": []
+  }
+}
+```
+
+JSON import accepts this export shape and recreates implemented user-owned MVP records into the importing account. Existing database IDs are treated as historical export metadata; new local IDs are generated.
+
+### Import validation and no-partial-write rule
+
+1. `POST /api/imports/preview/` accepts multipart or JSON input with `sourceType` (`csv` or `json`) and a file/content payload.
+2. The response returns an `ImportBatch` with per-row `ImportItemPreview` statuses: `valid`, `invalid`, or `duplicate`.
+3. Invalid rows never modify library data during preview.
+4. `POST /api/imports/{id}/confirm/` is rejected if the batch has any invalid rows.
+5. Confirm runs in a database transaction. Valid rows are committed together, duplicate rows are skipped with warnings, and failed confirmation rolls back the batch.
+6. All import/export records are scoped to the authenticated owner.
+
+### Endpoints
+
+- `POST /api/imports/preview/` — create an import validation preview.
+- `POST /api/imports/{id}/confirm/` — commit a valid import preview.
+- `POST /api/exports/` — create a `json` or `csv` export job.
+- `GET /api/exports/{id}/download/` — download a completed export owned by the current user.

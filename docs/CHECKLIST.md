@@ -1314,73 +1314,73 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M13-SH-001 Define `ImportBatch` type.
-- [ ] MVP-M13-SH-002 Define `ImportItemPreview` type.
-- [ ] MVP-M13-SH-003 Define `ExportRequest` type.
-- [ ] MVP-M13-SH-004 Define `ExportResult` type.
-- [ ] MVP-M13-SH-005 Document supported CSV import columns.
-- [ ] MVP-M13-SH-006 Document full-fidelity JSON import/export format.
-- [ ] MVP-M13-SH-007 Document import validation and no-partial-write rules.
+- [x] MVP-M13-SH-001 Define `ImportBatch` type.
+- [x] MVP-M13-SH-002 Define `ImportItemPreview` type.
+- [x] MVP-M13-SH-003 Define `ExportRequest` type.
+- [x] MVP-M13-SH-004 Define `ExportResult` type.
+- [x] MVP-M13-SH-005 Document supported CSV import columns.
+- [x] MVP-M13-SH-006 Document full-fidelity JSON import/export format.
+- [x] MVP-M13-SH-007 Document import validation and no-partial-write rules.
 
 ### Backend Tasks
 
-- [ ] MVP-M13-BE-001 Create imports/exports service module.
-- [ ] MVP-M13-BE-002 Create ImportBatch model.
-- [ ] MVP-M13-BE-003 Create ImportItem model.
-- [ ] MVP-M13-BE-004 Create ExportJob model.
-- [ ] MVP-M13-BE-005 Add owner/user filtering to all import/export records.
-- [ ] MVP-M13-BE-006 Create CSV import parser.
-- [ ] MVP-M13-BE-007 Create JSON import parser.
-- [ ] MVP-M13-BE-008 Create import validation preview service.
-- [ ] MVP-M13-BE-009 Reject invalid rows without changing existing library data.
-- [ ] MVP-M13-BE-010 Create import confirm service using a database transaction.
-- [ ] MVP-M13-BE-011 Create full JSON export service for user-owned data.
-- [ ] MVP-M13-BE-012 Create media/rating CSV export service.
-- [ ] MVP-M13-BE-013 Create import preview endpoint.
-- [ ] MVP-M13-BE-014 Create import confirm endpoint.
-- [ ] MVP-M13-BE-015 Create export request endpoint.
-- [ ] MVP-M13-BE-016 Create export download endpoint.
-- [ ] MVP-M13-BE-017 Create local backup command using the JSON export service.
-- [ ] MVP-M13-BE-018 Add test for valid CSV import preview.
-- [ ] MVP-M13-BE-019 Add test for invalid import preserving existing records.
-- [ ] MVP-M13-BE-020 Add test for JSON export contents.
-- [ ] MVP-M13-BE-021 Add test that exported JSON can be imported into a fresh database.
+- [x] MVP-M13-BE-001 Create imports/exports service module.
+- [x] MVP-M13-BE-002 Create ImportBatch model.
+- [x] MVP-M13-BE-003 Create ImportItem model.
+- [x] MVP-M13-BE-004 Create ExportJob model.
+- [x] MVP-M13-BE-005 Add owner/user filtering to all import/export records.
+- [x] MVP-M13-BE-006 Create CSV import parser.
+- [x] MVP-M13-BE-007 Create JSON import parser.
+- [x] MVP-M13-BE-008 Create import validation preview service.
+- [x] MVP-M13-BE-009 Reject invalid rows without changing existing library data.
+- [x] MVP-M13-BE-010 Create import confirm service using a database transaction.
+- [x] MVP-M13-BE-011 Create full JSON export service for user-owned data.
+- [x] MVP-M13-BE-012 Create media/rating CSV export service.
+- [x] MVP-M13-BE-013 Create import preview endpoint.
+- [x] MVP-M13-BE-014 Create import confirm endpoint.
+- [x] MVP-M13-BE-015 Create export request endpoint.
+- [x] MVP-M13-BE-016 Create export download endpoint.
+- [x] MVP-M13-BE-017 Create local backup command using the JSON export service.
+- [x] MVP-M13-BE-018 Add test for valid CSV import preview.
+- [x] MVP-M13-BE-019 Add test for invalid import preserving existing records.
+- [x] MVP-M13-BE-020 Add test for JSON export contents.
+- [x] MVP-M13-BE-021 Add test that exported JSON can be imported into a fresh database.
 
 ### Frontend Tasks
 
-- [ ] MVP-M13-FE-001 Add Import/Export section to Settings.
-- [ ] MVP-M13-FE-002 Create portability API client file.
-- [ ] MVP-M13-FE-003 Add import file picker.
-- [ ] MVP-M13-FE-004 Add import source type selector.
-- [ ] MVP-M13-FE-005 Add import preview table.
-- [ ] MVP-M13-FE-006 Add validation errors and duplicate warnings.
-- [ ] MVP-M13-FE-007 Add Confirm Import button.
-- [ ] MVP-M13-FE-008 Add import loading, empty, error, and success states.
-- [ ] MVP-M13-FE-009 Add export format selector.
-- [ ] MVP-M13-FE-010 Add Request Export button.
-- [ ] MVP-M13-FE-011 Add Download Export button.
-- [ ] MVP-M13-FE-012 Add export loading, empty, error, and success states.
+- [x] MVP-M13-FE-001 Add Import/Export section to Settings.
+- [x] MVP-M13-FE-002 Create portability API client file.
+- [x] MVP-M13-FE-003 Add import file picker.
+- [x] MVP-M13-FE-004 Add import source type selector.
+- [x] MVP-M13-FE-005 Add import preview table.
+- [x] MVP-M13-FE-006 Add validation errors and duplicate warnings.
+- [x] MVP-M13-FE-007 Add Confirm Import button.
+- [x] MVP-M13-FE-008 Add import loading, empty, error, and success states.
+- [x] MVP-M13-FE-009 Add export format selector.
+- [x] MVP-M13-FE-010 Add Request Export button.
+- [x] MVP-M13-FE-011 Add Download Export button.
+- [x] MVP-M13-FE-012 Add export loading, empty, error, and success states.
 
 ### Integration Tasks
 
-- [ ] MVP-M13-INT-001 Connect file picker to import preview endpoint.
-- [ ] MVP-M13-INT-002 Display import preview results before commit.
-- [ ] MVP-M13-INT-003 Connect Confirm Import button to import confirm endpoint.
-- [ ] MVP-M13-INT-004 Refresh Library and Dashboard after import completes.
-- [ ] MVP-M13-INT-005 Connect export request to export endpoint.
-- [ ] MVP-M13-INT-006 Connect Download Export button to download endpoint.
-- [ ] MVP-M13-INT-007 Confirm invalid import does not change visible library data.
+- [x] MVP-M13-INT-001 Connect file picker to import preview endpoint.
+- [x] MVP-M13-INT-002 Display import preview results before commit.
+- [x] MVP-M13-INT-003 Connect Confirm Import button to import confirm endpoint.
+- [x] MVP-M13-INT-004 Refresh Library and Dashboard after import completes.
+- [x] MVP-M13-INT-005 Connect export request to export endpoint.
+- [x] MVP-M13-INT-006 Connect Download Export button to download endpoint.
+- [x] MVP-M13-INT-007 Confirm invalid import does not change visible library data.
 
 ### QA Tasks
 
-- [ ] MVP-M13-QA-001 Import a valid CSV.
-- [ ] MVP-M13-QA-002 Import an invalid CSV and confirm clear row errors.
-- [ ] MVP-M13-QA-003 Import a JSON export into a fresh database.
-- [ ] MVP-M13-QA-004 Export all data as JSON.
-- [ ] MVP-M13-QA-005 Export media library and ratings as CSV.
-- [ ] MVP-M13-QA-006 Confirm imported media appears in Dashboard and Library.
-- [ ] MVP-M13-QA-007 Confirm export is offered before destructive deletion flows exist.
-- [ ] MVP-M13-QA-008 Create or update `docs/manual-tests/settings-portability.md`.
+- [x] MVP-M13-QA-001 Import a valid CSV.
+- [x] MVP-M13-QA-002 Import an invalid CSV and confirm clear row errors.
+- [x] MVP-M13-QA-003 Import a JSON export into a fresh database.
+- [x] MVP-M13-QA-004 Export all data as JSON.
+- [x] MVP-M13-QA-005 Export media library and ratings as CSV.
+- [x] MVP-M13-QA-006 Confirm imported media appears in Dashboard and Library.
+- [x] MVP-M13-QA-007 Confirm export is offered before destructive deletion flows exist.
+- [x] MVP-M13-QA-008 Create or update `docs/manual-tests/settings-portability.md`.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M12-QA-006.
+**Last completed task ID:** MVP-M13-QA-008.
 **Last completed task name:** Create or update `docs/manual-tests/settings-portability.md`.
-**Last completed milestone:** MVP-M12 — Settings MVP.
+**Last completed milestone:** MVP-M13 — Import / Export MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M13 — Import / Export MVP.
-**Next recommended task:** MVP-M13-SH-001 Define `ImportPreview` type.
+**Current milestone:** MVP-M14 — MVP API Documentation And Developer Experience.
+**Next recommended task:** MVP-M14-BE-001 Confirm all MVP endpoints have serializers.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M12 Settings is complete. Shared contracts now define `UserSettings`, `RecommendationSettings`, and `DisplaySettings`. Django creates settings at registration, exposes authenticated `GET/PATCH /api/auth/settings/`, validates recommendation/display preferences, and uses saved genericness sensitivity, modern skepticism, scoring strictness, default media types, and default risk tolerance in Candidate Evaluator and Tonight Mode. The frontend `/settings` page is connected to the real API with loading, error, save, reset, persisted confirmation, profile/display/recommendation controls, and app-shell theme application. Browser e2e covers saving settings, persistence after refresh, theme application, Tonight Mode defaults, and Candidate Evaluator settings signal; manual QA lives in `docs/manual-tests/settings-portability.md`.
+MVP-M13 Import / Export is complete. Shared contracts now define `ImportBatch`, `ImportItemPreview`, `ExportRequest`, and `ExportResult`; API docs define supported CSV columns, the `canonos.export.v1` JSON format, and the no-partial-write import rule. Django now has owner-scoped `ImportBatch`, `ImportItem`, and `ExportJob` models; CSV/JSON preview parsers; transactional import confirmation; full JSON and media-score CSV export services; download endpoints; and a local `backup_user_data` command. Settings now includes an Import and export section with file preview, validation errors, duplicate warnings, confirm import, export request, and download controls. Backend and browser e2e cover valid CSV import, invalid import preserving library data, JSON export contents, exported JSON re-import, and CSV export.
 
 ## 9.3 Important Notes For The Next Agent
 

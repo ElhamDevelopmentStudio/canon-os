@@ -92,3 +92,5 @@ Foundation QA checks verified during MVP-M01:
 - PostgreSQL: `pg_isready -h 127.0.0.1 -p 5432` reported accepting connections.
 - Redis: Python Redis client returned `PONG` for `redis://localhost:6379/0`.
 - Health endpoint: `GET /api/health/` returned `{"status":"ok","service":"canonos-api","version":"0.1.0"}`.
+
+- Import/export browser e2e verifies CSV preview/confirm, invalid-row no-write behavior, JSON export download, and media/ratings CSV export download through Settings.
