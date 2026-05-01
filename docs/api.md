@@ -127,3 +127,7 @@ List filters: `mediaType`, `priority`, and `search`. Queue priorities are `start
 ## E2E Coverage Rule
 
 Every new API endpoint must be covered through a real browser e2e user flow when a UI exists. If the endpoint is intentionally API-only or the UI has not shipped yet, add an API-only e2e exception to `docs/testing.md` and cover it with Playwright's request client or backend e2e tests. Serializer/API contract changes still require unit/API tests; mocked frontend tests do not replace browser-to-backend e2e coverage.
+
+## Tonight Mode
+
+- `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request includes available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance. The response includes up to five recommendations plus safe, challenging, and wildcard slots when available.

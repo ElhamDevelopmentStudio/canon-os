@@ -12,6 +12,7 @@ export const API_ROUTES = {
   tasteDimensions: "/taste-dimensions/",
   candidates: "/candidates/",
   queueItems: "/queue-items/",
+  tonightMode: "/queue/tonight/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",
   scalarDocs: "/docs/scalar/",

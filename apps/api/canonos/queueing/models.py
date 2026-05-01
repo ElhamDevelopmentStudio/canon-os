@@ -61,3 +61,52 @@ class QueueItem(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class TonightModeSession(models.Model):
+    class EnergyLevel(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        HIGH = "high", "High"
+
+    class FocusLevel(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        DEEP = "deep", "Deep"
+
+    class DesiredEffect(models.TextChoices):
+        COMFORT = "comfort", "Comfort"
+        QUALITY = "quality", "Quality"
+        SURPRISE = "surprise", "Surprise"
+        LIGHT = "light", "Light"
+        DEEP = "deep", "Deep"
+
+    class RiskTolerance(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        HIGH = "high", "High"
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tonight_mode_sessions",
+    )
+    available_minutes = models.PositiveIntegerField()
+    energy_level = models.CharField(max_length=16, choices=EnergyLevel.choices)
+    focus_level = models.CharField(max_length=16, choices=FocusLevel.choices)
+    desired_effect = models.CharField(max_length=24, choices=DesiredEffect.choices)
+    preferred_media_types = models.JSONField(default=list, blank=True)
+    risk_tolerance = models.CharField(max_length=16, choices=RiskTolerance.choices)
+    generated_recommendations = models.JSONField(default=list, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["owner", "-created_at"], name="tonight_owner_created_idx"),
+            models.Index(fields=["energy_level", "focus_level"], name="tonight_energy_focus_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"Tonight Mode for {self.owner} at {self.created_at:%Y-%m-%d %H:%M}"

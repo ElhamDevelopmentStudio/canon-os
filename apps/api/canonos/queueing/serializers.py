@@ -5,7 +5,7 @@ from rest_framework import serializers
 from canonos.candidates.models import Candidate
 from canonos.media.models import MediaItem
 
-from .models import QueueItem
+from .models import QueueItem, TonightModeSession
 
 
 class QueueItemSerializer(serializers.ModelSerializer):
@@ -106,3 +106,80 @@ class QueueReorderSerializer(serializers.Serializer):
 
 class QueueReorderResponseSerializer(serializers.Serializer):
     results = QueueItemSerializer(many=True)
+
+
+class TonightModeRequestSerializer(serializers.Serializer):
+    availableMinutes = serializers.IntegerField(
+        source="available_minutes", min_value=1, max_value=1440
+    )
+    energyLevel = serializers.ChoiceField(
+        source="energy_level",
+        choices=TonightModeSession.EnergyLevel.choices,
+    )
+    focusLevel = serializers.ChoiceField(
+        source="focus_level",
+        choices=TonightModeSession.FocusLevel.choices,
+    )
+    desiredEffect = serializers.ChoiceField(
+        source="desired_effect",
+        choices=TonightModeSession.DesiredEffect.choices,
+    )
+    preferredMediaTypes = serializers.ListField(
+        source="preferred_media_types",
+        child=serializers.ChoiceField(choices=MediaItem.MediaType.choices),
+        required=False,
+        allow_empty=True,
+    )
+    riskTolerance = serializers.ChoiceField(
+        source="risk_tolerance",
+        choices=TonightModeSession.RiskTolerance.choices,
+    )
+
+
+class TonightModeRecommendationSerializer(serializers.Serializer):
+    slot = serializers.ChoiceField(choices=["safe", "challenging", "wildcard"])
+    source = serializers.ChoiceField(choices=["queue", "planned_media"])
+    title = serializers.CharField()
+    mediaType = serializers.ChoiceField(choices=MediaItem.MediaType.choices)
+    reason = serializers.CharField()
+    score = serializers.FloatField()
+    estimatedTimeMinutes = serializers.IntegerField(allow_null=True)
+    queueItemId = serializers.UUIDField(allow_null=True)
+    mediaItemId = serializers.UUIDField(allow_null=True)
+    candidateId = serializers.UUIDField(allow_null=True)
+    priority = serializers.ChoiceField(choices=QueueItem.Priority.choices, allow_null=True)
+
+
+class TonightModeSessionSerializer(serializers.ModelSerializer):
+    availableMinutes = serializers.IntegerField(source="available_minutes")
+    energyLevel = serializers.CharField(source="energy_level")
+    focusLevel = serializers.CharField(source="focus_level")
+    desiredEffect = serializers.CharField(source="desired_effect")
+    preferredMediaTypes = serializers.ListField(
+        source="preferred_media_types", child=serializers.CharField()
+    )
+    riskTolerance = serializers.CharField(source="risk_tolerance")
+    recommendations = serializers.JSONField(source="generated_recommendations")
+    createdAt = serializers.DateTimeField(source="created_at")
+
+    class Meta:
+        model = TonightModeSession
+        fields = [
+            "id",
+            "availableMinutes",
+            "energyLevel",
+            "focusLevel",
+            "desiredEffect",
+            "preferredMediaTypes",
+            "riskTolerance",
+            "recommendations",
+            "createdAt",
+        ]
+
+
+class TonightModeResponseSerializer(serializers.Serializer):
+    session = TonightModeSessionSerializer()
+    recommendations = TonightModeRecommendationSerializer(many=True)
+    safeChoice = TonightModeRecommendationSerializer(allow_null=True)
+    challengingChoice = TonightModeRecommendationSerializer(allow_null=True)
+    wildcardChoice = TonightModeRecommendationSerializer(allow_null=True)

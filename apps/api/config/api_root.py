@@ -27,6 +27,7 @@ class ApiRootView(APIView):
                         "taste_dimensions": "/api/taste-dimensions/",
                         "candidates": "/api/candidates/",
                         "queue_items": "/api/queue-items/",
+                        "tonight_mode": "/api/queue/tonight/",
                         "schema": "/api/schema/",
                         "swagger_docs": "/api/docs/swagger/",
                         "scalar_docs": "/api/docs/scalar/",
@@ -43,7 +44,11 @@ class ApiRootView(APIView):
                         {"name": "taste", "status": "available", "path": "/api/taste-dimensions/"},
                         {"name": "candidates", "status": "available", "path": "/api/candidates/"},
                         {"name": "queue", "status": "available", "path": "/api/queue-items/"},
-                        {"name": "tonight_mode", "status": "planned", "path": None},
+                        {
+                            "name": "tonight_mode",
+                            "status": "available",
+                            "path": "/api/queue/tonight/",
+                        },
                     ],
                 },
                 response_only=True,
@@ -66,6 +71,7 @@ class ApiRootView(APIView):
                     "taste_dimensions": "/api/taste-dimensions/",
                     "candidates": "/api/candidates/",
                     "queue_items": "/api/queue-items/",
+                    "tonight_mode": "/api/queue/tonight/",
                     "schema": "/api/schema/",
                     "swagger_docs": "/api/docs/swagger/",
                     "scalar_docs": "/api/docs/scalar/",
@@ -82,7 +88,7 @@ class ApiRootView(APIView):
                     {"name": "taste", "status": "available", "path": "/api/taste-dimensions/"},
                     {"name": "candidates", "status": "available", "path": "/api/candidates/"},
                     {"name": "queue", "status": "available", "path": "/api/queue-items/"},
-                    {"name": "tonight_mode", "status": "planned", "path": None},
+                    {"name": "tonight_mode", "status": "available", "path": "/api/queue/tonight/"},
                 ],
             }
         )

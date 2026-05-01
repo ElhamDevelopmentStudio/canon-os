@@ -64,12 +64,12 @@ Tests must:
 - Taste/profile scoring: taste dimension load and media score upsert from the media detail UI.
 - Candidate evaluator: create candidate, evaluate candidate, update candidate, add candidate to library, add evaluated candidate to queue.
 - Queue: create, list, edit, reorder, delete.
+- Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, and defer queue item.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions
 
 - API schema and Scalar docs are covered with Playwright's request client because there is no frontend docs page yet.
-- Tonight Mode has no implemented recommendation API/UI yet; coverage must be added when MVP-M09 ships.
 
 ## Docker-backed E2E Checks
 

@@ -11,6 +11,7 @@ import { LoginPage } from "@/pages/LoginPage";
 import { MediaDetailPage } from "@/pages/MediaDetailPage";
 import { PlaceholderPage } from "@/pages/PlaceholderPage";
 import { QueuePage } from "@/pages/QueuePage";
+import { TonightModePage } from "@/pages/TonightModePage";
 import { RegisterPage } from "@/pages/RegisterPage";
 
 export const protectedRouteChildren: RouteObject[] = [
@@ -18,7 +19,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.library.slice(1), element: <LibraryPage /> },
   { path: "library/:mediaId", element: <MediaDetailPage /> },
   { path: APP_ROUTES.candidates.slice(1), element: <CandidateEvaluatorPage /> },
-  { path: APP_ROUTES.tonight.slice(1), element: <PlaceholderPage route={APP_ROUTES.tonight} /> },
+  { path: APP_ROUTES.tonight.slice(1), element: <TonightModePage /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <PlaceholderPage route={APP_ROUTES.tasteProfile} /> },
   { path: APP_ROUTES.aftertasteLog.slice(1), element: <PlaceholderPage route={APP_ROUTES.aftertasteLog} /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },

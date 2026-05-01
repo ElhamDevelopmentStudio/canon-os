@@ -7,9 +7,17 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import QueueItem
-from .serializers import QueueItemSerializer, QueueReorderResponseSerializer, QueueReorderSerializer
+from .models import QueueItem, TonightModeSession
+from .serializers import (
+    QueueItemSerializer,
+    QueueReorderResponseSerializer,
+    QueueReorderSerializer,
+    TonightModeRequestSerializer,
+    TonightModeResponseSerializer,
+    TonightModeSessionSerializer,
+)
 
 
 @extend_schema_view(
@@ -101,3 +109,47 @@ class QueueItemViewSet(viewsets.ModelViewSet):
             "title",
         )
         return Response({"results": QueueItemSerializer(ordered_items, many=True).data})
+
+
+class TonightModeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    @extend_schema(
+        request=TonightModeRequestSerializer,
+        responses={201: TonightModeResponseSerializer},
+        summary="Generate Tonight Mode recommendations",
+    )
+    def post(self, request):  # noqa: ANN001, ANN201
+        from .services import TonightContext, generate_tonight_recommendations
+
+        serializer = TonightModeRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        context = TonightContext(**serializer.validated_data)
+        recommendations = generate_tonight_recommendations(request.user, context)
+        session = TonightModeSession.objects.create(
+            owner=request.user,
+            available_minutes=context.available_minutes,
+            energy_level=context.energy_level,
+            focus_level=context.focus_level,
+            desired_effect=context.desired_effect,
+            preferred_media_types=context.preferred_media_types,
+            risk_tolerance=context.risk_tolerance,
+            generated_recommendations=recommendations,
+        )
+        payload = {
+            "session": TonightModeSessionSerializer(session).data,
+            "recommendations": recommendations,
+            "safeChoice": _choice_for_slot(recommendations, "safe"),
+            "challengingChoice": _choice_for_slot(recommendations, "challenging"),
+            "wildcardChoice": _choice_for_slot(recommendations, "wildcard"),
+        }
+        return Response(payload, status=status.HTTP_201_CREATED)
+
+
+def _choice_for_slot(
+    recommendations: list[dict[str, object]], slot: str
+) -> dict[str, object] | None:
+    return next(
+        (recommendation for recommendation in recommendations if recommendation["slot"] == slot),
+        None,
+    )

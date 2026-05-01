@@ -997,87 +997,87 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M09-SH-001 Define `TonightModeRequest` type.
-- [ ] MVP-M09-SH-002 Define `TonightModeRecommendation` type.
-- [ ] MVP-M09-SH-003 Define `EnergyLevel` enum.
-- [ ] MVP-M09-SH-004 Define `FocusLevel` enum.
-- [ ] MVP-M09-SH-005 Define `DesiredEffect` enum.
-- [ ] MVP-M09-SH-006 Define `RiskTolerance` enum.
-- [ ] MVP-M09-SH-007 Document Tonight Mode recommendation rules.
+- [x] MVP-M09-SH-001 Define `TonightModeRequest` type.
+- [x] MVP-M09-SH-002 Define `TonightModeRecommendation` type.
+- [x] MVP-M09-SH-003 Define `EnergyLevel` enum.
+- [x] MVP-M09-SH-004 Define `FocusLevel` enum.
+- [x] MVP-M09-SH-005 Define `DesiredEffect` enum.
+- [x] MVP-M09-SH-006 Define `RiskTolerance` enum.
+- [x] MVP-M09-SH-007 Document Tonight Mode recommendation rules.
 
 ### Backend Tasks
 
-- [ ] MVP-M09-BE-001 Create Tonight Mode service module.
-- [ ] MVP-M09-BE-002 Create TonightModeSession model.
-- [ ] MVP-M09-BE-003 Add owner/user foreign key to session.
-- [ ] MVP-M09-BE-004 Add available minutes field.
-- [ ] MVP-M09-BE-005 Add energy level field.
-- [ ] MVP-M09-BE-006 Add focus level field.
-- [ ] MVP-M09-BE-007 Add desired effect field.
-- [ ] MVP-M09-BE-008 Add preferred media types field.
-- [ ] MVP-M09-BE-009 Add risk tolerance field.
-- [ ] MVP-M09-BE-010 Add generated recommendations field.
-- [ ] MVP-M09-BE-011 Add created at field.
-- [ ] MVP-M09-BE-012 Create migration for TonightModeSession.
-- [ ] MVP-M09-BE-013 Create TonightModeSession serializer.
-- [ ] MVP-M09-BE-014 Implement queue candidate collection.
-- [ ] MVP-M09-BE-015 Implement planned media candidate collection.
-- [ ] MVP-M09-BE-016 Implement estimated time filter.
-- [ ] MVP-M09-BE-017 Implement energy compatibility score.
-- [ ] MVP-M09-BE-018 Implement focus compatibility score.
-- [ ] MVP-M09-BE-019 Implement desired effect compatibility score.
-- [ ] MVP-M09-BE-020 Implement risk tolerance score.
-- [ ] MVP-M09-BE-021 Implement final ranking formula.
-- [ ] MVP-M09-BE-022 Return safe choice recommendation.
-- [ ] MVP-M09-BE-023 Return challenging choice recommendation.
-- [ ] MVP-M09-BE-024 Return wildcard recommendation.
-- [ ] MVP-M09-BE-025 Create Tonight Mode recommendation endpoint.
-- [ ] MVP-M09-BE-026 Register TonightModeSession in Django admin.
-- [ ] MVP-M09-BE-027 Add test for Tonight Mode empty data.
-- [ ] MVP-M09-BE-028 Add test for time filtering.
-- [ ] MVP-M09-BE-029 Add test for three recommendation slots.
+- [x] MVP-M09-BE-001 Create Tonight Mode service module.
+- [x] MVP-M09-BE-002 Create TonightModeSession model.
+- [x] MVP-M09-BE-003 Add owner/user foreign key to session.
+- [x] MVP-M09-BE-004 Add available minutes field.
+- [x] MVP-M09-BE-005 Add energy level field.
+- [x] MVP-M09-BE-006 Add focus level field.
+- [x] MVP-M09-BE-007 Add desired effect field.
+- [x] MVP-M09-BE-008 Add preferred media types field.
+- [x] MVP-M09-BE-009 Add risk tolerance field.
+- [x] MVP-M09-BE-010 Add generated recommendations field.
+- [x] MVP-M09-BE-011 Add created at field.
+- [x] MVP-M09-BE-012 Create migration for TonightModeSession.
+- [x] MVP-M09-BE-013 Create TonightModeSession serializer.
+- [x] MVP-M09-BE-014 Implement queue candidate collection.
+- [x] MVP-M09-BE-015 Implement planned media candidate collection.
+- [x] MVP-M09-BE-016 Implement estimated time filter.
+- [x] MVP-M09-BE-017 Implement energy compatibility score.
+- [x] MVP-M09-BE-018 Implement focus compatibility score.
+- [x] MVP-M09-BE-019 Implement desired effect compatibility score.
+- [x] MVP-M09-BE-020 Implement risk tolerance score.
+- [x] MVP-M09-BE-021 Implement final ranking formula.
+- [x] MVP-M09-BE-022 Return safe choice recommendation.
+- [x] MVP-M09-BE-023 Return challenging choice recommendation.
+- [x] MVP-M09-BE-024 Return wildcard recommendation.
+- [x] MVP-M09-BE-025 Create Tonight Mode recommendation endpoint.
+- [x] MVP-M09-BE-026 Register TonightModeSession in Django admin.
+- [x] MVP-M09-BE-027 Add test for Tonight Mode empty data.
+- [x] MVP-M09-BE-028 Add test for time filtering.
+- [x] MVP-M09-BE-029 Add test for three recommendation slots.
 
 ### Frontend Tasks
 
-- [ ] MVP-M09-FE-001 Create Tonight Mode API client file.
-- [ ] MVP-M09-FE-002 Create Tonight Mode page skeleton.
-- [ ] MVP-M09-FE-003 Add page title.
-- [ ] MVP-M09-FE-004 Add available time input.
-- [ ] MVP-M09-FE-005 Add energy level selector.
-- [ ] MVP-M09-FE-006 Add focus level selector.
-- [ ] MVP-M09-FE-007 Add desired effect selector.
-- [ ] MVP-M09-FE-008 Add media type preference multi-select.
-- [ ] MVP-M09-FE-009 Add risk tolerance selector.
-- [ ] MVP-M09-FE-010 Add Generate Tonight Plan button.
-- [ ] MVP-M09-FE-011 Create recommendation result grid.
-- [ ] MVP-M09-FE-012 Create safe choice card.
-- [ ] MVP-M09-FE-013 Create challenging choice card.
-- [ ] MVP-M09-FE-014 Create wildcard choice card.
-- [ ] MVP-M09-FE-015 Add recommendation reason display.
-- [ ] MVP-M09-FE-016 Add Start This button.
-- [ ] MVP-M09-FE-017 Add Not Tonight button.
-- [ ] MVP-M09-FE-018 Add Add To Queue button.
-- [ ] MVP-M09-FE-019 Add loading state while generating plan.
-- [ ] MVP-M09-FE-020 Add empty state when no recommendations exist.
-- [ ] MVP-M09-FE-021 Add error state for failed generation.
+- [x] MVP-M09-FE-001 Create Tonight Mode API client file.
+- [x] MVP-M09-FE-002 Create Tonight Mode page skeleton.
+- [x] MVP-M09-FE-003 Add page title.
+- [x] MVP-M09-FE-004 Add available time input.
+- [x] MVP-M09-FE-005 Add energy level selector.
+- [x] MVP-M09-FE-006 Add focus level selector.
+- [x] MVP-M09-FE-007 Add desired effect selector.
+- [x] MVP-M09-FE-008 Add media type preference multi-select.
+- [x] MVP-M09-FE-009 Add risk tolerance selector.
+- [x] MVP-M09-FE-010 Add Generate Tonight Plan button.
+- [x] MVP-M09-FE-011 Create recommendation result grid.
+- [x] MVP-M09-FE-012 Create safe choice card.
+- [x] MVP-M09-FE-013 Create challenging choice card.
+- [x] MVP-M09-FE-014 Create wildcard choice card.
+- [x] MVP-M09-FE-015 Add recommendation reason display.
+- [x] MVP-M09-FE-016 Add Start This button.
+- [x] MVP-M09-FE-017 Add Not Tonight button.
+- [x] MVP-M09-FE-018 Add Add To Queue button.
+- [x] MVP-M09-FE-019 Add loading state while generating plan.
+- [x] MVP-M09-FE-020 Add empty state when no recommendations exist.
+- [x] MVP-M09-FE-021 Add error state for failed generation.
 
 ### Integration Tasks
 
-- [ ] MVP-M09-INT-001 Connect Tonight Mode form to recommendation endpoint.
-- [ ] MVP-M09-INT-002 Display generated recommendations.
-- [ ] MVP-M09-INT-003 Connect Start This button to media status update.
-- [ ] MVP-M09-INT-004 Connect Not Tonight button to queue priority lowering.
-- [ ] MVP-M09-INT-005 Connect Add To Queue button to queue endpoint.
-- [ ] MVP-M09-INT-006 Persist Tonight Mode session after generation.
+- [x] MVP-M09-INT-001 Connect Tonight Mode form to recommendation endpoint.
+- [x] MVP-M09-INT-002 Display generated recommendations.
+- [x] MVP-M09-INT-003 Connect Start This button to media status update.
+- [x] MVP-M09-INT-004 Connect Not Tonight button to queue priority lowering.
+- [x] MVP-M09-INT-005 Connect Add To Queue button to queue endpoint.
+- [x] MVP-M09-INT-006 Persist Tonight Mode session after generation.
 
 ### QA Tasks
 
-- [ ] MVP-M09-QA-001 Generate recommendations with empty queue.
-- [ ] MVP-M09-QA-002 Generate recommendations with queue items.
-- [ ] MVP-M09-QA-003 Generate recommendations with planned media.
-- [ ] MVP-M09-QA-004 Confirm time limit affects recommendations.
-- [ ] MVP-M09-QA-005 Confirm Tonight Mode page matches wireframe.
-- [ ] MVP-M09-QA-006 Create or update `docs/manual-tests/queue-tonight.md`.
+- [x] MVP-M09-QA-001 Generate recommendations with empty queue.
+- [x] MVP-M09-QA-002 Generate recommendations with queue items.
+- [x] MVP-M09-QA-003 Generate recommendations with planned media.
+- [x] MVP-M09-QA-004 Confirm time limit affects recommendations.
+- [x] MVP-M09-QA-005 Confirm Tonight Mode page matches wireframe.
+- [x] MVP-M09-QA-006 Create or update `docs/manual-tests/queue-tonight.md`.
 
 ---
 
@@ -2991,7 +2991,7 @@ The MVP is done only when:
 - [ ] A user can create aftertaste entries.
 - [x] A user can evaluate a candidate.
 - [x] A user can add candidates to queue.
-- [ ] A user can generate a Tonight Mode recommendation.
+- [x] A user can generate a Tonight Mode recommendation.
 - [ ] A user can view a basic Taste Profile.
 - [ ] A user can view a useful Dashboard.
 - [ ] A user can update basic Settings.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M08-QA-006.
+**Last completed task ID:** MVP-M09-QA-006.
 **Last completed task name:** Create or update `docs/manual-tests/queue-tonight.md`.
-**Last completed milestone:** MVP-M08 — Queue MVP.
+**Last completed milestone:** MVP-M09 — Tonight Mode MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M09 — Tonight Mode MVP.
-**Next recommended task:** MVP-M09-SH-001 Define `TonightModeRequest` type.
+**Current milestone:** MVP-M10 — Aftertaste Log MVP.
+**Next recommended task:** MVP-M10-SH-001 Define `AftertasteEntry` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M08 queue is complete. Shared contracts define `QueueItem`, queue priorities, create/update payloads, and reorder payloads. Django now has an owner-scoped queueing app with optional media/candidate links, snapshot fields, priority lanes, queue positions, CRUD, reorder endpoint, admin registration, and tests for create/update/delete/reorder/privacy/OpenAPI. The frontend `/queue` page is connected with search/filter controls, Start Soon / Sample First / Delay lanes, add/edit modal, remove confirmation, move up/down reorder, and loading/empty/error/success states. Candidate Evaluator now sends evaluated candidates to the queue. Queue rules live in `docs/queue.md`; manual QA lives in `docs/manual-tests/queue-tonight.md`.
+MVP-M09 Tonight Mode is complete. Shared contracts now define the Tonight Mode request, recommendation, response, energy/focus/effect/risk enums, and slot labels. Django persists `TonightModeSession` records, generates deterministic recommendations from adaptive queue items and planned media, filters by time, scores by energy/focus/effect/risk/media preference, returns safe/challenging/wildcard choices, registers admin support, and exposes `POST /api/queue/tonight/` with tests for empty data, time filtering, slots, and OpenAPI coverage. The frontend `/tonight` page is connected to the real API with check-in controls, loading/empty/error/success states, recommendation cards, Start This, Not Tonight, and Add To Queue actions. Browser e2e now covers the full Tonight Mode flow and empty state. Recommendation rules live in `docs/queue.md`; manual QA lives in `docs/manual-tests/queue-tonight.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

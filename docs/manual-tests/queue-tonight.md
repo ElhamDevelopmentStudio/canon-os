@@ -38,6 +38,38 @@
 2. Select the remove button and confirm.
    - Expected: The item is removed from the queue only. The source candidate or media item remains available in its original area.
 
-## Tonight Mode note
+## Tonight Mode happy path: generate a plan
 
-Tonight Mode is implemented in MVP-M09. This document will be expanded there with generate/recommend/start/not-tonight checks.
+1. Add at least two queue items: one **Start Soon** item under 120 minutes and one **Sample First** item under 60 minutes.
+   - Expected: Both items appear in their queue lanes.
+2. Add one planned library media item with a known runtime, page count, or audiobook length.
+   - Expected: The item appears in Library with status **Planned**.
+3. Open **Tonight Mode** from the sidebar.
+   - Expected: The page shows available time, energy, focus, desired effect, media type, risk tolerance, and Generate Tonight Plan controls.
+4. Enter 120 available minutes, choose medium or deep focus, choose a desired effect, and select preferred media types.
+   - Expected: The form accepts the choices without leaving the page.
+5. Select **Generate Tonight Plan**.
+   - Expected: Recommendation cards appear with Safe choice, Challenging choice, and/or Wildcard choice labels, reasons, media badges, fit scores, and time estimates.
+
+## Tonight Mode actions
+
+1. On a linked planned media recommendation, select **Start This**.
+   - Expected: A success message says the title is marked as consuming, and the media item status changes to **Consuming** in Library.
+2. On a queued recommendation, select **Not Tonight**.
+   - Expected: A success message appears and the queue item moves to the **Delay / Archive** lane.
+3. On a planned media recommendation not already queued, select **Add To Queue**.
+   - Expected: A success message appears and the title is visible in Queue.
+
+## Tonight Mode error path: invalid time
+
+1. Open **Tonight Mode**.
+   - Expected: The form is visible.
+2. Set available time to 0 or blank and select **Generate Tonight Plan**.
+   - Expected: An error message asks for at least 1 available minute and no recommendation request is sent.
+
+## Tonight Mode edge case: no matching candidates
+
+1. Use a new account with no queue items and no planned media.
+   - Expected: Queue and Library are empty.
+2. Open **Tonight Mode** and select **Generate Tonight Plan**.
+   - Expected: The page shows an empty state explaining that queue items or planned media are needed.
