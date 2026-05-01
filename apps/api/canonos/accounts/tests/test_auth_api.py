@@ -76,6 +76,14 @@ def test_current_user_endpoint_returns_session_state_and_profile() -> None:
     assert payload["user"]["email"] == "reader@example.com"
 
 
+def test_current_user_endpoint_allows_credentialed_frontend_origin() -> None:
+    response = APIClient().get(reverse("auth-me"), HTTP_ORIGIN="http://localhost:5173")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+    assert response.headers["access-control-allow-credentials"] == "true"
+
+
 def test_profile_update_endpoint_updates_current_user_profile() -> None:
     user = User.objects.create_user(
         username="reader@example.com", email="reader@example.com", password="strong-password"

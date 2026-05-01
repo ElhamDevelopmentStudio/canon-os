@@ -36,6 +36,8 @@ When an API response shape changes, update serializers, shared contracts, fronte
 
 CanonOS uses Django session authentication for the browser app. The frontend does not store bearer tokens in `localStorage`; Django owns the HTTP-only `sessionid` cookie and Axios sends credentials with each API request.
 
+When the frontend calls the backend directly from `http://localhost:5173` to `http://localhost:8000`, Django must allow the frontend origin and credentialed CORS requests. Local defaults use `DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:5173`, `DJANGO_CORS_ALLOW_CREDENTIALS=true`, and `DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:5173`.
+
 Auth endpoints:
 
 - `GET /api/auth/csrf/` sets/returns a CSRF token for unsafe requests.

@@ -83,6 +83,8 @@ corepack pnpm --filter @canonos/web run build
 
 Set `VITE_API_BASE_URL=http://localhost:8000/api` in the root `.env` when bypassing the Vite dev server. The Vite config loads frontend environment variables from the repository root only; when `VITE_API_BASE_URL` is omitted, the shared client uses `/api` and the Vite dev server proxies `/api` to `http://localhost:8000`, configurable with root `VITE_API_PROXY_TARGET`. The dashboard calls `GET /health/` through the shared Axios client and displays loading, success, and error states.
 
+Because the shared Axios client sends cookies with `withCredentials: true`, direct `localhost:5173` to `localhost:8000` requests also require backend credentialed CORS with root `DJANGO_CORS_ALLOW_CREDENTIALS=true`.
+
 ## Auth Integration
 
 - Public routes: `/login` and `/register`.
