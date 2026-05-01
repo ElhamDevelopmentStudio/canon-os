@@ -30,3 +30,10 @@ def test_openapi_schema_is_available_and_documents_api_root() -> None:
     assert "CanonOS API" in content
     assert "/api/" in content
     assert "/api/health/" in content
+
+
+def test_django_admin_login_loads() -> None:
+    response = APIClient().get("/admin/login/")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert b"Django administration" in response.content

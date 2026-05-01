@@ -70,6 +70,10 @@ Tests must:
 - fail on browser console errors, page errors, and unexpected failed `/api/` responses;
 - explicitly allow any intentionally simulated backend failure with `allowApiFailure`.
 
+### MVP acceptance e2e
+
+`apps/web/e2e/mvp-acceptance.spec.ts` is the MVP sign-off browser test. It verifies that every MVP route renders from the sidebar on desktop and mobile, then completes a persisted user journey: register, add movie/anime/novel, score media, log aftertaste, confirm Taste Profile evidence, evaluate a candidate, add to queue, generate Tonight Mode, start a recommendation, verify Dashboard, update Settings, import CSV, export JSON/CSV, logout, login, and confirm data persisted.
+
 ### Current browser e2e coverage
 
 - Auth: CSRF bootstrap, register, login, logout, current user/session bootstrap, protected-route redirect, public-route redirect while authenticated, `csrftoken` and `sessionid` cookies, session persistence after refresh.

@@ -1446,72 +1446,72 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Backend QA Tasks
 
-- [ ] MVP-M15-BE-001 Run all backend tests.
-- [ ] MVP-M15-BE-002 Fix failing auth tests.
-- [ ] MVP-M15-BE-003 Fix failing media tests.
-- [ ] MVP-M15-BE-004 Fix failing scoring tests.
-- [ ] MVP-M15-BE-005 Fix failing candidate tests.
-- [ ] MVP-M15-BE-006 Fix failing queue tests.
-- [ ] MVP-M15-BE-007 Fix failing Tonight Mode tests.
-- [ ] MVP-M15-BE-008 Fix failing aftertaste tests.
-- [ ] MVP-M15-BE-009 Fix failing settings tests.
-- [ ] MVP-M15-BE-010 Fix failing import/export tests.
-- [ ] MVP-M15-BE-011 Confirm migrations run from clean database.
-- [ ] MVP-M15-BE-012 Confirm admin site loads.
-- [ ] MVP-M15-BE-013 Confirm no endpoint leaks another user's data.
+- [x] MVP-M15-BE-001 Run all backend tests.
+- [x] MVP-M15-BE-002 Fix failing auth tests.
+- [x] MVP-M15-BE-003 Fix failing media tests.
+- [x] MVP-M15-BE-004 Fix failing scoring tests.
+- [x] MVP-M15-BE-005 Fix failing candidate tests.
+- [x] MVP-M15-BE-006 Fix failing queue tests.
+- [x] MVP-M15-BE-007 Fix failing Tonight Mode tests.
+- [x] MVP-M15-BE-008 Fix failing aftertaste tests.
+- [x] MVP-M15-BE-009 Fix failing settings tests.
+- [x] MVP-M15-BE-010 Fix failing import/export tests.
+- [x] MVP-M15-BE-011 Confirm migrations run from clean database.
+- [x] MVP-M15-BE-012 Confirm admin site loads.
+- [x] MVP-M15-BE-013 Confirm no endpoint leaks another user's data.
 
 ### Frontend QA Tasks
 
-- [ ] MVP-M15-FE-001 Run frontend type check.
-- [ ] MVP-M15-FE-002 Fix TypeScript errors.
-- [ ] MVP-M15-FE-003 Run frontend build.
-- [ ] MVP-M15-FE-004 Fix build errors.
-- [ ] MVP-M15-FE-005 Confirm all routes render.
-- [ ] MVP-M15-FE-006 Confirm all sidebar links work.
-- [ ] MVP-M15-FE-007 Confirm all major buttons have handlers.
-- [ ] MVP-M15-FE-008 Confirm no major button is a dead placeholder.
-- [ ] MVP-M15-FE-009 Confirm loading states render on major pages.
-- [ ] MVP-M15-FE-010 Confirm empty states render on major pages.
-- [ ] MVP-M15-FE-011 Confirm error states render on major pages.
-- [ ] MVP-M15-FE-012 Confirm layout remains consistent on mobile width.
+- [x] MVP-M15-FE-001 Run frontend type check.
+- [x] MVP-M15-FE-002 Fix TypeScript errors.
+- [x] MVP-M15-FE-003 Run frontend build.
+- [x] MVP-M15-FE-004 Fix build errors.
+- [x] MVP-M15-FE-005 Confirm all routes render.
+- [x] MVP-M15-FE-006 Confirm all sidebar links work.
+- [x] MVP-M15-FE-007 Confirm all major buttons have handlers.
+- [x] MVP-M15-FE-008 Confirm no major button is a dead placeholder.
+- [x] MVP-M15-FE-009 Confirm loading states render on major pages.
+- [x] MVP-M15-FE-010 Confirm empty states render on major pages.
+- [x] MVP-M15-FE-011 Confirm error states render on major pages.
+- [x] MVP-M15-FE-012 Confirm layout remains consistent on mobile width.
 
 ### End-To-End Acceptance Tasks
 
-- [ ] MVP-M15-E2E-001 Register a new user.
-- [ ] MVP-M15-E2E-002 Log in as the new user.
-- [ ] MVP-M15-E2E-003 Add a movie to Library.
-- [ ] MVP-M15-E2E-004 Add an anime to Library.
-- [ ] MVP-M15-E2E-005 Add a novel to Library.
-- [ ] MVP-M15-E2E-006 Score the movie with taste dimensions.
-- [ ] MVP-M15-E2E-007 Score the anime with taste dimensions.
-- [ ] MVP-M15-E2E-008 Create an aftertaste entry.
-- [ ] MVP-M15-E2E-009 Open Taste Profile and confirm it reflects data.
-- [ ] MVP-M15-E2E-010 Create a candidate.
-- [ ] MVP-M15-E2E-011 Evaluate the candidate.
-- [ ] MVP-M15-E2E-012 Add the candidate to Queue.
-- [ ] MVP-M15-E2E-013 Open Tonight Mode.
-- [ ] MVP-M15-E2E-014 Generate a Tonight Mode plan.
-- [ ] MVP-M15-E2E-015 Start one recommendation.
-- [ ] MVP-M15-E2E-016 Confirm Dashboard updates.
-- [ ] MVP-M15-E2E-017 Update Settings.
-- [ ] MVP-M15-E2E-018 Import a valid CSV media list.
-- [ ] MVP-M15-E2E-019 Export all user data as JSON.
-- [ ] MVP-M15-E2E-020 Export media library as CSV.
-- [ ] MVP-M15-E2E-021 Log out.
-- [ ] MVP-M15-E2E-022 Log back in.
-- [ ] MVP-M15-E2E-023 Confirm data persisted.
+- [x] MVP-M15-E2E-001 Register a new user.
+- [x] MVP-M15-E2E-002 Log in as the new user.
+- [x] MVP-M15-E2E-003 Add a movie to Library.
+- [x] MVP-M15-E2E-004 Add an anime to Library.
+- [x] MVP-M15-E2E-005 Add a novel to Library.
+- [x] MVP-M15-E2E-006 Score the movie with taste dimensions.
+- [x] MVP-M15-E2E-007 Score the anime with taste dimensions.
+- [x] MVP-M15-E2E-008 Create an aftertaste entry.
+- [x] MVP-M15-E2E-009 Open Taste Profile and confirm it reflects data.
+- [x] MVP-M15-E2E-010 Create a candidate.
+- [x] MVP-M15-E2E-011 Evaluate the candidate.
+- [x] MVP-M15-E2E-012 Add the candidate to Queue.
+- [x] MVP-M15-E2E-013 Open Tonight Mode.
+- [x] MVP-M15-E2E-014 Generate a Tonight Mode plan.
+- [x] MVP-M15-E2E-015 Start one recommendation.
+- [x] MVP-M15-E2E-016 Confirm Dashboard updates.
+- [x] MVP-M15-E2E-017 Update Settings.
+- [x] MVP-M15-E2E-018 Import a valid CSV media list.
+- [x] MVP-M15-E2E-019 Export all user data as JSON.
+- [x] MVP-M15-E2E-020 Export media library as CSV.
+- [x] MVP-M15-E2E-021 Log out.
+- [x] MVP-M15-E2E-022 Log back in.
+- [x] MVP-M15-E2E-023 Confirm data persisted.
 
 ### MVP Sign-Off Tasks
 
-- [ ] MVP-M15-SIGN-001 Confirm MVP has no missing critical page.
-- [ ] MVP-M15-SIGN-002 Confirm MVP has no dead primary action.
-- [ ] MVP-M15-SIGN-003 Confirm MVP has clear API docs.
-- [ ] MVP-M15-SIGN-004 Confirm MVP has working local setup.
-- [ ] MVP-M15-SIGN-005 Confirm MVP is useful for logging and choosing media.
-- [ ] MVP-M15-SIGN-006 Confirm MVP can import and export user-owned data.
-- [ ] MVP-M15-SIGN-007 Confirm all manual test docs exist for MVP user-facing features.
-- [ ] MVP-M15-SIGN-008 Confirm lint, typecheck, tests, build, and E2E all pass.
-- [ ] MVP-M15-SIGN-009 Write MVP completion summary in Last Completed Task Summary section.
+- [x] MVP-M15-SIGN-001 Confirm MVP has no missing critical page.
+- [x] MVP-M15-SIGN-002 Confirm MVP has no dead primary action.
+- [x] MVP-M15-SIGN-003 Confirm MVP has clear API docs.
+- [x] MVP-M15-SIGN-004 Confirm MVP has working local setup.
+- [x] MVP-M15-SIGN-005 Confirm MVP is useful for logging and choosing media.
+- [x] MVP-M15-SIGN-006 Confirm MVP can import and export user-owned data.
+- [x] MVP-M15-SIGN-007 Confirm all manual test docs exist for MVP user-facing features.
+- [x] MVP-M15-SIGN-008 Confirm lint, typecheck, tests, build, and E2E all pass.
+- [x] MVP-M15-SIGN-009 Write MVP completion summary in Last Completed Task Summary section.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M13-QA-008.
-**Last completed task name:** Create or update `docs/manual-tests/settings-portability.md`.
-**Last completed milestone:** MVP-M13 — Import / Export MVP.
-**Current phase:** MVP Phase.
-**Current milestone:** MVP-M15 — MVP Testing, Bug Fixing, And Acceptance.
-**Next recommended task:** MVP-M15-BE-001 Run all backend tests.
+**Last completed task ID:** MVP-M15-SIGN-009.
+**Last completed task name:** Write MVP completion summary in Last Completed Task Summary section.
+**Last completed milestone:** MVP-M15 — MVP Testing, Bug Fixing, And Acceptance.
+**Current phase:** Complete Product Phase.
+**Current milestone:** CP-M01 — Production-Ready Monorepo Hardening.
+**Next recommended task:** CP-M01-SH-001 Add consistent root lint command.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M13 Import / Export is complete. Shared contracts now define `ImportBatch`, `ImportItemPreview`, `ExportRequest`, and `ExportResult`; API docs define supported CSV columns, the `canonos.export.v1` JSON format, and the no-partial-write import rule. Django now has owner-scoped `ImportBatch`, `ImportItem`, and `ExportJob` models; CSV/JSON preview parsers; transactional import confirmation; full JSON and media-score CSV export services; download endpoints; and a local `backup_user_data` command. Settings now includes an Import and export section with file preview, validation errors, duplicate warnings, confirm import, export request, and download controls. Backend and browser e2e cover valid CSV import, invalid import preserving library data, JSON export contents, exported JSON re-import, and CSV export.
+MVP acceptance is complete. Backend tests cover auth, media, scoring, candidates, queue, Tonight Mode, aftertaste, settings, import/export, API root/schema, Django admin reachability, and owner scoping including import/export download protection. Frontend typecheck/build pass, all MVP routes render from sidebar navigation on desktop and mobile, and the browser-to-backend acceptance journey persists data across logout/login. The MVP supports registering, adding/scoring media, logging aftertaste, viewing Taste Profile and Dashboard updates, evaluating a candidate, queueing it, generating Tonight Mode, updating settings, importing CSV, and exporting JSON/CSV backups. Full lint, typecheck, tests, build, and e2e gates pass.
 
 ## 9.3 Important Notes For The Next Agent
 

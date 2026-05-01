@@ -164,3 +164,32 @@ def test_csv_export_downloads_library_and_rating_columns() -> None:
     assert "title,media_type,status,personal_rating" in content
     assert "score_atmosphere" in content
     assert "CSV Movie" in content
+
+
+def test_import_confirm_and_export_download_are_owner_scoped() -> None:
+    owner_client, _ = authenticated_client("portable-owner@example.com")
+    other_client, _ = authenticated_client("portable-other@example.com")
+    preview_response = owner_client.post(
+        reverse("import-preview"),
+        {
+            "sourceType": "csv",
+            "content": "title,media_type,status\nPrivate Import,movie,planned\n",
+        },
+        format="json",
+    )
+    export_response = owner_client.post(
+        reverse("export-request"), {"format": "json"}, format="json"
+    )
+
+    confirm_response = other_client.post(
+        reverse("import-confirm", args=[preview_response.json()["id"]])
+    )
+    download_response = other_client.get(
+        reverse("export-download", args=[export_response.json()["id"]])
+    )
+
+    assert preview_response.status_code == status.HTTP_201_CREATED
+    assert export_response.status_code == status.HTTP_201_CREATED
+    assert confirm_response.status_code == status.HTTP_404_NOT_FOUND
+    assert download_response.status_code == status.HTTP_404_NOT_FOUND
+    assert not MediaItem.objects.filter(title="Private Import").exists()
