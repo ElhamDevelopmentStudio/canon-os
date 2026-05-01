@@ -131,3 +131,24 @@ Every new API endpoint must be covered through a real browser e2e user flow when
 ## Tonight Mode
 
 - `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request includes available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance. The response includes up to five recommendations plus safe, challenging, and wildcard slots when available.
+
+## Aftertaste API Contract
+
+Aftertaste entries are user-owned reflections tied to one media item. Every endpoint requires an authenticated session and only returns entries owned by the current user.
+
+Endpoints:
+
+- `GET /api/aftertaste/` lists the current user's aftertaste entries with pagination.
+- `POST /api/aftertaste/` creates an aftertaste entry for an owned media item.
+- `GET /api/aftertaste/{id}/` returns one owned aftertaste entry.
+- `PATCH /api/aftertaste/{id}/` updates one owned aftertaste entry.
+- `DELETE /api/aftertaste/{id}/` deletes one owned aftertaste entry.
+- `GET /api/aftertaste/prompts/` returns the default reflection prompts used by the browser UI.
+
+List filter:
+
+- `mediaItemId`: limit results to one owned media item.
+
+The create/update payload uses `mediaItemId`, `worthTime`, `stayedWithMeScore` (`0` to `10`), `feltAlive`, `feltGeneric`, `completionReason`, `whatWorked`, `whatFailed`, `finalThoughts`, and `appetiteEffect`. Appetite effects are `more_like_this`, `less_like_this`, `only_in_mood`, and `no_change`.
+
+Media detail responses include `latestAftertaste` so the detail page can show the newest reflection without making a second request. Shared TypeScript contracts live in `packages/contracts/src/aftertaste.ts`; the frontend client and SWR hooks live in `apps/web/src/features/aftertaste/aftertasteApi.ts`.

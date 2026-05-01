@@ -1087,90 +1087,90 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M10-SH-001 Define `AftertasteEntry` type.
-- [ ] MVP-M10-SH-002 Define `AftertasteCreateRequest` type.
-- [ ] MVP-M10-SH-003 Define `AftertastePrompt` type.
-- [ ] MVP-M10-SH-004 Define default aftertaste prompt list.
-- [ ] MVP-M10-SH-005 Document aftertaste API contract.
+- [x] MVP-M10-SH-001 Define `AftertasteEntry` type.
+- [x] MVP-M10-SH-002 Define `AftertasteCreateRequest` type.
+- [x] MVP-M10-SH-003 Define `AftertastePrompt` type.
+- [x] MVP-M10-SH-004 Define default aftertaste prompt list.
+- [x] MVP-M10-SH-005 Document aftertaste API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M10-BE-001 Create aftertaste app.
-- [ ] MVP-M10-BE-002 Create AftertasteEntry model.
-- [ ] MVP-M10-BE-003 Add owner/user foreign key.
-- [ ] MVP-M10-BE-004 Add media item foreign key.
-- [ ] MVP-M10-BE-005 Add worth_time boolean field.
-- [ ] MVP-M10-BE-006 Add stayed_with_me score field.
-- [ ] MVP-M10-BE-007 Add felt_alive boolean field.
-- [ ] MVP-M10-BE-008 Add felt_generic boolean field.
-- [ ] MVP-M10-BE-009 Add completion_reason field.
-- [ ] MVP-M10-BE-010 Add what_worked text field.
-- [ ] MVP-M10-BE-011 Add what_failed text field.
-- [ ] MVP-M10-BE-012 Add final_thoughts text field.
-- [ ] MVP-M10-BE-013 Add appetite_effect field.
-- [ ] MVP-M10-BE-014 Add created at field.
-- [ ] MVP-M10-BE-015 Create migration for AftertasteEntry.
-- [ ] MVP-M10-BE-016 Create AftertasteEntry serializer.
-- [ ] MVP-M10-BE-017 Create aftertaste list endpoint.
-- [ ] MVP-M10-BE-018 Create aftertaste create endpoint.
-- [ ] MVP-M10-BE-019 Create aftertaste detail endpoint.
-- [ ] MVP-M10-BE-020 Create aftertaste update endpoint.
-- [ ] MVP-M10-BE-021 Create aftertaste delete endpoint.
-- [ ] MVP-M10-BE-022 Add latest aftertaste entry to media detail response.
-- [ ] MVP-M10-BE-023 Register AftertasteEntry in Django admin.
-- [ ] MVP-M10-BE-024 Add test for aftertaste creation.
-- [ ] MVP-M10-BE-025 Add test for aftertaste list.
-- [ ] MVP-M10-BE-026 Add test for media ownership protection.
+- [x] MVP-M10-BE-001 Create aftertaste app.
+- [x] MVP-M10-BE-002 Create AftertasteEntry model.
+- [x] MVP-M10-BE-003 Add owner/user foreign key.
+- [x] MVP-M10-BE-004 Add media item foreign key.
+- [x] MVP-M10-BE-005 Add worth_time boolean field.
+- [x] MVP-M10-BE-006 Add stayed_with_me score field.
+- [x] MVP-M10-BE-007 Add felt_alive boolean field.
+- [x] MVP-M10-BE-008 Add felt_generic boolean field.
+- [x] MVP-M10-BE-009 Add completion_reason field.
+- [x] MVP-M10-BE-010 Add what_worked text field.
+- [x] MVP-M10-BE-011 Add what_failed text field.
+- [x] MVP-M10-BE-012 Add final_thoughts text field.
+- [x] MVP-M10-BE-013 Add appetite_effect field.
+- [x] MVP-M10-BE-014 Add created at field.
+- [x] MVP-M10-BE-015 Create migration for AftertasteEntry.
+- [x] MVP-M10-BE-016 Create AftertasteEntry serializer.
+- [x] MVP-M10-BE-017 Create aftertaste list endpoint.
+- [x] MVP-M10-BE-018 Create aftertaste create endpoint.
+- [x] MVP-M10-BE-019 Create aftertaste detail endpoint.
+- [x] MVP-M10-BE-020 Create aftertaste update endpoint.
+- [x] MVP-M10-BE-021 Create aftertaste delete endpoint.
+- [x] MVP-M10-BE-022 Add latest aftertaste entry to media detail response.
+- [x] MVP-M10-BE-023 Register AftertasteEntry in Django admin.
+- [x] MVP-M10-BE-024 Add test for aftertaste creation.
+- [x] MVP-M10-BE-025 Add test for aftertaste list.
+- [x] MVP-M10-BE-026 Add test for media ownership protection.
 
 ### Frontend Tasks
 
-- [ ] MVP-M10-FE-001 Create aftertaste API client file.
-- [ ] MVP-M10-FE-002 Create `useAftertasteEntries` SWR hook.
-- [ ] MVP-M10-FE-003 Create Aftertaste Log page skeleton.
-- [ ] MVP-M10-FE-004 Add Aftertaste page title.
-- [ ] MVP-M10-FE-005 Add New Reflection button.
-- [ ] MVP-M10-FE-006 Create aftertaste entry list component.
-- [ ] MVP-M10-FE-007 Create aftertaste entry card component.
-- [ ] MVP-M10-FE-008 Add media title to entry card.
-- [ ] MVP-M10-FE-009 Add worth time indicator to entry card.
-- [ ] MVP-M10-FE-010 Add stayed-with-me score to entry card.
-- [ ] MVP-M10-FE-011 Add felt generic indicator to entry card.
-- [ ] MVP-M10-FE-012 Add final thoughts preview to entry card.
-- [ ] MVP-M10-FE-013 Create Aftertaste form modal.
-- [ ] MVP-M10-FE-014 Add media item selector to form.
-- [ ] MVP-M10-FE-015 Add worth time control to form.
-- [ ] MVP-M10-FE-016 Add stayed with me score field.
-- [ ] MVP-M10-FE-017 Add felt alive control.
-- [ ] MVP-M10-FE-018 Add felt generic control.
-- [ ] MVP-M10-FE-019 Add completion reason field.
-- [ ] MVP-M10-FE-020 Add what worked textarea.
-- [ ] MVP-M10-FE-021 Add what failed textarea.
-- [ ] MVP-M10-FE-022 Add final thoughts textarea.
-- [ ] MVP-M10-FE-023 Add appetite effect select.
-- [ ] MVP-M10-FE-024 Add save button.
-- [ ] MVP-M10-FE-025 Add cancel button.
-- [ ] MVP-M10-FE-026 Add aftertaste prompt section to Media Detail page.
-- [ ] MVP-M10-FE-027 Add loading state to Aftertaste page.
-- [ ] MVP-M10-FE-028 Add empty state to Aftertaste page.
-- [ ] MVP-M10-FE-029 Add error state to Aftertaste page.
+- [x] MVP-M10-FE-001 Create aftertaste API client file.
+- [x] MVP-M10-FE-002 Create `useAftertasteEntries` SWR hook.
+- [x] MVP-M10-FE-003 Create Aftertaste Log page skeleton.
+- [x] MVP-M10-FE-004 Add Aftertaste page title.
+- [x] MVP-M10-FE-005 Add New Reflection button.
+- [x] MVP-M10-FE-006 Create aftertaste entry list component.
+- [x] MVP-M10-FE-007 Create aftertaste entry card component.
+- [x] MVP-M10-FE-008 Add media title to entry card.
+- [x] MVP-M10-FE-009 Add worth time indicator to entry card.
+- [x] MVP-M10-FE-010 Add stayed-with-me score to entry card.
+- [x] MVP-M10-FE-011 Add felt generic indicator to entry card.
+- [x] MVP-M10-FE-012 Add final thoughts preview to entry card.
+- [x] MVP-M10-FE-013 Create Aftertaste form modal.
+- [x] MVP-M10-FE-014 Add media item selector to form.
+- [x] MVP-M10-FE-015 Add worth time control to form.
+- [x] MVP-M10-FE-016 Add stayed with me score field.
+- [x] MVP-M10-FE-017 Add felt alive control.
+- [x] MVP-M10-FE-018 Add felt generic control.
+- [x] MVP-M10-FE-019 Add completion reason field.
+- [x] MVP-M10-FE-020 Add what worked textarea.
+- [x] MVP-M10-FE-021 Add what failed textarea.
+- [x] MVP-M10-FE-022 Add final thoughts textarea.
+- [x] MVP-M10-FE-023 Add appetite effect select.
+- [x] MVP-M10-FE-024 Add save button.
+- [x] MVP-M10-FE-025 Add cancel button.
+- [x] MVP-M10-FE-026 Add aftertaste prompt section to Media Detail page.
+- [x] MVP-M10-FE-027 Add loading state to Aftertaste page.
+- [x] MVP-M10-FE-028 Add empty state to Aftertaste page.
+- [x] MVP-M10-FE-029 Add error state to Aftertaste page.
 
 ### Integration Tasks
 
-- [ ] MVP-M10-INT-001 Connect Aftertaste page to list endpoint.
-- [ ] MVP-M10-INT-002 Connect New Reflection form to create endpoint.
-- [ ] MVP-M10-INT-003 Connect edit action to update endpoint.
-- [ ] MVP-M10-INT-004 Connect delete action to delete endpoint.
-- [ ] MVP-M10-INT-005 Connect Media Detail aftertaste section to latest entry.
-- [ ] MVP-M10-INT-006 Revalidate aftertaste list after creation.
+- [x] MVP-M10-INT-001 Connect Aftertaste page to list endpoint.
+- [x] MVP-M10-INT-002 Connect New Reflection form to create endpoint.
+- [x] MVP-M10-INT-003 Connect edit action to update endpoint.
+- [x] MVP-M10-INT-004 Connect delete action to delete endpoint.
+- [x] MVP-M10-INT-005 Connect Media Detail aftertaste section to latest entry.
+- [x] MVP-M10-INT-006 Revalidate aftertaste list after creation.
 
 ### QA Tasks
 
-- [ ] MVP-M10-QA-001 Create aftertaste entry from UI.
-- [ ] MVP-M10-QA-002 Edit aftertaste entry from UI.
-- [ ] MVP-M10-QA-003 Delete aftertaste entry from UI.
-- [ ] MVP-M10-QA-004 Confirm entry appears on Media Detail page.
-- [ ] MVP-M10-QA-005 Confirm Aftertaste page matches wireframe.
-- [ ] MVP-M10-QA-006 Create or update `docs/manual-tests/aftertaste-log.md`.
+- [x] MVP-M10-QA-001 Create aftertaste entry from UI.
+- [x] MVP-M10-QA-002 Edit aftertaste entry from UI.
+- [x] MVP-M10-QA-003 Delete aftertaste entry from UI.
+- [x] MVP-M10-QA-004 Confirm entry appears on Media Detail page.
+- [x] MVP-M10-QA-005 Confirm Aftertaste page matches wireframe.
+- [x] MVP-M10-QA-006 Create or update `docs/manual-tests/aftertaste-log.md`.
 
 ---
 
@@ -2988,7 +2988,7 @@ The MVP is done only when:
 - [ ] A user can register, log in, and log out.
 - [ ] A user can add, edit, delete, search, and filter media.
 - [ ] A user can score media by custom taste dimensions.
-- [ ] A user can create aftertaste entries.
+- [x] A user can create aftertaste entries.
 - [x] A user can evaluate a candidate.
 - [x] A user can add candidates to queue.
 - [x] A user can generate a Tonight Mode recommendation.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M09-QA-006.
-**Last completed task name:** Create or update `docs/manual-tests/queue-tonight.md`.
-**Last completed milestone:** MVP-M09 — Tonight Mode MVP.
+**Last completed task ID:** MVP-M10-QA-006.
+**Last completed task name:** Create or update `docs/manual-tests/aftertaste-log.md`.
+**Last completed milestone:** MVP-M10 — Aftertaste Log MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M10 — Aftertaste Log MVP.
-**Next recommended task:** MVP-M10-SH-001 Define `AftertasteEntry` type.
+**Current milestone:** MVP-M11 — Taste Profile MVP.
+**Next recommended task:** MVP-M11-SH-001 Define `TasteProfileSummary` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M09 Tonight Mode is complete. Shared contracts now define the Tonight Mode request, recommendation, response, energy/focus/effect/risk enums, and slot labels. Django persists `TonightModeSession` records, generates deterministic recommendations from adaptive queue items and planned media, filters by time, scores by energy/focus/effect/risk/media preference, returns safe/challenging/wildcard choices, registers admin support, and exposes `POST /api/queue/tonight/` with tests for empty data, time filtering, slots, and OpenAPI coverage. The frontend `/tonight` page is connected to the real API with check-in controls, loading/empty/error/success states, recommendation cards, Start This, Not Tonight, and Add To Queue actions. Browser e2e now covers the full Tonight Mode flow and empty state. Recommendation rules live in `docs/queue.md`; manual QA lives in `docs/manual-tests/queue-tonight.md`.
+MVP-M10 Aftertaste Log is complete. Shared contracts now define aftertaste entries, create/update payloads, appetite effects, prompts, and media-detail `latestAftertaste`. Django exposes user-owned `GET/POST/PATCH/DELETE /api/aftertaste/`, `GET /api/aftertaste/prompts/`, persists `AftertasteEntry`, registers admin support, protects media ownership, and includes the latest aftertaste entry on media detail responses. The frontend `/aftertaste-log` page is connected to the real API with loading, empty, error, create, edit, delete, prompt, and success states, and Media Detail now surfaces the latest reflection. Browser e2e covers create/edit/media-detail/delete, and manual QA lives in `docs/manual-tests/aftertaste-log.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

@@ -37,6 +37,7 @@ class MediaItemViewSet(viewsets.ModelViewSet):
             MediaItem.objects.filter(owner=self.request.user)
             .prefetch_related(
                 "scores__taste_dimension",
+                "aftertaste_entries",
             )
             .order_by(
                 "-updated_at",

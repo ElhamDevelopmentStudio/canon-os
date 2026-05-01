@@ -33,6 +33,12 @@ function normalizeMediaItem(item: MediaItem): MediaItem {
     ...item,
     personalRating: item.personalRating === null ? null : Number(item.personalRating),
     scores: item.scores?.map((score) => ({ ...score, score: Number(score.score) })),
+    latestAftertaste: item.latestAftertaste
+      ? {
+        ...item.latestAftertaste,
+        stayedWithMeScore: Number(item.latestAftertaste.stayedWithMeScore),
+      }
+      : item.latestAftertaste,
   };
 }
 

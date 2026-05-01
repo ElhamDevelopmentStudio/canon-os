@@ -1,4 +1,14 @@
 export type {
+  AftertasteAppetiteEffect,
+  AftertasteCreateRequest,
+  AftertasteEntry,
+  AftertasteEntryFilters,
+  AftertasteEntryListResponse,
+  AftertastePrompt,
+  AftertasteUpdateRequest,
+} from "./aftertaste";
+export { AFTERTASTE_APPETITE_EFFECTS, DEFAULT_AFTERTASTE_PROMPTS } from "./aftertaste";
+export type {
   Candidate,
   CandidateAddToLibraryRequest,
   CandidateAddToLibraryResponse,

@@ -13,6 +13,7 @@ import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
+import { appetiteEffectLabels, booleanLabel } from "@/features/aftertaste/aftertasteLabels";
 import { DimensionScoreGrid } from "@/features/media/DimensionScoreGrid";
 import {
   findScoreValidationError,
@@ -181,6 +182,43 @@ export function MediaDetailPage() {
             </Button>
           </div>
         </div>
+      </SectionCard>
+
+      <SectionCard title="Aftertaste">
+        {data.latestAftertaste ? (
+          <div className="grid gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold">Latest reflection</h2>
+                <p className="text-sm text-muted-foreground">
+                  Logged {new Date(data.latestAftertaste.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+              <Button asChild type="button" variant="secondary">
+                <Link to={APP_ROUTES.aftertasteLog}>Open Aftertaste Log</Link>
+              </Button>
+            </div>
+            <dl className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
+              <Metadata label="Worth time" value={booleanLabel(data.latestAftertaste.worthTime)} />
+              <Metadata label="Stayed with me" value={`${data.latestAftertaste.stayedWithMeScore}/10`} />
+              <Metadata label="Felt generic" value={booleanLabel(data.latestAftertaste.feltGeneric)} />
+              <Metadata label="Appetite effect" value={appetiteEffectLabels[data.latestAftertaste.appetiteEffect]} />
+            </dl>
+            <div className="rounded-2xl bg-muted/50 p-4">
+              <h3 className="text-sm font-semibold">Final thoughts</h3>
+              <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
+                {data.latestAftertaste.finalThoughts || "No final thoughts recorded yet."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <EmptyState
+            actionLabel="Log Aftertaste"
+            message="When this work is finished, dropped, or paused, add a reflection so CanonOS remembers what actually stayed with you."
+            title="No aftertaste recorded"
+            onAction={() => navigate(APP_ROUTES.aftertasteLog)}
+          />
+        )}
       </SectionCard>
 
       <SectionCard title="Metadata">

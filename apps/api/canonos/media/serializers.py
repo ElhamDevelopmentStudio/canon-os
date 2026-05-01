@@ -52,6 +52,7 @@ class MediaItemSerializer(serializers.ModelSerializer):
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
     scores = serializers.SerializerMethodField()
+    latestAftertaste = serializers.SerializerMethodField()
 
     class Meta:
         model = MediaItem
@@ -75,6 +76,7 @@ class MediaItemSerializer(serializers.ModelSerializer):
             "createdAt",
             "updatedAt",
             "scores",
+            "latestAftertaste",
         ]
         read_only_fields = ["id", "createdAt", "updatedAt"]
 
@@ -83,3 +85,11 @@ class MediaItemSerializer(serializers.ModelSerializer):
 
         scores = obj.scores.select_related("taste_dimension").all()
         return MediaScoreSerializer(scores, many=True).data
+
+    def get_latestAftertaste(self, obj: MediaItem):  # noqa: ANN201, N802
+        from canonos.aftertaste.serializers import AftertasteEntrySerializer
+
+        latest = obj.aftertaste_entries.select_related("media_item").order_by("-created_at").first()
+        if latest is None:
+            return None
+        return AftertasteEntrySerializer(latest, context=self.context).data

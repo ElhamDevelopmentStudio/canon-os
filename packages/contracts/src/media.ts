@@ -1,3 +1,4 @@
+import type { AftertasteEntry } from "./aftertaste";
 import type { MediaScore } from "./taste";
 
 export const MEDIA_TYPES = ["movie", "tv_show", "anime", "novel", "audiobook"] as const;
@@ -26,6 +27,7 @@ export type MediaItem = {
   createdAt: string;
   updatedAt: string;
   scores?: MediaScore[];
+  latestAftertaste?: AftertasteEntry | null;
 };
 
 export type MediaItemCreateRequest = {

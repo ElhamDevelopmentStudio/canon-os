@@ -1,6 +1,7 @@
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
 
 import { AppLayout } from "@/app/layouts/AppLayout";
+import { AftertasteLogPage } from "@/pages/AftertasteLogPage";
 import { APP_ROUTES } from "@/app/routeConstants";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
@@ -21,7 +22,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.candidates.slice(1), element: <CandidateEvaluatorPage /> },
   { path: APP_ROUTES.tonight.slice(1), element: <TonightModePage /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <PlaceholderPage route={APP_ROUTES.tasteProfile} /> },
-  { path: APP_ROUTES.aftertasteLog.slice(1), element: <PlaceholderPage route={APP_ROUTES.aftertasteLog} /> },
+  { path: APP_ROUTES.aftertasteLog.slice(1), element: <AftertasteLogPage /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },
   { path: APP_ROUTES.settings.slice(1), element: <PlaceholderPage route={APP_ROUTES.settings} /> },
 ];
