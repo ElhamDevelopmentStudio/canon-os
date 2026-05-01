@@ -306,12 +306,12 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### QA Tasks
 
-- [ ] MVP-M01-QA-001 Confirm backend starts without errors.
-- [ ] MVP-M01-QA-002 Confirm frontend starts without errors.
-- [ ] MVP-M01-QA-003 Confirm PostgreSQL connection works.
-- [ ] MVP-M01-QA-004 Confirm Redis connection works.
-- [ ] MVP-M01-QA-005 Confirm health endpoint returns success.
-- [ ] MVP-M01-QA-006 Confirm root README has enough setup instructions for another agent.
+- [x] MVP-M01-QA-001 Confirm backend starts without errors.
+- [x] MVP-M01-QA-002 Confirm frontend starts without errors.
+- [x] MVP-M01-QA-003 Confirm PostgreSQL connection works.
+- [x] MVP-M01-QA-004 Confirm Redis connection works.
+- [x] MVP-M01-QA-005 Confirm health endpoint returns success.
+- [x] MVP-M01-QA-006 Confirm root README has enough setup instructions for another agent.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M01-INT-006.
-**Last completed task name:** Add CORS fix if frontend cannot reach backend.
-**Last completed milestone:** MVP-M01 — Monorepo Foundation integration track is complete.
+**Last completed task ID:** MVP-M01-QA-006.
+**Last completed task name:** Confirm root README has enough setup instructions for another agent.
+**Last completed milestone:** MVP-M01 — Monorepo Foundation is complete.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M01 — Monorepo Foundation.
-**Next recommended task:** MVP-M01-QA-001 Confirm backend starts without errors.
+**Current milestone:** MVP-M02 — Shared Design System And Global Layout.
+**Next recommended task:** MVP-M02-SH-001 Add low-fidelity wireframe document references to `/docs/frontend.md`.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-The frontend/backend health integration was formalized: the shared Axios client exposes `API_BASE_URL`, the health API has an explicit `getHealthCheck()` function plus SWR hook, the home page displays API health from the configured backend URL, and tests cover the health client. The running Django API returned `/api/health/` successfully with `Origin: http://localhost:5173`, including the expected CORS allow-origin header.
+MVP-M01 QA was completed. Backend startup, frontend startup, PostgreSQL readiness, Redis ping, and the health endpoint were verified locally. The README now includes app-specific commands and foundation smoke checks so another agent can reproduce the setup. QA evidence was also recorded in `docs/testing.md`.
 
 ## 9.3 Important Notes For The Next Agent
 

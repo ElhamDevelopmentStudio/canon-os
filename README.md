@@ -57,14 +57,36 @@ These commands discover app/package scripts as modules are added. If no child wo
 ### Service Commands
 
 ```bash
-corepack pnpm dev:web      # start the Vite frontend after apps/web is initialized
-corepack pnpm dev:api      # start the Django API after apps/api is initialized
-corepack pnpm dev:worker   # start the Celery worker after backend settings exist
+corepack pnpm dev:web      # start the Vite frontend
+corepack pnpm dev:api      # start the Django API
+corepack pnpm dev:worker   # start the Celery worker
 corepack pnpm dev:all      # start available local services in one terminal
 corepack pnpm stop:all     # stop services recorded by dev:all
 ```
 
-If a service has not been initialized yet, its script prints a clear setup message instead of hiding the missing step.
+Useful app-specific commands:
+
+```bash
+corepack pnpm --filter @canonos/api run bootstrap
+corepack pnpm --filter @canonos/api run test
+corepack pnpm --filter @canonos/web run dev
+corepack pnpm --filter @canonos/web run test
+```
+
+### Foundation Smoke Checks
+
+After starting local dependencies, these checks should pass:
+
+```bash
+pg_isready -h 127.0.0.1 -p 5432
+apps/api/.venv/bin/python - <<'PY'
+from redis import Redis
+assert Redis.from_url("redis://localhost:6379/0").ping() is True
+PY
+curl http://127.0.0.1:8000/api/health/
+```
+
+The frontend should be configured with `VITE_API_BASE_URL=http://localhost:8000/api` so the temporary home page can show backend health.
 
 ## Source Documents
 
