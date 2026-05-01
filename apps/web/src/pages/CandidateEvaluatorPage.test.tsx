@@ -11,10 +11,15 @@ import {
   useCandidates,
 } from "@/features/candidate-evaluator/candidateApi";
 import { createQueueItem } from "@/features/queue/queueApi";
+import { useUserSettings } from "@/features/settings/settingsApi";
 import { CandidateEvaluatorPage } from "@/pages/CandidateEvaluatorPage";
 
 vi.mock("@/features/queue/queueApi", () => ({
   createQueueItem: vi.fn(),
+}));
+
+vi.mock("@/features/settings/settingsApi", () => ({
+  useUserSettings: vi.fn(),
 }));
 
 vi.mock("@/features/candidate-evaluator/candidateApi", () => ({
@@ -95,6 +100,7 @@ const mockedEvaluateCandidate = vi.mocked(evaluateCandidate);
 const mockedUpdateCandidate = vi.mocked(updateCandidate);
 const mockedAddCandidateToLibrary = vi.mocked(addCandidateToLibrary);
 const mockedCreateQueueItem = vi.mocked(createQueueItem);
+const mockedUseUserSettings = vi.mocked(useUserSettings);
 
 function mockCandidates(data: CandidateListResponse = sampleList) {
   mockedUseCandidates.mockReturnValue({
@@ -110,6 +116,25 @@ describe("CandidateEvaluatorPage", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mockCandidates();
+    mockedUseUserSettings.mockReturnValue({
+      data: {
+        id: 1,
+        profile: { id: 1, displayName: "Canon Reader", timezone: "UTC", preferredLanguage: "en" },
+        display: { themePreference: "system" },
+        recommendation: {
+          defaultMediaTypes: ["movie", "anime"],
+          defaultRiskTolerance: "medium",
+          modernMediaSkepticismLevel: 5,
+          genericnessSensitivity: 6,
+          preferredScoringStrictness: 5,
+        },
+        updatedAt: "2026-01-01T00:00:00Z",
+      },
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useUserSettings>);
     mockedCreateCandidate.mockResolvedValue(unevaluatedCandidate);
     mockedUpdateCandidate.mockResolvedValue(evaluatedCandidate);
     mockedEvaluateCandidate.mockResolvedValue(evaluationResponse);

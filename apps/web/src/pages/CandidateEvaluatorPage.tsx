@@ -30,6 +30,7 @@ import {
   evaluationDecisionLabels,
 } from "@/features/candidate-evaluator/candidateLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
+import { useUserSettings } from "@/features/settings/settingsApi";
 import { createQueueItem } from "@/features/queue/queueApi";
 import { cn } from "@/lib/utils";
 
@@ -59,6 +60,7 @@ const emptyDraft: CandidateDraft = {
 
 export function CandidateEvaluatorPage() {
   const { data, error, isLoading, mutate } = useCandidates();
+  const { data: userSettings } = useUserSettings();
   const [draft, setDraft] = useState<CandidateDraft>(emptyDraft);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [evaluation, setEvaluation] = useState<CandidateEvaluation | null>(null);
@@ -211,6 +213,13 @@ export function CandidateEvaluatorPage() {
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
+        {userSettings ? (
+          <div className="rounded-2xl border border-risky/30 bg-risky/10 p-4 text-sm text-risky xl:col-span-2">
+            Candidate Evaluator is using your saved genericness sensitivity: {userSettings.recommendation.genericnessSensitivity}/10
+            and modern media skepticism: {userSettings.recommendation.modernMediaSkepticismLevel}/10.
+          </div>
+        ) : null}
+
         <CandidateInputCard
           draft={draft}
           isEvaluating={isEvaluating}

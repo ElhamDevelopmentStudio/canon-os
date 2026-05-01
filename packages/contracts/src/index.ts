@@ -81,6 +81,14 @@ export {
   TASTE_DIMENSION_DIRECTIONS,
 } from "./taste";
 export type {
+  DisplaySettings,
+  RecommendationSettings,
+  ThemePreference,
+  UserSettings,
+  UserSettingsUpdateRequest,
+} from "./settings";
+export { THEME_PREFERENCES } from "./settings";
+export type {
   DesiredEffect,
   EnergyLevel,
   FocusLevel,

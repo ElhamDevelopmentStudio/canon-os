@@ -133,6 +133,7 @@ class TonightModeRequestSerializer(serializers.Serializer):
     riskTolerance = serializers.ChoiceField(
         source="risk_tolerance",
         choices=TonightModeSession.RiskTolerance.choices,
+        required=False,
     )
 
 

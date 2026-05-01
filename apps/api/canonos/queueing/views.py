@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.accounts.models import UserSettings
+
 from .models import QueueItem, TonightModeSession
 from .serializers import (
     QueueItemSerializer,
@@ -124,7 +126,17 @@ class TonightModeView(APIView):
 
         serializer = TonightModeRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        context = TonightContext(**serializer.validated_data)
+        user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
+        context_data = {
+            **serializer.validated_data,
+            "preferred_media_types": serializer.validated_data.get(
+                "preferred_media_types", user_settings.default_media_types
+            ),
+            "risk_tolerance": serializer.validated_data.get(
+                "risk_tolerance", user_settings.default_risk_tolerance
+            ),
+        }
+        context = TonightContext(**context_data)
         recommendations = generate_tonight_recommendations(request.user, context)
         session = TonightModeSession.objects.create(
             owner=request.user,

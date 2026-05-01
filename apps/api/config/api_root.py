@@ -11,6 +11,7 @@ API_ROOT_PAYLOAD = {
     "endpoints": {
         "health": "/api/health/",
         "auth": "/api/auth/",
+        "settings": "/api/auth/settings/",
         "aftertaste": "/api/aftertaste/",
         "dashboard_summary": "/api/dashboard/summary/",
         "media_items": "/api/media-items/",
@@ -26,6 +27,7 @@ API_ROOT_PAYLOAD = {
     "mvp_modules": [
         {"name": "health", "status": "available", "path": "/api/health/"},
         {"name": "auth", "status": "available", "path": "/api/auth/me/"},
+        {"name": "settings", "status": "available", "path": "/api/auth/settings/"},
         {"name": "aftertaste", "status": "available", "path": "/api/aftertaste/"},
         {"name": "dashboard", "status": "available", "path": "/api/dashboard/summary/"},
         {"name": "library", "status": "available", "path": "/api/media-items/"},

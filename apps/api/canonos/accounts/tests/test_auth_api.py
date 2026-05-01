@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from canonos.accounts.models import UserProfile
+from canonos.accounts.models import UserProfile, UserSettings
 
 pytestmark = pytest.mark.django_db
 
@@ -44,6 +44,7 @@ def test_registration_creates_user_profile_and_session() -> None:
     assert payload["user"]["profile"]["displayName"] == "Canon Reader"
     assert User.objects.filter(email="reader@example.com").exists()
     assert UserProfile.objects.filter(display_name="Canon Reader").exists()
+    assert UserSettings.objects.filter(user__email="reader@example.com").exists()
 
 
 def test_login_returns_current_user_session() -> None:
@@ -121,6 +122,74 @@ def test_profile_update_endpoint_updates_current_user_profile() -> None:
     }
 
 
+def test_settings_endpoint_returns_defaults_and_updates_profile_display_and_recommendations() -> (
+    None
+):
+    user = User.objects.create_user(
+        username="settings@example.com", email="settings@example.com", password="strong-password"
+    )
+    UserProfile.objects.create(user=user, display_name="Settings Reader")
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    default_response = client.get(reverse("auth-settings"))
+
+    assert default_response.status_code == status.HTTP_200_OK
+    default_payload = default_response.json()
+    assert default_payload["profile"]["displayName"] == "Settings Reader"
+    assert default_payload["recommendation"]["defaultRiskTolerance"] == "medium"
+    assert default_payload["display"]["themePreference"] == "system"
+
+    update_response = client.patch(
+        reverse("auth-settings"),
+        {
+            "profile": {"displayName": "Updated Settings", "timezone": "Asia/Kabul"},
+            "display": {"themePreference": "dark"},
+            "recommendation": {
+                "defaultMediaTypes": ["movie", "novel"],
+                "defaultRiskTolerance": "high",
+                "modernMediaSkepticismLevel": 8,
+                "genericnessSensitivity": 9,
+                "preferredScoringStrictness": 7,
+            },
+        },
+        format="json",
+    )
+
+    assert update_response.status_code == status.HTTP_200_OK
+    payload = update_response.json()
+    assert payload["profile"]["displayName"] == "Updated Settings"
+    assert payload["profile"]["timezone"] == "Asia/Kabul"
+    assert payload["display"]["themePreference"] == "dark"
+    assert payload["recommendation"]["defaultMediaTypes"] == ["movie", "novel"]
+    assert payload["recommendation"]["defaultRiskTolerance"] == "high"
+    assert payload["recommendation"]["genericnessSensitivity"] == 9
+
+
+def test_settings_endpoint_validates_range_and_choices() -> None:
+    user = User.objects.create_user(
+        username="invalid-settings@example.com",
+        email="invalid-settings@example.com",
+        password="strong-password",
+    )
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    response = client.patch(
+        reverse("auth-settings"),
+        {
+            "display": {"themePreference": "neon"},
+            "recommendation": {"genericnessSensitivity": 11},
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    payload = response.json()
+    assert "themePreference" in payload["display"]
+    assert "genericnessSensitivity" in payload["recommendation"]
+
+
 def test_auth_endpoints_appear_in_openapi_schema() -> None:
     response = APIClient().get(reverse("schema"))
 
@@ -130,3 +199,4 @@ def test_auth_endpoints_appear_in_openapi_schema() -> None:
     assert "/api/auth/login/" in content
     assert "/api/auth/logout/" in content
     assert "/api/auth/me/" in content
+    assert "/api/auth/settings/" in content

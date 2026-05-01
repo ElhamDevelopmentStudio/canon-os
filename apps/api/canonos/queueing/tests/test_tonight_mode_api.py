@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from canonos.accounts.models import UserSettings
 from canonos.media.models import MediaItem
 from canonos.queueing.models import QueueItem, TonightModeSession
 
@@ -133,6 +134,49 @@ def test_tonight_mode_returns_three_recommendation_slots() -> None:
     assert payload["wildcardChoice"]["slot"] == "wildcard"
     assert len(payload["recommendations"]) >= 3
     assert TonightModeSession.objects.get(owner=user).generated_recommendations
+
+
+def test_tonight_mode_uses_saved_defaults_when_request_omits_them() -> None:
+    client, user = authenticated_client()
+    UserSettings.objects.create(
+        user=user,
+        default_media_types=["novel"],
+        default_risk_tolerance="high",
+    )
+    MediaItem.objects.create(
+        owner=user,
+        title="Default Novel",
+        media_type="novel",
+        status="planned",
+        page_count=30,
+        notes="A weird literary wildcard.",
+    )
+    MediaItem.objects.create(
+        owner=user,
+        title="Default Movie",
+        media_type="movie",
+        status="planned",
+        runtime_minutes=80,
+        notes="A regular movie option.",
+    )
+
+    response = client.post(
+        reverse("tonightmode-generate"),
+        {
+            "availableMinutes": 120,
+            "energyLevel": "medium",
+            "focusLevel": "deep",
+            "desiredEffect": "deep",
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_201_CREATED
+    session = response.json()["session"]
+    assert session["preferredMediaTypes"] == ["novel"]
+    assert session["riskTolerance"] == "high"
+    recommendations = response.json()["recommendations"]
+    assert any(item["title"] == "Default Novel" for item in recommendations)
 
 
 def test_tonight_mode_schema_is_documented() -> None:

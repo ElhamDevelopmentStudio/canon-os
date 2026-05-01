@@ -124,6 +124,22 @@ Queue items are user-owned and require an authenticated session. Endpoints:
 
 List filters: `mediaType`, `priority`, and `search`. Queue priorities are `start_soon`, `sample_first`, and `later`. Product rules are documented in `docs/queue.md`.
 
+## Settings API Contract
+
+`GET /api/auth/settings/` returns the authenticated user's profile, display preferences, and recommendation defaults. `PATCH /api/auth/settings/` updates the same shape with partial nested objects. The settings record is created at registration and lazily created for older users.
+
+The response includes:
+
+- `profile`: display name, timezone, and preferred language.
+- `display.themePreference`: `system`, `light`, or `dark`; the browser app applies it to the app shell.
+- `recommendation.defaultMediaTypes`: default media type filters for recommendation surfaces.
+- `recommendation.defaultRiskTolerance`: `low`, `medium`, or `high`; Tonight Mode uses it when the request omits risk tolerance and the UI uses it as the default selection.
+- `recommendation.modernMediaSkepticismLevel`: `0` to `10`; Candidate Evaluator adds caution for recent releases when high.
+- `recommendation.genericnessSensitivity`: `0` to `10`; Candidate Evaluator weights expected genericness risk with this value.
+- `recommendation.preferredScoringStrictness`: `0` to `10`; Candidate Evaluator makes final decisions stricter when high.
+
+Shared TypeScript contracts live in `packages/contracts/src/settings.ts`; the frontend SWR hook lives in `apps/web/src/features/settings/settingsApi.ts`.
+
 ## E2E Coverage Rule
 
 Every new API endpoint must be covered through a real browser e2e user flow when a UI exists. If the endpoint is intentionally API-only or the UI has not shipped yet, add an API-only e2e exception to `docs/testing.md` and cover it with Playwright's request client or backend e2e tests. Serializer/API contract changes still require unit/API tests; mocked frontend tests do not replace browser-to-backend e2e coverage.

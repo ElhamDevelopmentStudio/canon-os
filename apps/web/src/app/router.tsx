@@ -10,11 +10,11 @@ import { CandidateEvaluatorPage } from "@/pages/CandidateEvaluatorPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { MediaDetailPage } from "@/pages/MediaDetailPage";
-import { PlaceholderPage } from "@/pages/PlaceholderPage";
 import { QueuePage } from "@/pages/QueuePage";
 import { TonightModePage } from "@/pages/TonightModePage";
 import { TasteProfilePage } from "@/pages/TasteProfilePage";
 import { RegisterPage } from "@/pages/RegisterPage";
+import { SettingsPage } from "@/pages/SettingsPage";
 
 export const protectedRouteChildren: RouteObject[] = [
   { index: true, element: <DashboardPage /> },
@@ -25,7 +25,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.tasteProfile.slice(1), element: <TasteProfilePage /> },
   { path: APP_ROUTES.aftertasteLog.slice(1), element: <AftertasteLogPage /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },
-  { path: APP_ROUTES.settings.slice(1), element: <PlaceholderPage route={APP_ROUTES.settings} /> },
+  { path: APP_ROUTES.settings.slice(1), element: <SettingsPage /> },
 ];
 
 export const appRoutes: RouteObject[] = [

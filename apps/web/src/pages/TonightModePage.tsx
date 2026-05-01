@@ -13,7 +13,7 @@ import {
   type TonightModeResponse,
 } from "@canonos/contracts";
 import { ListPlus, Moon, Play, ThumbsDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
@@ -25,6 +25,7 @@ import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { updateMediaItem } from "@/features/media/mediaApi";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
+import { useUserSettings } from "@/features/settings/settingsApi";
 import { createQueueItem, updateQueueItem } from "@/features/queue/queueApi";
 import {
   desiredEffectLabels,
@@ -57,11 +58,23 @@ const defaultDraft: TonightDraft = {
 };
 
 export function TonightModePage() {
+  const { data: userSettings } = useUserSettings();
   const [draft, setDraft] = useState<TonightDraft>(defaultDraft);
+  const [settingsDefaultsApplied, setSettingsDefaultsApplied] = useState(false);
   const [plan, setPlan] = useState<TonightModeResponse | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!userSettings || settingsDefaultsApplied) return;
+    setDraft((current) => ({
+      ...current,
+      preferredMediaTypes: userSettings.recommendation.defaultMediaTypes,
+      riskTolerance: userSettings.recommendation.defaultRiskTolerance,
+    }));
+    setSettingsDefaultsApplied(true);
+  }, [settingsDefaultsApplied, userSettings]);
 
   function updateDraft<K extends keyof TonightDraft>(field: K, value: TonightDraft[K]) {
     setDraft((current) => ({ ...current, [field]: value }));
@@ -235,7 +248,7 @@ export function TonightModePage() {
             <Moon aria-hidden="true" className="h-4 w-4" />
             {isGenerating ? "Generating..." : "Generate Tonight Plan"}
           </Button>
-          <p className="text-sm text-muted-foreground">Unsafe calls use the browser CSRF cookie and session.</p>
+          <p className="text-sm text-muted-foreground">Default risk and media types come from Settings. Unsafe calls use the browser CSRF cookie and session.</p>
         </div>
       </SectionCard>
 

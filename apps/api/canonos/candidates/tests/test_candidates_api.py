@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from canonos.accounts.models import UserSettings
 from canonos.candidates.models import Candidate, CandidateEvaluation
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore
@@ -131,6 +132,38 @@ def test_genericness_and_time_penalties_reduce_candidate_decision() -> None:
     assert evaluation["riskScore"] >= 80
     assert evaluation["decision"] in {"delay", "skip"}
     assert any("genericness" in reason.lower() for reason in evaluation["reasonsAgainst"])
+
+
+def test_candidate_evaluation_uses_saved_genericness_sensitivity() -> None:
+    client, user = authenticated_client()
+    UserSettings.objects.create(
+        user=user,
+        genericness_sensitivity=10,
+        modern_media_skepticism_level=9,
+        preferred_scoring_strictness=8,
+    )
+    candidate = Candidate.objects.create(
+        owner=user,
+        title="Modern trend suspect",
+        media_type="tv_show",
+        release_year=2024,
+        premise="A recent trend-heavy project with moderate genericness signals.",
+        hype_level=8,
+        expected_genericness=6,
+        expected_time_cost_minutes=240,
+    )
+
+    response = client.post(reverse("candidate-evaluate", args=[candidate.id]), format="json")
+
+    assert response.status_code == status.HTTP_200_OK
+    evaluation = response.json()["evaluation"]
+    assert evaluation["riskScore"] >= 70
+    assert any(
+        "genericness sensitivity" in reason.lower() for reason in evaluation["reasonsAgainst"]
+    )
+    assert any(
+        "modern media skepticism" in reason.lower() for reason in evaluation["reasonsAgainst"]
+    )
 
 
 def test_candidate_privacy_for_list_detail_evaluation_and_update() -> None:

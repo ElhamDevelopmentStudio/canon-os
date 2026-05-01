@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type ThemeMode = "light" | "dark";
+export type ThemeMode = "light" | "dark" | "system";
 
 type AppState = {
   sidebarCollapsed: boolean;
@@ -19,14 +19,16 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       sidebarCollapsed: false,
       mobileSidebarOpen: false,
-      themeMode: "light",
+      themeMode: "system",
       setSidebarCollapsed: (sidebarCollapsed) => set({ sidebarCollapsed }),
       toggleSidebarCollapsed: () =>
         set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
       setMobileSidebarOpen: (mobileSidebarOpen) => set({ mobileSidebarOpen }),
       setThemeMode: (themeMode) => set({ themeMode }),
       toggleThemeMode: () =>
-        set((state) => ({ themeMode: state.themeMode === "dark" ? "light" : "dark" })),
+        set((state) => ({
+          themeMode: state.themeMode === "dark" ? "light" : "dark",
+        })),
     }),
     {
       name: "canonos-app-store",

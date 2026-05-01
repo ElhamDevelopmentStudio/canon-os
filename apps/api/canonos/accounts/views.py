@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import UserProfile
+from .models import UserProfile, UserSettings
 from .permissions import IsAuthenticatedUser
 from .serializers import (
     AuthSessionSerializer,
@@ -16,6 +16,7 @@ from .serializers import (
     ProfileUpdateSerializer,
     RegisterSerializer,
     UserProfileSerializer,
+    UserSettingsSerializer,
 )
 
 
@@ -120,3 +121,35 @@ class CurrentUserProfileView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(UserProfileSerializer(profile).data)
+
+
+class CurrentUserSettingsView(APIView):
+    permission_classes = [IsAuthenticatedUser]
+
+    def get_settings(self, request) -> UserSettings:  # noqa: ANN001
+        settings, _ = UserSettings.objects.get_or_create(user=request.user)
+        UserProfile.objects.get_or_create(
+            user=request.user,
+            defaults={
+                "display_name": request.user.get_full_name()
+                or request.user.email
+                or request.user.username
+            },
+        )
+        return settings
+
+    @extend_schema(responses=UserSettingsSerializer, summary="Get current user settings")
+    def get(self, request):  # noqa: ANN001, ANN201
+        return Response(UserSettingsSerializer(self.get_settings(request)).data)
+
+    @extend_schema(
+        request=UserSettingsSerializer,
+        responses=UserSettingsSerializer,
+        summary="Update current user settings",
+    )
+    def patch(self, request):  # noqa: ANN001, ANN201
+        settings = self.get_settings(request)
+        serializer = UserSettingsSerializer(settings, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(UserSettingsSerializer(settings).data)

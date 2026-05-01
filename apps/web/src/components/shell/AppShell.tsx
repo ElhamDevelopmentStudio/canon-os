@@ -12,7 +12,17 @@ export function AppShell() {
   const themeMode = useAppStore((state) => state.themeMode);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", themeMode === "dark");
+    const mediaQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+    const applyTheme = () => {
+      document.documentElement.classList.toggle(
+        "dark",
+        themeMode === "dark" || (themeMode === "system" && Boolean(mediaQuery?.matches)),
+      );
+    };
+    applyTheme();
+    if (themeMode !== "system" || !mediaQuery) return;
+    mediaQuery.addEventListener("change", applyTheme);
+    return () => mediaQuery.removeEventListener("change", applyTheme);
   }, [themeMode]);
 
   return (

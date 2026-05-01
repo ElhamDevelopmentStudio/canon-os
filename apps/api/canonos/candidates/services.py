@@ -5,6 +5,7 @@ from statistics import mean
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 
+from canonos.accounts.models import UserSettings
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore, TasteDimension
 
@@ -13,6 +14,11 @@ from .models import Candidate, CandidateEvaluation
 
 def clamp(value: float, minimum: int = 0, maximum: int = 100) -> int:
     return round(max(minimum, min(maximum, value)))
+
+
+def _user_settings(user: User) -> UserSettings:
+    settings, _ = UserSettings.objects.get_or_create(user=user)
+    return settings
 
 
 def _media_type_bonus(user: User, candidate: Candidate) -> tuple[int, list[str]]:
@@ -53,6 +59,7 @@ def _score_profile(user: User) -> tuple[float, float, int]:
 
 def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     positive_avg, negative_avg, score_count = _score_profile(user)
+    settings = _user_settings(user)
     type_bonus, type_reasons = _media_type_bonus(user, candidate)
     genericness = (
         candidate.expected_genericness if candidate.expected_genericness is not None else 5
@@ -69,8 +76,22 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         time_penalty = -5
 
     likely_fit = clamp(50 + ((positive_avg - 5) * 7) - max(negative_avg - 5, 0) * 5 + type_bonus)
-    risk = clamp((genericness * 7) + max(time_penalty, 0) + max(hype - 7, 0) * 4)
-    final_score = clamp(likely_fit - (risk * 0.45) - time_penalty + min(hype, 8))
+    genericness_weight = 4 + (settings.genericness_sensitivity * 0.6)
+    modern_skepticism_penalty = (
+        max(settings.modern_media_skepticism_level - 5, 0) * 3
+        if candidate.release_year and candidate.release_year >= 2018
+        else 0
+    )
+    strictness_penalty = (settings.preferred_scoring_strictness - 5) * 2
+    risk = clamp(
+        (genericness * genericness_weight)
+        + max(time_penalty, 0)
+        + max(hype - 7, 0) * 4
+        + modern_skepticism_penalty
+    )
+    final_score = clamp(
+        likely_fit - (risk * 0.45) - time_penalty + min(hype, 8) - strictness_penalty
+    )
     confidence = clamp(
         45
         + min(score_count * 4, 30)
@@ -108,6 +129,14 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         reasons_against.append("The time cost is high enough to raise commitment risk.")
     if hype >= 8:
         reasons_against.append("High hype can mask mismatch; judge against your own standards.")
+    if settings.genericness_sensitivity >= 8 and genericness >= 6:
+        reasons_against.append(
+            "Your saved genericness sensitivity is high, so this risk is weighted heavily."
+        )
+    if modern_skepticism_penalty:
+        reasons_against.append(
+            "Your modern media skepticism setting adds caution for recent releases."
+        )
     if score_count == 0:
         reasons_against.append("Confidence is limited until more taste scores are logged.")
     if not candidate.premise:

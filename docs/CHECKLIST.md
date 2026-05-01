@@ -1244,67 +1244,67 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Contract Tasks
 
-- [ ] MVP-M12-SH-001 Define `UserSettings` type.
-- [ ] MVP-M12-SH-002 Define `RecommendationSettings` type.
-- [ ] MVP-M12-SH-003 Define `DisplaySettings` type.
-- [ ] MVP-M12-SH-004 Document settings API contract.
+- [x] MVP-M12-SH-001 Define `UserSettings` type.
+- [x] MVP-M12-SH-002 Define `RecommendationSettings` type.
+- [x] MVP-M12-SH-003 Define `DisplaySettings` type.
+- [x] MVP-M12-SH-004 Document settings API contract.
 
 ### Backend Tasks
 
-- [ ] MVP-M12-BE-001 Create UserSettings model.
-- [ ] MVP-M12-BE-002 Add owner/user one-to-one field.
-- [ ] MVP-M12-BE-003 Add default media types field.
-- [ ] MVP-M12-BE-004 Add default risk tolerance field.
-- [ ] MVP-M12-BE-005 Add modern media skepticism level field.
-- [ ] MVP-M12-BE-006 Add genericness sensitivity field.
-- [ ] MVP-M12-BE-007 Add preferred scoring strictness field.
-- [ ] MVP-M12-BE-008 Add theme preference field.
-- [ ] MVP-M12-BE-009 Create migration for UserSettings.
-- [ ] MVP-M12-BE-010 Create settings on user registration.
-- [ ] MVP-M12-BE-011 Create UserSettings serializer.
-- [ ] MVP-M12-BE-012 Create settings detail endpoint.
-- [ ] MVP-M12-BE-013 Create settings update endpoint.
-- [ ] MVP-M12-BE-014 Register UserSettings in Django admin.
-- [ ] MVP-M12-BE-015 Add test for default settings creation.
-- [ ] MVP-M12-BE-016 Add test for settings update.
+- [x] MVP-M12-BE-001 Create UserSettings model.
+- [x] MVP-M12-BE-002 Add owner/user one-to-one field.
+- [x] MVP-M12-BE-003 Add default media types field.
+- [x] MVP-M12-BE-004 Add default risk tolerance field.
+- [x] MVP-M12-BE-005 Add modern media skepticism level field.
+- [x] MVP-M12-BE-006 Add genericness sensitivity field.
+- [x] MVP-M12-BE-007 Add preferred scoring strictness field.
+- [x] MVP-M12-BE-008 Add theme preference field.
+- [x] MVP-M12-BE-009 Create migration for UserSettings.
+- [x] MVP-M12-BE-010 Create settings on user registration.
+- [x] MVP-M12-BE-011 Create UserSettings serializer.
+- [x] MVP-M12-BE-012 Create settings detail endpoint.
+- [x] MVP-M12-BE-013 Create settings update endpoint.
+- [x] MVP-M12-BE-014 Register UserSettings in Django admin.
+- [x] MVP-M12-BE-015 Add test for default settings creation.
+- [x] MVP-M12-BE-016 Add test for settings update.
 
 ### Frontend Tasks
 
-- [ ] MVP-M12-FE-001 Create settings API client file.
-- [ ] MVP-M12-FE-002 Create `useUserSettings` SWR hook.
-- [ ] MVP-M12-FE-003 Create Settings page skeleton.
-- [ ] MVP-M12-FE-004 Add Settings page title.
-- [ ] MVP-M12-FE-005 Add Profile settings section.
-- [ ] MVP-M12-FE-006 Add Display settings section.
-- [ ] MVP-M12-FE-007 Add Recommendation settings section.
-- [ ] MVP-M12-FE-008 Add default media types control.
-- [ ] MVP-M12-FE-009 Add default risk tolerance control.
-- [ ] MVP-M12-FE-010 Add modern media skepticism slider.
-- [ ] MVP-M12-FE-011 Add genericness sensitivity slider.
-- [ ] MVP-M12-FE-012 Add scoring strictness slider.
-- [ ] MVP-M12-FE-013 Add theme preference control.
-- [ ] MVP-M12-FE-014 Add Save Settings button.
-- [ ] MVP-M12-FE-015 Add Reset Changes button.
-- [ ] MVP-M12-FE-016 Add loading state to Settings page.
-- [ ] MVP-M12-FE-017 Add error state to Settings page.
-- [ ] MVP-M12-FE-018 Add saved confirmation toast.
+- [x] MVP-M12-FE-001 Create settings API client file.
+- [x] MVP-M12-FE-002 Create `useUserSettings` SWR hook.
+- [x] MVP-M12-FE-003 Create Settings page skeleton.
+- [x] MVP-M12-FE-004 Add Settings page title.
+- [x] MVP-M12-FE-005 Add Profile settings section.
+- [x] MVP-M12-FE-006 Add Display settings section.
+- [x] MVP-M12-FE-007 Add Recommendation settings section.
+- [x] MVP-M12-FE-008 Add default media types control.
+- [x] MVP-M12-FE-009 Add default risk tolerance control.
+- [x] MVP-M12-FE-010 Add modern media skepticism slider.
+- [x] MVP-M12-FE-011 Add genericness sensitivity slider.
+- [x] MVP-M12-FE-012 Add scoring strictness slider.
+- [x] MVP-M12-FE-013 Add theme preference control.
+- [x] MVP-M12-FE-014 Add Save Settings button.
+- [x] MVP-M12-FE-015 Add Reset Changes button.
+- [x] MVP-M12-FE-016 Add loading state to Settings page.
+- [x] MVP-M12-FE-017 Add error state to Settings page.
+- [x] MVP-M12-FE-018 Add saved confirmation toast.
 
 ### Integration Tasks
 
-- [ ] MVP-M12-INT-001 Connect Settings page to settings endpoint.
-- [ ] MVP-M12-INT-002 Connect Save Settings button to update endpoint.
-- [ ] MVP-M12-INT-003 Apply theme preference to app shell.
-- [ ] MVP-M12-INT-004 Use genericness sensitivity in candidate evaluator.
-- [ ] MVP-M12-INT-005 Use risk tolerance default in Tonight Mode.
+- [x] MVP-M12-INT-001 Connect Settings page to settings endpoint.
+- [x] MVP-M12-INT-002 Connect Save Settings button to update endpoint.
+- [x] MVP-M12-INT-003 Apply theme preference to app shell.
+- [x] MVP-M12-INT-004 Use genericness sensitivity in candidate evaluator.
+- [x] MVP-M12-INT-005 Use risk tolerance default in Tonight Mode.
 
 ### QA Tasks
 
-- [ ] MVP-M12-QA-001 Update settings from UI.
-- [ ] MVP-M12-QA-002 Confirm saved settings persist after refresh.
-- [ ] MVP-M12-QA-003 Confirm settings influence Candidate Evaluator.
-- [ ] MVP-M12-QA-004 Confirm settings influence Tonight Mode defaults.
-- [ ] MVP-M12-QA-005 Confirm Settings page matches wireframe.
-- [ ] MVP-M12-QA-006 Create or update `docs/manual-tests/settings-portability.md`.
+- [x] MVP-M12-QA-001 Update settings from UI.
+- [x] MVP-M12-QA-002 Confirm saved settings persist after refresh.
+- [x] MVP-M12-QA-003 Confirm settings influence Candidate Evaluator.
+- [x] MVP-M12-QA-004 Confirm settings influence Tonight Mode defaults.
+- [x] MVP-M12-QA-005 Confirm Settings page matches wireframe.
+- [x] MVP-M12-QA-006 Create or update `docs/manual-tests/settings-portability.md`.
 
 ---
 
@@ -2994,7 +2994,7 @@ The MVP is done only when:
 - [x] A user can generate a Tonight Mode recommendation.
 - [x] A user can view a basic Taste Profile.
 - [ ] A user can view a useful Dashboard.
-- [ ] A user can update basic Settings.
+- [x] A user can update basic Settings.
 - [ ] A user can import a CSV or JSON media history with validation preview.
 - [ ] A user can export all owned data as JSON.
 - [ ] A user can export media library and ratings as CSV.
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M11-QA-005.
-**Last completed task name:** Create or update `docs/manual-tests/taste.md`.
-**Last completed milestone:** MVP-M11 — Taste Profile MVP.
+**Last completed task ID:** MVP-M12-QA-006.
+**Last completed task name:** Create or update `docs/manual-tests/settings-portability.md`.
+**Last completed milestone:** MVP-M12 — Settings MVP.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M12 — Settings MVP.
-**Next recommended task:** MVP-M12-SH-001 Define `UserSettings` type.
+**Current milestone:** MVP-M13 — Import / Export MVP.
+**Next recommended task:** MVP-M13-SH-001 Define `ImportPreview` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP-M11 Taste Profile is complete. Shared contracts now define `TasteProfileSummary`, positive/negative taste signals, medium preferences, evidence counts, confidence, and influential works. Django exposes `GET /api/taste-profile/`, recalculates from owned media, scorecards, and aftertaste entries, computes high/low dimensions, genericness/regret warnings, medium preferences, confidence, and a cautious generated summary. The frontend `/taste-profile` page is connected to the real API with loading, empty, error, refresh, metric, summary, signal, red-flag, medium, and influential-work states. Browser e2e covers empty profile, scored media, aftertaste-driven changes, and refresh; manual QA lives in `docs/manual-tests/taste.md`.
+MVP-M12 Settings is complete. Shared contracts now define `UserSettings`, `RecommendationSettings`, and `DisplaySettings`. Django creates settings at registration, exposes authenticated `GET/PATCH /api/auth/settings/`, validates recommendation/display preferences, and uses saved genericness sensitivity, modern skepticism, scoring strictness, default media types, and default risk tolerance in Candidate Evaluator and Tonight Mode. The frontend `/settings` page is connected to the real API with loading, error, save, reset, persisted confirmation, profile/display/recommendation controls, and app-shell theme application. Browser e2e covers saving settings, persistence after refresh, theme application, Tonight Mode defaults, and Candidate Evaluator settings signal; manual QA lives in `docs/manual-tests/settings-portability.md`.
 
 ## 9.3 Important Notes For The Next Agent
 
