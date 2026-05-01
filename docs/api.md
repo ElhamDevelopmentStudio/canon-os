@@ -22,3 +22,12 @@ Product endpoints will be introduced under `/api/v1/` as feature modules are imp
 ## Contract Rule
 
 When an API response shape changes, update serializers, shared contracts, frontend API client types, and tests in the same milestone.
+
+## API Root And Documentation
+
+- `GET /api/` lists available and planned MVP API entry points.
+- `GET /api/health/` returns service health.
+- `GET /api/schema/` returns the OpenAPI schema.
+- `GET /api/docs/swagger/` opens Swagger UI.
+- `GET /api/docs/scalar/` opens Scalar API Reference.
+

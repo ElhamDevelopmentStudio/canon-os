@@ -1,0 +1,13 @@
+export const APP_ROUTES = {
+  dashboard: "/",
+  library: "/library",
+  candidates: "/candidates",
+  tonight: "/tonight",
+  tasteProfile: "/taste-profile",
+  aftertasteLog: "/aftertaste-log",
+  queue: "/queue",
+  settings: "/settings",
+} as const;
+
+export type AppRouteKey = keyof typeof APP_ROUTES;
+export type AppRoutePath = (typeof APP_ROUTES)[AppRouteKey];

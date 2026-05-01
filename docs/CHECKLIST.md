@@ -321,77 +321,77 @@ The MVP must be useful immediately. It must let the user record media, import an
 
 ### Shared / Monorepo Tasks
 
-- [ ] MVP-M02-SH-001 Add low-fidelity wireframe document references to `/docs/frontend.md`.
-- [ ] MVP-M02-SH-002 Define route naming convention in `/docs/frontend.md`.
-- [ ] MVP-M02-SH-003 Define shared component naming convention in `/docs/frontend.md`.
-- [ ] MVP-M02-SH-004 Define frontend feature folder convention in `/docs/frontend.md`.
-- [ ] MVP-M02-SH-005 Define API client naming convention in `/docs/frontend.md`.
+- [x] MVP-M02-SH-001 Add low-fidelity wireframe document references to `/docs/frontend.md`.
+- [x] MVP-M02-SH-002 Define route naming convention in `/docs/frontend.md`.
+- [x] MVP-M02-SH-003 Define shared component naming convention in `/docs/frontend.md`.
+- [x] MVP-M02-SH-004 Define frontend feature folder convention in `/docs/frontend.md`.
+- [x] MVP-M02-SH-005 Define API client naming convention in `/docs/frontend.md`.
 
 ### Frontend Tasks
 
-- [ ] MVP-M02-FE-001 Create `AppShell` layout component.
-- [ ] MVP-M02-FE-002 Create persistent left sidebar component.
-- [ ] MVP-M02-FE-003 Create top header component.
-- [ ] MVP-M02-FE-004 Create main content wrapper component.
-- [ ] MVP-M02-FE-005 Create page title component.
-- [ ] MVP-M02-FE-006 Create page subtitle component.
-- [ ] MVP-M02-FE-007 Create section card component.
-- [ ] MVP-M02-FE-008 Create metric card component.
-- [ ] MVP-M02-FE-009 Create empty state component.
-- [ ] MVP-M02-FE-010 Create error state component.
-- [ ] MVP-M02-FE-011 Create loading state component.
-- [ ] MVP-M02-FE-012 Create confirmation dialog component.
-- [ ] MVP-M02-FE-013 Create form field wrapper component.
-- [ ] MVP-M02-FE-014 Create rating input component.
-- [ ] MVP-M02-FE-015 Create score badge component.
-- [ ] MVP-M02-FE-016 Create status pill component.
-- [ ] MVP-M02-FE-017 Create media type badge component.
-- [ ] MVP-M02-FE-018 Create command/search input component placeholder.
-- [ ] MVP-M02-FE-019 Create page action bar component.
-- [ ] MVP-M02-FE-020 Create responsive mobile sidebar state.
-- [ ] MVP-M02-FE-021 Add sidebar navigation item for Dashboard.
-- [ ] MVP-M02-FE-022 Add sidebar navigation item for Library.
-- [ ] MVP-M02-FE-023 Add sidebar navigation item for Candidates.
-- [ ] MVP-M02-FE-024 Add sidebar navigation item for Tonight Mode.
-- [ ] MVP-M02-FE-025 Add sidebar navigation item for Taste Profile.
-- [ ] MVP-M02-FE-026 Add sidebar navigation item for Aftertaste Log.
-- [ ] MVP-M02-FE-027 Add sidebar navigation item for Queue.
-- [ ] MVP-M02-FE-028 Add sidebar navigation item for Settings.
-- [ ] MVP-M02-FE-029 Implement active sidebar item highlighting.
-- [ ] MVP-M02-FE-030 Implement collapsed sidebar visual state.
-- [ ] MVP-M02-FE-031 Store sidebar collapsed state in Zustand.
-- [ ] MVP-M02-FE-032 Create global app store.
-- [ ] MVP-M02-FE-033 Add theme mode field to global app store.
-- [ ] MVP-M02-FE-034 Add theme toggle button placeholder.
-- [ ] MVP-M02-FE-035 Apply consistent spacing to layout.
-- [ ] MVP-M02-FE-036 Apply consistent typography to layout.
-- [ ] MVP-M02-FE-037 Confirm all placeholder pages use `AppShell`.
+- [x] MVP-M02-FE-001 Create `AppShell` layout component.
+- [x] MVP-M02-FE-002 Create persistent left sidebar component.
+- [x] MVP-M02-FE-003 Create top header component.
+- [x] MVP-M02-FE-004 Create main content wrapper component.
+- [x] MVP-M02-FE-005 Create page title component.
+- [x] MVP-M02-FE-006 Create page subtitle component.
+- [x] MVP-M02-FE-007 Create section card component.
+- [x] MVP-M02-FE-008 Create metric card component.
+- [x] MVP-M02-FE-009 Create empty state component.
+- [x] MVP-M02-FE-010 Create error state component.
+- [x] MVP-M02-FE-011 Create loading state component.
+- [x] MVP-M02-FE-012 Create confirmation dialog component.
+- [x] MVP-M02-FE-013 Create form field wrapper component.
+- [x] MVP-M02-FE-014 Create rating input component.
+- [x] MVP-M02-FE-015 Create score badge component.
+- [x] MVP-M02-FE-016 Create status pill component.
+- [x] MVP-M02-FE-017 Create media type badge component.
+- [x] MVP-M02-FE-018 Create command/search input component placeholder.
+- [x] MVP-M02-FE-019 Create page action bar component.
+- [x] MVP-M02-FE-020 Create responsive mobile sidebar state.
+- [x] MVP-M02-FE-021 Add sidebar navigation item for Dashboard.
+- [x] MVP-M02-FE-022 Add sidebar navigation item for Library.
+- [x] MVP-M02-FE-023 Add sidebar navigation item for Candidates.
+- [x] MVP-M02-FE-024 Add sidebar navigation item for Tonight Mode.
+- [x] MVP-M02-FE-025 Add sidebar navigation item for Taste Profile.
+- [x] MVP-M02-FE-026 Add sidebar navigation item for Aftertaste Log.
+- [x] MVP-M02-FE-027 Add sidebar navigation item for Queue.
+- [x] MVP-M02-FE-028 Add sidebar navigation item for Settings.
+- [x] MVP-M02-FE-029 Implement active sidebar item highlighting.
+- [x] MVP-M02-FE-030 Implement collapsed sidebar visual state.
+- [x] MVP-M02-FE-031 Store sidebar collapsed state in Zustand.
+- [x] MVP-M02-FE-032 Create global app store.
+- [x] MVP-M02-FE-033 Add theme mode field to global app store.
+- [x] MVP-M02-FE-034 Add theme toggle button placeholder.
+- [x] MVP-M02-FE-035 Apply consistent spacing to layout.
+- [x] MVP-M02-FE-036 Apply consistent typography to layout.
+- [x] MVP-M02-FE-037 Confirm all placeholder pages use `AppShell`.
 
 ### Backend Tasks
 
-- [ ] MVP-M02-BE-001 Add API root endpoint listing available MVP endpoints.
-- [ ] MVP-M02-BE-002 Add OpenAPI schema endpoint.
-- [ ] MVP-M02-BE-003 Add Swagger UI endpoint.
-- [ ] MVP-M02-BE-004 Add Scalar API documentation endpoint.
-- [ ] MVP-M02-BE-005 Add test for OpenAPI schema availability.
-- [ ] MVP-M02-BE-006 Add test for API root endpoint availability.
+- [x] MVP-M02-BE-001 Add API root endpoint listing available MVP endpoints.
+- [x] MVP-M02-BE-002 Add OpenAPI schema endpoint.
+- [x] MVP-M02-BE-003 Add Swagger UI endpoint.
+- [x] MVP-M02-BE-004 Add Scalar API documentation endpoint.
+- [x] MVP-M02-BE-005 Add test for OpenAPI schema availability.
+- [x] MVP-M02-BE-006 Add test for API root endpoint availability.
 
 ### Integration Tasks
 
-- [ ] MVP-M02-INT-001 Add frontend route constants file.
-- [ ] MVP-M02-INT-002 Add API route constants file.
-- [ ] MVP-M02-INT-003 Add app navigation config file.
-- [ ] MVP-M02-INT-004 Confirm route constants match sidebar navigation.
-- [ ] MVP-M02-INT-005 Confirm no page uses a custom sidebar design.
+- [x] MVP-M02-INT-001 Add frontend route constants file.
+- [x] MVP-M02-INT-002 Add API route constants file.
+- [x] MVP-M02-INT-003 Add app navigation config file.
+- [x] MVP-M02-INT-004 Confirm route constants match sidebar navigation.
+- [x] MVP-M02-INT-005 Confirm no page uses a custom sidebar design.
 
 ### QA Tasks
 
-- [ ] MVP-M02-QA-001 Verify sidebar appears on all app pages.
-- [ ] MVP-M02-QA-002 Verify top header appears on all app pages.
-- [ ] MVP-M02-QA-003 Verify mobile layout does not break at narrow width.
-- [ ] MVP-M02-QA-004 Verify shared loading state renders correctly.
-- [ ] MVP-M02-QA-005 Verify shared empty state renders correctly.
-- [ ] MVP-M02-QA-006 Verify shared error state renders correctly.
+- [x] MVP-M02-QA-001 Verify sidebar appears on all app pages.
+- [x] MVP-M02-QA-002 Verify top header appears on all app pages.
+- [x] MVP-M02-QA-003 Verify mobile layout does not break at narrow width.
+- [x] MVP-M02-QA-004 Verify shared loading state renders correctly.
+- [x] MVP-M02-QA-005 Verify shared empty state renders correctly.
+- [x] MVP-M02-QA-006 Verify shared error state renders correctly.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M21-INF-006 and CP-M21-INF-012 (completed early as local dependency infrastructure).
-**Last completed task name:** Add PostgreSQL/Redis local Docker Compose services and Docker env documentation.
-**Last completed milestone:** MVP-M01 remains complete; selected CP-M21 local dependency infrastructure tasks are complete early.
+**Last completed task ID:** MVP-M02-QA-006.
+**Last completed task name:** Verify shared error state renders correctly.
+**Last completed milestone:** MVP-M02 — Shared Design System And Global Layout.
 **Current phase:** MVP Phase.
-**Current milestone:** MVP-M02 — Shared Design System And Global Layout.
-**Next recommended task:** MVP-M02-SH-001 Add low-fidelity wireframe document references to `/docs/frontend.md`.
+**Current milestone:** MVP-M03 — Authentication And User Foundation.
+**Next recommended task:** MVP-M03-SH-001 Define `UserProfile` type in shared types.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-Local dependency infrastructure was added because the project should use Dockerized PostgreSQL and Redis for reproducible integration/e2e checks while keeping Django and Vite local. `infra/docker-compose.dev.yml` starts PostgreSQL 15 on host port `15432` and Redis 7 on host port `16379`. Migrations and `corepack pnpm e2e` were run successfully against those Docker services. README, deployment, and testing docs now explain the Docker-backed workflow.
+MVP-M02 shared design system and global layout is complete. The frontend now uses a shared `AppShell` with persistent sidebar, responsive mobile navigation, top header, shared layout primitives, feedback states, badges, form wrappers, route/API constants, and navigation config. Placeholder product pages all render through the shared shell. The API now exposes `GET /api/` plus tested OpenAPI/Swagger/Scalar documentation entry points. Manual shell testing is documented in `docs/manual-tests/app-shell.md`, and full lint/typecheck/test/build/e2e gates passed.
 
 ## 9.3 Important Notes For The Next Agent
 

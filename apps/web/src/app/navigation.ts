@@ -1,0 +1,71 @@
+import {
+  BookOpen,
+  ClipboardList,
+  Gauge,
+  Library,
+  ListChecks,
+  Moon,
+  Settings,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
+
+import { APP_ROUTES, type AppRoutePath } from "@/app/routeConstants";
+
+export type NavigationItem = {
+  label: string;
+  route: AppRoutePath;
+  icon: LucideIcon;
+  description: string;
+};
+
+export const APP_NAVIGATION: NavigationItem[] = [
+  {
+    label: "Dashboard",
+    route: APP_ROUTES.dashboard,
+    icon: Gauge,
+    description: "Decision overview and recent signals.",
+  },
+  {
+    label: "Library",
+    route: APP_ROUTES.library,
+    icon: Library,
+    description: "Owned, consumed, planned, paused, and dropped media.",
+  },
+  {
+    label: "Candidates",
+    route: APP_ROUTES.candidates,
+    icon: Sparkles,
+    description: "Pre-watch, pre-read, and pre-listen evaluations.",
+  },
+  {
+    label: "Tonight Mode",
+    route: APP_ROUTES.tonight,
+    icon: Moon,
+    description: "Shortlist options for current mood, time, and energy.",
+  },
+  {
+    label: "Taste Profile",
+    route: APP_ROUTES.tasteProfile,
+    icon: BookOpen,
+    description: "Personal standards, patterns, and taste evolution.",
+  },
+  {
+    label: "Aftertaste Log",
+    route: APP_ROUTES.aftertasteLog,
+    icon: ClipboardList,
+    description: "Reflections after finishing or dropping media.",
+  },
+  {
+    label: "Queue",
+    route: APP_ROUTES.queue,
+    icon: ListChecks,
+    description: "Prioritized candidates and planned consumption.",
+  },
+  {
+    label: "Settings",
+    route: APP_ROUTES.settings,
+    icon: Settings,
+    description: "Preferences, data portability, and integrations.",
+  },
+];

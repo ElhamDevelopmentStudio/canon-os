@@ -5,6 +5,8 @@ from django.http import HttpRequest, HttpResponse
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from .api_root import ApiRootView
+
 
 def scalar_docs(_: HttpRequest) -> HttpResponse:
     html = """
@@ -26,6 +28,7 @@ def scalar_docs(_: HttpRequest) -> HttpResponse:
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("api/", ApiRootView.as_view(), name="api-root"),
     path("api/health/", include("canonos.health.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
