@@ -26,19 +26,24 @@ def scalar_docs(_: HttpRequest) -> HttpResponse:
     return HttpResponse(html)
 
 
+api_urlpatterns = [
+    path("", ApiRootView.as_view(), name="api-root"),
+    path("auth/", include("canonos.accounts.urls")),
+    path("", include("canonos.aftertaste.urls")),
+    path("", include("canonos.candidates.urls")),
+    path("", include("canonos.dashboard.urls")),
+    path("health/", include("canonos.health.urls")),
+    path("", include("canonos.imports.urls")),
+    path("", include("canonos.media.urls")),
+    path("", include("canonos.queueing.urls")),
+    path("", include("canonos.taste.urls")),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
+    path("docs/scalar/", scalar_docs, name="scalar-docs"),
+]
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", ApiRootView.as_view(), name="api-root"),
-    path("api/auth/", include("canonos.accounts.urls")),
-    path("api/", include("canonos.aftertaste.urls")),
-    path("api/", include("canonos.candidates.urls")),
-    path("api/", include("canonos.dashboard.urls")),
-    path("api/health/", include("canonos.health.urls")),
-    path("api/", include("canonos.imports.urls")),
-    path("api/", include("canonos.media.urls")),
-    path("api/", include("canonos.queueing.urls")),
-    path("api/", include("canonos.taste.urls")),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("api/docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
-    path("api/docs/scalar/", scalar_docs, name="scalar-docs"),
+    path("api/", include(api_urlpatterns)),
+    path("api/v1/", include(api_urlpatterns)),
 ]

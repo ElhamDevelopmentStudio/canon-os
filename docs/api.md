@@ -5,7 +5,9 @@ The backend API is implemented under `apps/api` with Django REST Framework. Open
 ## Current Base Paths
 
 - `/api/health/` for service readiness.
+- `/api/v1/health/` for the versioned service readiness path.
 - `/api/schema/` for the generated OpenAPI schema.
+- `/api/v1/schema/` for the versioned OpenAPI schema path.
 - `/api/docs/swagger/` for Swagger UI.
 - `/api/docs/scalar/` for Scalar API documentation.
 
@@ -15,9 +17,27 @@ The frontend shared Axios client lives at `apps/web/src/lib/api.ts` and reads `V
 
 The backend CORS configuration allows the default Vite origin `http://localhost:5173` in local settings.
 
-## Planned Product Paths
+## Product Paths
 
-Product endpoints will be introduced under `/api/v1/` as feature modules are implemented.
+Product endpoints are available under `/api/v1/`. The legacy `/api/` paths remain available during hardening so existing frontend and e2e flows do not break while clients migrate.
+
+Error responses use a consistent envelope:
+
+```json
+{
+  "error": {
+    "code": "validation_error",
+    "message": "The request could not be completed.",
+    "details": {},
+    "requestId": "request-id",
+    "status": 400
+  }
+}
+```
+
+Every response includes `X-Request-ID`. Clients may send `X-Request-ID`; otherwise the API generates one.
+
+Schema versioning rule: OpenAPI `info.version` tracks the public API version (`v1`). Breaking response or path changes require a new versioned base path and migration notes.
 
 ## Contract Rule
 

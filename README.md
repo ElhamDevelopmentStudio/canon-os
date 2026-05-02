@@ -99,6 +99,7 @@ Run the required gates before considering a module complete:
 
 ```bash
 corepack pnpm lint
+corepack pnpm format:check
 corepack pnpm typecheck
 corepack pnpm test
 corepack pnpm build
@@ -111,11 +112,22 @@ Useful app-specific commands:
 
 ```bash
 corepack pnpm --filter @canonos/api run bootstrap
+corepack pnpm --filter @canonos/api run format:check
 corepack pnpm --filter @canonos/api run lint
+corepack pnpm --filter @canonos/api run migrations:check
+corepack pnpm --filter @canonos/api run seed
 corepack pnpm --filter @canonos/api run test
 corepack pnpm --filter @canonos/web run dev
+corepack pnpm --filter @canonos/web run format:check
 corepack pnpm --filter @canonos/web run test
 corepack pnpm --filter @canonos/web run e2e
+```
+
+Install `pre-commit` separately to run the local formatting and lint hooks before commits:
+
+```bash
+pre-commit install
+pre-commit run --all-files
 ```
 
 ## Foundation Smoke Checks

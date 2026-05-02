@@ -23,7 +23,22 @@ if (missingFiles.length > 0) {
 }
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
-const requiredScripts = ['lint', 'typecheck', 'test', 'build', 'e2e', 'dev:web', 'dev:api', 'dev:worker', 'dev:all', 'stop:all'];
+const requiredScripts = [
+  'lint',
+  'format',
+  'format:check',
+  'typecheck',
+  'test',
+  'build',
+  'e2e',
+  'db:migrations:check',
+  'seed:demo',
+  'dev:web',
+  'dev:api',
+  'dev:worker',
+  'dev:all',
+  'stop:all',
+];
 const missingScripts = requiredScripts.filter((scriptName) => !packageJson.scripts?.[scriptName]);
 if (missingScripts.length > 0) {
   console.error(`[canonos] Missing package scripts: ${missingScripts.join(', ')}`);

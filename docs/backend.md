@@ -11,6 +11,8 @@ The API app lives in `apps/api` and uses Django REST Framework, PostgreSQL-ready
 - Swagger docs: `GET /api/docs/swagger/`
 - Scalar docs: `GET /api/docs/scalar/`
 - Backend package scripts are exposed through `apps/api/package.json` and discovered by the root pnpm gates.
+- Versioned API base path: `/api/v1/`
+- Legacy compatibility base path: `/api/`
 
 ## App And Module List
 
@@ -44,6 +46,8 @@ cd apps/api
 - Keep DRF views thin and move product logic into services/selectors.
 - Tasks should call services and be retry-safe where practical.
 - User-owned data must remain scoped to the authenticated owner.
+- API errors use the shared `{"error": ...}` envelope and include a request ID.
+- `X-Request-ID` is returned on every response and should be copied into bug reports.
 - Redis is the MVP cache and Celery broker. RabbitMQ remains optional until Redis is insufficient.
 - Unsafe browser calls rely on Django sessions and CSRF; keep credentialed CORS enabled for local Vite-to-Django e2e.
 
@@ -54,5 +58,8 @@ corepack pnpm --filter @canonos/api run bootstrap
 corepack pnpm --filter @canonos/api run dev
 corepack pnpm --filter @canonos/api run worker
 corepack pnpm --filter @canonos/api run lint
+corepack pnpm --filter @canonos/api run format:check
 corepack pnpm --filter @canonos/api run test
+corepack pnpm --filter @canonos/api run migrations:check
+corepack pnpm --filter @canonos/api run seed
 ```

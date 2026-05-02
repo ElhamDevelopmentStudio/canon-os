@@ -1527,55 +1527,55 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared Tasks
 
-- [ ] CP-M01-SH-001 Add consistent root lint command.
-- [ ] CP-M01-SH-002 Add consistent root test command.
-- [ ] CP-M01-SH-003 Add consistent root build command.
-- [ ] CP-M01-SH-004 Add pre-commit configuration.
-- [ ] CP-M01-SH-005 Add backend formatting hook.
-- [ ] CP-M01-SH-006 Add frontend formatting hook.
-- [ ] CP-M01-SH-007 Add frontend lint hook.
-- [ ] CP-M01-SH-008 Add backend lint hook.
-- [ ] CP-M01-SH-009 Add commit message convention documentation.
-- [ ] CP-M01-SH-010 Add code ownership or module ownership documentation.
-- [ ] CP-M01-SH-011 Add architecture decision records directory.
-- [ ] CP-M01-SH-012 Add first ADR for monorepo choice.
-- [ ] CP-M01-SH-013 Add ADR for API-first development.
-- [ ] CP-M01-SH-014 Add ADR for recommendation heuristic strategy.
-- [ ] CP-M01-SH-015 Add ADR for Celery/Redis usage.
+- [x] CP-M01-SH-001 Add consistent root lint command.
+- [x] CP-M01-SH-002 Add consistent root test command.
+- [x] CP-M01-SH-003 Add consistent root build command.
+- [x] CP-M01-SH-004 Add pre-commit configuration.
+- [x] CP-M01-SH-005 Add backend formatting hook.
+- [x] CP-M01-SH-006 Add frontend formatting hook.
+- [x] CP-M01-SH-007 Add frontend lint hook.
+- [x] CP-M01-SH-008 Add backend lint hook.
+- [x] CP-M01-SH-009 Add commit message convention documentation.
+- [x] CP-M01-SH-010 Add code ownership or module ownership documentation.
+- [x] CP-M01-SH-011 Add architecture decision records directory.
+- [x] CP-M01-SH-012 Add first ADR for monorepo choice.
+- [x] CP-M01-SH-013 Add ADR for API-first development.
+- [x] CP-M01-SH-014 Add ADR for recommendation heuristic strategy.
+- [x] CP-M01-SH-015 Add ADR for Celery/Redis usage.
 
 ### Backend Tasks
 
-- [ ] CP-M01-BE-001 Split backend settings into base/dev/test/prod files.
-- [ ] CP-M01-BE-002 Add structured logging settings.
-- [ ] CP-M01-BE-003 Add request ID middleware.
-- [ ] CP-M01-BE-004 Add API exception handler.
-- [ ] CP-M01-BE-005 Add consistent error response format.
-- [ ] CP-M01-BE-006 Add test for error response format.
-- [ ] CP-M01-BE-007 Add API version prefix.
-- [ ] CP-M01-BE-008 Add schema versioning note to API docs.
-- [ ] CP-M01-BE-009 Add database migration check command.
-- [ ] CP-M01-BE-010 Add backend seed command.
+- [x] CP-M01-BE-001 Split backend settings into base/dev/test/prod files.
+- [x] CP-M01-BE-002 Add structured logging settings.
+- [x] CP-M01-BE-003 Add request ID middleware.
+- [x] CP-M01-BE-004 Add API exception handler.
+- [x] CP-M01-BE-005 Add consistent error response format.
+- [x] CP-M01-BE-006 Add test for error response format.
+- [x] CP-M01-BE-007 Add API version prefix.
+- [x] CP-M01-BE-008 Add schema versioning note to API docs.
+- [x] CP-M01-BE-009 Add database migration check command.
+- [x] CP-M01-BE-010 Add backend seed command.
 
 ### Frontend Tasks
 
-- [ ] CP-M01-FE-001 Add global error boundary.
-- [ ] CP-M01-FE-002 Add route-level error fallback.
-- [ ] CP-M01-FE-003 Add API error normalization helper.
-- [ ] CP-M01-FE-004 Add toast notification system.
-- [ ] CP-M01-FE-005 Replace silent API failures with toasts where appropriate.
-- [ ] CP-M01-FE-006 Add shared mutation loading button component.
-- [ ] CP-M01-FE-007 Add shared destructive action button pattern.
-- [ ] CP-M01-FE-008 Add shared form footer component.
-- [ ] CP-M01-FE-009 Add shared page tabs component.
-- [ ] CP-M01-FE-010 Add frontend accessibility checklist to docs.
+- [x] CP-M01-FE-001 Add global error boundary.
+- [x] CP-M01-FE-002 Add route-level error fallback.
+- [x] CP-M01-FE-003 Add API error normalization helper.
+- [x] CP-M01-FE-004 Add toast notification system.
+- [x] CP-M01-FE-005 Replace silent API failures with toasts where appropriate.
+- [x] CP-M01-FE-006 Add shared mutation loading button component.
+- [x] CP-M01-FE-007 Add shared destructive action button pattern.
+- [x] CP-M01-FE-008 Add shared form footer component.
+- [x] CP-M01-FE-009 Add shared page tabs component.
+- [x] CP-M01-FE-010 Add frontend accessibility checklist to docs.
 
 ### QA Tasks
 
-- [ ] CP-M01-QA-001 Run root lint command.
-- [ ] CP-M01-QA-002 Run root test command.
-- [ ] CP-M01-QA-003 Run root build command.
-- [ ] CP-M01-QA-004 Confirm pre-commit hooks work.
-- [ ] CP-M01-QA-005 Confirm error handling behavior is consistent.
+- [x] CP-M01-QA-001 Run root lint command.
+- [x] CP-M01-QA-002 Run root test command.
+- [x] CP-M01-QA-003 Run root build command.
+- [x] CP-M01-QA-004 Confirm pre-commit hooks work.
+- [x] CP-M01-QA-005 Confirm error handling behavior is consistent.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** MVP-M15-SIGN-009.
-**Last completed task name:** Write MVP completion summary in Last Completed Task Summary section.
-**Last completed milestone:** MVP-M15 — MVP Testing, Bug Fixing, And Acceptance.
+**Last completed task ID:** CP-M01-QA-005.
+**Last completed task name:** Confirm error handling behavior is consistent.
+**Last completed milestone:** CP-M01 — Production-Ready Monorepo Hardening.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M01 — Production-Ready Monorepo Hardening.
-**Next recommended task:** CP-M01-SH-001 Add consistent root lint command.
+**Current milestone:** CP-M02 — Advanced Metadata And External Provider Adapters.
+**Next recommended task:** CP-M02-SH-001 Define `ExternalProvider` enum.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-MVP acceptance is complete. Backend tests cover auth, media, scoring, candidates, queue, Tonight Mode, aftertaste, settings, import/export, API root/schema, Django admin reachability, and owner scoping including import/export download protection. Frontend typecheck/build pass, all MVP routes render from sidebar navigation on desktop and mobile, and the browser-to-backend acceptance journey persists data across logout/login. The MVP supports registering, adding/scoring media, logging aftertaste, viewing Taste Profile and Dashboard updates, evaluating a candidate, queueing it, generating Tonight Mode, updating settings, importing CSV, and exporting JSON/CSV backups. Full lint, typecheck, tests, build, and e2e gates pass.
+CP-M01 production-ready monorepo hardening is complete. Root formatting, lint, test, build, migration-check, seed, and pre-commit hook commands now provide consistent development gates. Backend hardening adds structured logging, request ID propagation, consistent DRF error envelopes, `/api/v1/` versioned aliases, migration and demo seed commands, schema/version docs, and tests for request/error behavior. Frontend hardening adds a global error boundary, route fallback, toast notifications for API load failures, normalized API error codes, shared mutation/destructive/form-footer/page-tabs primitives, and accessibility docs. ADRs now record monorepo, API-first, deterministic recommendation, and Redis/Celery decisions.
 
 ## 9.3 Important Notes For The Next Agent
 

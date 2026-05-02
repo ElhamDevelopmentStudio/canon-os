@@ -37,3 +37,28 @@ def test_django_admin_login_loads() -> None:
 
     assert response.status_code == status.HTTP_200_OK
     assert b"Django administration" in response.content
+
+
+def test_versioned_api_root_and_health_are_available() -> None:
+    client = APIClient()
+
+    root_response = client.get("/api/v1/")
+    health_response = client.get("/api/v1/health/")
+
+    assert root_response.status_code == status.HTTP_200_OK
+    assert root_response.json()["schemaVersion"] == "v1"
+    assert health_response.status_code == status.HTTP_200_OK
+
+
+def test_request_id_header_and_error_response_format() -> None:
+    response = APIClient().get(
+        "/api/media-items/not-a-uuid/",
+        HTTP_X_REQUEST_ID="test-request-id",
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+    assert response.headers["X-Request-ID"] == "test-request-id"
+    payload = response.json()
+    assert payload["error"]["status"] == status.HTTP_403_FORBIDDEN
+    assert payload["error"]["requestId"] == "test-request-id"
+    assert payload["error"]["message"]

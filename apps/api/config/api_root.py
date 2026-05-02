@@ -7,9 +7,12 @@ from rest_framework.views import APIView
 
 API_ROOT_PAYLOAD = {
     "service": "canonos-api",
-    "version": "0.1.0",
+    "version": "v1",
+    "schemaVersion": "v1",
+    "versionedBasePath": "/api/v1/",
     "endpoints": {
         "health": "/api/health/",
+        "health_v1": "/api/v1/health/",
         "auth": "/api/auth/",
         "settings": "/api/auth/settings/",
         "aftertaste": "/api/aftertaste/",
@@ -25,6 +28,7 @@ API_ROOT_PAYLOAD = {
         "schema": "/api/schema/",
         "swagger_docs": "/api/docs/swagger/",
         "scalar_docs": "/api/docs/scalar/",
+        "schema_v1": "/api/v1/schema/",
     },
     "mvp_modules": [
         {"name": "health", "status": "available", "path": "/api/health/"},

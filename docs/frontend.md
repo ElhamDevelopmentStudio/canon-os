@@ -107,9 +107,12 @@ Treat the existing Lo-Fi documents as implementation references before creating 
 ## Error Handling Pattern
 
 - Use shared feedback components for page-level errors, inline form errors, empty states, loading states, and confirmation dialogs.
+- The app has a global error boundary plus route-level fallback so render errors do not blank the whole screen.
+- API load failures should show visible page errors and emit a toast notification when practical.
 - API errors should be translated into user-friendly copy without hiding diagnostic detail from logs/tests.
 - Browser e2e fails on unexpected console errors and failed `/api/` responses. Explicitly allow only the expected error responses in tests.
 - Destructive actions require a confirmation affordance and should revalidate affected lists after success.
+- New shared mutation buttons, destructive action buttons, form footers, and page tabs should be reused before creating feature-local variants.
 
 ## UI Requirements
 

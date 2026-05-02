@@ -186,8 +186,9 @@ def test_settings_endpoint_validates_range_and_choices() -> None:
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     payload = response.json()
-    assert "themePreference" in payload["display"]
-    assert "genericnessSensitivity" in payload["recommendation"]
+    assert payload["error"]["code"] == "invalid_choice"
+    assert "themePreference" in payload["error"]["details"]["display"]
+    assert "genericnessSensitivity" in payload["error"]["details"]["recommendation"]
 
 
 def test_auth_endpoints_appear_in_openapi_schema() -> None:

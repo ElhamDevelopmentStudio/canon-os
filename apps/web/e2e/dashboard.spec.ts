@@ -30,6 +30,6 @@ test.describe("dashboard browser-to-backend flow", () => {
     await page.goto("/");
 
     await expect(page.getByText("Dashboard unavailable")).toBeVisible();
-    await expect(page.getByText("E2E forced dashboard failure")).toBeVisible();
+    await expect(page.locator("#main-content").getByText("E2E forced dashboard failure")).toBeVisible();
   });
 });

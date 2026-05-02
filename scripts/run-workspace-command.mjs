@@ -4,7 +4,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 const command = process.argv[2];
-const allowed = new Set(['lint', 'typecheck', 'test', 'build', 'e2e']);
+const allowed = new Set(['lint', 'format', 'format:check', 'typecheck', 'test', 'build', 'e2e']);
 
 if (!allowed.has(command)) {
   console.error(`Unsupported workspace command: ${command ?? '(missing)'}`);

@@ -5,6 +5,7 @@ import { AftertasteLogPage } from "@/pages/AftertasteLogPage";
 import { APP_ROUTES } from "@/app/routeConstants";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { PublicRoute } from "@/components/auth/PublicRoute";
+import { RouteErrorFallback } from "@/components/feedback/RouteErrorFallback";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { CandidateEvaluatorPage } from "@/pages/CandidateEvaluatorPage";
 import { LibraryPage } from "@/pages/LibraryPage";
@@ -35,17 +36,21 @@ export const appRoutes: RouteObject[] = [
       { path: APP_ROUTES.login, element: <LoginPage /> },
       { path: APP_ROUTES.register, element: <RegisterPage /> },
     ],
+    errorElement: <RouteErrorFallback />,
   },
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteErrorFallback />,
     children: [
       {
         path: APP_ROUTES.dashboard,
         element: <AppLayout />,
+        errorElement: <RouteErrorFallback />,
         children: protectedRouteChildren,
       },
     ],
   },
+  { path: "*", element: <RouteErrorFallback /> },
 ];
 
 export function createAppRouter() {

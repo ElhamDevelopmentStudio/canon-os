@@ -131,7 +131,7 @@ def test_aftertaste_media_ownership_protection() -> None:
     assert list_response.json()["results"] == []
     assert detail_response.status_code == status.HTTP_404_NOT_FOUND
     assert create_response.status_code == status.HTTP_400_BAD_REQUEST
-    assert create_response.json()["mediaItemId"] == ["Media item not found."]
+    assert create_response.json()["error"]["details"]["mediaItemId"] == ["Media item not found."]
 
 
 def test_media_detail_includes_latest_aftertaste_entry() -> None:

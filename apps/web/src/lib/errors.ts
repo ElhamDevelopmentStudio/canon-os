@@ -22,6 +22,10 @@ function firstMessage(value: unknown): string | null {
     }
   }
   if (typeof value === "object" && value) {
+    if ("error" in value) {
+      const message = firstMessage((value as { error?: unknown }).error);
+      if (message) return message;
+    }
     if ("message" in value) {
       const message = firstMessage((value as { message?: unknown }).message);
       if (message) return message;
@@ -45,7 +49,18 @@ function firstMessage(value: unknown): string | null {
 export function normalizeApiError(error: unknown): ApiError {
   if (axios.isAxiosError(error)) {
     const message = firstMessage(error.response?.data) ?? error.message;
-    return new ApiError(message, error.response?.status);
+    const responseData = error.response?.data;
+    const code =
+      typeof responseData === "object" &&
+      responseData &&
+      "error" in responseData &&
+      typeof responseData.error === "object" &&
+      responseData.error &&
+      "code" in responseData.error &&
+      typeof responseData.error.code === "string"
+        ? responseData.error.code
+        : "api_error";
+    return new ApiError(message, error.response?.status, code);
   }
 
   if (error instanceof Error) return new ApiError(error.message);

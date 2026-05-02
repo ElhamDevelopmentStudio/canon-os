@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "canonos.accounts",
     "canonos.aftertaste",
     "canonos.candidates",
+    "canonos.common",
     "canonos.dashboard",
     "canonos.health",
     "canonos.imports",
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "canonos.common.middleware.RequestIdMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -147,13 +149,50 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 25,
     "COERCE_DECIMAL_TO_STRING": False,
+    "EXCEPTION_HANDLER": "canonos.common.exceptions.canonos_exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "CanonOS API",
-    "DESCRIPTION": "Private personal media intelligence API.",
-    "VERSION": "0.1.0",
+    "DESCRIPTION": (
+        "Private personal media intelligence API. Versioned endpoints are exposed under "
+        "/api/v1/ while legacy /api/ paths remain available during the hardening phase."
+    ),
+    "VERSION": "v1",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+LOG_LEVEL = os.environ.get("DJANGO_LOG_LEVEL", "INFO")
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "structured": {
+            "format": "%(asctime)s %(levelname)s %(name)s %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "structured",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": LOG_LEVEL,
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": os.environ.get("DJANGO_REQUEST_LOG_LEVEL", "WARNING"),
+            "propagate": False,
+        },
+        "canonos": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+    },
 }
 
 CORS_ALLOWED_ORIGINS = [
