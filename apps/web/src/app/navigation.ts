@@ -5,6 +5,7 @@ import {
   Library,
   ListChecks,
   Moon,
+  Network,
   Settings,
   Sparkles,
   type LucideIcon,
@@ -49,6 +50,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.tasteProfile,
     icon: BookOpen,
     description: "Personal standards, patterns, and taste evolution.",
+  },
+  {
+    label: "TasteGraph",
+    route: APP_ROUTES.tasteGraph,
+    icon: Network,
+    description: "Graph connections between media, creators, dimensions, and reactions.",
   },
   {
     label: "Aftertaste Log",

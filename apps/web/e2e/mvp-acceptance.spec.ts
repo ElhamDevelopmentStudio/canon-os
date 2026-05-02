@@ -28,6 +28,7 @@ const routes = [
   { label: "Candidates", path: "/candidates", heading: "Candidate Evaluator" },
   { label: "Tonight Mode", path: "/tonight", heading: "Tonight Mode" },
   { label: "Taste Profile", path: "/taste-profile", heading: "Taste Profile" },
+  { label: "TasteGraph", path: "/taste-graph", heading: "TasteGraph" },
   { label: "Aftertaste Log", path: "/aftertaste-log", heading: "Aftertaste Log" },
   { label: "Queue", path: "/queue", heading: "Adaptive Queue" },
   { label: "Settings", path: "/settings", heading: "Settings" },

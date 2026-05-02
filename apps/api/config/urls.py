@@ -33,6 +33,7 @@ api_urlpatterns = [
     path("", include("canonos.candidates.urls")),
     path("", include("canonos.dashboard.urls")),
     path("health/", include("canonos.health.urls")),
+    path("", include("canonos.graph.urls")),
     path("", include("canonos.imports.urls")),
     path("", include("canonos.media.urls")),
     path("", include("canonos.metadata.urls")),

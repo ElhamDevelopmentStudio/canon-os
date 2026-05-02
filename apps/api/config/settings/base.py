@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "canonos.candidates",
     "canonos.common",
     "canonos.dashboard",
+    "canonos.graph",
     "canonos.health",
     "canonos.imports",
     "canonos.media",

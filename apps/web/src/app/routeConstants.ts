@@ -5,6 +5,7 @@ export const APP_ROUTES = {
   candidates: "/candidates",
   tonight: "/tonight",
   tasteProfile: "/taste-profile",
+  tasteGraph: "/taste-graph",
   aftertasteLog: "/aftertaste-log",
   queue: "/queue",
   settings: "/settings",

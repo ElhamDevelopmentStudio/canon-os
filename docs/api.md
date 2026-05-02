@@ -273,3 +273,10 @@ CanonOS supports optional provider enrichment without making provider data canon
 - `POST /api/media-items/{id}/metadata/refresh/` refreshes the latest attached snapshot and returns a metadata refresh job payload.
 
 Provider calls must not send private notes, ratings, aftertaste, queue state, or taste scores. User edits and personal fields remain authoritative over provider payloads.
+
+### TasteGraph
+
+- `GET /api/taste-graph/summary/` returns the current owner-scoped TasteGraph summary.
+- `GET /api/taste-graph/nodes/` lists graph nodes, optionally filtered by `nodeType`.
+- `GET /api/taste-graph/edges/` lists graph edges, optionally filtered by `edgeType`.
+- `POST /api/taste-graph/rebuild/` rebuilds the authenticated user's graph and returns a rebuild job payload.

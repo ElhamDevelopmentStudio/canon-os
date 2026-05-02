@@ -14,6 +14,7 @@ import { MediaDetailPage } from "@/pages/MediaDetailPage";
 import { QueuePage } from "@/pages/QueuePage";
 import { TonightModePage } from "@/pages/TonightModePage";
 import { TasteProfilePage } from "@/pages/TasteProfilePage";
+import { TasteGraphPage } from "@/pages/TasteGraphPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 
@@ -24,6 +25,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.candidates.slice(1), element: <CandidateEvaluatorPage /> },
   { path: APP_ROUTES.tonight.slice(1), element: <TonightModePage /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <TasteProfilePage /> },
+  { path: APP_ROUTES.tasteGraph.slice(1), element: <TasteGraphPage /> },
   { path: APP_ROUTES.aftertasteLog.slice(1), element: <AftertasteLogPage /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },
   { path: APP_ROUTES.settings.slice(1), element: <SettingsPage /> },

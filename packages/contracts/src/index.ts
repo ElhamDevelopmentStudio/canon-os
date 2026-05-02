@@ -120,3 +120,16 @@ export type {
   MetadataSearchRequest,
 } from "./metadata";
 export { EXTERNAL_PROVIDERS } from "./metadata";
+
+export type {
+  GraphEdge,
+  GraphEdgeType,
+  GraphNode,
+  GraphNodeType,
+  GraphRebuildJob,
+  GraphRebuildJobStatus,
+  TasteGraphEvidenceCounts,
+  TasteGraphSummary,
+  TasteGraphSummaryItem,
+} from "./tastegraph";
+export { GRAPH_EDGE_TYPES, GRAPH_NODE_TYPES, GRAPH_REBUILD_JOB_STATUSES } from "./tastegraph";

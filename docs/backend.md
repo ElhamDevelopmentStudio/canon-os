@@ -67,3 +67,7 @@ corepack pnpm --filter @canonos/api run seed
 ## Metadata provider adapters
 
 The `canonos.metadata` app owns external metadata snapshots and adapter orchestration. Current adapters are deterministic placeholders for movie/TV, anime, book, and audiobook metadata; they prove the internal contract without requiring external API keys. Real providers must implement the interface documented in `docs/metadata-providers.md`, use mocked provider tests, and keep private user data out of outbound requests.
+
+## TasteGraph service
+
+The `canonos.graph` app owns `GraphNode` and `GraphEdge`. Its rebuild service is deterministic, owner-scoped, and currently derives nodes/edges from media items, creators, media types, dimensional scores, and aftertaste entries. The Celery task `canonos.graph.rebuild_taste_graph` calls the same service for background workers.

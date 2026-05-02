@@ -181,3 +181,7 @@ Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. The 
 ## Metadata enrichment UI
 
 The media add/edit dialog includes an external metadata search section. Search results can prefill public fields, and existing media items can attach a provider snapshot. The media detail page shows attached provider source, description, image, rating/popularity hints, missing-metadata empty state, and a refresh action.
+
+## TasteGraph UI
+
+The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exposes a **Rebuild TasteGraph** action, and renders loading, empty, error, success, rebuild status, summary cards, ranked signal sections, and a simple text graph view.

@@ -83,6 +83,7 @@ describe("App", () => {
       APP_ROUTES.candidates,
       APP_ROUTES.tonight,
       APP_ROUTES.tasteProfile,
+      APP_ROUTES.tasteGraph,
       APP_ROUTES.aftertasteLog,
       APP_ROUTES.queue,
       APP_ROUTES.settings,

@@ -1657,80 +1657,80 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M03-SH-001 Define `GraphNode` type.
-- [ ] CP-M03-SH-002 Define `GraphEdge` type.
-- [ ] CP-M03-SH-003 Define graph node type enum.
-- [ ] CP-M03-SH-004 Define graph edge type enum.
-- [ ] CP-M03-SH-005 Define `TasteGraphSummary` type.
-- [ ] CP-M03-SH-006 Document TasteGraph concepts.
+- [x] CP-M03-SH-001 Define `GraphNode` type.
+- [x] CP-M03-SH-002 Define `GraphEdge` type.
+- [x] CP-M03-SH-003 Define graph node type enum.
+- [x] CP-M03-SH-004 Define graph edge type enum.
+- [x] CP-M03-SH-005 Define `TasteGraphSummary` type.
+- [x] CP-M03-SH-006 Document TasteGraph concepts.
 
 ### Backend Tasks
 
-- [ ] CP-M03-BE-001 Create graph app.
-- [ ] CP-M03-BE-002 Create GraphNode model.
-- [ ] CP-M03-BE-003 Add owner/user foreign key to GraphNode.
-- [ ] CP-M03-BE-004 Add node type field.
-- [ ] CP-M03-BE-005 Add label field.
-- [ ] CP-M03-BE-006 Add slug field.
-- [ ] CP-M03-BE-007 Add metadata JSON field.
-- [ ] CP-M03-BE-008 Create GraphEdge model.
-- [ ] CP-M03-BE-009 Add owner/user foreign key to GraphEdge.
-- [ ] CP-M03-BE-010 Add source node foreign key.
-- [ ] CP-M03-BE-011 Add target node foreign key.
-- [ ] CP-M03-BE-012 Add edge type field.
-- [ ] CP-M03-BE-013 Add weight field.
-- [ ] CP-M03-BE-014 Add evidence text field.
-- [ ] CP-M03-BE-015 Create migrations for graph models.
-- [ ] CP-M03-BE-016 Create graph node serializer.
-- [ ] CP-M03-BE-017 Create graph edge serializer.
-- [ ] CP-M03-BE-018 Create graph summary endpoint.
-- [ ] CP-M03-BE-019 Create graph nodes list endpoint.
-- [ ] CP-M03-BE-020 Create graph edges list endpoint.
-- [ ] CP-M03-BE-021 Create graph rebuild service.
-- [ ] CP-M03-BE-022 Add media item node creation logic.
-- [ ] CP-M03-BE-023 Add creator node creation logic.
-- [ ] CP-M03-BE-024 Add media-to-creator edge logic.
-- [ ] CP-M03-BE-025 Add dimension-to-media edge logic.
-- [ ] CP-M03-BE-026 Add aftertaste-to-media edge logic.
-- [ ] CP-M03-BE-027 Create rebuild TasteGraph endpoint.
-- [ ] CP-M03-BE-028 Add Celery task for graph rebuild.
-- [ ] CP-M03-BE-029 Register graph models in admin.
-- [ ] CP-M03-BE-030 Add test for media node creation.
-- [ ] CP-M03-BE-031 Add test for creator node creation.
-- [ ] CP-M03-BE-032 Add test for graph rebuild.
+- [x] CP-M03-BE-001 Create graph app.
+- [x] CP-M03-BE-002 Create GraphNode model.
+- [x] CP-M03-BE-003 Add owner/user foreign key to GraphNode.
+- [x] CP-M03-BE-004 Add node type field.
+- [x] CP-M03-BE-005 Add label field.
+- [x] CP-M03-BE-006 Add slug field.
+- [x] CP-M03-BE-007 Add metadata JSON field.
+- [x] CP-M03-BE-008 Create GraphEdge model.
+- [x] CP-M03-BE-009 Add owner/user foreign key to GraphEdge.
+- [x] CP-M03-BE-010 Add source node foreign key.
+- [x] CP-M03-BE-011 Add target node foreign key.
+- [x] CP-M03-BE-012 Add edge type field.
+- [x] CP-M03-BE-013 Add weight field.
+- [x] CP-M03-BE-014 Add evidence text field.
+- [x] CP-M03-BE-015 Create migrations for graph models.
+- [x] CP-M03-BE-016 Create graph node serializer.
+- [x] CP-M03-BE-017 Create graph edge serializer.
+- [x] CP-M03-BE-018 Create graph summary endpoint.
+- [x] CP-M03-BE-019 Create graph nodes list endpoint.
+- [x] CP-M03-BE-020 Create graph edges list endpoint.
+- [x] CP-M03-BE-021 Create graph rebuild service.
+- [x] CP-M03-BE-022 Add media item node creation logic.
+- [x] CP-M03-BE-023 Add creator node creation logic.
+- [x] CP-M03-BE-024 Add media-to-creator edge logic.
+- [x] CP-M03-BE-025 Add dimension-to-media edge logic.
+- [x] CP-M03-BE-026 Add aftertaste-to-media edge logic.
+- [x] CP-M03-BE-027 Create rebuild TasteGraph endpoint.
+- [x] CP-M03-BE-028 Add Celery task for graph rebuild.
+- [x] CP-M03-BE-029 Register graph models in admin.
+- [x] CP-M03-BE-030 Add test for media node creation.
+- [x] CP-M03-BE-031 Add test for creator node creation.
+- [x] CP-M03-BE-032 Add test for graph rebuild.
 
 ### Frontend Tasks
 
-- [ ] CP-M03-FE-001 Create graph API client file.
-- [ ] CP-M03-FE-002 Create `useTasteGraphSummary` SWR hook.
-- [ ] CP-M03-FE-003 Create TasteGraph page skeleton.
-- [ ] CP-M03-FE-004 Add TasteGraph page title.
-- [ ] CP-M03-FE-005 Add graph summary cards.
-- [ ] CP-M03-FE-006 Add strongest connected themes section.
-- [ ] CP-M03-FE-007 Add strongest connected creators section.
-- [ ] CP-M03-FE-008 Add strongest connected media section.
-- [ ] CP-M03-FE-009 Add weak/negative signal section.
-- [ ] CP-M03-FE-010 Add Rebuild TasteGraph button.
-- [ ] CP-M03-FE-011 Add graph rebuild job status display.
-- [ ] CP-M03-FE-012 Add simple text graph view.
-- [ ] CP-M03-FE-013 Add loading state to TasteGraph page.
-- [ ] CP-M03-FE-014 Add empty state to TasteGraph page.
-- [ ] CP-M03-FE-015 Add error state to TasteGraph page.
+- [x] CP-M03-FE-001 Create graph API client file.
+- [x] CP-M03-FE-002 Create `useTasteGraphSummary` SWR hook.
+- [x] CP-M03-FE-003 Create TasteGraph page skeleton.
+- [x] CP-M03-FE-004 Add TasteGraph page title.
+- [x] CP-M03-FE-005 Add graph summary cards.
+- [x] CP-M03-FE-006 Add strongest connected themes section.
+- [x] CP-M03-FE-007 Add strongest connected creators section.
+- [x] CP-M03-FE-008 Add strongest connected media section.
+- [x] CP-M03-FE-009 Add weak/negative signal section.
+- [x] CP-M03-FE-010 Add Rebuild TasteGraph button.
+- [x] CP-M03-FE-011 Add graph rebuild job status display.
+- [x] CP-M03-FE-012 Add simple text graph view.
+- [x] CP-M03-FE-013 Add loading state to TasteGraph page.
+- [x] CP-M03-FE-014 Add empty state to TasteGraph page.
+- [x] CP-M03-FE-015 Add error state to TasteGraph page.
 
 ### Integration Tasks
 
-- [ ] CP-M03-INT-001 Connect TasteGraph page to summary endpoint.
-- [ ] CP-M03-INT-002 Connect Rebuild button to rebuild endpoint.
-- [ ] CP-M03-INT-003 Show job running status after rebuild starts.
-- [ ] CP-M03-INT-004 Refresh graph summary after rebuild finishes.
+- [x] CP-M03-INT-001 Connect TasteGraph page to summary endpoint.
+- [x] CP-M03-INT-002 Connect Rebuild button to rebuild endpoint.
+- [x] CP-M03-INT-003 Show job running status after rebuild starts.
+- [x] CP-M03-INT-004 Refresh graph summary after rebuild finishes.
 
 ### QA Tasks
 
-- [ ] CP-M03-QA-001 Rebuild graph with empty library.
-- [ ] CP-M03-QA-002 Rebuild graph with scored library.
-- [ ] CP-M03-QA-003 Confirm graph connects media to creators.
-- [ ] CP-M03-QA-004 Confirm graph connects media to taste dimensions.
-- [ ] CP-M03-QA-005 Confirm TasteGraph page follows shared layout.
+- [x] CP-M03-QA-001 Rebuild graph with empty library.
+- [x] CP-M03-QA-002 Rebuild graph with scored library.
+- [x] CP-M03-QA-003 Confirm graph connects media to creators.
+- [x] CP-M03-QA-004 Confirm graph connects media to taste dimensions.
+- [x] CP-M03-QA-005 Confirm TasteGraph page follows shared layout.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M02-QA-005.
-**Last completed task name:** Refresh metadata from UI.
-**Last completed milestone:** CP-M02 — Advanced Metadata And External Provider Adapters.
+**Last completed task ID:** CP-M03-QA-005.
+**Last completed task name:** Confirm TasteGraph page follows shared layout.
+**Last completed milestone:** CP-M03 — TasteGraph Core.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M03 — TasteGraph Core.
-**Next recommended task:** CP-M03-SH-001 Define `GraphNode` type.
+**Current milestone:** CP-M04 — Anti-Generic Filter.
+**Next recommended task:** CP-M04-SH-001 Define anti-generic scoring contracts.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M02 advanced metadata and external provider adapters is complete. Shared contracts now define provider enums, external matches, attached metadata snapshots, and refresh job payloads. Backend work adds the `canonos.metadata` app, `ExternalMetadata` model/migration, deterministic placeholder adapters for movie/TV, anime, book, and audiobook metadata, match/attach/refresh endpoints, a refresh task, OpenAPI-visible routes, and ownership tests. Frontend work adds metadata search/attach UI in the media add/edit modal plus external metadata display, missing state, and refresh controls on media detail. Manual media-library tests and browser e2e now cover metadata search, attach, and refresh.
+CP-M03 TasteGraph Core is complete. Shared contracts now define graph node/edge enums, graph rows, summary payloads, and rebuild job payloads. Backend work adds the `canonos.graph` app, `GraphNode` and `GraphEdge` models/migration, owner-scoped serializers and endpoints, deterministic rebuild service, Celery rebuild task, admin registration, API root entries, and tests for media, creator, dimension, aftertaste, ownership, summary, endpoint, and task behavior. Frontend work adds the `/taste-graph` route, navigation item, SWR API client, summary cards, strongest themes/creators/media sections, weak/negative signals, rebuild job status, text graph view, and loading/empty/error states. Manual and browser e2e tests now cover empty and scored-library graph rebuild flows.
 
 ## 9.3 Important Notes For The Next Agent
 
