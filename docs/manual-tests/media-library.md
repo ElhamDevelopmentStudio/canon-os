@@ -21,6 +21,12 @@ Confirm the user can create, find, edit, view, and delete private media records.
    - Expected: The dialog closes and the new item appears in the Library table.
 4. Click the item title.
    - Expected: The Media Detail page opens and shows metadata plus notes.
+5. Click `Edit`, enter the item title in `Metadata search title`, and click `Search metadata`.
+   - Expected: Provider match cards appear and clearly label the provider source.
+6. Click `Attach metadata`, then save the media item.
+   - Expected: The detail page shows an External metadata section with source, description, image area, rating/popularity hints, and refresh button.
+7. Click `Refresh metadata`.
+   - Expected: The refresh succeeds and the External metadata section remains visible.
 
 ## Error Path
 
@@ -30,6 +36,8 @@ Confirm the user can create, find, edit, view, and delete private media records.
    - Expected: The browser prevents submission or the API returns a clear validation error.
 3. Enter a valid title and click `Save media` again.
    - Expected: The item saves successfully.
+4. Search metadata with an empty query and no title.
+   - Expected: A clear validation message asks for a title before contacting providers.
 
 ## Edge Case
 
@@ -37,5 +45,7 @@ Confirm the user can create, find, edit, view, and delete private media records.
    - Expected: A friendly empty state appears.
 2. Clear the search, then filter by a media type and status that match an item.
    - Expected: Matching items remain visible.
-3. Click Delete for an item and confirm.
+3. Open a media item with no attached provider snapshot.
+   - Expected: The External metadata section shows a friendly missing-metadata empty state.
+4. Click Delete for an item and confirm.
    - Expected: The item disappears from the Library list and cannot be opened from its old detail URL.

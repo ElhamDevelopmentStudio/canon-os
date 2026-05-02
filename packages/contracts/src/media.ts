@@ -1,5 +1,6 @@
 import type { AftertasteEntry } from "./aftertaste";
 import type { MediaScore } from "./taste";
+import type { ExternalMetadataSnapshot } from "./metadata";
 
 export const MEDIA_TYPES = ["movie", "tv_show", "anime", "novel", "audiobook"] as const;
 export type MediaType = (typeof MEDIA_TYPES)[number];
@@ -28,6 +29,7 @@ export type MediaItem = {
   updatedAt: string;
   scores?: MediaScore[];
   latestAftertaste?: AftertasteEntry | null;
+  externalMetadata?: ExternalMetadataSnapshot | null;
 };
 
 export type MediaItemCreateRequest = {

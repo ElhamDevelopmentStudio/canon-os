@@ -1,11 +1,15 @@
 import {
   CONSUMPTION_STATUSES,
+  EXTERNAL_PROVIDERS,
   MEDIA_TYPES,
+  type ExternalMediaMatch,
+  type ExternalProvider,
   type MediaItem,
   type MediaItemCreateRequest,
 } from "@canonos/contracts";
 import { FormEvent, useEffect, useState } from "react";
 
+import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { FormFieldWrapper, TextInput } from "@/components/forms/FormFieldWrapper";
 import { Button } from "@/components/ui/button";
@@ -17,6 +21,9 @@ import {
   type ScoreDraft,
 } from "@/features/media/scoreDrafts";
 import { createMediaItem, updateMediaItem } from "@/features/media/mediaApi";
+import { ExternalMetadataCard } from "@/features/metadata/ExternalMetadataCard";
+import { attachMetadata, searchMetadata } from "@/features/metadata/metadataApi";
+import { externalProviderLabels } from "@/features/metadata/metadataLabels";
 import { mediaTypeLabels, statusLabels } from "@/features/media/mediaLabels";
 import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
 import { cn } from "@/lib/utils";
@@ -123,6 +130,12 @@ export function MediaFormModal({
   const [scoreDrafts, setScoreDrafts] = useState<ScoreDraftMap>({});
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [metadataQuery, setMetadataQuery] = useState("");
+  const [metadataProvider, setMetadataProvider] = useState<ExternalProvider | "">("");
+  const [metadataMatches, setMetadataMatches] = useState<ExternalMediaMatch[]>([]);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
+  const [isSearchingMetadata, setIsSearchingMetadata] = useState(false);
+  const [attachingProviderItemId, setAttachingProviderItemId] = useState<string | null>(null);
   const { data: dimensions, error: dimensionsError, isLoading: isLoadingDimensions } =
     useTasteDimensions(open);
   const title = media ? "Edit media" : "Add media";
@@ -132,6 +145,10 @@ export function MediaFormModal({
       setForm(stateFromMedia(media));
       setScoreDrafts(scoreDraftsFromScores(media?.scores));
       setError(null);
+      setMetadataQuery(media?.title ?? "");
+      setMetadataProvider("");
+      setMetadataMatches([]);
+      setMetadataError(null);
     }
   }, [media, open]);
 
@@ -139,6 +156,58 @@ export function MediaFormModal({
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  function applyMetadataMatch(match: ExternalMediaMatch) {
+    setForm((current) => ({
+      ...current,
+      title: match.title || current.title,
+      originalTitle: match.originalTitle || current.originalTitle,
+      mediaType: match.mediaType,
+      releaseYear: match.releaseYear?.toString() ?? current.releaseYear,
+      creator: match.creator || current.creator,
+      notes: current.notes || match.description,
+    }));
+  }
+
+  async function handleMetadataSearch() {
+    const query = metadataQuery.trim() || form.title.trim();
+    if (!query) {
+      setMetadataError("Enter a title before searching metadata.");
+      return;
+    }
+    setIsSearchingMetadata(true);
+    setMetadataError(null);
+    try {
+      const response = await searchMetadata({
+        query,
+        mediaType: form.mediaType,
+        provider: metadataProvider,
+      });
+      setMetadataMatches(response.results);
+    } catch (caught) {
+      setMetadataError(caught instanceof Error ? caught.message : "Could not search metadata providers.");
+    } finally {
+      setIsSearchingMetadata(false);
+    }
+  }
+
+  async function handleAttachMetadata(match: ExternalMediaMatch) {
+    if (!media) {
+      applyMetadataMatch(match);
+      return;
+    }
+    setAttachingProviderItemId(match.providerItemId);
+    setMetadataError(null);
+    try {
+      await attachMetadata(media.id, match);
+      applyMetadataMatch(match);
+      onSaved?.({ ...media, externalMetadata: undefined });
+    } catch (caught) {
+      setMetadataError(caught instanceof Error ? caught.message : "Could not attach metadata.");
+    } finally {
+      setAttachingProviderItemId(null);
+    }
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -345,6 +414,63 @@ export function MediaFormModal({
               onChange={(event) => updateField("notes", event.target.value)}
             />
           </FormFieldWrapper>
+
+          <section className="grid gap-3 rounded-2xl border border-border bg-muted/20 p-4">
+            <div>
+              <h3 className="text-lg font-semibold">External metadata</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Search optional provider adapters for public metadata. Personal notes, ratings, and taste data are never sent.
+              </p>
+            </div>
+            {metadataError ? <ErrorState title="Metadata lookup failed" message={metadataError} /> : null}
+            <div className="grid gap-3 md:grid-cols-[1fr_180px_auto]">
+              <FormFieldWrapper id="metadata-query" label="Metadata search title">
+                <TextInput
+                  id="metadata-query"
+                  value={metadataQuery}
+                  onChange={(event) => setMetadataQuery(event.target.value)}
+                />
+              </FormFieldWrapper>
+              <FormFieldWrapper id="metadata-provider" label="Provider">
+                <select
+                  className={selectClassName}
+                  id="metadata-provider"
+                  value={metadataProvider}
+                  onChange={(event) => setMetadataProvider(event.target.value as ExternalProvider | "")}
+                >
+                  <option value="">Best provider</option>
+                  {EXTERNAL_PROVIDERS.filter((provider) => provider !== "manual").map((provider) => (
+                    <option key={provider} value={provider}>
+                      {externalProviderLabels[provider]}
+                    </option>
+                  ))}
+                </select>
+              </FormFieldWrapper>
+              <div className="flex items-end">
+                <Button disabled={isSearchingMetadata} type="button" variant="secondary" onClick={() => void handleMetadataSearch()}>
+                  {isSearchingMetadata ? "Searching…" : "Search metadata"}
+                </Button>
+              </div>
+            </div>
+            {metadataMatches.length ? (
+              <div className="grid gap-3">
+                {metadataMatches.map((match) => (
+                  <ExternalMetadataCard
+                    key={`${match.provider}:${match.providerItemId}`}
+                    isAttaching={attachingProviderItemId === match.providerItemId}
+                    match={match}
+                    onAttach={handleAttachMetadata}
+                    onUse={applyMetadataMatch}
+                  />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                title="No metadata selected"
+                message="Search by title to prefill public metadata or attach a provider snapshot to an existing item."
+              />
+            )}
+          </section>
 
           <section className="grid gap-3">
             <div>

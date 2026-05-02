@@ -45,6 +45,25 @@ test.describe("media library browser-to-backend flow", () => {
     await detailResponse;
     await expect(page.getByRole("heading", { name: updatedTitle })).toBeVisible();
 
+    await page.getByRole("button", { name: "Edit" }).click();
+    await expect(page.getByRole("dialog", { name: "Edit media" })).toBeVisible();
+    await page.getByLabel("Metadata search title").fill(updatedTitle);
+    const metadataSearchResponse = waitForApiResponse(page, "GET", /\/api\/metadata\/matches\/?/, 200);
+    await page.getByRole("button", { name: "Search metadata" }).click();
+    await metadataSearchResponse;
+    await expect(page.getByRole("heading", { name: updatedTitle, level: 4 })).toBeVisible();
+    const attachResponse = waitForApiResponse(page, "POST", /\/api\/media-items\/[^/]+\/metadata\/attach\/$/, 201);
+    await page.getByRole("button", { name: "Attach metadata" }).first().click();
+    await attachResponse;
+    const metadataSaveResponse = waitForApiResponse(page, "PATCH", /\/api\/media-items\/[^/]+\/$/, 200);
+    await page.getByRole("button", { name: "Save media" }).click();
+    await metadataSaveResponse;
+    await expect(page.getByRole("heading", { name: "External metadata" })).toBeVisible();
+    await expect(page.getByLabel("External metadata").getByText("Movie/TV metadata")).toBeVisible();
+    const refreshResponse = waitForApiResponse(page, "POST", /\/api\/media-items\/[^/]+\/metadata\/refresh\/$/, 201);
+    await page.getByRole("button", { name: "Refresh metadata" }).click();
+    await refreshResponse;
+
     await page.getByRole("spinbutton", { name: "Score" }).first().fill("8.8");
     await page.getByRole("textbox", { name: "Score note" }).first().fill("Strong E2E taste signal.");
     const scoreResponse = waitForApiResponse(page, "PUT", /\/api\/media-items\/[^/]+\/scores\/$/, 200);

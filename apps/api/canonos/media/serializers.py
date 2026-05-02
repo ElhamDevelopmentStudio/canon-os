@@ -54,6 +54,7 @@ class MediaItemSerializer(serializers.ModelSerializer):
     updatedAt = serializers.DateTimeField(source="updated_at", read_only=True)
     scores = serializers.SerializerMethodField()
     latestAftertaste = serializers.SerializerMethodField()
+    externalMetadata = serializers.SerializerMethodField()
 
     class Meta:
         model = MediaItem
@@ -78,6 +79,7 @@ class MediaItemSerializer(serializers.ModelSerializer):
             "updatedAt",
             "scores",
             "latestAftertaste",
+            "externalMetadata",
         ]
         read_only_fields = ["id", "createdAt", "updatedAt"]
 
@@ -96,3 +98,12 @@ class MediaItemSerializer(serializers.ModelSerializer):
         if latest is None:
             return None
         return AftertasteEntrySerializer(latest, context=self.context).data
+
+    @extend_schema_field(serializers.DictField(allow_null=True))
+    def get_externalMetadata(self, obj: MediaItem):  # noqa: ANN201, N802
+        from canonos.metadata.serializers import ExternalMetadataSerializer
+
+        latest = obj.external_metadata.order_by("-last_refreshed_at").first()
+        if latest is None:
+            return None
+        return ExternalMetadataSerializer(latest, context=self.context).data

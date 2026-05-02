@@ -109,3 +109,14 @@ export {
   TONIGHT_RECOMMENDATION_SOURCES,
 } from "./tonight";
 export * from "./portability";
+export type {
+  ExternalMediaMatch,
+  ExternalMetadataSnapshot,
+  ExternalProvider,
+  MetadataAttachRequest,
+  MetadataMatchListResponse,
+  MetadataRefreshJob,
+  MetadataRefreshJobStatus,
+  MetadataSearchRequest,
+} from "./metadata";
+export { EXTERNAL_PROVIDERS } from "./metadata";

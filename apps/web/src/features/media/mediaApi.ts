@@ -39,6 +39,17 @@ function normalizeMediaItem(item: MediaItem): MediaItem {
         stayedWithMeScore: Number(item.latestAftertaste.stayedWithMeScore),
       }
       : item.latestAftertaste,
+    externalMetadata: item.externalMetadata
+      ? {
+        ...item.externalMetadata,
+        externalRating:
+          item.externalMetadata.externalRating === null ? null : Number(item.externalMetadata.externalRating),
+        externalPopularity:
+          item.externalMetadata.externalPopularity === null
+            ? null
+            : Number(item.externalMetadata.externalPopularity),
+      }
+      : item.externalMetadata,
   };
 }
 

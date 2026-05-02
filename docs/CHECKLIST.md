@@ -1585,69 +1585,69 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M02-SH-001 Define `ExternalProvider` enum.
-- [ ] CP-M02-SH-002 Define `ExternalMediaMatch` type.
-- [ ] CP-M02-SH-003 Define `ExternalMetadataSnapshot` type.
-- [ ] CP-M02-SH-004 Define metadata refresh job type.
-- [ ] CP-M02-SH-005 Document provider adapter interface.
+- [x] CP-M02-SH-001 Define `ExternalProvider` enum.
+- [x] CP-M02-SH-002 Define `ExternalMediaMatch` type.
+- [x] CP-M02-SH-003 Define `ExternalMetadataSnapshot` type.
+- [x] CP-M02-SH-004 Define metadata refresh job type.
+- [x] CP-M02-SH-005 Document provider adapter interface.
 
 ### Backend Tasks
 
-- [ ] CP-M02-BE-001 Create metadata app.
-- [ ] CP-M02-BE-002 Create ExternalMetadata model.
-- [ ] CP-M02-BE-003 Add media item foreign key.
-- [ ] CP-M02-BE-004 Add provider field.
-- [ ] CP-M02-BE-005 Add provider item ID field.
-- [ ] CP-M02-BE-006 Add raw payload JSON field.
-- [ ] CP-M02-BE-007 Add normalized title field.
-- [ ] CP-M02-BE-008 Add normalized description field.
-- [ ] CP-M02-BE-009 Add poster/image URL field.
-- [ ] CP-M02-BE-010 Add external rating field.
-- [ ] CP-M02-BE-011 Add external popularity field.
-- [ ] CP-M02-BE-012 Add last refreshed at field.
-- [ ] CP-M02-BE-013 Create provider adapter base class.
-- [ ] CP-M02-BE-014 Create movie/TV provider adapter placeholder.
-- [ ] CP-M02-BE-015 Create anime provider adapter placeholder.
-- [ ] CP-M02-BE-016 Create book provider adapter placeholder.
-- [ ] CP-M02-BE-017 Create audiobook provider adapter placeholder.
-- [ ] CP-M02-BE-018 Create metadata search service.
-- [ ] CP-M02-BE-019 Create metadata match endpoint.
-- [ ] CP-M02-BE-020 Create attach metadata endpoint.
-- [ ] CP-M02-BE-021 Create refresh metadata endpoint.
-- [ ] CP-M02-BE-022 Add Celery task for metadata refresh.
-- [ ] CP-M02-BE-023 Add test for provider adapter interface.
-- [ ] CP-M02-BE-024 Add test for attaching metadata.
-- [ ] CP-M02-BE-025 Add test for refreshing metadata job.
+- [x] CP-M02-BE-001 Create metadata app.
+- [x] CP-M02-BE-002 Create ExternalMetadata model.
+- [x] CP-M02-BE-003 Add media item foreign key.
+- [x] CP-M02-BE-004 Add provider field.
+- [x] CP-M02-BE-005 Add provider item ID field.
+- [x] CP-M02-BE-006 Add raw payload JSON field.
+- [x] CP-M02-BE-007 Add normalized title field.
+- [x] CP-M02-BE-008 Add normalized description field.
+- [x] CP-M02-BE-009 Add poster/image URL field.
+- [x] CP-M02-BE-010 Add external rating field.
+- [x] CP-M02-BE-011 Add external popularity field.
+- [x] CP-M02-BE-012 Add last refreshed at field.
+- [x] CP-M02-BE-013 Create provider adapter base class.
+- [x] CP-M02-BE-014 Create movie/TV provider adapter placeholder.
+- [x] CP-M02-BE-015 Create anime provider adapter placeholder.
+- [x] CP-M02-BE-016 Create book provider adapter placeholder.
+- [x] CP-M02-BE-017 Create audiobook provider adapter placeholder.
+- [x] CP-M02-BE-018 Create metadata search service.
+- [x] CP-M02-BE-019 Create metadata match endpoint.
+- [x] CP-M02-BE-020 Create attach metadata endpoint.
+- [x] CP-M02-BE-021 Create refresh metadata endpoint.
+- [x] CP-M02-BE-022 Add Celery task for metadata refresh.
+- [x] CP-M02-BE-023 Add test for provider adapter interface.
+- [x] CP-M02-BE-024 Add test for attaching metadata.
+- [x] CP-M02-BE-025 Add test for refreshing metadata job.
 
 ### Frontend Tasks
 
-- [ ] CP-M02-FE-001 Create metadata API client file.
-- [ ] CP-M02-FE-002 Add metadata search section to Add/Edit Media modal.
-- [ ] CP-M02-FE-003 Add Search Metadata button.
-- [ ] CP-M02-FE-004 Create external match result card.
-- [ ] CP-M02-FE-005 Add Attach Metadata button to result card.
-- [ ] CP-M02-FE-006 Add poster/image display to media detail page.
-- [ ] CP-M02-FE-007 Add external description display to media detail page.
-- [ ] CP-M02-FE-008 Add external source label to media detail page.
-- [ ] CP-M02-FE-009 Add Refresh Metadata button.
-- [ ] CP-M02-FE-010 Add metadata refresh loading state.
-- [ ] CP-M02-FE-011 Add metadata missing empty state.
+- [x] CP-M02-FE-001 Create metadata API client file.
+- [x] CP-M02-FE-002 Add metadata search section to Add/Edit Media modal.
+- [x] CP-M02-FE-003 Add Search Metadata button.
+- [x] CP-M02-FE-004 Create external match result card.
+- [x] CP-M02-FE-005 Add Attach Metadata button to result card.
+- [x] CP-M02-FE-006 Add poster/image display to media detail page.
+- [x] CP-M02-FE-007 Add external description display to media detail page.
+- [x] CP-M02-FE-008 Add external source label to media detail page.
+- [x] CP-M02-FE-009 Add Refresh Metadata button.
+- [x] CP-M02-FE-010 Add metadata refresh loading state.
+- [x] CP-M02-FE-011 Add metadata missing empty state.
 
 ### Integration Tasks
 
-- [ ] CP-M02-INT-001 Connect metadata search UI to match endpoint.
-- [ ] CP-M02-INT-002 Connect Attach Metadata button to attach endpoint.
-- [ ] CP-M02-INT-003 Connect Refresh Metadata button to refresh endpoint.
-- [ ] CP-M02-INT-004 Revalidate media detail after metadata attach.
-- [ ] CP-M02-INT-005 Revalidate media detail after refresh completes.
+- [x] CP-M02-INT-001 Connect metadata search UI to match endpoint.
+- [x] CP-M02-INT-002 Connect Attach Metadata button to attach endpoint.
+- [x] CP-M02-INT-003 Connect Refresh Metadata button to refresh endpoint.
+- [x] CP-M02-INT-004 Revalidate media detail after metadata attach.
+- [x] CP-M02-INT-005 Revalidate media detail after refresh completes.
 
 ### QA Tasks
 
-- [ ] CP-M02-QA-001 Search metadata for a movie.
-- [ ] CP-M02-QA-002 Search metadata for anime.
-- [ ] CP-M02-QA-003 Search metadata for a novel.
-- [ ] CP-M02-QA-004 Attach metadata to a media item.
-- [ ] CP-M02-QA-005 Refresh metadata from UI.
+- [x] CP-M02-QA-001 Search metadata for a movie.
+- [x] CP-M02-QA-002 Search metadata for anime.
+- [x] CP-M02-QA-003 Search metadata for a novel.
+- [x] CP-M02-QA-004 Attach metadata to a media item.
+- [x] CP-M02-QA-005 Refresh metadata from UI.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M01-QA-005.
-**Last completed task name:** Confirm error handling behavior is consistent.
-**Last completed milestone:** CP-M01 — Production-Ready Monorepo Hardening.
+**Last completed task ID:** CP-M02-QA-005.
+**Last completed task name:** Refresh metadata from UI.
+**Last completed milestone:** CP-M02 — Advanced Metadata And External Provider Adapters.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M02 — Advanced Metadata And External Provider Adapters.
-**Next recommended task:** CP-M02-SH-001 Define `ExternalProvider` enum.
+**Current milestone:** CP-M03 — TasteGraph Core.
+**Next recommended task:** CP-M03-SH-001 Define `GraphNode` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M01 production-ready monorepo hardening is complete. Root formatting, lint, test, build, migration-check, seed, and pre-commit hook commands now provide consistent development gates. Backend hardening adds structured logging, request ID propagation, consistent DRF error envelopes, `/api/v1/` versioned aliases, migration and demo seed commands, schema/version docs, and tests for request/error behavior. Frontend hardening adds a global error boundary, route fallback, toast notifications for API load failures, normalized API error codes, shared mutation/destructive/form-footer/page-tabs primitives, and accessibility docs. ADRs now record monorepo, API-first, deterministic recommendation, and Redis/Celery decisions.
+CP-M02 advanced metadata and external provider adapters is complete. Shared contracts now define provider enums, external matches, attached metadata snapshots, and refresh job payloads. Backend work adds the `canonos.metadata` app, `ExternalMetadata` model/migration, deterministic placeholder adapters for movie/TV, anime, book, and audiobook metadata, match/attach/refresh endpoints, a refresh task, OpenAPI-visible routes, and ownership tests. Frontend work adds metadata search/attach UI in the media add/edit modal plus external metadata display, missing state, and refresh controls on media detail. Manual media-library tests and browser e2e now cover metadata search, attach, and refresh.
 
 ## 9.3 Important Notes For The Next Agent
 

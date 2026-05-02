@@ -63,3 +63,7 @@ corepack pnpm --filter @canonos/api run test
 corepack pnpm --filter @canonos/api run migrations:check
 corepack pnpm --filter @canonos/api run seed
 ```
+
+## Metadata provider adapters
+
+The `canonos.metadata` app owns external metadata snapshots and adapter orchestration. Current adapters are deterministic placeholders for movie/TV, anime, book, and audiobook metadata; they prove the internal contract without requiring external API keys. Real providers must implement the interface documented in `docs/metadata-providers.md`, use mocked provider tests, and keep private user data out of outbound requests.

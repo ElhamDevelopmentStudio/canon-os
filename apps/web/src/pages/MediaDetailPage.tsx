@@ -1,4 +1,4 @@
-import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, Pencil, RefreshCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -22,6 +22,8 @@ import {
   type ScoreDraft,
 } from "@/features/media/scoreDrafts";
 import { deleteMediaItem, useMediaItem } from "@/features/media/mediaApi";
+import { refreshMetadata } from "@/features/metadata/metadataApi";
+import { externalProviderLabels } from "@/features/metadata/metadataLabels";
 import { MediaFormModal } from "@/features/media/MediaFormModal";
 import { mediaTypeLabels, statusLabels } from "@/features/media/mediaLabels";
 import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
@@ -51,6 +53,8 @@ export function MediaDetailPage() {
   const [isSavingScores, setIsSavingScores] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [scoreError, setScoreError] = useState<string | null>(null);
+  const [isRefreshingMetadata, setIsRefreshingMetadata] = useState(false);
+  const [metadataError, setMetadataError] = useState<string | null>(null);
 
   useEffect(() => {
     setScoreDrafts(scoreDraftsFromScores(data?.scores));
@@ -67,6 +71,21 @@ export function MediaDetailPage() {
       setDeleteError(caught instanceof Error ? caught.message : "Could not delete media item.");
     } finally {
       setIsDeleting(false);
+    }
+  }
+
+
+  async function handleRefreshMetadata() {
+    if (!data) return;
+    setIsRefreshingMetadata(true);
+    setMetadataError(null);
+    try {
+      await refreshMetadata(data.id);
+      await mutate();
+    } catch (caught) {
+      setMetadataError(caught instanceof Error ? caught.message : "Could not refresh metadata.");
+    } finally {
+      setIsRefreshingMetadata(false);
     }
   }
 
@@ -217,6 +236,56 @@ export function MediaDetailPage() {
             message="When this work is finished, dropped, or paused, add a reflection so CanonOS remembers what actually stayed with you."
             title="No aftertaste recorded"
             onAction={() => navigate(APP_ROUTES.aftertasteLog)}
+          />
+        )}
+      </SectionCard>
+
+      <SectionCard title="External metadata">
+        {metadataError ? <ErrorState title="Metadata refresh failed" message={metadataError} /> : null}
+        {data.externalMetadata ? (
+          <div className="grid gap-4 lg:grid-cols-[160px_1fr]">
+            {data.externalMetadata.imageUrl ? (
+              <img
+                alt={`Poster for ${data.title}`}
+                className="h-60 w-40 rounded-2xl object-cover shadow-sm"
+                src={data.externalMetadata.imageUrl}
+              />
+            ) : null}
+            <div className="grid gap-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {externalProviderLabels[data.externalMetadata.provider]}
+                  </p>
+                  <h2 className="text-xl font-semibold">{data.externalMetadata.normalizedTitle}</h2>
+                </div>
+                <Button
+                  className="gap-2"
+                  disabled={isRefreshingMetadata}
+                  type="button"
+                  variant="secondary"
+                  onClick={() => void handleRefreshMetadata()}
+                >
+                  <RefreshCcw aria-hidden="true" className="h-4 w-4" />
+                  {isRefreshingMetadata ? "Refreshing…" : "Refresh metadata"}
+                </Button>
+              </div>
+              <p className="text-sm leading-6 text-muted-foreground">
+                {data.externalMetadata.normalizedDescription || "No external description available."}
+              </p>
+              <dl className="grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <Metadata label="Provider item ID" value={data.externalMetadata.providerItemId} />
+                <Metadata label="External rating" value={data.externalMetadata.externalRating?.toString()} />
+                <Metadata label="Popularity" value={data.externalMetadata.externalPopularity?.toString()} />
+                <Metadata label="Source" value={data.externalMetadata.sourceUrl} />
+                <Metadata label="Last refreshed" value={new Date(data.externalMetadata.lastRefreshedAt).toLocaleString()} />
+              </dl>
+            </div>
+          </div>
+        ) : (
+          <EmptyState
+            title="No external metadata attached"
+            message="Use Edit, search metadata, and attach a provider result to enrich this item without changing your private scores or notes."
           />
         )}
       </SectionCard>

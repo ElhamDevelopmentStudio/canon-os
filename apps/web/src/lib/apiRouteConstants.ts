@@ -12,6 +12,7 @@ export const API_ROUTES = {
   aftertastePrompts: "/aftertaste/prompts/",
   dashboardSummary: "/dashboard/summary/",
   mediaItems: "/media-items/",
+  metadataMatches: "/metadata/matches/",
   importPreview: "/imports/preview/",
   exportRequest: "/exports/",
   tasteDimensions: "/taste-dimensions/",

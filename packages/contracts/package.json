@@ -6,7 +6,8 @@
   "description": "Shared CanonOS API contracts and TypeScript types.",
   "exports": {
     ".": "./src/index.ts",
-    "./auth": "./src/auth.ts"
+    "./auth": "./src/auth.ts",
+    "./metadata": "./src/metadata.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",

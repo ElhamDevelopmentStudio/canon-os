@@ -52,6 +52,7 @@ class MediaItemViewSet(viewsets.ModelViewSet):
             .prefetch_related(
                 "scores__taste_dimension",
                 "aftertaste_entries",
+                "external_metadata",
             )
             .order_by(
                 "-updated_at",

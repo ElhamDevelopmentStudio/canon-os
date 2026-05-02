@@ -177,3 +177,7 @@ Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi
 ### Settings And Portability UI
 
 Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. The Settings page owns profile preferences, recommendation defaults, theme preferences, import preview/confirm, JSON export, and media/ratings CSV export. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
+
+## Metadata enrichment UI
+
+The media add/edit dialog includes an external metadata search section. Search results can prefill public fields, and existing media items can attach a provider snapshot. The media detail page shows attached provider source, description, image, rating/popularity hints, missing-metadata empty state, and a refresh action.

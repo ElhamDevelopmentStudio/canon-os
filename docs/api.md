@@ -262,3 +262,14 @@ JSON import accepts this export shape and recreates implemented user-owned MVP r
 - `POST /api/imports/{id}/confirm/` — commit a valid import preview.
 - `POST /api/exports/` — create a `json` or `csv` export job.
 - `GET /api/exports/{id}/download/` — download a completed export owned by the current user.
+
+## External metadata endpoints
+
+CanonOS supports optional provider enrichment without making provider data canonical user truth.
+
+- `GET /api/metadata/matches/?query=<title>&mediaType=<type>&provider=<provider>` searches configured adapters and returns normalized `ExternalMediaMatch` records.
+- `POST /api/media-items/{id}/metadata/attach/` stores one provider match as an `ExternalMetadata` snapshot for the authenticated user's media item.
+- `GET /api/media-items/{id}/metadata/` lists attached snapshots.
+- `POST /api/media-items/{id}/metadata/refresh/` refreshes the latest attached snapshot and returns a metadata refresh job payload.
+
+Provider calls must not send private notes, ratings, aftertaste, queue state, or taste scores. User edits and personal fields remain authoritative over provider payloads.
