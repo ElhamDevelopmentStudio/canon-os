@@ -42,4 +42,5 @@ class DashboardSummarySerializer(serializers.Serializer):
     recentActivity = DashboardMediaItemSerializer(many=True)
     highestRated = DashboardMediaItemSerializer(many=True)
     topTasteSignals = DashboardTopTasteSignalSerializer(many=True)
+    latestTasteEvolutionInsight = serializers.JSONField(allow_null=True)
     generatedAt = serializers.DateTimeField()

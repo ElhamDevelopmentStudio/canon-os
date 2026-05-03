@@ -22,6 +22,8 @@ export const API_ROUTES = {
   tasteGraphNodes: "/taste-graph/nodes/",
   tasteGraphEdges: "/taste-graph/edges/",
   tasteGraphRebuild: "/taste-graph/rebuild/",
+  tasteEvolution: "/taste-evolution/",
+  tasteEvolutionGenerate: "/taste-evolution/generate/",
   candidates: "/candidates/",
   criticPersonas: "/critic-personas/",
   councilSessions: "/council-sessions/",

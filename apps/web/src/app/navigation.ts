@@ -10,6 +10,7 @@ import {
   Network,
   Settings,
   Sparkles,
+  TrendingUp,
   type LucideIcon,
 } from "lucide-react";
 
@@ -64,6 +65,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.tasteProfile,
     icon: BookOpen,
     description: "Personal standards, patterns, and taste evolution.",
+  },
+  {
+    label: "Taste Evolution",
+    route: APP_ROUTES.tasteEvolution,
+    icon: TrendingUp,
+    description: "Historical shifts in ratings, mediums, regret, fatigue, and favorite dimensions.",
   },
   {
     label: "TasteGraph",

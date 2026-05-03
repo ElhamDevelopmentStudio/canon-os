@@ -1,4 +1,5 @@
 import type { ConsumptionStatus, MediaType } from "./media";
+import type { TasteChangeInsight } from "./evolution";
 import type { TasteDimensionDirection } from "./taste";
 
 export type DashboardCounts = {
@@ -37,5 +38,6 @@ export type DashboardSummary = {
   recentActivity: DashboardMediaItem[];
   highestRated: DashboardMediaItem[];
   topTasteSignals: DashboardTopTasteSignal[];
+  latestTasteEvolutionInsight: TasteChangeInsight | null;
   generatedAt: string;
 };

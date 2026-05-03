@@ -54,6 +54,14 @@ const summary: DashboardSummary = {
       updatedAt: "2026-01-03T00:00:00Z",
     },
   ],
+  latestTasteEvolutionInsight: {
+    key: "favorite_dimension",
+    severity: "positive",
+    title: "Atmosphere is carrying recent taste",
+    body: "Your latest positive dimension leader is the clearest current taste anchor.",
+    recommendation: "Use it as the first recommendation filter.",
+    evidence: ["Favorite dimension: latest value Atmosphere."],
+  },
   topTasteSignals: [
     {
       dimensionId: "6cc99274-279b-4cf7-8dd0-623ed19798e1",
@@ -127,9 +135,12 @@ describe("DashboardPage", () => {
     expect(screen.getByText("3")).toBeInTheDocument();
     expect(screen.getAllByText("1").length).toBeGreaterThanOrEqual(3);
     expect(screen.getByRole("heading", { name: /media type breakdown/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /latest taste shift/i })).toBeInTheDocument();
+    expect(screen.getByText(/atmosphere is carrying recent taste/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /open taste evolution/i })).toHaveAttribute("href", "/taste-evolution");
     expect(screen.getByRole("heading", { name: /top taste signals/i })).toBeInTheDocument();
     expect(screen.getAllByText(/stalker/i).length).toBeGreaterThan(0);
-    expect(screen.getByText(/atmosphere/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/atmosphere/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: /evaluate candidate/i })).toHaveAttribute("href", "/candidates");
     expect(screen.getByRole("link", { name: /tonight mode/i })).toHaveAttribute("href", "/tonight");
   });
@@ -151,6 +162,7 @@ describe("DashboardPage", () => {
         recentActivity: [],
         highestRated: [],
         topTasteSignals: [],
+        latestTasteEvolutionInsight: null,
       },
       error: undefined,
       isLoading: false,

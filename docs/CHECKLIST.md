@@ -92,6 +92,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Media Archaeologist: `docs/manual-tests/media-archaeologist.md`
 - Narrative DNA: `docs/manual-tests/narrative-dna.md`
 - Critic Council: `docs/manual-tests/critic-council.md`
+- Taste Evolution Journal: `docs/manual-tests/taste-evolution.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 
@@ -2111,64 +2112,64 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M09-SH-001 Define `TasteEvolutionSnapshot` type.
-- [ ] CP-M09-SH-002 Define `TasteTrend` type.
-- [ ] CP-M09-SH-003 Define `TasteChangeInsight` type.
-- [ ] CP-M09-SH-004 Document taste evolution rules.
+- [x] CP-M09-SH-001 Define `TasteEvolutionSnapshot` type.
+- [x] CP-M09-SH-002 Define `TasteTrend` type.
+- [x] CP-M09-SH-003 Define `TasteChangeInsight` type.
+- [x] CP-M09-SH-004 Document taste evolution rules.
 
 ### Backend Tasks
 
-- [ ] CP-M09-BE-001 Create evolution app.
-- [ ] CP-M09-BE-002 Create TasteEvolutionSnapshot model.
-- [ ] CP-M09-BE-003 Add owner/user foreign key.
-- [ ] CP-M09-BE-004 Add snapshot period field.
-- [ ] CP-M09-BE-005 Add snapshot date field.
-- [ ] CP-M09-BE-006 Add aggregate data JSON field.
-- [ ] CP-M09-BE-007 Add insights JSON field.
-- [ ] CP-M09-BE-008 Create snapshot generation service.
-- [ ] CP-M09-BE-009 Compute rating trend by month.
-- [ ] CP-M09-BE-010 Compute media type trend by month.
-- [ ] CP-M09-BE-011 Compute genericness tolerance trend.
-- [ ] CP-M09-BE-012 Compute regret trend.
-- [ ] CP-M09-BE-013 Compute completion fatigue trend.
-- [ ] CP-M09-BE-014 Compute favorite dimension trend.
-- [ ] CP-M09-BE-015 Create generate evolution snapshot endpoint.
-- [ ] CP-M09-BE-016 Create evolution timeline endpoint.
-- [ ] CP-M09-BE-017 Add Celery scheduled task placeholder for monthly snapshot.
-- [ ] CP-M09-BE-018 Add test for snapshot generation.
-- [ ] CP-M09-BE-019 Add test for empty evolution timeline.
+- [x] CP-M09-BE-001 Create evolution app.
+- [x] CP-M09-BE-002 Create TasteEvolutionSnapshot model.
+- [x] CP-M09-BE-003 Add owner/user foreign key.
+- [x] CP-M09-BE-004 Add snapshot period field.
+- [x] CP-M09-BE-005 Add snapshot date field.
+- [x] CP-M09-BE-006 Add aggregate data JSON field.
+- [x] CP-M09-BE-007 Add insights JSON field.
+- [x] CP-M09-BE-008 Create snapshot generation service.
+- [x] CP-M09-BE-009 Compute rating trend by month.
+- [x] CP-M09-BE-010 Compute media type trend by month.
+- [x] CP-M09-BE-011 Compute genericness tolerance trend.
+- [x] CP-M09-BE-012 Compute regret trend.
+- [x] CP-M09-BE-013 Compute completion fatigue trend.
+- [x] CP-M09-BE-014 Compute favorite dimension trend.
+- [x] CP-M09-BE-015 Create generate evolution snapshot endpoint.
+- [x] CP-M09-BE-016 Create evolution timeline endpoint.
+- [x] CP-M09-BE-017 Add Celery scheduled task placeholder for monthly snapshot.
+- [x] CP-M09-BE-018 Add test for snapshot generation.
+- [x] CP-M09-BE-019 Add test for empty evolution timeline.
 
 ### Frontend Tasks
 
-- [ ] CP-M09-FE-001 Create evolution API client file.
-- [ ] CP-M09-FE-002 Create Taste Evolution page skeleton.
-- [ ] CP-M09-FE-003 Add page title.
-- [ ] CP-M09-FE-004 Add Generate Snapshot button.
-- [ ] CP-M09-FE-005 Add taste timeline section.
-- [ ] CP-M09-FE-006 Add rating trend display.
-- [ ] CP-M09-FE-007 Add medium trend display.
-- [ ] CP-M09-FE-008 Add genericness tolerance trend display.
-- [ ] CP-M09-FE-009 Add regret trend display.
-- [ ] CP-M09-FE-010 Add completion fatigue trend display.
-- [ ] CP-M09-FE-011 Add current taste change insights card.
-- [ ] CP-M09-FE-012 Add snapshot history list.
-- [ ] CP-M09-FE-013 Add loading state.
-- [ ] CP-M09-FE-014 Add empty state.
-- [ ] CP-M09-FE-015 Add error state.
+- [x] CP-M09-FE-001 Create evolution API client file.
+- [x] CP-M09-FE-002 Create Taste Evolution page skeleton.
+- [x] CP-M09-FE-003 Add page title.
+- [x] CP-M09-FE-004 Add Generate Snapshot button.
+- [x] CP-M09-FE-005 Add taste timeline section.
+- [x] CP-M09-FE-006 Add rating trend display.
+- [x] CP-M09-FE-007 Add medium trend display.
+- [x] CP-M09-FE-008 Add genericness tolerance trend display.
+- [x] CP-M09-FE-009 Add regret trend display.
+- [x] CP-M09-FE-010 Add completion fatigue trend display.
+- [x] CP-M09-FE-011 Add current taste change insights card.
+- [x] CP-M09-FE-012 Add snapshot history list.
+- [x] CP-M09-FE-013 Add loading state.
+- [x] CP-M09-FE-014 Add empty state.
+- [x] CP-M09-FE-015 Add error state.
 
 ### Integration Tasks
 
-- [ ] CP-M09-INT-001 Connect page to evolution timeline endpoint.
-- [ ] CP-M09-INT-002 Connect Generate Snapshot button to endpoint.
-- [ ] CP-M09-INT-003 Revalidate timeline after snapshot generation.
-- [ ] CP-M09-INT-004 Show latest taste change insight on Dashboard.
+- [x] CP-M09-INT-001 Connect page to evolution timeline endpoint.
+- [x] CP-M09-INT-002 Connect Generate Snapshot button to endpoint.
+- [x] CP-M09-INT-003 Revalidate timeline after snapshot generation.
+- [x] CP-M09-INT-004 Show latest taste change insight on Dashboard.
 
 ### QA Tasks
 
-- [ ] CP-M09-QA-001 Generate snapshot with empty data.
-- [ ] CP-M09-QA-002 Generate snapshot with multiple completed works.
-- [ ] CP-M09-QA-003 Confirm timeline renders snapshots.
-- [ ] CP-M09-QA-004 Confirm Dashboard shows latest insight.
+- [x] CP-M09-QA-001 Generate snapshot with empty data.
+- [x] CP-M09-QA-002 Generate snapshot with multiple completed works.
+- [x] CP-M09-QA-003 Confirm timeline renders snapshots.
+- [x] CP-M09-QA-004 Confirm Dashboard shows latest insight.
 
 ---
 
@@ -3042,16 +3043,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M08-QA-004.
-**Last completed task name:** Confirm final decision is visible and actionable.
-**Last completed milestone:** CP-M08 — Critic Council.
+**Last completed task ID:** CP-M09-QA-004.
+**Last completed task name:** Confirm Dashboard shows latest insight.
+**Last completed milestone:** CP-M09 — Taste Evolution Journal.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M09 — Taste Evolution Journal.
-**Next recommended task:** CP-M09-SH-001 Define `TasteEvolutionSnapshot` type.
+**Current milestone:** CP-M10 — Completion Detox System.
+**Next recommended task:** CP-M10-SH-001 Define `DetoxRule` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M08 Critic Council is complete. Shared contracts now define CriticPersona, CriticOpinion, CouncilSession, CouncilFinalDecision, filters, requests, and apply responses. Backend work adds the owner-scoped council app, CriticPersona and CouncilSession models/migrations/admin, seeded default personas including Completion Strategist, deterministic council generation, persona list/update/reset endpoints, session list/create/detail/apply endpoints, API root/schema coverage, and backend tests. Frontend work adds the `/critic-council` route/sidebar entry, council prompt form, candidate/media selectors, Run Council, ordered critic opinion cards, final decision card, Add Decision To Candidate, critic enable/weight settings, Candidate Evaluator attached-results display, docs/manual tests, and Playwright browser-to-backend coverage for candidate/media debate, persona disable/rerun, and apply-to-candidate.
+CP-M09 Taste Evolution Journal is complete. Shared contracts now define TasteEvolutionSnapshot, TasteTrend, TasteChangeInsight, evidence counts, generate requests, and timeline responses. Backend work adds the owner-scoped evolution app, TasteEvolutionSnapshot model/migration/admin, deterministic snapshot generation, monthly rating/medium/genericness tolerance/regret/completion fatigue/favorite dimension trends, insight generation, timeline and generate endpoints, Celery monthly snapshot placeholder, API root/schema coverage, and backend tests. Frontend work adds the `/taste-evolution` route/sidebar entry, evolution API client, Generate Snapshot flow, loading/empty/error/success states, trend cards, current insights, snapshot history, Dashboard latest taste shift card, docs/manual tests, and Playwright browser-to-backend coverage for empty timeline, scored completed works, snapshot generation, timeline rendering, and dashboard insight integration.
 
 ## 9.3 Important Notes For The Next Agent
 

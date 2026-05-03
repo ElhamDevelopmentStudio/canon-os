@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Avg, Count, F, QuerySet
 from django.utils import timezone
 
+from canonos.evolution.services import get_latest_evolution_insight
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore
 
@@ -72,5 +73,6 @@ def build_dashboard_summary(user: User) -> dict[str, object]:
         "recentActivity": recent_activity,
         "highestRated": highest_rated,
         "topTasteSignals": top_taste_signals,
+        "latestTasteEvolutionInsight": get_latest_evolution_insight(user),
         "generatedAt": timezone.now().isoformat().replace("+00:00", "Z"),
     }

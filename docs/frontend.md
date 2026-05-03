@@ -31,6 +31,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/critic-council` | Critic Council | Run critic debates, tune critic personas, apply final decisions to candidates. |
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
+| `/taste-evolution` | Taste Evolution Journal | Generate/list snapshots, show rating/medium/genericness/regret/fatigue/favorite-dimension trends, and expose current insight. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
 | `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items, recalculate priority, and restore archived items. |
 | `/settings` | Settings | Update profile/settings and run import/export flows. |
@@ -200,3 +201,7 @@ The media add/edit dialog includes an external metadata search section. Search r
 ## TasteGraph UI
 
 The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exposes a **Rebuild TasteGraph** action, and renders loading, empty, error, success, rebuild status, summary cards, ranked signal sections, and a simple text graph view.
+
+### Taste Evolution UI
+
+Taste Evolution lives at `/taste-evolution`. API calls live in `apps/web/src/features/evolution/evolutionApi.ts`. The page supports loading, empty, error, and success states; Generate Snapshot; trend cards for ratings, mediums, genericness tolerance, regret, completion fatigue, and favorite dimension; current insight cards; and snapshot history. The Dashboard summary displays the latest saved taste change insight when available.

@@ -13,6 +13,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
     assert payload["service"] == "canonos-api"
     assert payload["endpoints"]["health"] == "/api/health/"
     assert payload["endpoints"]["schema"] == "/api/schema/"
+    assert payload["endpoints"]["taste_evolution"] == "/api/taste-evolution/"
     assert {module["name"] for module in payload["mvp_modules"]} >= {
         "health",
         "auth",
@@ -21,6 +22,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
         "narrative_dna",
         "candidates",
         "critic_council",
+        "taste_evolution",
         "tonight_mode",
     }
 

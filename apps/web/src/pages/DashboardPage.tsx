@@ -1,6 +1,6 @@
 import type { DashboardMediaItem, DashboardSummary } from "@canonos/contracts";
 import type { ReactNode } from "react";
-import { BarChart3, Clock, Moon, Plus, Sparkles } from "lucide-react";
+import { BarChart3, Clock, Moon, Plus, Sparkles, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -115,6 +115,24 @@ function DashboardSummaryContent({
             </div>
           ) : (
             <p className="mt-3 text-sm text-muted-foreground">No media types yet.</p>
+          )}
+        </SectionCard>
+
+        <SectionCard title="Latest taste shift">
+          <CardHeading icon={<TrendingUp aria-hidden="true" className="h-5 w-5" />} title="Latest taste shift" />
+          {summary.latestTasteEvolutionInsight ? (
+            <div className="mt-4 rounded-xl border border-border bg-background p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {summary.latestTasteEvolutionInsight.severity} insight
+              </p>
+              <h3 className="mt-2 font-semibold">{summary.latestTasteEvolutionInsight.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{summary.latestTasteEvolutionInsight.body}</p>
+              <Button asChild className="mt-4" size="sm" type="button" variant="secondary">
+                <Link to={APP_ROUTES.tasteEvolution}>Open Taste Evolution</Link>
+              </Button>
+            </div>
+          ) : (
+            <p className="mt-3 text-sm text-muted-foreground">Generate a Taste Evolution snapshot to surface the latest taste change insight here.</p>
           )}
         </SectionCard>
 

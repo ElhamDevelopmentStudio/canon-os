@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from canonos.evolution.models import TasteEvolutionSnapshot
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore
 from canonos.taste.services import seed_default_taste_dimensions
@@ -80,6 +81,7 @@ def test_dashboard_summary_counts_activity_ratings_and_taste_signals() -> None:
     assert len(payload["recentActivity"]) == 3
     assert payload["topTasteSignals"][0]["dimensionSlug"] == "atmosphere"
     assert payload["topTasteSignals"][0]["scoreCount"] == 2
+    assert payload["latestTasteEvolutionInsight"] is None
 
 
 def test_empty_dashboard_summary() -> None:
@@ -99,6 +101,7 @@ def test_empty_dashboard_summary() -> None:
     assert payload["recentActivity"] == []
     assert payload["highestRated"] == []
     assert payload["topTasteSignals"] == []
+    assert payload["latestTasteEvolutionInsight"] is None
 
 
 def test_dashboard_endpoint_appears_in_openapi_schema() -> None:
@@ -106,3 +109,32 @@ def test_dashboard_endpoint_appears_in_openapi_schema() -> None:
 
     assert response.status_code == status.HTTP_200_OK
     assert "/api/dashboard/summary/" in response.content.decode()
+
+
+def test_dashboard_summary_includes_latest_taste_evolution_insight() -> None:
+    client, user = authenticated_client()
+    TasteEvolutionSnapshot.objects.create(
+        owner=user,
+        snapshot_period="monthly",
+        snapshot_date="2026-02-28",
+        aggregate_data={"isEmpty": False},
+        insights=[
+            {
+                "key": "favorite_dimension",
+                "severity": "positive",
+                "title": "Atmosphere is carrying recent taste",
+                "body": (
+                    "Your latest positive dimension leader is the clearest current taste " "anchor."
+                ),
+                "recommendation": "Use it as the first recommendation filter.",
+                "evidence": ["Favorite dimension: latest value Atmosphere."],
+            }
+        ],
+    )
+
+    response = client.get(reverse("dashboard-summary"))
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()["latestTasteEvolutionInsight"]["title"] == (
+        "Atmosphere is carrying recent taste"
+    )

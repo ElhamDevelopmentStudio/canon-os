@@ -38,6 +38,29 @@ export type {
 } from "./discovery";
 export { DISCOVERY_ERAS, DISCOVERY_MODES, DISCOVERY_REASON_KINDS } from "./discovery";
 
+
+export type {
+  TasteChangeInsight,
+  TasteChangeInsightSeverity,
+  TasteEvolutionAggregateData,
+  TasteEvolutionEvidenceCounts,
+  TasteEvolutionGenerateRequest,
+  TasteEvolutionGenerateResponse,
+  TasteEvolutionSnapshot,
+  TasteEvolutionSnapshotPeriod,
+  TasteEvolutionTimelineResponse,
+  TasteTrend,
+  TasteTrendDirection,
+  TasteTrendKey,
+  TasteTrendPoint,
+} from "./evolution";
+export {
+  TASTE_CHANGE_INSIGHT_SEVERITIES,
+  TASTE_EVOLUTION_SNAPSHOT_PERIODS,
+  TASTE_TREND_DIRECTIONS,
+  TASTE_TREND_KEYS,
+} from "./evolution";
+
 export type {
   DashboardCounts,
   DashboardMediaItem,

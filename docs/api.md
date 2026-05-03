@@ -113,6 +113,7 @@ The response includes:
 - `recentActivity`: five most recently updated media items.
 - `highestRated`: five highest-rated recent items with `personalRating`.
 - `topTasteSignals`: highest average taste dimension scores with dimension metadata and score counts.
+- `latestTasteEvolutionInsight`: newest taste-change insight from the latest Taste Evolution snapshot, or `null`.
 - `generatedAt`: server timestamp for the summary.
 
 
@@ -334,6 +335,18 @@ CanonOS supports optional provider enrichment without making provider data canon
 - `POST /api/media-items/{id}/metadata/refresh/` refreshes the latest attached snapshot and returns a metadata refresh job payload.
 
 Provider calls must not send private notes, ratings, aftertaste, queue state, or taste scores. User edits and personal fields remain authoritative over provider payloads.
+
+
+## Taste Evolution API Contract
+
+Taste Evolution snapshots are user-owned and require an authenticated session. They preserve month-by-month aggregate evidence so the user can see how taste changes over time without recomputing historical explanations.
+
+Endpoints:
+
+- `GET /api/taste-evolution/` lists the current user's snapshots, newest first.
+- `POST /api/taste-evolution/generate/` creates a snapshot. The optional payload accepts `snapshotPeriod` (`monthly`, `quarterly`, or `yearly`) and `snapshotDate` (`YYYY-MM-DD`); the current implementation generates monthly evidence windows.
+
+Snapshot payloads include `snapshotPeriod`, `snapshotDate`, `aggregateData`, `insights`, and timestamps. `aggregateData` contains rating, medium, genericness tolerance, regret, completion fatigue, and favorite-dimension trends. The Dashboard summary includes `latestTasteEvolutionInsight` from the newest snapshot when one exists. Shared TypeScript contracts live in `packages/contracts/src/evolution.ts`; frontend calls live in `apps/web/src/features/evolution/evolutionApi.ts`; product rules live in `docs/taste-evolution.md`.
 
 ### TasteGraph
 
