@@ -1,4 +1,5 @@
 import type {
+  AntiGenericEvaluation,
   Candidate,
   CandidateAddToLibraryRequest,
   CandidateAddToLibraryResponse,
@@ -14,17 +15,40 @@ import { api } from "@/lib/api";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
 import { fetcher } from "@/lib/swr";
 
+function normalizeAntiGenericEvaluation(evaluation: AntiGenericEvaluation | null): AntiGenericEvaluation | null {
+  if (!evaluation) return null;
+  return {
+    ...evaluation,
+    genericnessRiskScore: Number(evaluation.genericnessRiskScore),
+    timeWasteRiskScore: Number(evaluation.timeWasteRiskScore),
+    positiveExceptionScore: Number(evaluation.positiveExceptionScore),
+    detectedSignals: evaluation.detectedSignals.map((signal) => ({
+      ...signal,
+      score: Number(signal.score),
+      weight: Number(signal.weight),
+    })),
+    positiveExceptions: evaluation.positiveExceptions.map((signal) => ({
+      ...signal,
+      score: Number(signal.score),
+      weight: Number(signal.weight),
+    })),
+  };
+}
+
+function normalizeEvaluation(evaluation: NonNullable<Candidate["latestEvaluation"]>): NonNullable<Candidate["latestEvaluation"]> {
+  return {
+    ...evaluation,
+    confidenceScore: Number(evaluation.confidenceScore),
+    likelyFitScore: Number(evaluation.likelyFitScore),
+    riskScore: Number(evaluation.riskScore),
+    antiGenericEvaluation: normalizeAntiGenericEvaluation(evaluation.antiGenericEvaluation),
+  };
+}
+
 function normalizeCandidate(candidate: Candidate): Candidate {
   return {
     ...candidate,
-    latestEvaluation: candidate.latestEvaluation
-      ? {
-          ...candidate.latestEvaluation,
-          confidenceScore: Number(candidate.latestEvaluation.confidenceScore),
-          likelyFitScore: Number(candidate.latestEvaluation.likelyFitScore),
-          riskScore: Number(candidate.latestEvaluation.riskScore),
-        }
-      : null,
+    latestEvaluation: candidate.latestEvaluation ? normalizeEvaluation(candidate.latestEvaluation) : null,
   };
 }
 
@@ -35,12 +59,7 @@ function normalizeCandidateList(response: CandidateListResponse): CandidateListR
 function normalizeEvaluationResponse(response: CandidateEvaluateResponse): CandidateEvaluateResponse {
   return {
     candidate: normalizeCandidate(response.candidate),
-    evaluation: {
-      ...response.evaluation,
-      confidenceScore: Number(response.evaluation.confidenceScore),
-      likelyFitScore: Number(response.evaluation.likelyFitScore),
-      riskScore: Number(response.evaluation.riskScore),
-    },
+    evaluation: normalizeEvaluation(response.evaluation),
   };
 }
 

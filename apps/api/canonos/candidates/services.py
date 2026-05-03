@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 
 from canonos.accounts.models import UserSettings
+from canonos.anti_generic.services import evaluate_anti_generic_for_candidate
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore, TasteDimension
 
@@ -83,11 +84,15 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         else 0
     )
     strictness_penalty = (settings.preferred_scoring_strictness - 5) * 2
+    anti_generic = evaluate_anti_generic_for_candidate(user, candidate)
     risk = clamp(
         (genericness * genericness_weight)
         + max(time_penalty, 0)
         + max(hype - 7, 0) * 4
         + modern_skepticism_penalty
+        + (anti_generic.genericness_risk_score * 0.35)
+        + (anti_generic.time_waste_risk_score * 0.2)
+        - (anti_generic.positive_exception_score * 0.25)
     )
     final_score = clamp(
         likely_fit - (risk * 0.45) - time_penalty + min(hype, 8) - strictness_penalty
@@ -137,6 +142,10 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         reasons_against.append(
             "Your modern media skepticism setting adds caution for recent releases."
         )
+    if anti_generic.detected_signals:
+        reasons_against.append(anti_generic.detected_signals[0]["evidence"])
+    if anti_generic.positive_exceptions:
+        reasons_for.append(anti_generic.positive_exceptions[0]["evidence"])
     if score_count == 0:
         reasons_against.append("Confidence is limited until more taste scores are logged.")
     if not candidate.premise:

@@ -133,3 +133,16 @@ export type {
   TasteGraphSummaryItem,
 } from "./tastegraph";
 export { GRAPH_EDGE_TYPES, GRAPH_NODE_TYPES, GRAPH_REBUILD_JOB_STATUSES } from "./tastegraph";
+
+export type {
+  AntiGenericEvaluateRequest,
+  AntiGenericEvaluateResponse,
+  AntiGenericEvaluation,
+  AntiGenericFinalVerdict,
+  AntiGenericRule,
+  AntiGenericRuleListResponse,
+  AntiGenericRuleUpdateRequest,
+  GenericnessSignal,
+  PositiveExceptionSignal,
+} from "./antiGeneric";
+export { ANTI_GENERIC_FINAL_VERDICTS } from "./antiGeneric";

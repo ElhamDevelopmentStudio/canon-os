@@ -53,6 +53,35 @@ const evaluatedCandidate: Candidate = {
     reasonsAgainst: ["Sample before committing."],
     bestMood: "Focused and curious",
     recommendedAction: "Sample the first meaningful unit.",
+
+    antiGenericEvaluation: {
+      id: "13a7b2c8-eccb-4e8a-98db-9509e673d6db",
+      candidateId: "8a3f2c28-74b6-4a2d-b3fe-c19dbb8a60d9",
+      mediaItemId: null,
+      genericnessRiskScore: 28,
+      timeWasteRiskScore: 22,
+      positiveExceptionScore: 40,
+      detectedSignals: [{
+        ruleId: "4fc9a872-9651-4b33-b793-04ba7e3f0704",
+        ruleKey: "overhype_mismatch",
+        name: "Overhype mismatch",
+        description: "High hype can hide personal mismatch.",
+        weight: 17,
+        score: 8,
+        evidence: "High hype combined with genericness can hide personal mismatch.",
+      }],
+      positiveExceptions: [{
+        ruleId: "a9d8a070-cd51-4286-9cf2-3f199fc533c8",
+        ruleKey: "auteur_driven_modern_work",
+        name: "Auteur-driven modern work",
+        description: "Creator signal protects modern exceptions.",
+        weight: 22,
+        score: 24,
+        evidence: "Recent work has creator voice or distinctive craft signals; recency is not penalized.",
+      }],
+      finalVerdict: "modern_exception",
+      createdAt: "2026-01-03T00:00:00Z",
+    },
     createdAt: "2026-01-03T00:00:00Z",
   },
   createdAt: "2026-01-02T00:00:00Z",
@@ -174,6 +203,8 @@ describe("CandidateEvaluatorPage", () => {
     await user.click(screen.getByRole("button", { name: /perfect blue/i }));
 
     expect(screen.getByText(/Strong director signal/i)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /anti-generic filter/i })).toBeInTheDocument();
+    expect(screen.getByText(/modern exception/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /add to queue/i })).toBeEnabled();
   });
 

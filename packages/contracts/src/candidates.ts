@@ -1,3 +1,4 @@
+import type { AntiGenericEvaluation } from "./antiGeneric";
 import type { MediaItem, MediaItemCreateRequest, MediaType } from "./media";
 
 export const CANDIDATE_STATUSES = ["unevaluated", "watch_now", "sample", "delay", "skip"] as const;
@@ -17,6 +18,7 @@ export type CandidateEvaluation = {
   reasonsAgainst: string[];
   bestMood: string;
   recommendedAction: string;
+  antiGenericEvaluation: AntiGenericEvaluation | null;
   createdAt: string;
 };
 

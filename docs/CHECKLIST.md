@@ -1740,78 +1740,78 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M04-SH-001 Define `GenericnessSignal` type.
-- [ ] CP-M04-SH-002 Define `PositiveExceptionSignal` type.
-- [ ] CP-M04-SH-003 Define `AntiGenericEvaluation` type.
-- [ ] CP-M04-SH-004 Define `AntiGenericRule` type.
-- [ ] CP-M04-SH-005 Document Anti-Generic Filter rules.
+- [x] CP-M04-SH-001 Define `GenericnessSignal` type.
+- [x] CP-M04-SH-002 Define `PositiveExceptionSignal` type.
+- [x] CP-M04-SH-003 Define `AntiGenericEvaluation` type.
+- [x] CP-M04-SH-004 Define `AntiGenericRule` type.
+- [x] CP-M04-SH-005 Document Anti-Generic Filter rules.
 
 ### Backend Tasks
 
-- [ ] CP-M04-BE-001 Create anti_generic app or module.
-- [ ] CP-M04-BE-002 Create AntiGenericRule model.
-- [ ] CP-M04-BE-003 Add owner/user foreign key to rule.
-- [ ] CP-M04-BE-004 Add rule name field.
-- [ ] CP-M04-BE-005 Add rule description field.
-- [ ] CP-M04-BE-006 Add rule weight field.
-- [ ] CP-M04-BE-007 Add is positive exception field.
-- [ ] CP-M04-BE-008 Add is enabled field.
-- [ ] CP-M04-BE-009 Create AntiGenericEvaluation model.
-- [ ] CP-M04-BE-010 Add candidate foreign key.
-- [ ] CP-M04-BE-011 Add media item foreign key nullable.
-- [ ] CP-M04-BE-012 Add genericness risk score.
-- [ ] CP-M04-BE-013 Add time waste risk score.
-- [ ] CP-M04-BE-014 Add positive exception score.
-- [ ] CP-M04-BE-015 Add detected signals JSON field.
-- [ ] CP-M04-BE-016 Add final verdict field.
-- [ ] CP-M04-BE-017 Create migrations for anti-generic models.
-- [ ] CP-M04-BE-018 Create default anti-generic rules seed.
-- [ ] CP-M04-BE-019 Add rule for fake complexity.
-- [ ] CP-M04-BE-020 Add rule for weak ending risk.
-- [ ] CP-M04-BE-021 Add rule for shallow darkness.
-- [ ] CP-M04-BE-022 Add rule for filler-heavy long series.
-- [ ] CP-M04-BE-023 Add rule for overhype mismatch.
-- [ ] CP-M04-BE-024 Add positive rule for auteur-driven modern work.
-- [ ] CP-M04-BE-025 Add positive rule for low popularity but strong fit.
-- [ ] CP-M04-BE-026 Implement anti-generic evaluation service.
-- [ ] CP-M04-BE-027 Connect anti-generic service to candidate evaluator.
-- [ ] CP-M04-BE-028 Create anti-generic evaluation endpoint.
-- [ ] CP-M04-BE-029 Create rules list endpoint.
-- [ ] CP-M04-BE-030 Create rule update endpoint.
-- [ ] CP-M04-BE-031 Register anti-generic models in admin.
-- [ ] CP-M04-BE-032 Add test for genericness risk scoring.
-- [ ] CP-M04-BE-033 Add test for positive exception scoring.
-- [ ] CP-M04-BE-034 Add test for disabled rule ignored.
+- [x] CP-M04-BE-001 Create anti_generic app or module.
+- [x] CP-M04-BE-002 Create AntiGenericRule model.
+- [x] CP-M04-BE-003 Add owner/user foreign key to rule.
+- [x] CP-M04-BE-004 Add rule name field.
+- [x] CP-M04-BE-005 Add rule description field.
+- [x] CP-M04-BE-006 Add rule weight field.
+- [x] CP-M04-BE-007 Add is positive exception field.
+- [x] CP-M04-BE-008 Add is enabled field.
+- [x] CP-M04-BE-009 Create AntiGenericEvaluation model.
+- [x] CP-M04-BE-010 Add candidate foreign key.
+- [x] CP-M04-BE-011 Add media item foreign key nullable.
+- [x] CP-M04-BE-012 Add genericness risk score.
+- [x] CP-M04-BE-013 Add time waste risk score.
+- [x] CP-M04-BE-014 Add positive exception score.
+- [x] CP-M04-BE-015 Add detected signals JSON field.
+- [x] CP-M04-BE-016 Add final verdict field.
+- [x] CP-M04-BE-017 Create migrations for anti-generic models.
+- [x] CP-M04-BE-018 Create default anti-generic rules seed.
+- [x] CP-M04-BE-019 Add rule for fake complexity.
+- [x] CP-M04-BE-020 Add rule for weak ending risk.
+- [x] CP-M04-BE-021 Add rule for shallow darkness.
+- [x] CP-M04-BE-022 Add rule for filler-heavy long series.
+- [x] CP-M04-BE-023 Add rule for overhype mismatch.
+- [x] CP-M04-BE-024 Add positive rule for auteur-driven modern work.
+- [x] CP-M04-BE-025 Add positive rule for low popularity but strong fit.
+- [x] CP-M04-BE-026 Implement anti-generic evaluation service.
+- [x] CP-M04-BE-027 Connect anti-generic service to candidate evaluator.
+- [x] CP-M04-BE-028 Create anti-generic evaluation endpoint.
+- [x] CP-M04-BE-029 Create rules list endpoint.
+- [x] CP-M04-BE-030 Create rule update endpoint.
+- [x] CP-M04-BE-031 Register anti-generic models in admin.
+- [x] CP-M04-BE-032 Add test for genericness risk scoring.
+- [x] CP-M04-BE-033 Add test for positive exception scoring.
+- [x] CP-M04-BE-034 Add test for disabled rule ignored.
 
 ### Frontend Tasks
 
-- [ ] CP-M04-FE-001 Create anti-generic API client file.
-- [ ] CP-M04-FE-002 Add Anti-Generic section to Candidate result card.
-- [ ] CP-M04-FE-003 Add genericness risk meter component.
-- [ ] CP-M04-FE-004 Add time waste risk meter component.
-- [ ] CP-M04-FE-005 Add positive exception meter component.
-- [ ] CP-M04-FE-006 Add detected red flags list.
-- [ ] CP-M04-FE-007 Add detected positive exceptions list.
-- [ ] CP-M04-FE-008 Add Anti-Generic Settings page section.
-- [ ] CP-M04-FE-009 Add rules list UI.
-- [ ] CP-M04-FE-010 Add rule enable/disable toggle.
-- [ ] CP-M04-FE-011 Add rule weight editor.
-- [ ] CP-M04-FE-012 Add save rule button.
-- [ ] CP-M04-FE-013 Add reset rules button.
+- [x] CP-M04-FE-001 Create anti-generic API client file.
+- [x] CP-M04-FE-002 Add Anti-Generic section to Candidate result card.
+- [x] CP-M04-FE-003 Add genericness risk meter component.
+- [x] CP-M04-FE-004 Add time waste risk meter component.
+- [x] CP-M04-FE-005 Add positive exception meter component.
+- [x] CP-M04-FE-006 Add detected red flags list.
+- [x] CP-M04-FE-007 Add detected positive exceptions list.
+- [x] CP-M04-FE-008 Add Anti-Generic Settings page section.
+- [x] CP-M04-FE-009 Add rules list UI.
+- [x] CP-M04-FE-010 Add rule enable/disable toggle.
+- [x] CP-M04-FE-011 Add rule weight editor.
+- [x] CP-M04-FE-012 Add save rule button.
+- [x] CP-M04-FE-013 Add reset rules button.
 
 ### Integration Tasks
 
-- [ ] CP-M04-INT-001 Connect Candidate Evaluator to anti-generic endpoint.
-- [ ] CP-M04-INT-002 Display anti-generic result after candidate evaluation.
-- [ ] CP-M04-INT-003 Connect rules settings UI to rules endpoints.
-- [ ] CP-M04-INT-004 Re-run evaluation after rule update.
+- [x] CP-M04-INT-001 Connect Candidate Evaluator to anti-generic endpoint.
+- [x] CP-M04-INT-002 Display anti-generic result after candidate evaluation.
+- [x] CP-M04-INT-003 Connect rules settings UI to rules endpoints.
+- [x] CP-M04-INT-004 Re-run evaluation after rule update.
 
 ### QA Tasks
 
-- [ ] CP-M04-QA-001 Evaluate a high genericness candidate.
-- [ ] CP-M04-QA-002 Evaluate a modern positive exception candidate.
-- [ ] CP-M04-QA-003 Disable a rule and confirm output changes.
-- [ ] CP-M04-QA-004 Confirm Anti-Generic UI is understandable.
+- [x] CP-M04-QA-001 Evaluate a high genericness candidate.
+- [x] CP-M04-QA-002 Evaluate a modern positive exception candidate.
+- [x] CP-M04-QA-003 Disable a rule and confirm output changes.
+- [x] CP-M04-QA-004 Confirm Anti-Generic UI is understandable.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M03-QA-005.
-**Last completed task name:** Confirm TasteGraph page follows shared layout.
-**Last completed milestone:** CP-M03 — TasteGraph Core.
+**Last completed task ID:** CP-M04-QA-004.
+**Last completed task name:** Confirm Anti-Generic UI is understandable.
+**Last completed milestone:** CP-M04 — Anti-Generic Filter.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M04 — Anti-Generic Filter.
-**Next recommended task:** CP-M04-SH-001 Define anti-generic scoring contracts.
+**Current milestone:** CP-M05 — Adaptive Queue v2.
+**Next recommended task:** CP-M05-BE-001 Add mood compatibility field to QueueItem.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M03 TasteGraph Core is complete. Shared contracts now define graph node/edge enums, graph rows, summary payloads, and rebuild job payloads. Backend work adds the `canonos.graph` app, `GraphNode` and `GraphEdge` models/migration, owner-scoped serializers and endpoints, deterministic rebuild service, Celery rebuild task, admin registration, API root entries, and tests for media, creator, dimension, aftertaste, ownership, summary, endpoint, and task behavior. Frontend work adds the `/taste-graph` route, navigation item, SWR API client, summary cards, strongest themes/creators/media sections, weak/negative signals, rebuild job status, text graph view, and loading/empty/error states. Manual and browser e2e tests now cover empty and scored-library graph rebuild flows.
+CP-M04 Anti-Generic Filter is complete. Shared contracts now define genericness signals, positive exception signals, rule payloads, evaluation payloads, and final verdicts. Backend work adds the `canonos.anti_generic` app, owner-scoped `AntiGenericRule` and `AntiGenericEvaluation` models/migration, default rule seeding, deterministic scoring, rule list/update/reset endpoints, standalone evaluation endpoint, candidate evaluator integration, admin registration, API root entries, and backend tests for red flags, modern exceptions, disabled rules, ownership, endpoints, and embedded candidate results. Frontend work adds the Anti-Generic API client, Candidate Evaluator result section with risk meters and signal lists, Settings rule controls, documentation, manual tests, and Playwright coverage for high-risk candidates, modern exceptions, and rule update effects.
 
 ## 9.3 Important Notes For The Next Agent
 

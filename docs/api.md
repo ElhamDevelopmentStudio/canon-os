@@ -130,6 +130,21 @@ Candidate records are user-owned and require an authenticated session. The API s
 
 Candidate statuses are `unevaluated`, `watch_now`, `sample`, `delay`, and `skip`. Evaluation decisions are `watch_now`, `sample`, `delay`, and `skip`. Scoring details are documented in `docs/candidate-evaluator.md`.
 
+## Anti-Generic Filter API Contract
+
+Anti-Generic rules and evaluations are user-owned and require an authenticated session. Candidate evaluation automatically creates and embeds an Anti-Generic result.
+
+Endpoints:
+
+- `GET /api/anti-generic/rules/` lists the current user's red-flag and positive-exception rules, seeding defaults when missing.
+- `PATCH /api/anti-generic/rules/{id}/` updates `isEnabled` and `weight` for one owned rule.
+- `POST /api/anti-generic/rules/reset/` restores the current user's default rules.
+- `POST /api/anti-generic/evaluate/` evaluates an owned candidate, with optional `mediaItemId`, and stores an `AntiGenericEvaluation`.
+
+Evaluation payloads include genericness risk, time-waste risk, positive exception score, detected red flags, detected positive exceptions, final verdict, and timestamps. Modernness is not a genericness signal by itself; recent works need actual red flags to raise risk and may be protected by positive exception rules.
+
+Shared TypeScript contracts live in `packages/contracts/src/antiGeneric.ts`; frontend rule calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`.
+
 
 ## Queue API Contract
 

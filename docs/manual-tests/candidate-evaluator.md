@@ -7,7 +7,7 @@
 2. Enter a title, choose a media type, add a premise, set hype, genericness, and time cost.
    - Expected: All fields are keyboard reachable and labels are visible.
 3. Select **Run Evaluation**.
-   - Expected: The page saves the candidate, shows a decision, confidence, likely fit, risk, reasons for, reasons against, best mood, and recommended action.
+   - Expected: The page saves the candidate, shows a decision, confidence, likely fit, risk, Anti-Generic Filter result, reasons for, reasons against, best mood, and recommended action.
 4. Select **Add To Library**.
    - Expected: A success message confirms the candidate was added to the library as Planned.
 5. Open **Library**.
@@ -25,13 +25,13 @@
 ## Edge case: skip a risky candidate
 
 1. Create a candidate with high expected genericness, high hype, and a long time cost.
-   - Expected: The result warns about genericness and/or time cost risk.
+   - Expected: The result warns about genericness and/or time cost risk, and the Anti-Generic section lists any matched red flags.
 2. Select **Skip Candidate**.
    - Expected: The candidate status changes to Skip and the history revalidates.
 3. Reload the page.
    - Expected: The skipped candidate remains in history with the Skip status.
 
-## Delayed queue behavior
+## Edge case: modern exception
 
-1. Run any evaluation and inspect the action buttons.
-   - Expected: **Add To Queue** is visible but disabled with text indicating queue actions arrive in MVP-M08.
+1. Create a recent candidate with a known creator, low expected genericness, and premise notes about original authorial voice.
+   - Expected: The Anti-Generic section shows a positive exception instead of treating recency alone as a red flag.

@@ -164,7 +164,7 @@ The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 
 
 ### Candidate Evaluator UI
 
-Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`. The page supports save, evaluate, add-to-library, add-to-queue, skip, result explanation, history selection, loading, empty, error, and success states.
+Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`. The page supports save, evaluate, add-to-library, add-to-queue, skip, result explanation, history selection, loading, empty, error, and success states. Evaluation results include the server-provided Anti-Generic section with verdict, genericness risk, time-waste risk, positive exceptions, and detected red flags.
 
 ### Queue And Tonight Mode UI
 
@@ -176,7 +176,7 @@ Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi
 
 ### Settings And Portability UI
 
-Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. The Settings page owns profile preferences, recommendation defaults, theme preferences, import preview/confirm, JSON export, and media/ratings CSV export. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
+Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. Anti-Generic rule API calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`. The Settings page owns profile preferences, recommendation defaults, theme preferences, Anti-Generic rule toggles/weights/reset, import preview/confirm, JSON export, and media/ratings CSV export. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
 
 ## Metadata enrichment UI
 

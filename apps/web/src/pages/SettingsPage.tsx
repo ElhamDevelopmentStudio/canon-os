@@ -4,6 +4,7 @@ import {
   MEDIA_TYPES,
   RISK_TOLERANCES,
   THEME_PREFERENCES,
+  type AntiGenericRule,
   type ExportFormat,
   type ExportResult,
   type ImportBatch,
@@ -24,6 +25,7 @@ import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
+import { resetAntiGenericRules, updateAntiGenericRule, useAntiGenericRules } from "@/features/anti-generic-filter/antiGenericApi";
 import { confirmImportBatch, downloadExportText, previewImportFile, requestExport } from "@/features/portability/portabilityApi";
 import { exportFormatLabels, importSourceTypeLabels, importStatusLabels } from "@/features/portability/portabilityLabels";
 import { updateUserSettings, useUserSettings } from "@/features/settings/settingsApi";
@@ -266,6 +268,8 @@ export function SettingsPage() {
             </div>
           </SectionCard>
 
+          <AntiGenericRulesSection />
+
           <PortabilitySection />
         </div>
       </div>
@@ -279,6 +283,7 @@ function SettingsSubnav() {
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Settings Sections</p>
       <ul className="mt-4 grid gap-2 text-sm">
         <li className="rounded-xl bg-muted px-3 py-2 font-medium text-foreground">Profile & Preferences</li>
+        <li className="rounded-xl px-3 py-2 text-muted-foreground">Anti-Generic Rules</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Data & Integrations</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Account & Security</li>
       </ul>
@@ -340,6 +345,141 @@ function RangeField({ label, value, onChange }: { label: string; value: string; 
       />
     </label>
   );
+}
+
+
+type AntiGenericRuleDraft = {
+  isEnabled: boolean;
+  weight: string;
+};
+
+function AntiGenericRulesSection() {
+  const { data, error, isLoading, mutate } = useAntiGenericRules();
+  const [drafts, setDrafts] = useState<Record<string, AntiGenericRuleDraft>>({});
+  const [message, setMessage] = useState<string | null>(null);
+  const [ruleError, setRuleError] = useState<string | null>(null);
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [isResetting, setIsResetting] = useState(false);
+
+  useEffect(() => {
+    if (!data) return;
+    setDrafts((current) => {
+      if (Object.keys(current).length > 0) return current;
+      return Object.fromEntries(data.results.map((rule) => [rule.id, ruleToDraft(rule)]));
+    });
+  }, [data]);
+
+  function updateRuleDraft(id: string, next: Partial<AntiGenericRuleDraft>) {
+    setDrafts((current) => ({
+      ...current,
+      [id]: { ...(current[id] ?? { isEnabled: true, weight: "0" }), ...next },
+    }));
+    setMessage(null);
+    setRuleError(null);
+  }
+
+  async function saveRule(rule: AntiGenericRule) {
+    const draft = drafts[rule.id];
+    if (!draft) return;
+    setSavingId(rule.id);
+    setMessage(null);
+    setRuleError(null);
+    try {
+      const saved = await updateAntiGenericRule(rule.id, {
+        isEnabled: draft.isEnabled,
+        weight: Number(draft.weight),
+      });
+      await mutate();
+      setDrafts((current) => ({ ...current, [rule.id]: ruleToDraft(saved) }));
+      setMessage(`Saved ${saved.name}. Re-run a candidate evaluation to apply the change.`);
+    } catch (caught) {
+      setRuleError(caught instanceof Error ? caught.message : "Could not save Anti-Generic rule.");
+    } finally {
+      setSavingId(null);
+    }
+  }
+
+  async function resetRules() {
+    setIsResetting(true);
+    setMessage(null);
+    setRuleError(null);
+    try {
+      const rules = await resetAntiGenericRules();
+      await mutate({ count: rules.length, next: null, previous: null, results: rules }, { revalidate: false });
+      setDrafts(Object.fromEntries(rules.map((rule) => [rule.id, ruleToDraft(rule)])));
+      setMessage("Anti-Generic rules reset. Re-run a candidate evaluation to apply the default rules.");
+    } catch (caught) {
+      setRuleError(caught instanceof Error ? caught.message : "Could not reset Anti-Generic rules.");
+    } finally {
+      setIsResetting(false);
+    }
+  }
+
+  return (
+    <SectionCard title="Anti-Generic Filter rules">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold">Anti-Generic Filter rules</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Tune red flags and positive exception rules. Recency is never a red flag by itself; modern works need actual genericness signals.
+          </p>
+        </div>
+        <Button disabled={isResetting} type="button" variant="secondary" onClick={() => void resetRules()}>
+          {isResetting ? "Resetting..." : "Reset Rules"}
+        </Button>
+      </div>
+
+      {isLoading ? <LoadingState title="Loading Anti-Generic rules" message="Fetching rule weights and toggles." /> : null}
+      {error ? <ErrorState title="Anti-Generic rules unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
+      {ruleError ? <ErrorState title="Anti-Generic rule save failed" message={ruleError} /> : null}
+      {message ? <SuccessMessage message={message} /> : null}
+
+      <div className="mt-5 grid gap-3">
+        {(data?.results ?? []).map((rule) => {
+          const draft = drafts[rule.id] ?? ruleToDraft(rule);
+          return (
+            <article className="rounded-2xl border border-border bg-background p-4" key={rule.id}>
+              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_10rem_8rem_auto] lg:items-center">
+                <div>
+                  <h3 className="font-semibold">{rule.name}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{rule.description}</p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    {rule.isPositiveException ? "Positive exception" : "Red flag"}
+                  </p>
+                </div>
+                <label className="flex items-center gap-2 text-sm font-medium">
+                  <input
+                    checked={draft.isEnabled}
+                    type="checkbox"
+                    onChange={(event) => updateRuleDraft(rule.id, { isEnabled: event.target.checked })}
+                  />
+                  Enabled
+                </label>
+                <label className="grid gap-1.5 text-sm font-medium">
+                  Weight
+                  <input
+                    className={fieldClassName}
+                    max={100}
+                    min={0}
+                    type="number"
+                    value={draft.weight}
+                    onChange={(event) => updateRuleDraft(rule.id, { weight: event.target.value })}
+                  />
+                </label>
+                <Button disabled={savingId === rule.id} type="button" onClick={() => void saveRule(rule)}>
+                  {savingId === rule.id ? "Saving..." : "Save Rule"}
+                </Button>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </SectionCard>
+  );
+}
+
+function ruleToDraft(rule: AntiGenericRule): AntiGenericRuleDraft {
+  return { isEnabled: rule.isEnabled, weight: String(rule.weight) };
 }
 
 

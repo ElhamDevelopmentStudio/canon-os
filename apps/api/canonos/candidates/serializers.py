@@ -3,6 +3,7 @@ from __future__ import annotations
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
+from canonos.anti_generic.serializers import AntiGenericEvaluationSerializer
 from canonos.media.models import MediaItem
 from canonos.media.serializers import MediaItemSerializer
 
@@ -26,6 +27,7 @@ class CandidateEvaluationSerializer(serializers.ModelSerializer):
     )
     bestMood = serializers.CharField(source="best_mood", read_only=True)
     recommendedAction = serializers.CharField(source="recommended_action", read_only=True)
+    antiGenericEvaluation = serializers.SerializerMethodField()
     createdAt = serializers.DateTimeField(source="created_at", read_only=True)
 
     class Meta:
@@ -41,9 +43,15 @@ class CandidateEvaluationSerializer(serializers.ModelSerializer):
             "reasonsAgainst",
             "bestMood",
             "recommendedAction",
+            "antiGenericEvaluation",
             "createdAt",
         ]
         read_only_fields = fields
+
+    @extend_schema_field(AntiGenericEvaluationSerializer(allow_null=True))
+    def get_antiGenericEvaluation(self, obj: CandidateEvaluation):  # noqa: ANN201, N802
+        evaluation = obj.candidate.anti_generic_evaluations.order_by("-created_at").first()
+        return AntiGenericEvaluationSerializer(evaluation).data if evaluation else None
 
 
 class CandidateSerializer(serializers.ModelSerializer):

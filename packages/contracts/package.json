@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./auth": "./src/auth.ts",
     "./metadata": "./src/metadata.ts",
-    "./tastegraph": "./src/tastegraph.ts"
+    "./tastegraph": "./src/tastegraph.ts",
+    "./antiGeneric": "./src/antiGeneric.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit",

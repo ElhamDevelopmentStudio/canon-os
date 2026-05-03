@@ -1,12 +1,22 @@
 import type {
+  AntiGenericEvaluation,
   Candidate,
   CandidateCreateRequest,
   CandidateEvaluation,
   MediaType,
 } from "@canonos/contracts";
 import { MEDIA_TYPES } from "@canonos/contracts";
-import { BookOpenCheck, LibraryBig, PlayCircle, RotateCcw, Save, SkipForward } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  BookOpenCheck,
+  LibraryBig,
+  PlayCircle,
+  RotateCcw,
+  Save,
+  ShieldAlert,
+  ShieldCheck,
+  SkipForward,
+} from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
@@ -30,8 +40,8 @@ import {
   evaluationDecisionLabels,
 } from "@/features/candidate-evaluator/candidateLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
-import { useUserSettings } from "@/features/settings/settingsApi";
 import { createQueueItem } from "@/features/queue/queueApi";
+import { useUserSettings } from "@/features/settings/settingsApi";
 import { cn } from "@/lib/utils";
 
 type CandidateDraft = {
@@ -408,6 +418,8 @@ function EvaluationResultCard({
           <Metric label="Risk" score={evaluation.riskScore} tone={evaluation.riskScore >= 65 ? "avoid" : "risky"} />
         </div>
 
+        {evaluation.antiGenericEvaluation ? <AntiGenericSection evaluation={evaluation.antiGenericEvaluation} /> : null}
+
         <ReasonList title="Why it may work" reasons={evaluation.reasonsFor} />
         <ReasonList title="Risks / reasons against" reasons={evaluation.reasonsAgainst} />
 
@@ -432,6 +444,84 @@ function EvaluationResultCard({
         </div>
       </div>
     </SectionCard>
+  );
+}
+
+const antiGenericVerdictLabels: Record<AntiGenericEvaluation["finalVerdict"], string> = {
+  low_risk: "Low genericness risk",
+  sample_with_guardrail: "Sample with guardrail",
+  likely_generic_skip: "Likely generic skip",
+  modern_exception: "Modern exception",
+};
+
+function AntiGenericSection({ evaluation }: { evaluation: AntiGenericEvaluation }) {
+  return (
+    <section className="rounded-2xl border border-risky/25 bg-risky/5 p-4" aria-labelledby="anti-generic-heading">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="flex items-center gap-2 font-semibold" id="anti-generic-heading">
+            <ShieldAlert aria-hidden="true" className="h-4 w-4 text-risky" />
+            Anti-Generic Filter
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {antiGenericVerdictLabels[evaluation.finalVerdict]} based on red flags and positive exception rules.
+          </p>
+        </div>
+        <ScoreBadge label="generic risk" score={evaluation.genericnessRiskScore} tone={evaluation.genericnessRiskScore >= 70 ? "avoid" : "risky"} />
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        <Metric label="Genericness risk" score={evaluation.genericnessRiskScore} tone={evaluation.genericnessRiskScore >= 70 ? "avoid" : "risky"} />
+        <Metric label="Time-waste risk" score={evaluation.timeWasteRiskScore} tone={evaluation.timeWasteRiskScore >= 70 ? "avoid" : "risky"} />
+        <Metric label="Positive exception" score={evaluation.positiveExceptionScore} tone="promising" />
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <SignalList
+          empty="No specific red flags were detected."
+          icon={<ShieldAlert aria-hidden="true" className="h-4 w-4 text-risky" />}
+          signals={evaluation.detectedSignals}
+          title="Detected red flags"
+        />
+        <SignalList
+          empty="No positive exception rule fired."
+          icon={<ShieldCheck aria-hidden="true" className="h-4 w-4 text-promising" />}
+          signals={evaluation.positiveExceptions}
+          title="Positive exceptions"
+        />
+      </div>
+    </section>
+  );
+}
+
+function SignalList({
+  empty,
+  icon,
+  signals,
+  title,
+}: {
+  empty: string;
+  icon: ReactNode;
+  signals: AntiGenericEvaluation["detectedSignals"];
+  title: string;
+}) {
+  return (
+    <div>
+      <h4 className="flex items-center gap-2 text-sm font-semibold">{icon}{title}</h4>
+      {signals.length > 0 ? (
+        <ul className="mt-2 grid gap-2 text-sm text-muted-foreground">
+          {signals.map((signal) => (
+            <li className="rounded-xl bg-background p-3" key={signal.ruleKey}>
+              <span className="font-medium text-foreground">{signal.name}</span>
+              <span className="ml-2 text-xs">+{signal.score}</span>
+              <p className="mt-1 leading-5">{signal.evidence}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm text-muted-foreground">{empty}</p>
+      )}
+    </div>
   );
 }
 

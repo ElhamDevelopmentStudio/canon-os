@@ -1,7 +1,8 @@
 import { test, expect } from "./helpers/fixtures";
 import { registerViaUi } from "./helpers/auth";
 import { uniqueTitle } from "./helpers/data";
-import { waitForApiResponse } from "./helpers/network";
+import { expectApiJson, waitForApiResponse } from "./helpers/network";
+import type { CandidateEvaluateResponse } from "@canonos/contracts";
 
 test.describe("candidate evaluator browser-to-backend flow", () => {
   test("creates, evaluates, updates, adds to library, and adds to queue", async ({ page }) => {
@@ -23,8 +24,10 @@ test.describe("candidate evaluator browser-to-backend flow", () => {
     const evaluateResponse = waitForApiResponse(page, "POST", /\/api\/candidates\/[^/]+\/evaluate\/$/, 200);
     await page.getByRole("button", { name: "Run Evaluation" }).click();
     await createResponse;
-    await evaluateResponse;
+    const evaluationPayload = await expectApiJson<CandidateEvaluateResponse>(await evaluateResponse);
+    expect(evaluationPayload.evaluation.antiGenericEvaluation).not.toBeNull();
     await expect(page.getByText("Evaluation saved with the candidate history.")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Anti-Generic Filter" })).toBeVisible();
     await expect(page.getByRole("button", { name: new RegExp(title) })).toBeVisible();
 
     await page.getByLabel("Title").fill(updatedTitle);

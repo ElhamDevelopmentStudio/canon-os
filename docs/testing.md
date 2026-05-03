@@ -21,6 +21,7 @@ User-facing features must also update the matching manual test document under `d
 | Media Library and detail | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/media-library.md` |
 | Taste scoring/profile | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/taste-profile.md` |
 | Candidate Evaluator | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/candidate-evaluator.md` |
+| Anti-Generic Filter | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/anti-generic-filter.md` |
 | Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight-mode.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
@@ -80,7 +81,8 @@ Tests must:
 - Dashboard: authenticated dashboard load, dashboard summary success, expected dashboard API error state.
 - Media library: create, list, edit, detail load, delete, ownership isolation through a second authenticated user.
 - Taste/profile scoring: taste dimension load and media score upsert from the media detail UI.
-- Candidate evaluator: create candidate, evaluate candidate, update candidate, add candidate to library, add evaluated candidate to queue.
+- Candidate evaluator: create candidate, evaluate candidate, update candidate, add candidate to library, add evaluated candidate to queue, and assert embedded Anti-Generic evaluation payloads.
+- Anti-Generic Filter: high-genericness red flag scoring, modern positive exception scoring, Settings rule disable/save, and re-evaluation output changes.
 - Queue: create, list, edit, reorder, delete.
 - Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, and defer queue item.
 - Aftertaste Log: create a completed media item, load prompts, create aftertaste, edit aftertaste, verify latest aftertaste on Media Detail, and delete aftertaste.

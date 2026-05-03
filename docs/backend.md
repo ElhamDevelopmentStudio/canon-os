@@ -23,6 +23,7 @@ The API app lives in `apps/api` and uses Django REST Framework, PostgreSQL-ready
 | `canonos.media` | User-owned media library CRUD and media detail payloads. | `/api/media-items/`, `/api/media-items/{id}/` |
 | `canonos.taste` | Default taste dimensions, media score upserts, taste profile summary. | `/api/taste-dimensions/`, `/api/media-items/{media_id}/scores/`, `/api/taste-profile/` |
 | `canonos.candidates` | Candidate intake, deterministic evaluation, library/queue conversion. | `/api/candidates/`, `/api/candidates/{id}/evaluate/`, `/api/candidates/{id}/add-to-library/` |
+| `canonos.anti_generic` | Owner-scoped genericness red flags, positive exception rules, and candidate Anti-Generic evaluations. | `/api/anti-generic/rules/`, `/api/anti-generic/evaluate/` |
 | `canonos.queueing` | Adaptive queue CRUD, reorder, and Tonight Mode planning. | `/api/queue-items/`, `/api/queue-items/reorder/`, `/api/queue/tonight/` |
 | `canonos.dashboard` | Authenticated overview metrics and recent activity. | `/api/dashboard/summary/` |
 | `canonos.aftertaste` | Reflection prompts and user aftertaste entries. | `/api/aftertaste/prompts/`, `/api/aftertaste/` |
@@ -71,3 +72,7 @@ The `canonos.metadata` app owns external metadata snapshots and adapter orchestr
 ## TasteGraph service
 
 The `canonos.graph` app owns `GraphNode` and `GraphEdge`. Its rebuild service is deterministic, owner-scoped, and currently derives nodes/edges from media items, creators, media types, dimensional scores, and aftertaste entries. The Celery task `canonos.graph.rebuild_taste_graph` calls the same service for background workers.
+
+## Anti-Generic Filter service
+
+The `canonos.anti_generic` app owns `AntiGenericRule` and `AntiGenericEvaluation`. Rules are seeded per user, editable through Settings, and evaluated only for owner-scoped candidates/media. Candidate evaluation calls the Anti-Generic service before scoring so red flags and positive exceptions shape risk without adding release-year-only bias.

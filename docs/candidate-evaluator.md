@@ -18,6 +18,7 @@ The MVP Candidate Evaluator is deterministic and inspectable. It does not call a
 - **Confidence score (0-100):** rises with prior taste score volume and high-fit media type history, and falls when premise detail is missing.
 - **Time cost penalty:** long candidates are penalized before the final decision; short candidates are easier to sample.
 - **Genericness penalty:** high expected genericness directly raises risk and adds an explanation warning.
+- **Anti-Generic Filter:** every evaluation runs the owner-scoped Anti-Generic service, embeds the latest `antiGenericEvaluation`, increases risk from detected red flags, and reduces risk from positive exceptions.
 
 ## Decision Mapping
 
@@ -28,4 +29,4 @@ The backend computes a final score from likely fit, risk, time cost, and capped 
 - `delay`: not a clear no, but mood, time, or evidence should improve first.
 - `skip`: protect time unless new evidence changes the risk profile.
 
-The response always includes the decision, confidence score, likely fit score, risk score, reasons for, reasons against, best mood, and recommended action. The frontend displays the server response as-is and does not duplicate scoring logic.
+The response always includes the decision, confidence score, likely fit score, risk score, reasons for, reasons against, best mood, recommended action, and Anti-Generic result. The frontend displays the server response as-is and does not duplicate scoring logic.
