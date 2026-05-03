@@ -1,5 +1,6 @@
 import {
   Ban,
+  BarChart3,
   BookMarked,
   BookOpen,
   ClipboardList,
@@ -74,6 +75,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.tasteEvolution,
     icon: TrendingUp,
     description: "Historical shifts in ratings, mediums, regret, fatigue, and favorite dimensions.",
+  },
+  {
+    label: "Insights",
+    route: APP_ROUTES.insights,
+    icon: BarChart3,
+    description: "Readable charts for timeline, ratings, creators, themes, and regret signals.",
   },
   {
     label: "Completion Detox",

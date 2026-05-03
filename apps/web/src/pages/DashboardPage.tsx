@@ -103,7 +103,12 @@ function DashboardSummaryContent({
 
       <section className="grid gap-4 xl:grid-cols-2">
         <SectionCard title="Media type breakdown">
-          <CardHeading icon={<BarChart3 aria-hidden="true" className="h-5 w-5" />} title="Media type breakdown" />
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <CardHeading icon={<BarChart3 aria-hidden="true" className="h-5 w-5" />} title="Media type breakdown" />
+            <Button asChild size="sm" type="button" variant="secondary">
+              <Link to={APP_ROUTES.insights}>Open Insights</Link>
+            </Button>
+          </div>
           {summary.mediaTypeBreakdown.length > 0 ? (
             <div className="mt-4 grid gap-3">
               {summary.mediaTypeBreakdown.map((row) => (
@@ -179,6 +184,12 @@ function QuickActions({ onAddMedia }: { onAddMedia: () => void }) {
         <Link to={APP_ROUTES.candidates}>
           <Sparkles aria-hidden="true" className="h-4 w-4" />
           Evaluate Candidate
+        </Link>
+      </Button>
+      <Button asChild className="gap-2" type="button" variant="secondary">
+        <Link to={APP_ROUTES.insights}>
+          <BarChart3 aria-hidden="true" className="h-4 w-4" />
+          Insights
         </Link>
       </Button>
       <Button asChild className="gap-2" type="button" variant="secondary">

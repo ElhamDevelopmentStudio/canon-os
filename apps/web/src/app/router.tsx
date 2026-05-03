@@ -24,6 +24,7 @@ import { TasteGraphPage } from "@/pages/TasteGraphPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { JobsPage } from "@/pages/JobsPage";
+import { InsightsPage } from "@/pages/InsightsPage";
 
 export const protectedRouteChildren: RouteObject[] = [
   { index: true, element: <DashboardPage /> },
@@ -35,6 +36,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.tonight.slice(1), element: <TonightModePage /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <TasteProfilePage /> },
   { path: APP_ROUTES.tasteEvolution.slice(1), element: <TasteEvolutionPage /> },
+  { path: APP_ROUTES.insights.slice(1), element: <InsightsPage /> },
   { path: APP_ROUTES.completionDetox.slice(1), element: <CompletionDetoxPage /> },
   { path: APP_ROUTES.seasons.slice(1), element: <PersonalCanonPage /> },
   { path: "seasons/:seasonId", element: <CanonSeasonDetailPage /> },

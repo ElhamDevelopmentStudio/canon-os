@@ -30,6 +30,7 @@ api_urlpatterns = [
     path("", ApiRootView.as_view(), name="api-root"),
     path("auth/", include("canonos.accounts.urls")),
     path("", include("canonos.adaptations.urls")),
+    path("", include("canonos.analytics.urls")),
     path("", include("canonos.anti_generic.urls")),
     path("", include("canonos.aftertaste.urls")),
     path("", include("canonos.candidates.urls")),

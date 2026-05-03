@@ -91,6 +91,7 @@ describe("App", () => {
       APP_ROUTES.tonight,
       APP_ROUTES.tasteProfile,
       APP_ROUTES.tasteEvolution,
+      APP_ROUTES.insights,
       APP_ROUTES.completionDetox,
       APP_ROUTES.seasons,
       APP_ROUTES.tasteGraph,

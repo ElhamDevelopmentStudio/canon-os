@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "canonos.accounts",
     "canonos.adaptations",
+    "canonos.analytics",
     "canonos.anti_generic",
     "canonos.aftertaste",
     "canonos.candidates",

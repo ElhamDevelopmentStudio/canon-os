@@ -8,6 +8,7 @@ export const APP_ROUTES = {
   tonight: "/tonight",
   tasteProfile: "/taste-profile",
   tasteEvolution: "/taste-evolution",
+  insights: "/insights",
   completionDetox: "/completion-detox",
   seasons: "/seasons",
   canonSeasonDetail: "/seasons/:seasonId",

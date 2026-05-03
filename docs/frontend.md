@@ -32,6 +32,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/taste-evolution` | Taste Evolution Journal | Generate/list snapshots, show rating/medium/genericness/regret/fatigue/favorite-dimension trends, and expose current insight. |
+| `/insights` | Insights | Show consumption, rating, medium, dimension, genericness, regret, creator, and Narrative DNA trait analytics. |
 | `/completion-detox` | Completion Detox | Evaluate sample boundaries, toggle rules, mark media dropped/paused, show time saved, and list decisions. |
 | `/seasons` | Personal Canon | Create and list themed canon seasons with progress. |
 | `/seasons/:seasonId` | Canon Season Detail | Add mixed-source season items, reorder, complete, canon-mark, and reflect. |
@@ -222,3 +223,7 @@ Taste Evolution lives at `/taste-evolution`. API calls live in `apps/web/src/fea
 ## Background Jobs
 
 Background Jobs lives at `/jobs`. API calls and polling hooks live in `apps/web/src/features/jobs/jobsApi.ts`; reusable status UI lives in `JobStatusBadge`, `JobProgress`, `JobResultSummary`, `JobStatusCard`, and `NotificationsDropdown`. The header dropdown shows recent job notifications, while the Jobs page shows loading, empty, error, and success states with status, progress, result details, and manual refresh.
+
+### Insights UI
+
+Insights lives at `/insights`. API calls live in `apps/web/src/features/insights/analyticsApi.ts`. The page supports loading, empty, error, and success states; metric cards; simple responsive bar visualizations for consumption, ratings, and media types; dimension trend cards; genericness/satisfaction and regret/time-cost insight cards; top creator rankings; and top theme rankings derived from Narrative DNA traits. The Dashboard links to Insights from the quick actions and media type preview.

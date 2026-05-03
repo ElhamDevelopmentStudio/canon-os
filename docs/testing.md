@@ -106,6 +106,7 @@ Tests must:
 - Import/export: CSV preview/confirm, duplicate warning review, invalid-row no-write behavior, invalid file-type rejection, import rollback, import/export progress display, JSON export download, media/ratings CSV export download, and restore dry-run validation through Settings.
 - Global search and advanced filters: command palette shortcut, media and candidate result navigation from real search responses, URL-persisted Library filters, active chips, and clear-filter behavior.
 - Background Jobs: metadata refresh, Narrative DNA analysis, TasteGraph rebuild, and export jobs appear through `/api/jobs/`, the Jobs page, and header notifications.
+- Insights analytics: empty and sample data browser flows load `/api/analytics/*` endpoints through the Insights page, assert network payloads, and verify mobile readability.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions

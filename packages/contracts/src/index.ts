@@ -83,6 +83,26 @@ export {
 } from "./evolution";
 
 export type {
+  AnalyticsConsumptionTimelinePoint,
+  AnalyticsConsumptionTimelineResponse,
+  AnalyticsDimensionTrend,
+  AnalyticsDimensionTrendPoint,
+  AnalyticsDimensionTrendsResponse,
+  AnalyticsGenericnessSatisfactionPoint,
+  AnalyticsGenericnessSatisfactionResponse,
+  AnalyticsInsights,
+  AnalyticsMediaTypeDistributionResponse,
+  AnalyticsMediaTypeDistributionRow,
+  AnalyticsRatingDistributionBucket,
+  AnalyticsRatingDistributionResponse,
+  AnalyticsRegretTimeCostPoint,
+  AnalyticsRegretTimeCostResponse,
+  AnalyticsTopCreator,
+  AnalyticsTopCreatorsResponse,
+  AnalyticsTopTheme,
+  AnalyticsTopThemesResponse,
+} from "./analytics";
+export type {
   DashboardCounts,
   DashboardMediaItem,
   DashboardMediaTypeBreakdown,

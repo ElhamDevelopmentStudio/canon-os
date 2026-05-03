@@ -415,6 +415,22 @@ JSON import accepts this export shape and recreates implemented user-owned recor
 
 Background job payloads include `jobType`, `status`, `progressTotal`, `progressProcessed`, `progressPercent`, `message`, `result`, `sourceId`, `sourceLabel`, `createdAt`, and `completedAt`. Current job types are import, export, metadata refresh, graph rebuild, and narrative analysis. Import/export, metadata refresh, graph rebuild, and Narrative DNA requests all upsert `BackgroundJob` records so the UI can show recent async work without reading Celery internals directly.
 
+## Analytics / Insights API
+
+Analytics endpoints are read-only, authenticated, and owner-scoped. They power the `/insights` page with simple aggregate data and return empty-safe payloads when the user has no evidence yet.
+
+Endpoints:
+
+- `GET /api/analytics/` — combined analytics overview payload for clients that need all sections at once.
+- `GET /api/analytics/consumption-timeline/` — completed and dropped media grouped by month.
+- `GET /api/analytics/rating-distribution/` — personal ratings counted in 0–10 buckets.
+- `GET /api/analytics/media-type-distribution/` — library counts, completed counts, average ratings, and share by medium.
+- `GET /api/analytics/dimension-trends/` — taste score averages grouped by dimension and month.
+- `GET /api/analytics/genericness-satisfaction/` — genericness scores compared with personal ratings.
+- `GET /api/analytics/regret-time-cost/` — regret scores compared with estimated runtime/page/episode time cost.
+- `GET /api/analytics/top-creators/` — creator rankings from owned media, ratings, and negative signals.
+- `GET /api/analytics/top-themes/` — recurring Narrative DNA traits from completed analyses. Dedicated tags/themes can replace this source later without changing the Insights page contract.
+
 ## External metadata endpoints
 
 CanonOS supports optional provider enrichment without making provider data canonical user truth.

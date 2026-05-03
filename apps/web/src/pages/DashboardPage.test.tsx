@@ -138,10 +138,12 @@ describe("DashboardPage", () => {
     expect(screen.getByRole("heading", { name: /latest taste shift/i })).toBeInTheDocument();
     expect(screen.getByText(/atmosphere is carrying recent taste/i)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /open taste evolution/i })).toHaveAttribute("href", "/taste-evolution");
+    expect(screen.getAllByRole("link", { name: /open insights|insights/i }).some((link) => link.getAttribute("href") === "/insights")).toBe(true);
     expect(screen.getByRole("heading", { name: /top taste signals/i })).toBeInTheDocument();
     expect(screen.getAllByText(/stalker/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/atmosphere/i).length).toBeGreaterThan(0);
     expect(screen.getByRole("link", { name: /evaluate candidate/i })).toHaveAttribute("href", "/candidates");
+    expect(screen.getAllByRole("link", { name: /insights/i }).some((link) => link.getAttribute("href") === "/insights")).toBe(true);
     expect(screen.getByRole("link", { name: /tonight mode/i })).toHaveAttribute("href", "/tonight");
   });
 

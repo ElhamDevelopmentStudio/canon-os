@@ -96,6 +96,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Completion Detox: `docs/manual-tests/completion-detox.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
+- Insights analytics: `docs/manual-tests/insights.md`
 
 Use `docs/manual-tests/TEMPLATE.md` as the format. Each manual test doc must include a happy path, one error path, and one useful edge case when relevant.
 
@@ -2589,46 +2590,46 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M16-BE-001 Create analytics app.
-- [ ] CP-M16-BE-002 Create media consumption timeline endpoint.
-- [ ] CP-M16-BE-003 Create rating distribution endpoint.
-- [ ] CP-M16-BE-004 Create media type distribution endpoint.
-- [ ] CP-M16-BE-005 Create dimension trend endpoint.
-- [ ] CP-M16-BE-006 Create genericness vs satisfaction endpoint.
-- [ ] CP-M16-BE-007 Create regret vs time cost endpoint.
-- [ ] CP-M16-BE-008 Create top creators endpoint.
-- [ ] CP-M16-BE-009 Create top themes endpoint.
-- [ ] CP-M16-BE-010 Add test for analytics endpoints with empty data.
-- [ ] CP-M16-BE-011 Add test for analytics endpoints with sample data.
+- [x] CP-M16-BE-001 Create analytics app.
+- [x] CP-M16-BE-002 Create media consumption timeline endpoint.
+- [x] CP-M16-BE-003 Create rating distribution endpoint.
+- [x] CP-M16-BE-004 Create media type distribution endpoint.
+- [x] CP-M16-BE-005 Create dimension trend endpoint.
+- [x] CP-M16-BE-006 Create genericness vs satisfaction endpoint.
+- [x] CP-M16-BE-007 Create regret vs time cost endpoint.
+- [x] CP-M16-BE-008 Create top creators endpoint.
+- [x] CP-M16-BE-009 Create top themes endpoint.
+- [x] CP-M16-BE-010 Add test for analytics endpoints with empty data.
+- [x] CP-M16-BE-011 Add test for analytics endpoints with sample data.
 
 ### Frontend Tasks
 
-- [ ] CP-M16-FE-001 Create analytics API client file.
-- [ ] CP-M16-FE-002 Create Insights page skeleton.
-- [ ] CP-M16-FE-003 Add page title.
-- [ ] CP-M16-FE-004 Add consumption timeline chart component.
-- [ ] CP-M16-FE-005 Add rating distribution chart component.
-- [ ] CP-M16-FE-006 Add media type distribution chart component.
-- [ ] CP-M16-FE-007 Add dimension trend display.
-- [ ] CP-M16-FE-008 Add genericness vs satisfaction insight card.
-- [ ] CP-M16-FE-009 Add regret vs time cost insight card.
-- [ ] CP-M16-FE-010 Add top creators card.
-- [ ] CP-M16-FE-011 Add top themes card.
-- [ ] CP-M16-FE-012 Add loading state.
-- [ ] CP-M16-FE-013 Add empty state.
-- [ ] CP-M16-FE-014 Add error state.
+- [x] CP-M16-FE-001 Create analytics API client file.
+- [x] CP-M16-FE-002 Create Insights page skeleton.
+- [x] CP-M16-FE-003 Add page title.
+- [x] CP-M16-FE-004 Add consumption timeline chart component.
+- [x] CP-M16-FE-005 Add rating distribution chart component.
+- [x] CP-M16-FE-006 Add media type distribution chart component.
+- [x] CP-M16-FE-007 Add dimension trend display.
+- [x] CP-M16-FE-008 Add genericness vs satisfaction insight card.
+- [x] CP-M16-FE-009 Add regret vs time cost insight card.
+- [x] CP-M16-FE-010 Add top creators card.
+- [x] CP-M16-FE-011 Add top themes card.
+- [x] CP-M16-FE-012 Add loading state.
+- [x] CP-M16-FE-013 Add empty state.
+- [x] CP-M16-FE-014 Add error state.
 
 ### Integration Tasks
 
-- [ ] CP-M16-INT-001 Connect Insights page to analytics endpoints.
-- [ ] CP-M16-INT-002 Add Insights link to sidebar.
-- [ ] CP-M16-INT-003 Link Dashboard insights preview to Insights page.
+- [x] CP-M16-INT-001 Connect Insights page to analytics endpoints.
+- [x] CP-M16-INT-002 Add Insights link to sidebar.
+- [x] CP-M16-INT-003 Link Dashboard insights preview to Insights page.
 
 ### QA Tasks
 
-- [ ] CP-M16-QA-001 Confirm Insights page works with empty data.
-- [ ] CP-M16-QA-002 Confirm Insights page works with sample data.
-- [ ] CP-M16-QA-003 Confirm visualizations are readable on mobile.
+- [x] CP-M16-QA-001 Confirm Insights page works with empty data.
+- [x] CP-M16-QA-002 Confirm Insights page works with sample data.
+- [x] CP-M16-QA-003 Confirm visualizations are readable on mobile.
 
 ---
 
@@ -3028,7 +3029,7 @@ The complete product is done only when:
 - [x] Import/export works.
 - [x] Command palette and advanced search work.
 - [x] Background jobs have visible status.
-- [ ] Analytics/Insights page works.
+- [x] Analytics/Insights page works.
 - [ ] Security and privacy tasks are complete.
 - [ ] Performance tasks are complete.
 - [ ] Accessibility and responsive UI tasks are complete.
@@ -3044,16 +3045,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M15-QA-004.
-**Last completed task name:** Confirm completed jobs appear in notification dropdown.
-**Last completed milestone:** CP-M15 — Notifications, Job Status, And Async UX.
+**Last completed task ID:** CP-M16-QA-003.
+**Last completed task name:** Confirm visualizations are readable on mobile.
+**Last completed milestone:** CP-M16 — Data Visualization And Insight Pages.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M16 — Data Visualization And Insight Pages.
-**Next recommended task:** CP-M16-BE-001 Create analytics app.
+**Current milestone:** CP-M17 — Advanced Settings And Personalization.
+**Next recommended task:** CP-M17-BE-001 Add recommendation formula weights to UserSettings.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M15 Notifications, Job Status, And Async UX is complete. Existing import/export background job records were extended into a full Jobs module experience: metadata refresh, TasteGraph rebuild, Narrative DNA analysis, and import/export operations now upsert owner-scoped BackgroundJob records; the API exposes job list/detail status; the frontend adds shared jobs contracts, polling hooks, status/progress/result components, a Jobs page, and a header notifications dropdown. Automated coverage includes backend job creation/status tests, frontend Jobs page and notification tests, Playwright browser-to-backend job notification coverage, and updated API/frontend/testing/manual documentation.
+CP-M16 Data Visualization And Insight Pages is complete. The backend now exposes owner-scoped analytics endpoints for consumption timeline, rating distribution, media type distribution, dimension trends, genericness vs satisfaction, regret vs time cost, top creators, and top themes. The frontend adds shared analytics contracts, an Insights API client, a responsive `/insights` page with loading/empty/error/success states, sidebar navigation, and Dashboard links. Automated coverage includes backend empty/sample analytics tests, frontend Insights/Dashboard/App tests, Playwright browser-to-backend Insights coverage for empty and sample mobile states, and updated API/frontend/testing/manual documentation.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3069,4 +3070,5 @@ CP-M15 Notifications, Job Status, And Async UX is complete. Existing import/expo
 - Every user-facing feature milestone should add or update its manual test doc under `docs/manual-tests/`.
 - CP-M14 completed: unified search, command palette navigation, URL-backed advanced Library filters, browser e2e, and manual documentation are in place.
 - CP-M15 completed: jobs API, polling hooks, Jobs page, header notifications, and background job records for metadata, graph, narrative, import, and export are in place.
-- CP-M16 is next: add data visualization and insight pages, starting with analytics endpoints.
+- CP-M16 completed: analytics endpoints, shared contracts, responsive Insights page, Dashboard/sidebar links, and browser e2e coverage are in place.
+- CP-M17 is next: advanced settings and personalization fields plus recommendation behavior integration.
