@@ -17,6 +17,7 @@ export const API_ROUTES = {
   detoxDecisions: "/detox/decisions/",
   detoxTimeSaved: "/detox/time-saved/",
   mediaItems: "/media-items/",
+  globalSearch: "/search/",
   metadataMatches: "/metadata/matches/",
   narrativeAnalyses: "/narrative-analyses/",
   importBatches: "/imports/",

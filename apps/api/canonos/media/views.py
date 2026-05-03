@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from django.db.models import Q
+from datetime import date
+from decimal import Decimal, InvalidOperation
+
+from django.db.models import Q, QuerySet
+from django.utils.dateparse import parse_date
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +18,19 @@ from .serializers import MediaItemSerializer
         parameters=[
             OpenApiParameter("mediaType", str, description="Filter by media type."),
             OpenApiParameter("status", str, description="Filter by consumption status."),
+            OpenApiParameter("creator", str, description="Filter by creator/director/author."),
+            OpenApiParameter("ratingMin", float, description="Minimum personal rating."),
+            OpenApiParameter("ratingMax", float, description="Maximum personal rating."),
+            OpenApiParameter("genericnessMin", float, description="Minimum Genericness score."),
+            OpenApiParameter("genericnessMax", float, description="Maximum Genericness score."),
+            OpenApiParameter("regretMin", float, description="Minimum Regret score."),
+            OpenApiParameter("regretMax", float, description="Maximum Regret score."),
+            OpenApiParameter(
+                "completedFrom",
+                str,
+                description="Earliest completed date, YYYY-MM-DD.",
+            ),
+            OpenApiParameter("completedTo", str, description="Latest completed date, YYYY-MM-DD."),
             OpenApiParameter(
                 "search",
                 str,
@@ -62,11 +79,14 @@ class MediaItemViewSet(viewsets.ModelViewSet):
         media_type = self.request.query_params.get("mediaType")
         status = self.request.query_params.get("status")
         search = self.request.query_params.get("search")
+        creator = self.request.query_params.get("creator")
 
         if media_type:
             queryset = queryset.filter(media_type=media_type)
         if status:
             queryset = queryset.filter(status=status)
+        if creator:
+            queryset = queryset.filter(creator__icontains=creator.strip())
         if search:
             queryset = queryset.filter(
                 Q(title__icontains=search)
@@ -74,7 +94,79 @@ class MediaItemViewSet(viewsets.ModelViewSet):
                 | Q(creator__icontains=search)
                 | Q(notes__icontains=search)
             )
-        return queryset
+
+        queryset = _apply_decimal_range(
+            queryset,
+            field_name="personal_rating",
+            min_value=self.request.query_params.get("ratingMin"),
+            max_value=self.request.query_params.get("ratingMax"),
+        )
+        queryset = _apply_score_range(
+            queryset,
+            slug="genericness",
+            min_value=self.request.query_params.get("genericnessMin"),
+            max_value=self.request.query_params.get("genericnessMax"),
+        )
+        queryset = _apply_score_range(
+            queryset,
+            slug="regret_score",
+            min_value=self.request.query_params.get("regretMin"),
+            max_value=self.request.query_params.get("regretMax"),
+        )
+        completed_from = _parse_date_param(self.request.query_params.get("completedFrom"))
+        completed_to = _parse_date_param(self.request.query_params.get("completedTo"))
+        if completed_from:
+            queryset = queryset.filter(completed_date__gte=completed_from)
+        if completed_to:
+            queryset = queryset.filter(completed_date__lte=completed_to)
+        return queryset.distinct()
 
     def perform_create(self, serializer: MediaItemSerializer) -> None:
         serializer.save(owner=self.request.user)
+
+
+def _parse_decimal_param(value: str | None) -> Decimal | None:
+    if value is None or value.strip() == "":
+        return None
+    try:
+        return Decimal(value)
+    except InvalidOperation:
+        return None
+
+
+def _parse_date_param(value: str | None) -> date | None:
+    if value is None or value.strip() == "":
+        return None
+    return parse_date(value)
+
+
+def _apply_decimal_range(
+    queryset: QuerySet,
+    *,
+    field_name: str,
+    min_value: str | None,
+    max_value: str | None,
+) -> QuerySet:
+    minimum = _parse_decimal_param(min_value)
+    maximum = _parse_decimal_param(max_value)
+    if minimum is not None:
+        queryset = queryset.filter(**{f"{field_name}__gte": minimum})
+    if maximum is not None:
+        queryset = queryset.filter(**{f"{field_name}__lte": maximum})
+    return queryset
+
+
+def _apply_score_range(
+    queryset: QuerySet,
+    *,
+    slug: str,
+    min_value: str | None,
+    max_value: str | None,
+) -> QuerySet:
+    minimum = _parse_decimal_param(min_value)
+    maximum = _parse_decimal_param(max_value)
+    if minimum is not None:
+        queryset = queryset.filter(scores__taste_dimension__slug=slug, scores__score__gte=minimum)
+    if maximum is not None:
+        queryset = queryset.filter(scores__taste_dimension__slug=slug, scores__score__lte=maximum)
+    return queryset

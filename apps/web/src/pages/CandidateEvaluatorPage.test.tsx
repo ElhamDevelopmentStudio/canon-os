@@ -2,6 +2,7 @@ import type { Candidate, CandidateEvaluateResponse, CandidateListResponse, Counc
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 
 import {
   addCandidateToLibrary,
@@ -190,6 +191,15 @@ function mockCouncilSessions(data: CouncilSessionListResponse = councilSessions)
   } as unknown as ReturnType<typeof useCouncilSessions>);
 }
 
+
+function renderCandidateEvaluator(initialRoute = "/candidates") {
+  render(
+    <MemoryRouter initialEntries={[initialRoute]}>
+      <CandidateEvaluatorPage />
+    </MemoryRouter>,
+  );
+}
+
 function mockCandidates(data: CandidateListResponse = sampleList) {
   mockedUseCandidates.mockReturnValue({
     data,
@@ -255,7 +265,7 @@ describe("CandidateEvaluatorPage", () => {
 
   it("renders evaluator history and saved result explanations", async () => {
     const user = userEvent.setup();
-    render(<CandidateEvaluatorPage />);
+    renderCandidateEvaluator();
 
     expect(screen.getByRole("heading", { name: /candidate evaluator/i })).toBeInTheDocument();
     expect(screen.getByText(/Perfect Blue/i)).toBeInTheDocument();
@@ -274,7 +284,7 @@ describe("CandidateEvaluatorPage", () => {
   it("creates and evaluates a candidate from the form", async () => {
     const user = userEvent.setup();
     mockCandidates({ count: 0, next: null, previous: null, results: [] });
-    render(<CandidateEvaluatorPage />);
+    renderCandidateEvaluator();
 
     await user.type(screen.getByLabelText(/^title$/i), "Perfect Blue");
     await user.selectOptions(screen.getByLabelText(/media type/i), "anime");
@@ -293,7 +303,7 @@ describe("CandidateEvaluatorPage", () => {
 
   it("skips a selected candidate", async () => {
     const user = userEvent.setup();
-    render(<CandidateEvaluatorPage />);
+    renderCandidateEvaluator();
 
     await user.click(screen.getByRole("button", { name: /perfect blue/i }));
     await user.click(screen.getByRole("button", { name: /skip candidate/i }));
@@ -304,7 +314,7 @@ describe("CandidateEvaluatorPage", () => {
 
   it("adds an evaluated candidate to the queue", async () => {
     const user = userEvent.setup();
-    render(<CandidateEvaluatorPage />);
+    renderCandidateEvaluator();
 
     await user.click(screen.getByRole("button", { name: /perfect blue/i }));
     await user.click(screen.getByRole("button", { name: /add to queue/i }));
@@ -321,7 +331,7 @@ describe("CandidateEvaluatorPage", () => {
 
   it("adds an evaluated candidate to the library", async () => {
     const user = userEvent.setup();
-    render(<CandidateEvaluatorPage />);
+    renderCandidateEvaluator();
 
     await user.click(screen.getByRole("button", { name: /perfect blue/i }));
     const resultCard = screen.getByRole("button", { name: /add to library/i }).closest("section");

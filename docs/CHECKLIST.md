@@ -2474,55 +2474,55 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M14-BE-001 Add unified search endpoint.
-- [ ] CP-M14-BE-002 Search media items by title.
-- [ ] CP-M14-BE-003 Search candidates by title.
-- [ ] CP-M14-BE-004 Search queue items by title.
-- [ ] CP-M14-BE-005 Search canon seasons by title/theme.
-- [ ] CP-M14-BE-006 Add advanced media filters endpoint support.
-- [ ] CP-M14-BE-007 Add filter by rating range.
-- [ ] CP-M14-BE-008 Add filter by genericness range.
-- [ ] CP-M14-BE-009 Add filter by regret score range.
-- [ ] CP-M14-BE-010 Add filter by completion date range.
-- [ ] CP-M14-BE-011 Add filter by creator.
-- [ ] CP-M14-BE-012 Add test for unified search.
-- [ ] CP-M14-BE-013 Add test for advanced filters.
+- [x] CP-M14-BE-001 Add unified search endpoint.
+- [x] CP-M14-BE-002 Search media items by title.
+- [x] CP-M14-BE-003 Search candidates by title.
+- [x] CP-M14-BE-004 Search queue items by title.
+- [x] CP-M14-BE-005 Search canon seasons by title/theme.
+- [x] CP-M14-BE-006 Add advanced media filters endpoint support.
+- [x] CP-M14-BE-007 Add filter by rating range.
+- [x] CP-M14-BE-008 Add filter by genericness range.
+- [x] CP-M14-BE-009 Add filter by regret score range.
+- [x] CP-M14-BE-010 Add filter by completion date range.
+- [x] CP-M14-BE-011 Add filter by creator.
+- [x] CP-M14-BE-012 Add test for unified search.
+- [x] CP-M14-BE-013 Add test for advanced filters.
 
 ### Frontend Tasks
 
-- [ ] CP-M14-FE-001 Create search API client file.
-- [ ] CP-M14-FE-002 Create command palette component.
-- [ ] CP-M14-FE-003 Add keyboard shortcut to open command palette.
-- [ ] CP-M14-FE-004 Add global search input inside command palette.
-- [ ] CP-M14-FE-005 Add media result row.
-- [ ] CP-M14-FE-006 Add candidate result row.
-- [ ] CP-M14-FE-007 Add queue result row.
-- [ ] CP-M14-FE-008 Add canon season result row.
-- [ ] CP-M14-FE-009 Add navigation action from result row.
-- [ ] CP-M14-FE-010 Add advanced filters drawer to Library page.
-- [ ] CP-M14-FE-011 Add rating range filter.
-- [ ] CP-M14-FE-012 Add genericness range filter.
-- [ ] CP-M14-FE-013 Add regret score range filter.
-- [ ] CP-M14-FE-014 Add completion date range filter.
-- [ ] CP-M14-FE-015 Add creator filter.
-- [ ] CP-M14-FE-016 Add Clear Filters button.
-- [ ] CP-M14-FE-017 Add active filter chips.
+- [x] CP-M14-FE-001 Create search API client file.
+- [x] CP-M14-FE-002 Create command palette component.
+- [x] CP-M14-FE-003 Add keyboard shortcut to open command palette.
+- [x] CP-M14-FE-004 Add global search input inside command palette.
+- [x] CP-M14-FE-005 Add media result row.
+- [x] CP-M14-FE-006 Add candidate result row.
+- [x] CP-M14-FE-007 Add queue result row.
+- [x] CP-M14-FE-008 Add canon season result row.
+- [x] CP-M14-FE-009 Add navigation action from result row.
+- [x] CP-M14-FE-010 Add advanced filters drawer to Library page.
+- [x] CP-M14-FE-011 Add rating range filter.
+- [x] CP-M14-FE-012 Add genericness range filter.
+- [x] CP-M14-FE-013 Add regret score range filter.
+- [x] CP-M14-FE-014 Add completion date range filter.
+- [x] CP-M14-FE-015 Add creator filter.
+- [x] CP-M14-FE-016 Add Clear Filters button.
+- [x] CP-M14-FE-017 Add active filter chips.
 
 ### Integration Tasks
 
-- [ ] CP-M14-INT-001 Connect command palette to unified search endpoint.
-- [ ] CP-M14-INT-002 Navigate to selected media result.
-- [ ] CP-M14-INT-003 Navigate to selected candidate result.
-- [ ] CP-M14-INT-004 Connect advanced filters to Library endpoint.
-- [ ] CP-M14-INT-005 Persist filter state in URL query parameters.
+- [x] CP-M14-INT-001 Connect command palette to unified search endpoint.
+- [x] CP-M14-INT-002 Navigate to selected media result.
+- [x] CP-M14-INT-003 Navigate to selected candidate result.
+- [x] CP-M14-INT-004 Connect advanced filters to Library endpoint.
+- [x] CP-M14-INT-005 Persist filter state in URL query parameters.
 
 ### QA Tasks
 
-- [ ] CP-M14-QA-001 Search globally for a media item.
-- [ ] CP-M14-QA-002 Search globally for a candidate.
-- [ ] CP-M14-QA-003 Use command palette keyboard shortcut.
-- [ ] CP-M14-QA-004 Apply advanced Library filters.
-- [ ] CP-M14-QA-005 Clear advanced Library filters.
+- [x] CP-M14-QA-001 Search globally for a media item.
+- [x] CP-M14-QA-002 Search globally for a candidate.
+- [x] CP-M14-QA-003 Use command palette keyboard shortcut.
+- [x] CP-M14-QA-004 Apply advanced Library filters.
+- [x] CP-M14-QA-005 Clear advanced Library filters.
 
 ---
 
@@ -3026,7 +3026,7 @@ The complete product is done only when:
 - [ ] Personal Canon Builder can create exploration seasons.
 - [ ] Cross-Medium Adaptation Intelligence can store relations and recommend experience order.
 - [x] Import/export works.
-- [ ] Command palette and advanced search work.
+- [x] Command palette and advanced search work.
 - [ ] Background jobs have visible status.
 - [ ] Analytics/Insights page works.
 - [ ] Security and privacy tasks are complete.
@@ -3044,16 +3044,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M13-QA-005.
-**Last completed task name:** Confirm import/export manual test doc covers rollback and restore.
-**Last completed milestone:** CP-M13 — Advanced Import, Export, And Data Portability.
+**Last completed task ID:** CP-M14-QA-005.
+**Last completed task name:** Clear advanced Library filters.
+**Last completed milestone:** CP-M14 — Advanced Search, Filters, And Command Palette.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M14 — Advanced Search, Filters, And Command Palette.
-**Next recommended task:** CP-M14-BE-001 Add unified search endpoint.
+**Current milestone:** CP-M15 — Notifications, Job Status, And Async UX.
+**Next recommended task:** CP-M15-BE-001 Create jobs app.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M13 Advanced Import, Export, And Data Portability is complete. Shared contracts now expose import/export progress metadata, rollback results, restore dry-run results, expanded statuses, duplicate references, and created object IDs. Backend work extends ImportBatch/ImportItem/ExportJob with migration-backed progress, file metadata, retention, duplicate, rollback, and restore validation fields; adds file size/type validation, same-import and existing-library duplicate detection, import rollback, restore dry-run validation, owner-scoped import/export history endpoints, rollback and restore endpoints, BackgroundJob records/endpoints for import/export jobs, Celery task wrappers, and API tests for duplicates, rollback, 500-row progress, restore dry run, and invalid file handling. Frontend work adds Settings import/export job progress, import history, rollback actions, duplicate warning review, export history, restore dry-run UI, invalid file error states, browser e2e coverage, and updated docs/manual tests.
+CP-M14 Advanced Search, Filters, And Command Palette is complete. Backend work adds an authenticated unified search endpoint for media, candidates, queue items, and canon seasons plus advanced Library media filters for creator, rating range, Genericness range, Regret range, and completed-date range. Frontend work adds shared search contracts, a global command palette opened from the header or Ctrl+K/⌘K, accessible result rows with navigation targets, URL-backed Library advanced filters, active filter chips, and clear-filter behavior. Automated coverage includes backend search/filter tests, frontend command palette and Library filter tests, Playwright browser-to-backend search/filter flows, and updated API/testing/manual documentation.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3067,4 +3067,5 @@ CP-M13 Advanced Import, Export, And Data Portability is complete. Shared contrac
 - Every new data model should have migration, serializer, API behavior, and tests where relevant.
 - Every new frontend feature should have loading, empty, and error handling where relevant.
 - Every user-facing feature milestone should add or update its manual test doc under `docs/manual-tests/`.
-- CP-M14 is next: build unified advanced search and filters without regressing the Settings portability flows.
+- CP-M14 completed: unified search, command palette navigation, URL-backed advanced Library filters, browser e2e, and manual documentation are in place.
+- CP-M15 is next: build visible background job status and async UX, starting with the jobs app and BackgroundJob model.

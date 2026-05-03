@@ -89,8 +89,25 @@ List filters:
 - `mediaType`: one of `movie`, `tv_show`, `anime`, `novel`, `audiobook`.
 - `status`: one of `planned`, `consuming`, `completed`, `paused`, `dropped`.
 - `search`: case-insensitive search over title, original title, creator, and notes.
+- `creator`: case-insensitive creator/director/author match.
+- `ratingMin` / `ratingMax`: personal rating range.
+- `genericnessMin` / `genericnessMax`: Genericness taste-score range.
+- `regretMin` / `regretMax`: Regret score taste-score range.
+- `completedFrom` / `completedTo`: completed date range in `YYYY-MM-DD` format.
 
 Shared TypeScript contracts live in `packages/contracts/src/media.ts`. The frontend client and SWR hooks live in `apps/web/src/features/media/mediaApi.ts`.
+
+## Unified Search API Contract
+
+Global search is user-owned and requires an authenticated session. It powers the command palette and returns navigation targets for currently searchable product surfaces.
+
+Endpoint:
+
+- `GET /api/search/?q=<query>&limit=<n>` searches the current user's media, candidates, queue items, and personal canon seasons. `limit` defaults to 5 per type and is capped at 10.
+
+Each result includes `id`, `type`, `title`, `subtitle`, `description`, `targetUrl`, and metadata. Supported result types are `media`, `candidate`, `queue_item`, and `canon_season`. Empty or missing queries return an empty result list without error.
+
+Frontend contracts live in `packages/contracts/src/search.ts`; the SWR client lives in `apps/web/src/features/search/searchApi.ts`; the UI entry point is the command palette opened from the header or with Ctrl+K / ⌘K.
 
 ## Taste Scoring API Contract
 

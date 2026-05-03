@@ -14,9 +14,23 @@ import { fetcher } from "@/lib/swr";
 
 function mediaListKey(filters: MediaItemFilters = {}) {
   const params = new URLSearchParams();
+  const setTrimmed = (key: keyof MediaItemFilters, paramName = key) => {
+    const value = filters[key];
+    if (typeof value === "string" && value.trim()) params.set(paramName, value.trim());
+  };
+
   if (filters.mediaType) params.set("mediaType", filters.mediaType);
   if (filters.status) params.set("status", filters.status);
-  if (filters.search?.trim()) params.set("search", filters.search.trim());
+  setTrimmed("search");
+  setTrimmed("creator");
+  setTrimmed("ratingMin");
+  setTrimmed("ratingMax");
+  setTrimmed("genericnessMin");
+  setTrimmed("genericnessMax");
+  setTrimmed("regretMin");
+  setTrimmed("regretMax");
+  setTrimmed("completedFrom");
+  setTrimmed("completedTo");
   const query = params.toString();
   return `${API_ROUTES.mediaItems}${query ? `?${query}` : ""}`;
 }

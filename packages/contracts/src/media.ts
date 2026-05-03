@@ -63,4 +63,13 @@ export type MediaItemFilters = {
   mediaType?: MediaType | "";
   status?: ConsumptionStatus | "";
   search?: string;
+  creator?: string;
+  ratingMin?: string;
+  ratingMax?: string;
+  genericnessMin?: string;
+  genericnessMax?: string;
+  regretMin?: string;
+  regretMax?: string;
+  completedFrom?: string;
+  completedTo?: string;
 };

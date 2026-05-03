@@ -1,5 +1,5 @@
 import type { MediaItemListResponse, TasteDimension } from "@canonos/contracts";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -65,9 +65,9 @@ const sampleDimensions: TasteDimension[] = [
   },
 ];
 
-function renderLibrary() {
+function renderLibrary(initialRoute = "/library") {
   render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialRoute]}>
       <LibraryPage />
     </MemoryRouter>,
   );
@@ -106,6 +106,51 @@ describe("LibraryPage", () => {
     expect(screen.getByLabelText(/filter by media type/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/filter by status/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /add media/i })).toBeInTheDocument();
+  });
+
+
+  it("hydrates advanced filters from the URL and clears active chips", async () => {
+    const user = userEvent.setup();
+    renderLibrary("/library?creator=Tarkovsky&ratingMin=8&genericnessMax=3&completedFrom=2026-01-01");
+
+    expect(mockedUseMediaItems).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        creator: "Tarkovsky",
+        ratingMin: "8",
+        genericnessMax: "3",
+        completedFrom: "2026-01-01",
+      }),
+    );
+    expect(screen.getByLabelText(/active filters/i)).toHaveTextContent("Creator: Tarkovsky");
+    expect(screen.getByLabelText(/active filters/i)).toHaveTextContent("Max genericness: 3");
+
+    await user.click(screen.getByRole("button", { name: /advanced filters/i }));
+    const advancedFilters = screen.getByLabelText(/advanced library filters/i);
+    expect(within(advancedFilters).getByLabelText(/^creator$/i)).toHaveValue("Tarkovsky");
+    expect(within(advancedFilters).getByLabelText(/minimum rating/i)).toHaveValue(8);
+
+    await user.click(screen.getByRole("button", { name: /clear filters/i }));
+
+    await waitFor(() => expect(screen.queryByLabelText(/active filters/i)).not.toBeInTheDocument());
+    expect(mockedUseMediaItems).toHaveBeenLastCalledWith({});
+  });
+
+  it("updates advanced filters through accessible controls", async () => {
+    const user = userEvent.setup();
+    renderLibrary();
+
+    await user.click(screen.getByRole("button", { name: /advanced filters/i }));
+    const advancedFilters = screen.getByLabelText(/advanced library filters/i);
+    await user.type(within(advancedFilters).getByLabelText(/^creator$/i), "Kurosawa");
+    await user.type(within(advancedFilters).getByLabelText(/maximum regret/i), "2");
+
+    await waitFor(() =>
+      expect(mockedUseMediaItems).toHaveBeenLastCalledWith(
+        expect.objectContaining({ creator: "Kurosawa", regretMax: "2" }),
+      ),
+    );
+    expect(screen.getByLabelText(/active filters/i)).toHaveTextContent("Creator: Kurosawa");
+    expect(screen.getByLabelText(/active filters/i)).toHaveTextContent("Max regret: 2");
   });
 
   it("creates and deletes media through connected actions", async () => {

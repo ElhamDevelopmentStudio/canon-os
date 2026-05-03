@@ -47,6 +47,7 @@ API_ROOT_PAYLOAD = {
         "council_sessions": "/api/council-sessions/",
         "queue_items": "/api/queue-items/",
         "queue_recalculate": "/api/queue-items/recalculate/",
+        "search": "/api/search/",
         "tonight_mode": "/api/queue/tonight/",
         "schema": "/api/schema/",
         "swagger_docs": "/api/docs/swagger/",
@@ -80,6 +81,7 @@ API_ROOT_PAYLOAD = {
         {"name": "personal_canon", "status": "available", "path": "/api/seasons/"},
         {"name": "critic_council", "status": "available", "path": "/api/council-sessions/"},
         {"name": "queue", "status": "available", "path": "/api/queue-items/"},
+        {"name": "search", "status": "available", "path": "/api/search/"},
         {"name": "tonight_mode", "status": "available", "path": "/api/queue/tonight/"},
     ],
 }

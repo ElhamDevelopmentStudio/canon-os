@@ -107,6 +107,8 @@ export type {
   MediaItemUpdateRequest,
   MediaType,
 } from "./media";
+export type { UnifiedSearchResponse, UnifiedSearchResult, UnifiedSearchResultType } from "./search";
+export { UNIFIED_SEARCH_RESULT_TYPES } from "./search";
 export { CONSUMPTION_STATUSES, MEDIA_TYPES } from "./media";
 export type {
   QueueItem,

@@ -32,6 +32,7 @@ User-facing features must also update the matching manual test document under `d
 | Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
+| Global search and advanced filters | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/search-and-filters.md` |
 | API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
 
 ## Browser-to-Backend E2E Contract
@@ -103,6 +104,7 @@ Tests must:
 - Adaptation Intelligence: create a source/adaptation relation from Media Detail, assert relation create/delete and path recommendation network payloads, and confirm the relation appears on both linked detail pages.
 - Settings: update profile/display/recommendation preferences, persist after refresh, apply theme, feed Tonight Mode defaults, and surface Candidate Evaluator settings.
 - Import/export: CSV preview/confirm, duplicate warning review, invalid-row no-write behavior, invalid file-type rejection, import rollback, import/export progress display, JSON export download, media/ratings CSV export download, and restore dry-run validation through Settings.
+- Global search and advanced filters: command palette shortcut, media and candidate result navigation from real search responses, URL-persisted Library filters, active chips, and clear-filter behavior.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions

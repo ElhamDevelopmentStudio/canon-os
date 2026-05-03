@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "canonos.metadata",
     "canonos.narrative",
     "canonos.queueing",
+    "canonos.search",
     "canonos.taste",
 ]
 

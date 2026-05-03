@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/stores/appStore";
 import { useAuthStore } from "@/stores/authStore";
 
-export function TopHeader() {
+export function TopHeader({ onOpenCommandPalette }: { onOpenCommandPalette: () => void }) {
   const themeMode = useAppStore((state) => state.themeMode);
   const toggleThemeMode = useAppStore((state) => state.toggleThemeMode);
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -28,7 +28,14 @@ export function TopHeader() {
         >
           Skip to content
         </a>
-        <CommandSearchInput className="hidden max-w-md flex-1 md:block" />
+        <CommandSearchInput
+          aria-label="Open command palette"
+          className="hidden max-w-md flex-1 md:block"
+          readOnly
+          value=""
+          onClick={onOpenCommandPalette}
+          onFocus={onOpenCommandPalette}
+        />
         <div className="ml-auto flex items-center gap-2">
           {currentUser ? (
             <span className="hidden max-w-48 truncate text-sm text-muted-foreground sm:inline" title={currentUser.email}>

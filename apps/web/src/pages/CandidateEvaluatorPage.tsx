@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   SkipForward,
 } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
@@ -73,6 +74,7 @@ const emptyDraft: CandidateDraft = {
 };
 
 export function CandidateEvaluatorPage() {
+  const [searchParams] = useSearchParams();
   const { data, error, isLoading, mutate } = useCandidates();
   const { data: userSettings } = useUserSettings();
   const [draft, setDraft] = useState<CandidateDraft>(emptyDraft);
@@ -87,6 +89,18 @@ export function CandidateEvaluatorPage() {
 
   const latestEvaluation = evaluation ?? selectedCandidate?.latestEvaluation ?? null;
   const candidates = useMemo(() => data?.results ?? [], [data]);
+  const selectedCandidateId = searchParams.get("candidateId");
+
+  useEffect(() => {
+    if (!selectedCandidateId || selectedCandidate?.id === selectedCandidateId) return;
+    const candidate = candidates.find((item) => item.id === selectedCandidateId);
+    if (!candidate) return;
+    setDraft(candidateToDraft(candidate));
+    setSelectedCandidate(candidate);
+    setEvaluation(candidate.latestEvaluation);
+    setFormError(null);
+    setActionMessage(null);
+  }, [candidates, selectedCandidate?.id, selectedCandidateId]);
 
   function updateDraft(field: keyof CandidateDraft, value: string) {
     setDraft((current) => ({ ...current, [field]: value }));

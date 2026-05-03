@@ -1,15 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import { MainContent } from "@/components/layout/MainContent";
 import { LeftSidebar } from "@/components/shell/LeftSidebar";
 import { TopHeader } from "@/components/shell/TopHeader";
+import { CommandPalette } from "@/features/search/CommandPalette";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/stores/appStore";
 
 export function AppShell() {
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const sidebarCollapsed = useAppStore((state) => state.sidebarCollapsed);
   const themeMode = useAppStore((state) => state.themeMode);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setCommandPaletteOpen(true);
+      }
+    }
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
@@ -30,12 +43,13 @@ export function AppShell() {
       <div className={cn("grid min-h-screen lg:grid-cols-[18rem_1fr]", sidebarCollapsed && "lg:grid-cols-[5rem_1fr]")}>
         <LeftSidebar />
         <div className="min-w-0">
-          <TopHeader />
+          <TopHeader onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
           <MainContent>
             <Outlet />
           </MainContent>
         </div>
       </div>
+      <CommandPalette open={commandPaletteOpen} onClose={() => setCommandPaletteOpen(false)} />
     </div>
   );
 }

@@ -147,3 +147,61 @@ def test_media_endpoints_appear_in_openapi_schema() -> None:
     content = response.content.decode()
     assert "/api/media-items/" in content
     assert "/api/media-items/{id}/" in content
+
+
+def test_list_media_items_supports_advanced_filters() -> None:
+    from canonos.taste.models import MediaScore, TasteDimension
+
+    client, user = authenticated_client()
+    genericness = TasteDimension.objects.create(
+        owner=user,
+        slug="genericness",
+        name="Genericness",
+        direction="negative",
+    )
+    regret = TasteDimension.objects.create(
+        owner=user,
+        slug="regret_score",
+        name="Regret score",
+        direction="negative",
+    )
+    match = MediaItem.objects.create(
+        owner=user,
+        title="Precise Match",
+        media_type="movie",
+        status="completed",
+        creator="Filter Auteur",
+        personal_rating="8.6",
+        completed_date="2026-02-10",
+    )
+    MediaScore.objects.create(media_item=match, taste_dimension=genericness, score="2.0")
+    MediaScore.objects.create(media_item=match, taste_dimension=regret, score="1.5")
+    mismatch = MediaItem.objects.create(
+        owner=user,
+        title="Risky Mismatch",
+        media_type="movie",
+        status="completed",
+        creator="Filter Auteur",
+        personal_rating="8.8",
+        completed_date="2026-02-11",
+    )
+    MediaScore.objects.create(media_item=mismatch, taste_dimension=genericness, score="8.0")
+    MediaScore.objects.create(media_item=mismatch, taste_dimension=regret, score="7.0")
+
+    response = client.get(
+        reverse("mediaitem-list"),
+        {
+            "creator": "auteur",
+            "ratingMin": "8",
+            "ratingMax": "9",
+            "genericnessMax": "3",
+            "regretMax": "2",
+            "completedFrom": "2026-02-01",
+            "completedTo": "2026-02-28",
+        },
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["count"] == 1
+    assert payload["results"][0]["id"] == str(match.id)
