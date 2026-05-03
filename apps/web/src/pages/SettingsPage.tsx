@@ -6,6 +6,7 @@ import {
   THEME_PREFERENCES,
   type AntiGenericRule,
   type ExportFormat,
+  type ExportRestoreDryRunResult,
   type ExportResult,
   type ImportBatch,
   type ImportSourceType,
@@ -26,8 +27,23 @@ import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { resetAntiGenericRules, updateAntiGenericRule, useAntiGenericRules } from "@/features/anti-generic-filter/antiGenericApi";
-import { confirmImportBatch, downloadExportText, previewImportFile, requestExport } from "@/features/portability/portabilityApi";
-import { exportFormatLabels, importSourceTypeLabels, importStatusLabels } from "@/features/portability/portabilityLabels";
+import {
+  confirmImportBatch,
+  downloadExportText,
+  dryRunExportRestore,
+  previewImportFile,
+  requestExport,
+  rollbackImportBatch,
+  useExportJobs,
+  useImportBatches,
+} from "@/features/portability/portabilityApi";
+import {
+  exportFormatLabels,
+  exportStatusLabels,
+  importBatchStatusLabels,
+  importSourceTypeLabels,
+  importStatusLabels,
+} from "@/features/portability/portabilityLabels";
 import { updateUserSettings, useUserSettings } from "@/features/settings/settingsApi";
 import {
   riskToleranceLabels,
@@ -485,18 +501,25 @@ function ruleToDraft(rule: AntiGenericRule): AntiGenericRuleDraft {
 
 function PortabilitySection() {
   const { mutate: mutateCache } = useSWRConfig();
+  const { data: importBatches = [], mutate: mutateImportBatches } = useImportBatches();
+  const { data: exportJobs = [], mutate: mutateExportJobs } = useExportJobs();
   const [importSourceType, setImportSourceType] = useState<ImportSourceType>("csv");
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importBatch, setImportBatch] = useState<ImportBatch | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const [importMessage, setImportMessage] = useState<string | null>(null);
   const [isImportLoading, setIsImportLoading] = useState(false);
+  const [rollingBackId, setRollingBackId] = useState<string | null>(null);
   const [exportFormat, setExportFormat] = useState<ExportFormat>("json");
   const [exportResult, setExportResult] = useState<ExportResult | null>(null);
   const [exportPreview, setExportPreview] = useState<string>("");
   const [exportError, setExportError] = useState<string | null>(null);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
   const [isExportLoading, setIsExportLoading] = useState(false);
+  const [restoreFile, setRestoreFile] = useState<File | null>(null);
+  const [restoreResult, setRestoreResult] = useState<ExportRestoreDryRunResult | null>(null);
+  const [restoreError, setRestoreError] = useState<string | null>(null);
+  const [isRestoreLoading, setIsRestoreLoading] = useState(false);
 
   async function previewImport() {
     if (!importFile) {
@@ -510,6 +533,7 @@ function PortabilitySection() {
       const preview = await previewImportFile(importFile, importSourceType);
       setImportBatch(preview);
       setImportMessage("Import preview ready. Review every row before confirming.");
+      await mutateImportBatches();
     } catch (caught) {
       setImportError(caught instanceof Error ? caught.message : "Could not preview import.");
     } finally {
@@ -526,11 +550,33 @@ function PortabilitySection() {
       const confirmed = await confirmImportBatch(importBatch.id);
       setImportBatch(confirmed);
       setImportMessage(`Import complete. Created ${confirmed.createdCount} records.`);
-      await mutateCache((key) => typeof key === "string" && (key.startsWith(API_ROUTES.mediaItems) || key === API_ROUTES.dashboardSummary));
+      await Promise.all([
+        mutateImportBatches(),
+        mutateCache((key) => typeof key === "string" && (key.startsWith(API_ROUTES.mediaItems) || key === API_ROUTES.dashboardSummary)),
+      ]);
     } catch (caught) {
       setImportError(caught instanceof Error ? caught.message : "Could not confirm import.");
     } finally {
       setIsImportLoading(false);
+    }
+  }
+
+  async function rollbackImport(batch: ImportBatch) {
+    setRollingBackId(batch.id);
+    setImportError(null);
+    setImportMessage(null);
+    try {
+      const result = await rollbackImportBatch(batch.id);
+      setImportBatch((current) => (current?.id === batch.id ? result.batch : current));
+      setImportMessage(`Import rolled back. Removed ${result.removedCount} records.`);
+      await Promise.all([
+        mutateImportBatches(),
+        mutateCache((key) => typeof key === "string" && (key.startsWith(API_ROUTES.mediaItems) || key === API_ROUTES.dashboardSummary)),
+      ]);
+    } catch (caught) {
+      setImportError(caught instanceof Error ? caught.message : "Could not roll back import.");
+    } finally {
+      setRollingBackId(null);
     }
   }
 
@@ -543,6 +589,7 @@ function PortabilitySection() {
       const result = await requestExport(exportFormat);
       setExportResult(result);
       setExportMessage(`${exportFormatLabels[result.format]} is ready to download.`);
+      await mutateExportJobs();
     } catch (caught) {
       setExportError(caught instanceof Error ? caught.message : "Could not create export.");
     } finally {
@@ -565,19 +612,37 @@ function PortabilitySection() {
     }
   }
 
-  const confirmDisabled = !importBatch || importBatch.invalidCount > 0 || importBatch.status === "confirmed" || isImportLoading;
+  async function validateRestore() {
+    if (!restoreFile) {
+      setRestoreError("Choose a CanonOS JSON export before validating restore.");
+      return;
+    }
+    setIsRestoreLoading(true);
+    setRestoreError(null);
+    setRestoreResult(null);
+    try {
+      setRestoreResult(await dryRunExportRestore(restoreFile));
+    } catch (caught) {
+      setRestoreError(caught instanceof Error ? caught.message : "Could not validate restore file.");
+    } finally {
+      setIsRestoreLoading(false);
+    }
+  }
+
+  const confirmDisabled = !importBatch || importBatch.invalidCount > 0 || importBatch.status !== "previewed" || isImportLoading;
+  const latestExport = exportResult ?? exportJobs[0] ?? null;
 
   return (
     <SectionCard title="Import and export">
       <h2 className="text-xl font-semibold">Import and export</h2>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        Bring in existing media history, preview validation before any write, and export a backup before destructive account tools exist.
+        Bring in existing media history, preview validation before any write, track job progress, and test restore safety before committing data.
       </p>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-border p-4">
           <h3 className="font-semibold">Import data</h3>
-          <p className="mt-1 text-sm text-muted-foreground">Invalid rows block confirmation, so existing library data is not partially changed.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Invalid rows block confirmation, duplicate rows are skipped, and confirmed batches can be rolled back.</p>
           <div className="mt-4 grid gap-4">
             <SelectField
               label="Import source type"
@@ -605,6 +670,7 @@ function PortabilitySection() {
                 }}
               />
             </label>
+            <p className="text-xs text-muted-foreground">CSV and JSON imports are limited to {formatBytes(2 * 1024 * 1024)} per file.</p>
             <div className="flex flex-wrap gap-3">
               <Button className="gap-2" disabled={isImportLoading} type="button" variant="secondary" onClick={() => void previewImport()}>
                 <FileUp aria-hidden="true" className="h-4 w-4" />
@@ -617,7 +683,17 @@ function PortabilitySection() {
           </div>
           {importError ? <ErrorState title="Import failed" message={importError} /> : null}
           {importMessage ? <SuccessMessage message={importMessage} /> : null}
-          {importBatch ? <ImportPreviewTable batch={importBatch} /> : <EmptyState title="No import preview yet" message="Choose a file and preview it before committing records." />}
+          {importBatch ? (
+            <div className="mt-4 grid gap-4">
+              <ProgressMeter label="Import job progress" percent={importBatch.progressPercent} processed={importBatch.progressProcessed} total={importBatch.progressTotal} />
+              {importBatch.duplicateCount > 0 ? (
+                <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200" role="status">
+                  {importBatch.duplicateCount} duplicate row{importBatch.duplicateCount === 1 ? "" : "s"} will be skipped. Review warnings before confirming.
+                </div>
+              ) : null}
+              <ImportPreviewTable batch={importBatch} />
+            </div>
+          ) : <EmptyState title="No import preview yet" message="Choose a file and preview it before committing records." />}
         </section>
 
         <section className="rounded-2xl border border-border p-4">
@@ -649,10 +725,12 @@ function PortabilitySection() {
           </div>
           {exportError ? <ErrorState title="Export failed" message={exportError} /> : null}
           {exportMessage ? <SuccessMessage message={exportMessage} /> : null}
-          {exportResult ? (
+          {latestExport ? (
             <div className="mt-4 rounded-xl bg-muted p-3 text-sm">
-              <p className="font-medium">{exportResult.filename}</p>
-              <p className="text-muted-foreground">{exportResult.recordCount} records • {exportResult.status}</p>
+              <p className="font-medium">{latestExport.filename}</p>
+              <p className="text-muted-foreground">{latestExport.recordCount} records • {exportStatusLabels[latestExport.status]} • {formatBytes(latestExport.fileSizeBytes)}</p>
+              <ProgressMeter label="Export job progress" percent={latestExport.progressPercent} processed={latestExport.progressProcessed} total={latestExport.progressTotal} />
+              {latestExport.retentionExpiresAt ? <p className="mt-2 text-xs text-muted-foreground">Retained until {new Date(latestExport.retentionExpiresAt).toLocaleString()}.</p> : null}
             </div>
           ) : (
             <EmptyState title="No export requested yet" message="Request an export before downloading a backup." />
@@ -662,7 +740,119 @@ function PortabilitySection() {
           ) : null}
         </section>
       </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <ImportHistory batches={importBatches} rollingBackId={rollingBackId} onRollback={(batch) => void rollbackImport(batch)} />
+        <section className="rounded-2xl border border-border p-4">
+          <h3 className="font-semibold">Restore dry run</h3>
+          <p className="mt-1 text-sm text-muted-foreground">Validate a CanonOS JSON backup and see the records it would restore before importing it.</p>
+          <div className="mt-4 grid gap-4">
+            <label className="grid gap-1.5 text-sm font-medium">
+              Restore file
+              <input
+                accept=".json,application/json"
+                className={fieldClassName}
+                type="file"
+                onChange={(event) => {
+                  setRestoreFile(event.target.files?.[0] ?? null);
+                  setRestoreResult(null);
+                  setRestoreError(null);
+                }}
+              />
+            </label>
+            <Button disabled={isRestoreLoading} type="button" variant="secondary" onClick={() => void validateRestore()}>
+              {isRestoreLoading ? "Validating..." : "Validate Restore"}
+            </Button>
+          </div>
+          {restoreError ? <ErrorState title="Restore validation failed" message={restoreError} /> : null}
+          {restoreResult ? <RestoreDryRunSummary result={restoreResult} /> : <EmptyState title="No restore validation yet" message="Choose a JSON backup to see restore counts and warnings." />}
+        </section>
+      </div>
+
+      <ExportHistory jobs={exportJobs} />
     </SectionCard>
+  );
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes <= 0) return "0 B";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function ProgressMeter({ label, percent, processed, total }: { label: string; percent: number; processed: number; total: number }) {
+  return (
+    <div className="mt-3 grid gap-1.5 text-sm" role="status" aria-label={label}>
+      <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+        <span>{label}</span>
+        <span>{processed}/{total || processed} • {percent}%</span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-border">
+        <div className="h-full rounded-full bg-primary" style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function ImportHistory({ batches, rollingBackId, onRollback }: { batches: ImportBatch[]; rollingBackId: string | null; onRollback: (batch: ImportBatch) => void }) {
+  return (
+    <section className="rounded-2xl border border-border p-4">
+      <h3 className="font-semibold">Import history</h3>
+      <p className="mt-1 text-sm text-muted-foreground">Recent import jobs, progress, duplicate counts, and rollback actions.</p>
+      <div className="mt-4 grid gap-3">
+        {batches.length ? batches.map((batch) => (
+          <article className="rounded-xl bg-muted p-3 text-sm" key={batch.id}>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="font-medium">{batch.originalFilename || batch.uploadedFileReference}</p>
+                <p className="text-muted-foreground">{importSourceTypeLabels[batch.sourceType]} • {importBatchStatusLabels[batch.status]} • {batch.createdCount} created • {batch.duplicateCount} duplicates</p>
+              </div>
+              <Button disabled={batch.status !== "confirmed" || rollingBackId === batch.id} type="button" variant="secondary" onClick={() => onRollback(batch)}>
+                {rollingBackId === batch.id ? "Rolling back..." : "Roll Back Import"}
+              </Button>
+            </div>
+            <ProgressMeter label={`Import ${batch.id} progress`} percent={batch.progressPercent} processed={batch.progressProcessed} total={batch.progressTotal} />
+            {batch.rolledBackAt ? <p className="mt-2 text-xs text-muted-foreground">Rolled back {batch.rollbackItemCount} records on {new Date(batch.rolledBackAt).toLocaleString()}.</p> : null}
+          </article>
+        )) : <EmptyState title="No import history yet" message="Preview and confirm an import to see it here." />}
+      </div>
+    </section>
+  );
+}
+
+function ExportHistory({ jobs }: { jobs: ExportResult[] }) {
+  return (
+    <section className="mt-6 rounded-2xl border border-border p-4">
+      <h3 className="font-semibold">Export history</h3>
+      <div className="mt-4 grid gap-3 md:grid-cols-2">
+        {jobs.length ? jobs.map((job) => (
+          <article className="rounded-xl bg-muted p-3 text-sm" key={job.id}>
+            <p className="font-medium">{job.filename}</p>
+            <p className="text-muted-foreground">{exportFormatLabels[job.format]} • {exportStatusLabels[job.status]} • {job.recordCount} records • {formatBytes(job.fileSizeBytes)}</p>
+            <ProgressMeter label={`Export ${job.id} progress`} percent={job.progressPercent} processed={job.progressProcessed} total={job.progressTotal} />
+          </article>
+        )) : <EmptyState title="No export history yet" message="Request an export to see retention and progress details." />}
+      </div>
+    </section>
+  );
+}
+
+function RestoreDryRunSummary({ result }: { result: ExportRestoreDryRunResult }) {
+  return (
+    <div className="mt-4 rounded-xl bg-muted p-3 text-sm" role="status">
+      <p className="font-medium">Restore dry run {result.isValid ? "passed" : "found errors"}</p>
+      <p className="mt-1 text-muted-foreground">
+        {result.totalCount} records checked • {result.validCount} valid • {result.invalidCount} invalid • {result.duplicateCount} duplicates • {result.warningsCount} warnings
+      </p>
+      <dl className="mt-3 grid gap-2 sm:grid-cols-3">
+        <div><dt className="text-xs uppercase text-muted-foreground">Media</dt><dd className="font-semibold">{result.countsByKind.media ?? 0}</dd></div>
+        <div><dt className="text-xs uppercase text-muted-foreground">Candidates</dt><dd className="font-semibold">{result.countsByKind.candidate ?? 0}</dd></div>
+        <div><dt className="text-xs uppercase text-muted-foreground">Queue</dt><dd className="font-semibold">{result.countsByKind.queue ?? 0}</dd></div>
+      </dl>
+      {result.errors.length ? <p className="mt-3 text-destructive">{result.errors.join(" ")}</p> : null}
+      {result.warnings.length ? <p className="mt-3 text-muted-foreground">{result.warnings.join(" ")}</p> : null}
+    </div>
   );
 }
 

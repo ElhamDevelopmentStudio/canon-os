@@ -1,4 +1,4 @@
-import type { ExportFormat, ImportItemStatus, ImportSourceType } from "@canonos/contracts";
+import type { ExportFormat, ExportStatus, ImportBatchStatus, ImportItemStatus, ImportSourceType } from "@canonos/contracts";
 
 export const importSourceTypeLabels: Record<ImportSourceType, string> = {
   csv: "CSV media list",
@@ -16,4 +16,21 @@ export const importStatusLabels: Record<ImportItemStatus, string> = {
   duplicate: "Duplicate",
   imported: "Imported",
   skipped: "Skipped",
+  rolled_back: "Rolled back",
+};
+
+export const importBatchStatusLabels: Record<ImportBatchStatus, string> = {
+  previewed: "Previewed",
+  processing: "Processing",
+  confirmed: "Confirmed",
+  rejected: "Rejected",
+  rolled_back: "Rolled back",
+  failed: "Failed",
+};
+
+export const exportStatusLabels: Record<ExportStatus, string> = {
+  queued: "Queued",
+  processing: "Processing",
+  complete: "Complete",
+  failed: "Failed",
 };

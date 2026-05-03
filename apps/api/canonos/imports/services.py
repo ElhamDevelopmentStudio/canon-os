@@ -3,9 +3,10 @@ from __future__ import annotations
 import csv
 import io
 import json
+import uuid
 from collections.abc import Iterable
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 from datetime import timezone as datetime_timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any, Protocol
@@ -17,6 +18,8 @@ from django.utils import timezone
 from canonos.accounts.models import UserProfile, UserSettings
 from canonos.aftertaste.models import AftertasteEntry
 from canonos.candidates.models import Candidate, CandidateEvaluation
+from canonos.jobs.models import BackgroundJob
+from canonos.jobs.services import upsert_background_job
 from canonos.media.models import MediaItem
 from canonos.queueing.models import QueueItem, TonightModeSession
 from canonos.taste.models import MediaScore, TasteDimension
@@ -27,11 +30,19 @@ from .models import ExportJob, ImportBatch, ImportItem
 
 class UploadedImportFile(Protocol):
     name: str
+    size: int
+    content_type: str
 
     def read(self) -> bytes | str: ...
 
 
 CANONOS_EXPORT_VERSION = "canonos.export.v1"
+MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024
+EXPORT_RETENTION_DAYS = 30
+SUPPORTED_IMPORT_EXTENSIONS = {
+    ImportBatch.SourceType.CSV: {".csv"},
+    ImportBatch.SourceType.JSON: {".json"},
+}
 SUPPORTED_CSV_COLUMNS = [
     "title",
     "media_type",
@@ -139,6 +150,7 @@ class ParsedItem:
     errors: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     action: str = "create"
+    duplicate_of_media_item_id: uuid.UUID | None = None
 
     @property
     def status(self) -> str:
@@ -156,6 +168,96 @@ def _read_text(uploaded_file: UploadedImportFile | None = None, content: str | N
         raise ValueError("Upload a file or provide content.")
     raw = uploaded_file.read()
     return raw.decode("utf-8-sig") if isinstance(raw, bytes) else str(raw)
+
+
+def _content_size_bytes(content: str | None) -> int:
+    return len(content.encode("utf-8")) if content is not None else 0
+
+
+def _uploaded_file_size(uploaded_file: UploadedImportFile | None) -> int:
+    if uploaded_file is None:
+        return 0
+    return int(getattr(uploaded_file, "size", 0) or 0)
+
+
+def _validate_import_source(
+    *,
+    source_type: str,
+    uploaded_file: UploadedImportFile | None,
+    content: str | None,
+    original_filename: str,
+) -> None:
+    size_bytes = _uploaded_file_size(uploaded_file) or _content_size_bytes(content)
+    if size_bytes > MAX_IMPORT_FILE_SIZE_BYTES:
+        max_mb = MAX_IMPORT_FILE_SIZE_BYTES // (1024 * 1024)
+        raise ValueError(f"Import files must be {max_mb} MB or smaller.")
+
+    filename = original_filename or getattr(uploaded_file, "name", "")
+    if uploaded_file is None or not filename:
+        return
+
+    lowered = filename.lower()
+    allowed_extensions = SUPPORTED_IMPORT_EXTENSIONS.get(source_type, set())
+    if allowed_extensions and not any(
+        lowered.endswith(extension) for extension in allowed_extensions
+    ):
+        expected = ", ".join(sorted(allowed_extensions))
+        raise ValueError(f"{source_type.upper()} imports must use {expected} files.")
+
+
+def _progress_percent(processed: int, total: int) -> int:
+    if total <= 0:
+        return 100
+    return min(100, round((processed / total) * 100))
+
+
+def _set_import_progress(batch: ImportBatch, *, processed: int, total: int) -> None:
+    batch.progress_processed = processed
+    batch.progress_total = total
+    batch.progress_percent = _progress_percent(processed, total)
+    batch.save(update_fields=["progress_processed", "progress_total", "progress_percent"])
+
+
+def _duplicate_key(
+    title: str, media_type: str | None, release_year: int | None = None
+) -> tuple[str, str, int | None]:
+    return (title.strip().casefold(), media_type or "", release_year)
+
+
+def _find_existing_media_duplicate(
+    user: User, title: str, media_type: str | None, release_year: int | None
+) -> MediaItem | None:
+    if not title or not media_type:
+        return None
+    queryset = MediaItem.objects.filter(owner=user, title__iexact=title, media_type=media_type)
+    if release_year is not None:
+        exact_year = queryset.filter(release_year=release_year).first()
+        if exact_year is not None:
+            return exact_year
+    return queryset.first()
+
+
+def _apply_intra_import_duplicate_detection(items: list[ParsedItem]) -> None:
+    seen: dict[tuple[str, str, int | None], ParsedItem] = {}
+    for item in items:
+        if item.errors or item.kind != ImportItem.ItemKind.MEDIA:
+            continue
+        key = _duplicate_key(
+            item.title,
+            item.payload.get("media_type"),
+            item.payload.get("release_year"),
+        )
+        if key[0] == "" or key[1] == "":
+            continue
+        previous = seen.get(key)
+        if previous is not None:
+            item.action = "skip_duplicate"
+            item.warnings.append(
+                f"Duplicate of row {previous.row_number} in this import; "
+                "confirm will skip this row."
+            )
+            continue
+        seen[key] = item
 
 
 def _clean(value: object) -> str:
@@ -277,13 +379,8 @@ def _build_media_payload(row: dict[str, Any], user: User, row_number: int) -> Pa
             )
 
     action = "create"
-    if (
-        title
-        and media_type
-        and MediaItem.objects.filter(
-            owner=user, title__iexact=title, media_type=media_type
-        ).exists()
-    ):
+    duplicate = _find_existing_media_duplicate(user, title, media_type, payload.get("release_year"))
+    if duplicate is not None:
         action = "skip_duplicate"
         warnings.append("Duplicate library item already exists; confirm will skip this row.")
 
@@ -295,6 +392,7 @@ def _build_media_payload(row: dict[str, Any], user: User, row_number: int) -> Pa
         errors=errors,
         warnings=warnings,
         action=action,
+        duplicate_of_media_item_id=duplicate.id if duplicate is not None else None,
     )
 
 
@@ -426,13 +524,8 @@ def _validate_json_media(item: dict[str, Any], user: User, row_number: int) -> P
             )
 
     action = "create"
-    if (
-        title
-        and media_type
-        and MediaItem.objects.filter(
-            owner=user, title__iexact=title, media_type=media_type
-        ).exists()
-    ):
+    duplicate = _find_existing_media_duplicate(user, title, media_type, payload.get("release_year"))
+    if duplicate is not None:
         action = "skip_duplicate"
         warnings.append("Duplicate library item already exists; confirm will skip this row.")
 
@@ -444,6 +537,7 @@ def _validate_json_media(item: dict[str, Any], user: User, row_number: int) -> P
         errors=errors,
         warnings=warnings,
         action=action,
+        duplicate_of_media_item_id=duplicate.id if duplicate is not None else None,
     )
 
 
@@ -534,9 +628,16 @@ def create_import_preview(
     original_filename: str = "",
 ) -> ImportBatch:
     source_type = source_type.lower()
-    text = _read_text(uploaded_file, content)
     if uploaded_file is not None and not original_filename:
         original_filename = getattr(uploaded_file, "name", "")
+    _validate_import_source(
+        source_type=source_type,
+        uploaded_file=uploaded_file,
+        content=content,
+        original_filename=original_filename,
+    )
+    text = _read_text(uploaded_file, content)
+    file_size_bytes = _uploaded_file_size(uploaded_file) or _content_size_bytes(content)
 
     if source_type == ImportBatch.SourceType.CSV:
         parsed_items = parse_csv_import(text, user)
@@ -552,6 +653,8 @@ def create_import_preview(
     else:
         raise ValueError("sourceType must be csv or json.")
 
+    _apply_intra_import_duplicate_detection(parsed_items)
+
     valid_count = sum(1 for item in parsed_items if item.status == ImportItem.ItemStatus.VALID)
     invalid_count = sum(1 for item in parsed_items if item.status == ImportItem.ItemStatus.INVALID)
     duplicate_count = sum(
@@ -563,6 +666,11 @@ def create_import_preview(
         owner=user,
         source_type=source_type,
         original_filename=original_filename,
+        uploaded_file_reference=original_filename or "inline-content",
+        file_size_bytes=file_size_bytes,
+        progress_total=len(parsed_items),
+        progress_processed=0,
+        progress_percent=0,
         valid_count=valid_count,
         invalid_count=invalid_count,
         duplicate_count=duplicate_count,
@@ -581,9 +689,26 @@ def create_import_preview(
                 payload=item.payload,
                 errors=item.errors,
                 warnings=item.warnings,
+                duplicate_of_media_item_id=item.duplicate_of_media_item_id,
             )
             for item in parsed_items
         ]
+    )
+    upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.IMPORT,
+        source_id=batch.id,
+        source_label=batch.original_filename or "inline import",
+        status=BackgroundJob.Status.QUEUED,
+        progress_total=len(parsed_items),
+        progress_processed=0,
+        progress_percent=0,
+        message="Import preview ready for confirmation.",
+        result={
+            "importBatchId": str(batch.id),
+            "validCount": valid_count,
+            "duplicateCount": duplicate_count,
+        },
     )
     return batch
 
@@ -700,36 +825,257 @@ def confirm_import_batch(*, user: User, batch: ImportBatch) -> ImportBatch:
         raise ValueError("Import batch not found.")
     if batch.status == ImportBatch.Status.CONFIRMED:
         return batch
+    if batch.status == ImportBatch.Status.ROLLED_BACK:
+        raise ValueError("This import has already been rolled back.")
     if batch.invalid_count:
         raise ValueError("Fix invalid rows before confirming this import.")
 
     if batch.source_type == ImportBatch.SourceType.JSON:
         apply_profile_and_settings_from_export(user, {"data": batch.raw_preview})
 
+    items = list(batch.items.select_for_update().order_by("row_number"))
+    batch.status = ImportBatch.Status.PROCESSING
+    batch.progress_total = len(items)
+    batch.progress_processed = 0
+    batch.progress_percent = 0
+    batch.error_message = ""
+    batch.save(
+        update_fields=[
+            "status",
+            "progress_total",
+            "progress_processed",
+            "progress_percent",
+            "error_message",
+        ]
+    )
+    upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.IMPORT,
+        source_id=batch.id,
+        source_label=batch.original_filename or "inline import",
+        status=BackgroundJob.Status.PROCESSING,
+        progress_total=len(items),
+        progress_processed=0,
+        progress_percent=0,
+        message="Import confirmation is processing.",
+        result={"importBatchId": str(batch.id)},
+    )
+
     created_count = 0
-    for item in batch.items.select_for_update().order_by("row_number"):
-        if item.status == ImportItem.ItemStatus.DUPLICATE:
-            item.status = ImportItem.ItemStatus.SKIPPED
-            item.save(update_fields=["status"])
-            continue
-        if item.status != ImportItem.ItemStatus.VALID:
-            continue
-        if item.kind == ImportItem.ItemKind.MEDIA:
-            created = _create_media_from_payload(user, item.payload)
-            item.created_media_item = created
-        elif item.kind == ImportItem.ItemKind.CANDIDATE:
-            _create_candidate_from_payload(user, item.payload)
-        elif item.kind == ImportItem.ItemKind.QUEUE:
-            _create_queue_item_from_payload(user, item.payload)
-        item.status = ImportItem.ItemStatus.IMPORTED
-        item.save(update_fields=["status", "created_media_item"])
-        created_count += 1
+    processed_count = 0
+    try:
+        for item in items:
+            if item.status == ImportItem.ItemStatus.DUPLICATE:
+                item.status = ImportItem.ItemStatus.SKIPPED
+                item.save(update_fields=["status"])
+            elif item.status == ImportItem.ItemStatus.VALID:
+                created_object_id: uuid.UUID | None = None
+                if item.kind == ImportItem.ItemKind.MEDIA:
+                    created = _create_media_from_payload(user, item.payload)
+                    item.created_media_item = created
+                    created_object_id = created.id
+                elif item.kind == ImportItem.ItemKind.CANDIDATE:
+                    created_candidate = _create_candidate_from_payload(user, item.payload)
+                    created_object_id = created_candidate.id
+                elif item.kind == ImportItem.ItemKind.QUEUE:
+                    created_queue_item = _create_queue_item_from_payload(user, item.payload)
+                    created_object_id = created_queue_item.id
+
+                item.created_object_id = created_object_id
+                item.status = ImportItem.ItemStatus.IMPORTED
+                item.save(update_fields=["status", "created_media_item", "created_object_id"])
+                created_count += 1
+
+            processed_count += 1
+            _set_import_progress(batch, processed=processed_count, total=len(items))
+            upsert_background_job(
+                owner=user,
+                job_type=BackgroundJob.JobType.IMPORT,
+                source_id=batch.id,
+                source_label=batch.original_filename or "inline import",
+                status=BackgroundJob.Status.PROCESSING,
+                progress_total=len(items),
+                progress_processed=processed_count,
+                progress_percent=batch.progress_percent,
+                message="Import confirmation is processing.",
+                result={"importBatchId": str(batch.id)},
+            )
+    except Exception as exc:
+        batch.status = ImportBatch.Status.FAILED
+        batch.error_message = str(exc)
+        batch.processed_at = timezone.now()
+        batch.save(update_fields=["status", "error_message", "processed_at"])
+        upsert_background_job(
+            owner=user,
+            job_type=BackgroundJob.JobType.IMPORT,
+            source_id=batch.id,
+            source_label=batch.original_filename or "inline import",
+            status=BackgroundJob.Status.FAILED,
+            progress_total=len(items),
+            progress_processed=processed_count,
+            progress_percent=batch.progress_percent,
+            message=str(exc),
+            result={"importBatchId": str(batch.id)},
+        )
+        raise
 
     batch.status = ImportBatch.Status.CONFIRMED
     batch.created_count = created_count
     batch.confirmed_at = timezone.now()
-    batch.save(update_fields=["status", "created_count", "confirmed_at"])
+    batch.processed_at = batch.confirmed_at
+    batch.progress_total = len(items)
+    batch.progress_processed = len(items)
+    batch.progress_percent = 100
+    batch.save(
+        update_fields=[
+            "status",
+            "created_count",
+            "confirmed_at",
+            "processed_at",
+            "progress_total",
+            "progress_processed",
+            "progress_percent",
+        ]
+    )
+    upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.IMPORT,
+        source_id=batch.id,
+        source_label=batch.original_filename or "inline import",
+        status=BackgroundJob.Status.COMPLETE,
+        progress_total=len(items),
+        progress_processed=len(items),
+        progress_percent=100,
+        message=f"Import complete. Created {created_count} records.",
+        result={"importBatchId": str(batch.id), "createdCount": created_count},
+    )
     return batch
+
+
+def _delete_created_import_item(user: User, item: ImportItem) -> int:
+    if item.created_object_id is None:
+        return 0
+    if item.kind == ImportItem.ItemKind.MEDIA:
+        deleted, _ = MediaItem.objects.filter(owner=user, id=item.created_object_id).delete()
+        return deleted
+    if item.kind == ImportItem.ItemKind.CANDIDATE:
+        deleted, _ = Candidate.objects.filter(owner=user, id=item.created_object_id).delete()
+        return deleted
+    if item.kind == ImportItem.ItemKind.QUEUE:
+        deleted, _ = QueueItem.objects.filter(owner=user, id=item.created_object_id).delete()
+        return deleted
+    return 0
+
+
+@transaction.atomic
+def rollback_import_batch(*, user: User, batch: ImportBatch) -> dict[str, Any]:
+    if batch.owner_id != user.id:
+        raise ValueError("Import batch not found.")
+    if batch.status == ImportBatch.Status.ROLLED_BACK:
+        raise ValueError("This import has already been rolled back.")
+    if batch.status != ImportBatch.Status.CONFIRMED:
+        raise ValueError("Only confirmed imports can be rolled back.")
+
+    removed_by_kind = {"media": 0, "candidate": 0, "queue": 0}
+    removed_count = 0
+    items = list(batch.items.select_for_update().filter(status=ImportItem.ItemStatus.IMPORTED))
+    try:
+        for item in items:
+            deleted_count = _delete_created_import_item(user, item)
+            if deleted_count:
+                removed_by_kind[item.kind] = removed_by_kind.get(item.kind, 0) + deleted_count
+                removed_count += deleted_count
+            item.status = ImportItem.ItemStatus.ROLLED_BACK
+            item.created_media_item = None
+            item.save(update_fields=["status", "created_media_item"])
+    except Exception as exc:
+        batch.rollback_error_message = str(exc)
+        batch.save(update_fields=["rollback_error_message"])
+        raise
+
+    batch.status = ImportBatch.Status.ROLLED_BACK
+    batch.rollback_item_count = removed_count
+    batch.rollback_error_message = ""
+    batch.rolled_back_at = timezone.now()
+    batch.save(
+        update_fields=[
+            "status",
+            "rollback_item_count",
+            "rollback_error_message",
+            "rolled_back_at",
+        ]
+    )
+    upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.IMPORT,
+        source_id=batch.id,
+        source_label=batch.original_filename or "inline import",
+        status=BackgroundJob.Status.ROLLED_BACK,
+        progress_total=batch.progress_total,
+        progress_processed=batch.progress_processed,
+        progress_percent=100,
+        message=f"Import rolled back. Removed {removed_count} records.",
+        result={"importBatchId": str(batch.id), "removedCount": removed_count},
+    )
+    return {
+        "batch": batch,
+        "removedCount": removed_count,
+        "mediaItemsRemoved": removed_by_kind.get("media", 0),
+        "candidatesRemoved": removed_by_kind.get("candidate", 0),
+        "queueItemsRemoved": removed_by_kind.get("queue", 0),
+    }
+
+
+def validate_export_restore(
+    *,
+    user: User,
+    uploaded_file: UploadedImportFile | None = None,
+    content: str | None = None,
+    original_filename: str = "",
+) -> dict[str, Any]:
+    if uploaded_file is not None and not original_filename:
+        original_filename = getattr(uploaded_file, "name", "")
+    _validate_import_source(
+        source_type=ImportBatch.SourceType.JSON,
+        uploaded_file=uploaded_file,
+        content=content,
+        original_filename=original_filename,
+    )
+    text = _read_text(uploaded_file, content)
+    parsed_items, document = parse_json_import(text, user)
+    _apply_intra_import_duplicate_detection(parsed_items)
+
+    version = document.get("version") if isinstance(document, dict) else None
+    warnings: list[str] = []
+    if version != CANONOS_EXPORT_VERSION:
+        warnings.append(
+            f"Backup version {version or 'unknown'} differs from supported "
+            f"{CANONOS_EXPORT_VERSION}."
+        )
+
+    errors = [error for item in parsed_items for error in item.errors]
+    warning_messages = [warning for item in parsed_items for warning in item.warnings]
+    counts_by_kind = {kind: 0 for kind, _label in ImportItem.ItemKind.choices}
+    for item in parsed_items:
+        counts_by_kind[item.kind] = counts_by_kind.get(item.kind, 0) + 1
+
+    result = {
+        "version": version or "unknown",
+        "isValid": not errors,
+        "totalCount": len(parsed_items),
+        "validCount": sum(1 for item in parsed_items if item.status == ImportItem.ItemStatus.VALID),
+        "invalidCount": sum(
+            1 for item in parsed_items if item.status == ImportItem.ItemStatus.INVALID
+        ),
+        "duplicateCount": sum(
+            1 for item in parsed_items if item.status == ImportItem.ItemStatus.DUPLICATE
+        ),
+        "warningsCount": len(warnings) + len(warning_messages),
+        "countsByKind": counts_by_kind,
+        "errors": errors,
+        "warnings": [*warnings, *warning_messages],
+    }
+    return result
 
 
 def _serialize_score(score: MediaScore) -> dict[str, Any]:
@@ -953,30 +1299,122 @@ def count_export_records(payload: dict[str, Any]) -> int:
     )
 
 
+def _finish_export_job(
+    *,
+    job: ExportJob,
+    payload_text: str,
+    record_count: int,
+    content_type: str,
+    filename: str,
+) -> ExportJob:
+    job.filename = filename
+    job.content_type = content_type
+    job.payload_text = payload_text
+    job.record_count = record_count
+    job.status = ExportJob.Status.COMPLETE
+    job.progress_total = max(record_count, 1)
+    job.progress_processed = max(record_count, 1)
+    job.progress_percent = 100
+    job.file_size_bytes = len(payload_text.encode("utf-8"))
+    job.retention_expires_at = timezone.now() + timedelta(days=EXPORT_RETENTION_DAYS)
+    job.processed_at = timezone.now()
+    job.error_message = ""
+    job.save(
+        update_fields=[
+            "filename",
+            "content_type",
+            "payload_text",
+            "record_count",
+            "status",
+            "progress_total",
+            "progress_processed",
+            "progress_percent",
+            "file_size_bytes",
+            "retention_expires_at",
+            "processed_at",
+            "error_message",
+        ]
+    )
+    upsert_background_job(
+        owner=job.owner,
+        job_type=BackgroundJob.JobType.EXPORT,
+        source_id=job.id,
+        source_label=job.filename,
+        status=BackgroundJob.Status.COMPLETE,
+        progress_total=job.progress_total,
+        progress_processed=job.progress_processed,
+        progress_percent=100,
+        message=f"Export complete. {record_count} records ready for download.",
+        result={"exportJobId": str(job.id), "recordCount": record_count},
+    )
+    return job
+
+
 def create_export_job(*, user: User, export_format: str) -> ExportJob:
     export_format = export_format.lower()
     timestamp = timezone.now().strftime("%Y%m%d-%H%M%S")
-    if export_format == ExportJob.Format.JSON:
-        payload = build_full_json_export(user)
-        return ExportJob.objects.create(
+    job = ExportJob.objects.create(
+        owner=user,
+        format=export_format,
+        status=ExportJob.Status.PROCESSING,
+        filename=f"canonos-export-{timestamp}.{export_format}",
+        content_type="application/octet-stream",
+        progress_total=1,
+        progress_processed=0,
+        progress_percent=0,
+        retention_expires_at=timezone.now() + timedelta(days=EXPORT_RETENTION_DAYS),
+    )
+    upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.EXPORT,
+        source_id=job.id,
+        source_label=job.filename,
+        status=BackgroundJob.Status.PROCESSING,
+        progress_total=1,
+        progress_processed=0,
+        progress_percent=0,
+        message="Export generation is processing.",
+        result={"exportJobId": str(job.id), "format": export_format},
+    )
+    try:
+        if export_format == ExportJob.Format.JSON:
+            payload = build_full_json_export(user)
+            payload_text = json.dumps(payload, indent=2, sort_keys=True)
+            return _finish_export_job(
+                job=job,
+                payload_text=payload_text,
+                record_count=count_export_records(payload),
+                content_type="application/json",
+                filename=f"canonos-export-{timestamp}.json",
+            )
+        if export_format == ExportJob.Format.CSV:
+            payload_text = build_media_csv_export(user)
+            return _finish_export_job(
+                job=job,
+                payload_text=payload_text,
+                record_count=max(0, len(payload_text.splitlines()) - 1),
+                content_type="text/csv",
+                filename=f"canonos-media-export-{timestamp}.csv",
+            )
+        raise ValueError("format must be json or csv.")
+    except Exception as exc:
+        job.status = ExportJob.Status.FAILED
+        job.error_message = str(exc)
+        job.processed_at = timezone.now()
+        job.save(update_fields=["status", "error_message", "processed_at"])
+        upsert_background_job(
             owner=user,
-            format=export_format,
-            filename=f"canonos-export-{timestamp}.json",
-            content_type="application/json",
-            payload_text=json.dumps(payload, indent=2, sort_keys=True),
-            record_count=count_export_records(payload),
+            job_type=BackgroundJob.JobType.EXPORT,
+            source_id=job.id,
+            source_label=job.filename,
+            status=BackgroundJob.Status.FAILED,
+            progress_total=job.progress_total,
+            progress_processed=job.progress_processed,
+            progress_percent=job.progress_percent,
+            message=str(exc),
+            result={"exportJobId": str(job.id), "format": export_format},
         )
-    if export_format == ExportJob.Format.CSV:
-        payload_text = build_media_csv_export(user)
-        return ExportJob.objects.create(
-            owner=user,
-            format=export_format,
-            filename=f"canonos-media-export-{timestamp}.csv",
-            content_type="text/csv",
-            payload_text=payload_text,
-            record_count=max(0, len(payload_text.splitlines()) - 1),
-        )
-    raise ValueError("format must be json or csv.")
+        raise
 
 
 def apply_profile_and_settings_from_export(user: User, document: dict[str, Any]) -> None:

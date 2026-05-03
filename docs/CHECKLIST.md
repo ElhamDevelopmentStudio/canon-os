@@ -2417,54 +2417,54 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M13-SH-001 Extend import job type with async progress fields.
-- [ ] CP-M13-SH-002 Extend export job type with async progress fields.
-- [ ] CP-M13-SH-003 Define import rollback result type.
-- [ ] CP-M13-SH-004 Document advanced import/export limits and restore steps.
+- [x] CP-M13-SH-001 Extend import job type with async progress fields.
+- [x] CP-M13-SH-002 Extend export job type with async progress fields.
+- [x] CP-M13-SH-003 Define import rollback result type.
+- [x] CP-M13-SH-004 Document advanced import/export limits and restore steps.
 
 ### Backend Tasks
 
-- [ ] CP-M13-BE-001 Add uploaded file storage reference to ImportBatch.
-- [ ] CP-M13-BE-002 Add import rollback metadata.
-- [ ] CP-M13-BE-003 Add export file retention metadata.
-- [ ] CP-M13-BE-004 Add duplicate detection across imports.
-- [ ] CP-M13-BE-005 Add import rollback service.
-- [ ] CP-M13-BE-006 Add export restore validation service.
-- [ ] CP-M13-BE-007 Add Celery task for large import execution.
-- [ ] CP-M13-BE-008 Add Celery task for large export generation.
-- [ ] CP-M13-BE-009 Connect import/export jobs to BackgroundJob records.
-- [ ] CP-M13-BE-010 Add import rollback endpoint.
-- [ ] CP-M13-BE-011 Add export restore dry-run endpoint.
-- [ ] CP-M13-BE-012 Add file size and file type validation.
-- [ ] CP-M13-BE-013 Add test for duplicate import detection.
-- [ ] CP-M13-BE-014 Add test for import rollback.
-- [ ] CP-M13-BE-015 Add test for large import job progress.
-- [ ] CP-M13-BE-016 Add test for export restore dry run.
+- [x] CP-M13-BE-001 Add uploaded file storage reference to ImportBatch.
+- [x] CP-M13-BE-002 Add import rollback metadata.
+- [x] CP-M13-BE-003 Add export file retention metadata.
+- [x] CP-M13-BE-004 Add duplicate detection across imports.
+- [x] CP-M13-BE-005 Add import rollback service.
+- [x] CP-M13-BE-006 Add export restore validation service.
+- [x] CP-M13-BE-007 Add Celery task for large import execution.
+- [x] CP-M13-BE-008 Add Celery task for large export generation.
+- [x] CP-M13-BE-009 Connect import/export jobs to BackgroundJob records.
+- [x] CP-M13-BE-010 Add import rollback endpoint.
+- [x] CP-M13-BE-011 Add export restore dry-run endpoint.
+- [x] CP-M13-BE-012 Add file size and file type validation.
+- [x] CP-M13-BE-013 Add test for duplicate import detection.
+- [x] CP-M13-BE-014 Add test for import rollback.
+- [x] CP-M13-BE-015 Add test for large import job progress.
+- [x] CP-M13-BE-016 Add test for export restore dry run.
 
 ### Frontend Tasks
 
-- [ ] CP-M13-FE-001 Add import history list.
-- [ ] CP-M13-FE-002 Add import rollback action.
-- [ ] CP-M13-FE-003 Add import job progress display.
-- [ ] CP-M13-FE-004 Add export job progress display.
-- [ ] CP-M13-FE-005 Add duplicate warning review UI.
-- [ ] CP-M13-FE-006 Add restore dry-run result display.
-- [ ] CP-M13-FE-007 Add file size/type error states.
+- [x] CP-M13-FE-001 Add import history list.
+- [x] CP-M13-FE-002 Add import rollback action.
+- [x] CP-M13-FE-003 Add import job progress display.
+- [x] CP-M13-FE-004 Add export job progress display.
+- [x] CP-M13-FE-005 Add duplicate warning review UI.
+- [x] CP-M13-FE-006 Add restore dry-run result display.
+- [x] CP-M13-FE-007 Add file size/type error states.
 
 ### Integration Tasks
 
-- [ ] CP-M13-INT-001 Connect import/export jobs to shared job status UI.
-- [ ] CP-M13-INT-002 Connect rollback action to rollback endpoint.
-- [ ] CP-M13-INT-003 Connect restore dry run to validation endpoint.
-- [ ] CP-M13-INT-004 Refresh Library after rollback completes.
+- [x] CP-M13-INT-001 Connect import/export jobs to shared job status UI.
+- [x] CP-M13-INT-002 Connect rollback action to rollback endpoint.
+- [x] CP-M13-INT-003 Connect restore dry run to validation endpoint.
+- [x] CP-M13-INT-004 Refresh Library after rollback completes.
 
 ### QA Tasks
 
-- [ ] CP-M13-QA-001 Import at least 500 media items.
-- [ ] CP-M13-QA-002 Roll back an import and confirm records are removed.
-- [ ] CP-M13-QA-003 Run export restore dry run.
-- [ ] CP-M13-QA-004 Confirm invalid file types are rejected clearly.
-- [ ] CP-M13-QA-005 Confirm import/export manual test doc covers rollback and restore.
+- [x] CP-M13-QA-001 Import at least 500 media items.
+- [x] CP-M13-QA-002 Roll back an import and confirm records are removed.
+- [x] CP-M13-QA-003 Run export restore dry run.
+- [x] CP-M13-QA-004 Confirm invalid file types are rejected clearly.
+- [x] CP-M13-QA-005 Confirm import/export manual test doc covers rollback and restore.
 
 ---
 
@@ -3000,9 +3000,9 @@ The MVP is done only when:
 - [x] A user can view a basic Taste Profile.
 - [ ] A user can view a useful Dashboard.
 - [x] A user can update basic Settings.
-- [ ] A user can import a CSV or JSON media history with validation preview.
-- [ ] A user can export all owned data as JSON.
-- [ ] A user can export media library and ratings as CSV.
+- [x] A user can import a CSV or JSON media history with validation preview.
+- [x] A user can export all owned data as JSON.
+- [x] A user can export media library and ratings as CSV.
 - [ ] API docs are available through Swagger/OpenAPI and Scalar.
 - [ ] The frontend uses the shared layout consistently.
 - [ ] The backend prevents cross-user data leakage.
@@ -3025,7 +3025,7 @@ The complete product is done only when:
 - [ ] Completion Detox can recommend dropping/pausing and track time saved.
 - [ ] Personal Canon Builder can create exploration seasons.
 - [ ] Cross-Medium Adaptation Intelligence can store relations and recommend experience order.
-- [ ] Import/export works.
+- [x] Import/export works.
 - [ ] Command palette and advanced search work.
 - [ ] Background jobs have visible status.
 - [ ] Analytics/Insights page works.
@@ -3044,16 +3044,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M10-QA-004.
-**Last completed task name:** Disable a detox rule and confirm behavior changes.
-**Last completed milestone:** CP-M10 — Completion Detox System.
+**Last completed task ID:** CP-M13-QA-005.
+**Last completed task name:** Confirm import/export manual test doc covers rollback and restore.
+**Last completed milestone:** CP-M13 — Advanced Import, Export, And Data Portability.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M11 — Personal Canon Builder.
-**Next recommended task:** CP-M11-SH-001 Define `CanonSeason` type.
+**Current milestone:** CP-M14 — Advanced Search, Filters, And Command Palette.
+**Next recommended task:** CP-M14-BE-001 Add unified search endpoint.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M10 Completion Detox System is complete. Shared contracts now define DetoxRule, DetoxDecision, TimeSavedEntry, evaluation requests/responses, rule list responses, and time-saved summaries. Backend work adds the owner-scoped detox app, DetoxRule and DetoxDecision models/migration/admin, default movie/TV/anime/novel sample rules, deterministic evaluation service, rules/evaluate/decisions/time-saved endpoints, API root/schema coverage, and backend tests for seeding, evaluation, disabled-rule behavior, owner scoping, and time saved. Frontend work adds the `/completion-detox` route/sidebar entry, detox API client, time-saved metrics, active rule toggles, evaluation form, decision result actions, decision history, Media Detail checkpoint warning, docs/manual tests, and Playwright browser-to-backend coverage for drop recommendations, marking media dropped, time saved, and disabled-rule continue behavior.
+CP-M13 Advanced Import, Export, And Data Portability is complete. Shared contracts now expose import/export progress metadata, rollback results, restore dry-run results, expanded statuses, duplicate references, and created object IDs. Backend work extends ImportBatch/ImportItem/ExportJob with migration-backed progress, file metadata, retention, duplicate, rollback, and restore validation fields; adds file size/type validation, same-import and existing-library duplicate detection, import rollback, restore dry-run validation, owner-scoped import/export history endpoints, rollback and restore endpoints, BackgroundJob records/endpoints for import/export jobs, Celery task wrappers, and API tests for duplicates, rollback, 500-row progress, restore dry run, and invalid file handling. Frontend work adds Settings import/export job progress, import history, rollback actions, duplicate warning review, export history, restore dry-run UI, invalid file error states, browser e2e coverage, and updated docs/manual tests.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3067,4 +3067,4 @@ CP-M10 Completion Detox System is complete. Shared contracts now define DetoxRul
 - Every new data model should have migration, serializer, API behavior, and tests where relevant.
 - Every new frontend feature should have loading, empty, and error handling where relevant.
 - Every user-facing feature milestone should add or update its manual test doc under `docs/manual-tests/`.
-- MVP import/export is now required before MVP acceptance, while CP-M13 is reserved for advanced portability hardening.
+- CP-M14 is next: build unified advanced search and filters without regressing the Settings portability flows.

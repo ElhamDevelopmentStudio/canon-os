@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "canonos.graph",
     "canonos.health",
     "canonos.imports",
+    "canonos.jobs",
     "canonos.media",
     "canonos.metadata",
     "canonos.narrative",

@@ -327,7 +327,7 @@ The endpoint is user-scoped and must not include another user's media, scores, o
 
 ## Import / Export API Contract
 
-CanonOS supports local data portability through authenticated, CSRF-protected endpoints. Browser flows must preview imports before writing data and must offer export before future destructive account actions.
+CanonOS supports local data portability through authenticated, CSRF-protected endpoints. Browser flows must preview imports before writing data, surface job progress, support rollback for confirmed imports, and validate restores before applying backup content.
 
 ### Supported CSV import columns
 
@@ -340,6 +340,15 @@ CSV import is media-first for the MVP. The header row may include:
 - Optional score fields: `score_<taste_dimension_slug>` and `score_note_<taste_dimension_slug>`.
 
 `media_type` accepts `movie`, `tv_show`, `anime`, `novel`, and `audiobook`, plus common labels like `film`, `tv show`, `series`, `book`, and `audio book`. `status` defaults to `planned` and accepts `planned`, `consuming`, `completed`, `paused`, and `dropped`, plus common aliases like `finished`, `watching`, and `on hold`.
+
+### Limits, validation, and duplicate handling
+
+- CSV files must use `.csv`; JSON files must use `.json`.
+- Import files and inline import/restore payloads are limited to 2 MB.
+- Import preview detects duplicates already in the user's library and duplicate rows inside the same import. Duplicate rows are reported with warnings and skipped on confirm.
+- The import job payload includes `progressTotal`, `progressProcessed`, `progressPercent`, `uploadedFileReference`, `fileSizeBytes`, `errorMessage`, and rollback metadata.
+- The export job payload includes `progressTotal`, `progressProcessed`, `progressPercent`, `fileSizeBytes`, `retentionExpiresAt`, `processedAt`, and `errorMessage`.
+- Import and export processing also upserts owner-scoped `BackgroundJob` records with job type, status, progress, message, result JSON, and source IDs.
 
 ### Full-fidelity JSON export/import format
 
@@ -362,23 +371,30 @@ CSV import is media-first for the MVP. The header row may include:
 }
 ```
 
-JSON import accepts this export shape and recreates implemented user-owned MVP records into the importing account. Existing database IDs are treated as historical export metadata; new local IDs are generated.
+JSON import accepts this export shape and recreates implemented user-owned records into the importing account. Existing database IDs are treated as historical export metadata; new local IDs are generated.
 
-### Import validation and no-partial-write rule
+### Import validation, rollback, and restore dry run
 
 1. `POST /api/imports/preview/` accepts multipart or JSON input with `sourceType` (`csv` or `json`) and a file/content payload.
-2. The response returns an `ImportBatch` with per-row `ImportItemPreview` statuses: `valid`, `invalid`, or `duplicate`.
+2. The response returns an `ImportBatch` with per-row `ImportItemPreview` statuses: `valid`, `invalid`, `duplicate`, `imported`, `skipped`, or `rolled_back`.
 3. Invalid rows never modify library data during preview.
-4. `POST /api/imports/{id}/confirm/` is rejected if the batch has any invalid rows.
-5. Confirm runs in a database transaction. Valid rows are committed together, duplicate rows are skipped with warnings, and failed confirmation rolls back the batch.
-6. All import/export records are scoped to the authenticated owner.
+4. `POST /api/imports/{id}/confirm/` is rejected if the batch has invalid rows. Confirm tracks progress, commits valid rows, skips duplicates, and marks the job `confirmed` at 100%.
+5. `POST /api/imports/{id}/rollback/` deletes records created by that confirmed import, marks imported rows `rolled_back`, and refreshes rollback metadata. A rolled-back import cannot be rolled back again.
+6. `POST /api/exports/restore-dry-run/` accepts a JSON backup file/content and returns validity, record counts by kind, duplicate counts, warnings, and errors without writing data.
+7. All import/export records are scoped to the authenticated owner.
 
 ### Endpoints
 
+- `GET /api/imports/` — list recent import jobs for the current user.
 - `POST /api/imports/preview/` — create an import validation preview.
 - `POST /api/imports/{id}/confirm/` — commit a valid import preview.
+- `POST /api/imports/{id}/rollback/` — roll back records created by a confirmed import.
+- `GET /api/exports/` — list recent export jobs for the current user.
 - `POST /api/exports/` — create a `json` or `csv` export job.
+- `POST /api/exports/restore-dry-run/` — validate a JSON backup before restore/import.
 - `GET /api/exports/{id}/download/` — download a completed export owned by the current user.
+- `GET /api/jobs/` — list recent owner-scoped background jobs.
+- `GET /api/jobs/{id}/` — fetch one owner-scoped background job status.
 
 ## External metadata endpoints
 

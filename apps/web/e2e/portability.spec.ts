@@ -1,7 +1,7 @@
 import { test, expect } from "./helpers/fixtures";
 import { registerViaUi } from "./helpers/auth";
 import { uniqueTitle } from "./helpers/data";
-import { expectApiJson, waitForApiResponse } from "./helpers/network";
+import { allowApiFailure, allowConsoleError, expectApiJson, waitForApiResponse } from "./helpers/network";
 
 test.describe("import and export browser-to-backend flow", () => {
   test("previews and confirms CSV import, then exports JSON and CSV backups", async ({ page }) => {
@@ -74,6 +74,81 @@ test.describe("import and export browser-to-backend flow", () => {
     expect(await csvDownload.text()).toContain("score_atmosphere");
     await expect(page.getByText(/Downloaded canonos-media-export/)).toBeVisible();
   });
+
+  test("rolls back a confirmed import and validates restore dry run", async ({ page }) => {
+    await registerViaUi(page);
+    const importedTitle = uniqueTitle("E2E Rollback Media");
+    const restoreTitle = uniqueTitle("E2E Restore Media");
+
+    await page.goto("/settings");
+    await page.getByLabel("Import file").setInputFiles({
+      name: "rollback-import.csv",
+      mimeType: "text/csv",
+      buffer: Buffer.from(`title,media_type,status\n${importedTitle},movie,planned\n`),
+    });
+
+    const previewResponsePromise = waitForApiResponse(page, "POST", "/api/imports/preview/", 201);
+    await page.getByRole("button", { name: "Preview Import" }).click();
+    const preview = await expectApiJson<{ id: string; validCount: number }>(await previewResponsePromise);
+    expect(preview.validCount).toBe(1);
+
+    const confirmResponsePromise = waitForApiResponse(page, "POST", `/api/imports/${preview.id}/confirm/`, 200);
+    await page.getByRole("button", { name: "Confirm Import" }).click();
+    await expectApiJson<{ status: string; progressPercent: number }>(await confirmResponsePromise);
+    await expect(page.getByText("Import job progress")).toBeVisible();
+
+    const rollbackResponsePromise = waitForApiResponse(page, "POST", `/api/imports/${preview.id}/rollback/`, 200);
+    await page.getByRole("button", { name: "Roll Back Import" }).click();
+    const rollback = await expectApiJson<{ removedCount: number; batch: { status: string } }>(await rollbackResponsePromise);
+    expect(rollback.removedCount).toBe(1);
+    expect(rollback.batch.status).toBe("rolled_back");
+    await expect(page.getByText("Import rolled back. Removed 1 records.")).toBeVisible();
+
+    const libraryResponse = waitForApiResponse(page, "GET", "/api/media-items/", 200);
+    await page.goto("/library");
+    await libraryResponse;
+    await expect(page.getByText(importedTitle)).toHaveCount(0);
+
+    await page.goto("/settings");
+    const backup = {
+      version: "canonos.export.v1",
+      data: {
+        mediaItems: [{ title: restoreTitle, mediaType: "movie", status: "planned" }],
+        candidates: [],
+        queueItems: [],
+      },
+    };
+    await page.getByLabel("Restore file").setInputFiles({
+      name: "restore-dry-run.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(backup)),
+    });
+    const restoreResponsePromise = waitForApiResponse(page, "POST", "/api/exports/restore-dry-run/", 200);
+    await page.getByRole("button", { name: "Validate Restore" }).click();
+    const restore = await expectApiJson<{ isValid: boolean; validCount: number }>(await restoreResponsePromise);
+    expect(restore.isValid).toBe(true);
+    expect(restore.validCount).toBe(1);
+    await expect(page.getByText("Restore dry run passed")).toBeVisible();
+  });
+
+  test("rejects unsupported import file types clearly", async ({ page }) => {
+    await registerViaUi(page);
+    allowApiFailure(page, { method: "POST", path: "/api/imports/preview/", status: 400 });
+    allowConsoleError(page, "Failed to load resource: the server responded with a status of 400");
+    await page.goto("/settings");
+    await page.getByLabel("Import file").setInputFiles({
+      name: "wrong-import.txt",
+      mimeType: "text/plain",
+      buffer: Buffer.from("title,media_type\nWrong,movie\n"),
+    });
+
+    const responsePromise = waitForApiResponse(page, "POST", "/api/imports/preview/", 400);
+    await page.getByRole("button", { name: "Preview Import" }).click();
+    const response = await expectApiJson<{ detail: string }>(await responsePromise);
+    expect(response.detail).toContain(".csv");
+    await expect(page.getByText(/CSV imports must use/)).toBeVisible();
+  });
+
 
   test("shows invalid CSV rows without changing the visible library", async ({ page }) => {
     await registerViaUi(page);

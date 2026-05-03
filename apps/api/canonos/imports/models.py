@@ -15,8 +15,11 @@ class ImportBatch(models.Model):
 
     class Status(models.TextChoices):
         PREVIEWED = "previewed", "Previewed"
+        PROCESSING = "processing", "Processing"
         CONFIRMED = "confirmed", "Confirmed"
         REJECTED = "rejected", "Rejected"
+        ROLLED_BACK = "rolled_back", "Rolled back"
+        FAILED = "failed", "Failed"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
@@ -26,6 +29,8 @@ class ImportBatch(models.Model):
     )
     source_type = models.CharField(max_length=16, choices=SourceType.choices)
     original_filename = models.CharField(max_length=255, blank=True)
+    uploaded_file_reference = models.CharField(max_length=512, blank=True)
+    file_size_bytes = models.PositiveIntegerField(default=0)
     status = models.CharField(
         max_length=16,
         choices=Status.choices,
@@ -36,9 +41,17 @@ class ImportBatch(models.Model):
     duplicate_count = models.PositiveIntegerField(default=0)
     warnings_count = models.PositiveIntegerField(default=0)
     created_count = models.PositiveIntegerField(default=0)
+    progress_total = models.PositiveIntegerField(default=0)
+    progress_processed = models.PositiveIntegerField(default=0)
+    progress_percent = models.PositiveSmallIntegerField(default=0)
     raw_preview = models.JSONField(default=dict, blank=True)
+    error_message = models.TextField(blank=True)
+    rollback_item_count = models.PositiveIntegerField(default=0)
+    rollback_error_message = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
+    rolled_back_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -58,6 +71,7 @@ class ImportItem(models.Model):
         DUPLICATE = "duplicate", "Duplicate"
         IMPORTED = "imported", "Imported"
         SKIPPED = "skipped", "Skipped"
+        ROLLED_BACK = "rolled_back", "Rolled back"
 
     class ItemKind(models.TextChoices):
         MEDIA = "media", "Media"
@@ -82,6 +96,14 @@ class ImportItem(models.Model):
         on_delete=models.SET_NULL,
         related_name="import_items",
     )
+    duplicate_of_media_item = models.ForeignKey(
+        MediaItem,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="duplicate_import_items",
+    )
+    created_object_id = models.UUIDField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -101,6 +123,8 @@ class ExportJob(models.Model):
         CSV = "csv", "CSV"
 
     class Status(models.TextChoices):
+        QUEUED = "queued", "Queued"
+        PROCESSING = "processing", "Processing"
         COMPLETE = "complete", "Complete"
         FAILED = "failed", "Failed"
 
@@ -114,10 +138,17 @@ class ExportJob(models.Model):
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.COMPLETE)
     filename = models.CharField(max_length=255)
     content_type = models.CharField(max_length=120)
-    payload_text = models.TextField()
+    payload_text = models.TextField(blank=True)
     record_count = models.PositiveIntegerField(default=0)
+    progress_total = models.PositiveIntegerField(default=0)
+    progress_processed = models.PositiveIntegerField(default=0)
+    progress_percent = models.PositiveSmallIntegerField(default=0)
+    file_size_bytes = models.PositiveIntegerField(default=0)
+    retention_expires_at = models.DateTimeField(null=True, blank=True)
+    restore_validation = models.JSONField(default=dict, blank=True)
     error_message = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    processed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]

@@ -5,10 +5,12 @@ from decimal import Decimal
 
 import pytest
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from canonos.jobs.models import BackgroundJob
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore, TasteDimension
 from canonos.taste.services import seed_default_taste_dimensions
@@ -51,6 +53,12 @@ def test_valid_csv_import_preview_and_confirm_creates_media_and_scores() -> None
     confirmed = confirm_response.json()
     assert confirmed["status"] == "confirmed"
     assert confirmed["createdCount"] == 1
+    assert BackgroundJob.objects.filter(
+        owner=user,
+        job_type=BackgroundJob.JobType.IMPORT,
+        source_id=confirmed["id"],
+        status=BackgroundJob.Status.COMPLETE,
+    ).exists()
     media_item = MediaItem.objects.get(owner=user, title="Imported Movie")
     assert media_item.personal_rating == Decimal("9.1")
     assert MediaScore.objects.get(
@@ -99,6 +107,12 @@ def test_json_export_contains_user_owned_media_scores_and_settings() -> None:
     export_result = export_response.json()
     assert export_result["format"] == "json"
     assert export_result["recordCount"] == 1
+    assert BackgroundJob.objects.filter(
+        owner=user,
+        job_type=BackgroundJob.JobType.EXPORT,
+        source_id=export_result["id"],
+        status=BackgroundJob.Status.COMPLETE,
+    ).exists()
 
     download_response = client.get(reverse("export-download", args=[export_result["id"]]))
     payload = json.loads(download_response.content.decode())
@@ -193,3 +207,156 @@ def test_import_confirm_and_export_download_are_owner_scoped() -> None:
     assert confirm_response.status_code == status.HTTP_404_NOT_FOUND
     assert download_response.status_code == status.HTTP_404_NOT_FOUND
     assert not MediaItem.objects.filter(title="Private Import").exists()
+
+
+def test_duplicate_import_detection_across_library_and_same_batch() -> None:
+    client, user = authenticated_client("duplicates@example.com")
+    existing = MediaItem.objects.create(
+        owner=user, title="Existing Duplicate", media_type="movie", release_year=2003
+    )
+    csv_content = (
+        "title,media_type,status,release_year\n"
+        "Existing Duplicate,movie,planned,2003\n"
+        "New Duplicate,movie,planned,2004\n"
+        "New Duplicate,movie,planned,2004\n"
+    )
+
+    response = client.post(
+        reverse("import-preview"),
+        {"sourceType": "csv", "content": csv_content},
+        format="json",
+    )
+    payload = response.json()
+
+    assert response.status_code == status.HTTP_201_CREATED
+    assert payload["validCount"] == 1
+    assert payload["duplicateCount"] == 2
+    existing_duplicate, first_new, repeated_new = payload["items"]
+    assert existing_duplicate["status"] == "duplicate"
+    assert existing_duplicate["duplicateOfMediaItemId"] == str(existing.id)
+    assert first_new["status"] == "valid"
+    assert repeated_new["status"] == "duplicate"
+    assert "Duplicate of row 3" in repeated_new["warnings"][0]
+
+
+def test_import_rollback_removes_created_records_and_is_idempotence_guarded() -> None:
+    client, user = authenticated_client("rollback@example.com")
+    csv_content = "title,media_type,status\nRollback Movie,movie,planned\n"
+    preview_response = client.post(
+        reverse("import-preview"),
+        {"sourceType": "csv", "content": csv_content},
+        format="json",
+    )
+    batch_id = preview_response.json()["id"]
+    confirm_response = client.post(reverse("import-confirm", args=[batch_id]))
+
+    assert confirm_response.status_code == status.HTTP_200_OK
+    assert MediaItem.objects.filter(owner=user, title="Rollback Movie").exists()
+
+    rollback_response = client.post(reverse("import-rollback", args=[batch_id]))
+    rollback_payload = rollback_response.json()
+
+    assert rollback_response.status_code == status.HTTP_200_OK
+    assert rollback_payload["removedCount"] == 1
+    assert rollback_payload["mediaItemsRemoved"] == 1
+    assert rollback_payload["batch"]["status"] == "rolled_back"
+    assert rollback_payload["batch"]["rollbackItemCount"] == 1
+    assert (
+        BackgroundJob.objects.get(
+            owner=user,
+            job_type=BackgroundJob.JobType.IMPORT,
+            source_id=batch_id,
+        ).status
+        == BackgroundJob.Status.ROLLED_BACK
+    )
+    assert not MediaItem.objects.filter(owner=user, title="Rollback Movie").exists()
+
+    second_response = client.post(reverse("import-rollback", args=[batch_id]))
+
+    assert second_response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+def test_large_import_tracks_progress_for_500_media_items() -> None:
+    client, user = authenticated_client("large-import@example.com")
+    rows = ["title,media_type,status,release_year"]
+    rows.extend(f"Large Import {index},movie,planned,{2000 + (index % 20)}" for index in range(500))
+    preview_response = client.post(
+        reverse("import-preview"),
+        {"sourceType": "csv", "content": "\n".join(rows)},
+        format="json",
+    )
+    preview = preview_response.json()
+
+    assert preview_response.status_code == status.HTTP_201_CREATED
+    assert preview["validCount"] == 500
+    assert preview["progressTotal"] == 500
+    assert preview["progressPercent"] == 0
+
+    confirm_response = client.post(reverse("import-confirm", args=[preview["id"]]))
+    confirmed = confirm_response.json()
+
+    assert confirm_response.status_code == status.HTTP_200_OK
+    assert confirmed["createdCount"] == 500
+    assert confirmed["progressTotal"] == 500
+    assert confirmed["progressProcessed"] == 500
+    assert confirmed["progressPercent"] == 100
+    assert MediaItem.objects.filter(owner=user, title__startswith="Large Import ").count() == 500
+
+
+def test_export_restore_dry_run_reports_counts_and_duplicate_warnings() -> None:
+    client, user = authenticated_client("restore@example.com")
+    MediaItem.objects.create(owner=user, title="Restore Duplicate", media_type="movie")
+    document = {
+        "version": "canonos.export.v1",
+        "data": {
+            "mediaItems": [
+                {"title": "Restore Duplicate", "mediaType": "movie", "status": "planned"},
+                {"title": "Restore New", "mediaType": "anime", "status": "completed"},
+            ],
+            "candidates": [
+                {"title": "Restore Candidate", "mediaType": "movie", "status": "unevaluated"}
+            ],
+            "queueItems": [{"title": "Restore Queue", "mediaType": "novel"}],
+        },
+    }
+
+    response = client.post(
+        reverse("export-restore-dry-run"),
+        {"content": json.dumps(document)},
+        format="json",
+    )
+    payload = response.json()
+
+    assert response.status_code == status.HTTP_200_OK
+    assert payload["isValid"] is True
+    assert payload["totalCount"] == 4
+    assert payload["validCount"] == 3
+    assert payload["duplicateCount"] == 1
+    assert payload["countsByKind"]["media"] == 2
+    assert payload["countsByKind"]["candidate"] == 1
+    assert payload["countsByKind"]["queue"] == 1
+
+
+def test_import_rejects_wrong_file_type_and_oversized_content() -> None:
+    client, _ = authenticated_client("invalid-file@example.com")
+
+    wrong_type = client.post(
+        reverse("import-preview"),
+        {
+            "sourceType": "csv",
+            "file": SimpleUploadedFile(
+                "not-a-csv.txt", b"title,media_type\nWrong,movie\n", content_type="text/plain"
+            ),
+        },
+        format="multipart",
+    )
+    oversized = client.post(
+        reverse("import-preview"),
+        {"sourceType": "json", "content": "x" * ((2 * 1024 * 1024) + 1)},
+        format="json",
+    )
+
+    assert wrong_type.status_code == status.HTTP_400_BAD_REQUEST
+    assert ".csv" in wrong_type.json()["detail"]
+    assert oversized.status_code == status.HTTP_400_BAD_REQUEST
+    assert "2 MB or smaller" in oversized.json()["detail"]

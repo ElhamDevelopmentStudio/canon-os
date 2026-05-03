@@ -102,7 +102,7 @@ Tests must:
 - Personal Canon: create a themed season, add custom/media/candidate items, reorder items, mark completion, set canon status, save reflection notes, and assert season/item network payloads.
 - Adaptation Intelligence: create a source/adaptation relation from Media Detail, assert relation create/delete and path recommendation network payloads, and confirm the relation appears on both linked detail pages.
 - Settings: update profile/display/recommendation preferences, persist after refresh, apply theme, feed Tonight Mode defaults, and surface Candidate Evaluator settings.
-- Import/export: CSV preview/confirm, invalid-row no-write behavior, JSON export download, and media/ratings CSV export download through Settings.
+- Import/export: CSV preview/confirm, duplicate warning review, invalid-row no-write behavior, invalid file-type rejection, import rollback, import/export progress display, JSON export download, media/ratings CSV export download, and restore dry-run validation through Settings.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions
