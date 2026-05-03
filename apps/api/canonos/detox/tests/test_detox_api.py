@@ -6,6 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from canonos.accounts.models import UserSettings
 from canonos.detox.models import DetoxDecision, DetoxRule
 from canonos.detox.services import evaluate_detox, get_rules_for_user, get_time_saved_summary
 from canonos.media.models import MediaItem
@@ -30,6 +31,7 @@ def create_media(
     title: str = "Low pull movie",
     media_type: str = MediaItem.MediaType.MOVIE,
     status_value: str = MediaItem.ConsumptionStatus.CONSUMING,
+    personal_rating: int = 4,
 ) -> MediaItem:
     return MediaItem.objects.create(
         owner=user,
@@ -39,7 +41,7 @@ def create_media(
         runtime_minutes=120,
         episode_count=12,
         page_count=300,
-        personal_rating=4,
+        personal_rating=personal_rating,
     )
 
 
@@ -100,6 +102,24 @@ def test_disabled_rule_changes_detox_behavior() -> None:
     assert decision.decision == DetoxDecision.Decision.CONTINUE
     assert decision.rule is None
     assert decision.estimated_time_saved_minutes == 0
+
+
+def test_completion_detox_strictness_changes_boundary_decision() -> None:
+    user = create_user("detox-strictness@example.com")
+    UserSettings.objects.create(user=user, completion_detox_strictness=10)
+    media = create_media(user, personal_rating=4)
+
+    strict_decision = evaluate_detox(user, media, progress_value=35, motivation_score=6)
+
+    assert strict_decision.decision == DetoxDecision.Decision.DROP
+    assert strict_decision.rule is not None
+
+    relaxed = create_user("detox-relaxed@example.com")
+    UserSettings.objects.create(user=relaxed, completion_detox_strictness=0)
+    relaxed_media = create_media(relaxed, title="Relaxed movie", personal_rating=4)
+    relaxed_decision = evaluate_detox(relaxed, relaxed_media, progress_value=35, motivation_score=6)
+
+    assert relaxed_decision.decision == DetoxDecision.Decision.CONTINUE
 
 
 def test_time_saved_summary_counts_drop_pause_delay_archive_decisions() -> None:

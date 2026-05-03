@@ -123,7 +123,9 @@ test.describe("anti-generic filter browser-to-backend flow", () => {
     expect(modernEvaluation.evaluation.antiGenericEvaluation?.positiveExceptions.map((signal) => signal.ruleKey)).toEqual(
       expect.arrayContaining(["auteur_driven_modern_work", "low_popularity_strong_fit"]),
     );
-    await expect(page.getByText("Modern exception")).toBeVisible();
+    await expect(
+      page.getByText("Modern exception based on red flags and positive exception rules."),
+    ).toBeVisible();
     await expect(page.getByText("Auteur-driven modern work")).toBeVisible();
   });
 });

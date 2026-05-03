@@ -280,7 +280,7 @@ List filters: `mediaType`, `priority`, `isArchived`, and `search`. Queue priorit
 
 ## Settings API Contract
 
-`GET /api/auth/settings/` returns the authenticated user's profile, display preferences, and recommendation defaults. `PATCH /api/auth/settings/` updates the same shape with partial nested objects. The settings record is created at registration and lazily created for older users.
+`GET /api/auth/settings/` returns the authenticated user's profile, display preferences, and advanced recommendation defaults. `PATCH /api/auth/settings/` updates the same shape with partial nested objects. The settings record is created at registration and lazily created for older users.
 
 The response includes:
 
@@ -288,9 +288,16 @@ The response includes:
 - `display.themePreference`: `system`, `light`, or `dark`; the browser app applies it to the app shell.
 - `recommendation.defaultMediaTypes`: default media type filters for recommendation surfaces.
 - `recommendation.defaultRiskTolerance`: `low`, `medium`, or `high`; Tonight Mode uses it when the request omits risk tolerance and the UI uses it as the default selection.
+- `recommendation.defaultTonightMode`: saved defaults for available minutes, energy level, focus level, and desired effect; Tonight Mode uses these when the request omits context fields.
+- `recommendation.recommendationFormulaWeights`: integer weights for personal fit, mood fit, quality signal, genericness penalty, regret risk penalty, and commitment cost penalty.
 - `recommendation.modernMediaSkepticismLevel`: `0` to `10`; Candidate Evaluator adds caution for recent releases when high.
 - `recommendation.genericnessSensitivity`: `0` to `10`; Candidate Evaluator weights expected genericness risk with this value.
-- `recommendation.preferredScoringStrictness`: `0` to `10`; Candidate Evaluator makes final decisions stricter when high.
+- `recommendation.preferredScoringStrictness`: legacy alias for scoring strictness, kept in sync for older clients.
+- `recommendation.preferredRecommendationStrictness`: `0` to `10`; Candidate Evaluator makes final decisions stricter when high.
+- `recommendation.allowModernExceptions`: lets Candidate Evaluator reduce modern-release risk when strong positive Anti-Generic exceptions exist.
+- `recommendation.burnoutSensitivity`: `0` to `10`; queue scoring and Tonight Mode penalize repeated, stale, or high-commitment items more when high.
+- `recommendation.completionDetoxStrictness`: `0` to `10`; Completion Detox recommends pause/drop decisions more aggressively when high.
+- `recommendation.notificationPreferences`: persisted notification opt-ins for browser notifications, email digest, recommendation reminders, and Completion Detox reminders.
 
 Shared TypeScript contracts live in `packages/contracts/src/settings.ts`; the frontend SWR hook lives in `apps/web/src/features/settings/settingsApi.ts`.
 
@@ -300,7 +307,7 @@ Every new API endpoint must be covered through a real browser e2e user flow when
 
 ## Tonight Mode
 
-- `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request includes available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance. The response includes up to five non-archived queue/planned-media recommendations plus safe, challenging, and wildcard slots when available. Queue recommendations include v2 fit fields so the browser can show mood fit, commitment, and freshness.
+- `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request may include available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance; omitted context falls back to saved recommendation settings. The response includes up to five non-archived queue/planned-media recommendations plus safe, challenging, and wildcard slots when available. Queue recommendations include v2 fit fields so the browser can show mood fit, commitment, and freshness.
 
 ## Aftertaste API Contract
 

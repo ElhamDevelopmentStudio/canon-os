@@ -70,6 +70,10 @@ export function TonightModePage() {
     if (!userSettings || settingsDefaultsApplied) return;
     setDraft((current) => ({
       ...current,
+      availableMinutes: String(userSettings.recommendation.defaultTonightMode.availableMinutes),
+      energyLevel: userSettings.recommendation.defaultTonightMode.energyLevel,
+      focusLevel: userSettings.recommendation.defaultTonightMode.focusLevel,
+      desiredEffect: userSettings.recommendation.defaultTonightMode.desiredEffect,
       preferredMediaTypes: userSettings.recommendation.defaultMediaTypes,
       riskTolerance: userSettings.recommendation.defaultRiskTolerance,
     }));
@@ -77,10 +81,12 @@ export function TonightModePage() {
   }, [settingsDefaultsApplied, userSettings]);
 
   function updateDraft<K extends keyof TonightDraft>(field: K, value: TonightDraft[K]) {
+    setSettingsDefaultsApplied(true);
     setDraft((current) => ({ ...current, [field]: value }));
   }
 
   function toggleMediaType(type: MediaType) {
+    setSettingsDefaultsApplied(true);
     setDraft((current) => {
       const selected = current.preferredMediaTypes.includes(type);
       const preferredMediaTypes = selected

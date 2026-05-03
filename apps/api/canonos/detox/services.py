@@ -9,6 +9,7 @@ from django.db import transaction
 from django.db.models import Sum
 from django.utils import timezone
 
+from canonos.accounts.models import UserSettings
 from canonos.media.models import MediaItem
 
 from .models import DetoxDecision, DetoxRule
@@ -141,7 +142,14 @@ def evaluate_detox(
 ) -> DetoxDecision:
     rules = [rule for rule in get_rules_for_user(user) if rule.is_enabled]
     matched_rule = _best_matching_rule(media_item, progress_value, rules)
-    decision, reason = _decision_for(media_item, matched_rule, progress_value, motivation_score)
+    settings, _ = UserSettings.objects.get_or_create(user=user)
+    decision, reason = _decision_for(
+        media_item,
+        matched_rule,
+        progress_value,
+        motivation_score,
+        completion_detox_strictness=settings.completion_detox_strictness,
+    )
     estimated_time_saved = _estimated_time_saved(media_item, progress_value, decision)
     return DetoxDecision.objects.create(
         media_item=media_item,
@@ -211,6 +219,8 @@ def _decision_for(
     rule: DetoxRule | None,
     progress_value: int,
     motivation_score: int,
+    *,
+    completion_detox_strictness: int = 5,
 ) -> tuple[str, str]:
     if rule is None:
         return (
@@ -221,7 +231,9 @@ def _decision_for(
             ),
         )
 
-    max_motivation = _condition_int(rule.condition, "maxMotivation", 4)
+    strictness_adjustment = round((completion_detox_strictness - 5) * 0.4)
+    max_motivation = _condition_int(rule.condition, "maxMotivation", 4) + strictness_adjustment
+    max_motivation = min(max(max_motivation, 1), 10)
     low_rating = media_item.personal_rating is not None and float(media_item.personal_rating) <= 5
     has_long_runtime = _estimated_total_minutes(media_item) >= 90
     if motivation_score <= max_motivation and (low_rating or has_long_runtime):

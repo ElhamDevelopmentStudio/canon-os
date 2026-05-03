@@ -8,7 +8,12 @@ from canonos.media.models import MediaItem
 from canonos.queueing.models import TonightModeSession
 from canonos.taste.services import seed_default_taste_dimensions
 
-from .models import UserProfile, UserSettings
+from .models import (
+    UserProfile,
+    UserSettings,
+    default_notification_preferences,
+    default_recommendation_formula_weights,
+)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -91,6 +96,46 @@ class DisplaySettingsSerializer(serializers.Serializer):
     )
 
 
+class RecommendationFormulaWeightsSerializer(serializers.Serializer):
+    personalFit = serializers.IntegerField(min_value=0, max_value=100, required=False)
+    moodFit = serializers.IntegerField(min_value=0, max_value=100, required=False)
+    qualitySignal = serializers.IntegerField(min_value=0, max_value=100, required=False)
+    genericnessPenalty = serializers.IntegerField(min_value=0, max_value=100, required=False)
+    regretRiskPenalty = serializers.IntegerField(min_value=0, max_value=100, required=False)
+    commitmentCostPenalty = serializers.IntegerField(min_value=0, max_value=100, required=False)
+
+
+class DefaultTonightModeSettingsSerializer(serializers.Serializer):
+    availableMinutes = serializers.IntegerField(
+        source="default_tonight_available_minutes",
+        min_value=1,
+        max_value=1440,
+        required=False,
+    )
+    energyLevel = serializers.ChoiceField(
+        source="default_tonight_energy_level",
+        choices=TonightModeSession.EnergyLevel.choices,
+        required=False,
+    )
+    focusLevel = serializers.ChoiceField(
+        source="default_tonight_focus_level",
+        choices=TonightModeSession.FocusLevel.choices,
+        required=False,
+    )
+    desiredEffect = serializers.ChoiceField(
+        source="default_tonight_desired_effect",
+        choices=TonightModeSession.DesiredEffect.choices,
+        required=False,
+    )
+
+
+class NotificationPreferencesSerializer(serializers.Serializer):
+    browserNotifications = serializers.BooleanField(required=False)
+    emailDigest = serializers.BooleanField(required=False)
+    recommendationReminders = serializers.BooleanField(required=False)
+    completionDetoxReminders = serializers.BooleanField(required=False)
+
+
 class RecommendationSettingsSerializer(serializers.Serializer):
     defaultMediaTypes = serializers.ListField(
         source="default_media_types",
@@ -121,6 +166,31 @@ class RecommendationSettingsSerializer(serializers.Serializer):
         max_value=10,
         required=False,
     )
+    recommendationFormulaWeights = RecommendationFormulaWeightsSerializer(required=False)
+    defaultTonightMode = DefaultTonightModeSettingsSerializer(required=False)
+    preferredRecommendationStrictness = serializers.IntegerField(
+        source="preferred_recommendation_strictness",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    allowModernExceptions = serializers.BooleanField(
+        source="allow_modern_exceptions",
+        required=False,
+    )
+    burnoutSensitivity = serializers.IntegerField(
+        source="burnout_sensitivity",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    completionDetoxStrictness = serializers.IntegerField(
+        source="completion_detox_strictness",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    notificationPreferences = NotificationPreferencesSerializer(required=False)
 
 
 class UserSettingsSerializer(serializers.Serializer):
@@ -144,6 +214,18 @@ class UserSettingsSerializer(serializers.Serializer):
                 "modernMediaSkepticismLevel": instance.modern_media_skepticism_level,
                 "genericnessSensitivity": instance.genericness_sensitivity,
                 "preferredScoringStrictness": instance.preferred_scoring_strictness,
+                "recommendationFormulaWeights": instance.recommendation_formula_weights,
+                "defaultTonightMode": {
+                    "availableMinutes": instance.default_tonight_available_minutes,
+                    "energyLevel": instance.default_tonight_energy_level,
+                    "focusLevel": instance.default_tonight_focus_level,
+                    "desiredEffect": instance.default_tonight_desired_effect,
+                },
+                "preferredRecommendationStrictness": (instance.preferred_recommendation_strictness),
+                "allowModernExceptions": instance.allow_modern_exceptions,
+                "burnoutSensitivity": instance.burnout_sensitivity,
+                "completionDetoxStrictness": instance.completion_detox_strictness,
+                "notificationPreferences": instance.notification_preferences,
             },
             "updatedAt": instance.updated_at.isoformat().replace("+00:00", "Z"),
         }
@@ -171,8 +253,31 @@ class UserSettingsSerializer(serializers.Serializer):
                 setattr(instance, field, value)
 
         if recommendation_data:
+            formula_weights = recommendation_data.pop("recommendationFormulaWeights", None)
+            if formula_weights is not None:
+                instance.recommendation_formula_weights = {
+                    **default_recommendation_formula_weights(),
+                    **dict(formula_weights),
+                }
+
+            tonight_defaults = recommendation_data.pop("defaultTonightMode", None)
+            if tonight_defaults is not None:
+                for field, value in tonight_defaults.items():
+                    setattr(instance, field, value)
+
+            notification_preferences = recommendation_data.pop("notificationPreferences", None)
+            if notification_preferences is not None:
+                instance.notification_preferences = {
+                    **default_notification_preferences(),
+                    **dict(notification_preferences),
+                }
+
             for field, value in recommendation_data.items():
                 setattr(instance, field, value)
+                if field == "preferred_recommendation_strictness":
+                    instance.preferred_scoring_strictness = value
+                elif field == "preferred_scoring_strictness":
+                    instance.preferred_recommendation_strictness = value
 
         instance.save()
         return instance

@@ -5,7 +5,7 @@ from statistics import mean
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 
-from canonos.accounts.models import UserSettings
+from canonos.accounts.models import UserSettings, default_recommendation_formula_weights
 from canonos.anti_generic.services import evaluate_anti_generic_for_candidate
 from canonos.media.models import MediaItem
 from canonos.narrative.services import narrative_trait_bonus_for_candidate
@@ -21,6 +21,21 @@ def clamp(value: float, minimum: int = 0, maximum: int = 100) -> int:
 def _user_settings(user: User) -> UserSettings:
     settings, _ = UserSettings.objects.get_or_create(user=user)
     return settings
+
+
+def _formula_weights(settings: UserSettings) -> dict[str, float]:
+    defaults = default_recommendation_formula_weights()
+    configured = settings.recommendation_formula_weights or {}
+    return {
+        key: float(configured.get(key, default_value)) for key, default_value in defaults.items()
+    }
+
+
+def _weight_ratio(weights: dict[str, float], key: str) -> float:
+    default_value = float(default_recommendation_formula_weights()[key])
+    if default_value <= 0:
+        return 1.0
+    return max(weights.get(key, default_value), 0.0) / default_value
 
 
 def _media_type_bonus(user: User, candidate: Candidate) -> tuple[int, list[str]]:
@@ -62,6 +77,7 @@ def _score_profile(user: User) -> tuple[float, float, int]:
 def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     positive_avg, negative_avg, score_count = _score_profile(user)
     settings = _user_settings(user)
+    weights = _formula_weights(settings)
     type_bonus, type_reasons = _media_type_bonus(user, candidate)
     genericness = (
         candidate.expected_genericness if candidate.expected_genericness is not None else 5
@@ -77,33 +93,62 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     elif time_cost <= 100:
         time_penalty = -5
 
-    likely_fit = clamp(50 + ((positive_avg - 5) * 7) - max(negative_avg - 5, 0) * 5 + type_bonus)
-    genericness_weight = 4 + (settings.genericness_sensitivity * 0.6)
+    personal_fit_ratio = _weight_ratio(weights, "personalFit")
+    quality_signal_ratio = _weight_ratio(weights, "qualitySignal")
+    genericness_penalty_ratio = _weight_ratio(weights, "genericnessPenalty")
+    regret_penalty_ratio = _weight_ratio(weights, "regretRiskPenalty")
+    commitment_penalty_ratio = _weight_ratio(weights, "commitmentCostPenalty")
+    mood_fit_ratio = _weight_ratio(weights, "moodFit")
+
+    time_penalty = round(time_penalty * commitment_penalty_ratio, 2)
+    likely_fit = clamp(
+        50
+        + ((positive_avg - 5) * 7 * personal_fit_ratio)
+        - (max(negative_avg - 5, 0) * 5 * regret_penalty_ratio)
+        + (type_bonus * personal_fit_ratio)
+    )
+    genericness_weight = (4 + (settings.genericness_sensitivity * 0.6)) * genericness_penalty_ratio
     modern_skepticism_penalty = (
         max(settings.modern_media_skepticism_level - 5, 0) * 3
         if candidate.release_year and candidate.release_year >= 2018
         else 0
     )
-    strictness_penalty = (settings.preferred_scoring_strictness - 5) * 2
+    strictness_penalty = (settings.preferred_recommendation_strictness - 5) * 2.4
     anti_generic = evaluate_anti_generic_for_candidate(user, candidate)
+    if settings.allow_modern_exceptions and anti_generic.positive_exception_score:
+        modern_skepticism_penalty = max(
+            0,
+            modern_skepticism_penalty - (anti_generic.positive_exception_score * 0.35),
+        )
+        positive_exception_discount = anti_generic.positive_exception_score * 0.3
+    else:
+        positive_exception_discount = 0.0
     narrative_bonus, narrative_risk, narrative_signals = narrative_trait_bonus_for_candidate(
         user,
         candidate.media_type,
         candidate.premise,
     )
-    likely_fit_with_narrative = clamp(likely_fit + narrative_bonus)
+    likely_fit_with_narrative = clamp(likely_fit + (narrative_bonus * quality_signal_ratio))
     risk = clamp(
         (genericness * genericness_weight)
         + max(time_penalty, 0)
         + max(hype - 7, 0) * 4
         + modern_skepticism_penalty
         + narrative_risk
-        + (anti_generic.genericness_risk_score * 0.35)
-        + (anti_generic.time_waste_risk_score * 0.2)
-        - (anti_generic.positive_exception_score * 0.25)
+        + (anti_generic.genericness_risk_score * 0.35 * genericness_penalty_ratio)
+        + (anti_generic.time_waste_risk_score * 0.2 * regret_penalty_ratio)
+        - positive_exception_discount
     )
+    mood_bonus = 4.0 * mood_fit_ratio if time_cost <= 120 else 0.0
+    if time_cost > 360:
+        mood_bonus -= 4.0 * mood_fit_ratio
     final_score = clamp(
-        likely_fit_with_narrative - (risk * 0.45) - time_penalty + min(hype, 8) - strictness_penalty
+        likely_fit_with_narrative
+        - (risk * 0.45)
+        - time_penalty
+        + (min(hype, 8) * quality_signal_ratio)
+        + mood_bonus
+        - strictness_penalty
     )
     confidence = clamp(
         45
@@ -152,6 +197,10 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         reasons_against.append(
             "Your saved genericness sensitivity is high, so this risk is weighted heavily."
         )
+    if settings.preferred_recommendation_strictness >= 8:
+        reasons_against.append(
+            "Your recommendation strictness is high, so borderline choices need stronger evidence."
+        )
     if modern_skepticism_penalty:
         reasons_against.append(
             "Your modern media skepticism setting adds caution for recent releases."
@@ -159,7 +208,13 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     if anti_generic.detected_signals:
         reasons_against.append(anti_generic.detected_signals[0]["evidence"])
     if anti_generic.positive_exceptions:
-        reasons_for.append(anti_generic.positive_exceptions[0]["evidence"])
+        if settings.allow_modern_exceptions:
+            reasons_for.append(anti_generic.positive_exceptions[0]["evidence"])
+        else:
+            reasons_against.append(
+                "A modern-work exception was detected, but modern exceptions are disabled "
+                "in settings."
+            )
     if score_count == 0:
         reasons_against.append("Confidence is limited until more taste scores are logged.")
     if not candidate.premise:

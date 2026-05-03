@@ -138,6 +138,18 @@ def test_settings_endpoint_returns_defaults_and_updates_profile_display_and_reco
     default_payload = default_response.json()
     assert default_payload["profile"]["displayName"] == "Settings Reader"
     assert default_payload["recommendation"]["defaultRiskTolerance"] == "medium"
+    assert default_payload["recommendation"]["defaultTonightMode"] == {
+        "availableMinutes": 90,
+        "energyLevel": "medium",
+        "focusLevel": "medium",
+        "desiredEffect": "quality",
+    }
+    assert default_payload["recommendation"]["recommendationFormulaWeights"]["personalFit"] == 30
+    assert default_payload["recommendation"]["allowModernExceptions"] is True
+    assert (
+        default_payload["recommendation"]["notificationPreferences"]["recommendationReminders"]
+        is True
+    )
     assert default_payload["display"]["themePreference"] == "system"
 
     update_response = client.patch(
@@ -150,7 +162,29 @@ def test_settings_endpoint_returns_defaults_and_updates_profile_display_and_reco
                 "defaultRiskTolerance": "high",
                 "modernMediaSkepticismLevel": 8,
                 "genericnessSensitivity": 9,
-                "preferredScoringStrictness": 7,
+                "preferredRecommendationStrictness": 7,
+                "recommendationFormulaWeights": {
+                    "personalFit": 36,
+                    "moodFit": 18,
+                    "qualitySignal": 24,
+                    "genericnessPenalty": 20,
+                    "regretRiskPenalty": 12,
+                    "commitmentCostPenalty": 8,
+                },
+                "defaultTonightMode": {
+                    "availableMinutes": 75,
+                    "energyLevel": "low",
+                    "focusLevel": "deep",
+                    "desiredEffect": "comfort",
+                },
+                "allowModernExceptions": False,
+                "burnoutSensitivity": 8,
+                "completionDetoxStrictness": 9,
+                "notificationPreferences": {
+                    "browserNotifications": True,
+                    "emailDigest": True,
+                    "recommendationReminders": False,
+                },
             },
         },
         format="json",
@@ -164,6 +198,16 @@ def test_settings_endpoint_returns_defaults_and_updates_profile_display_and_reco
     assert payload["recommendation"]["defaultMediaTypes"] == ["movie", "novel"]
     assert payload["recommendation"]["defaultRiskTolerance"] == "high"
     assert payload["recommendation"]["genericnessSensitivity"] == 9
+    assert payload["recommendation"]["preferredRecommendationStrictness"] == 7
+    assert payload["recommendation"]["preferredScoringStrictness"] == 7
+    assert payload["recommendation"]["recommendationFormulaWeights"]["qualitySignal"] == 24
+    assert payload["recommendation"]["defaultTonightMode"]["availableMinutes"] == 75
+    assert payload["recommendation"]["defaultTonightMode"]["focusLevel"] == "deep"
+    assert payload["recommendation"]["allowModernExceptions"] is False
+    assert payload["recommendation"]["burnoutSensitivity"] == 8
+    assert payload["recommendation"]["completionDetoxStrictness"] == 9
+    assert payload["recommendation"]["notificationPreferences"]["browserNotifications"] is True
+    assert payload["recommendation"]["notificationPreferences"]["completionDetoxReminders"] is True
 
 
 def test_settings_endpoint_validates_range_and_choices() -> None:
@@ -179,7 +223,10 @@ def test_settings_endpoint_validates_range_and_choices() -> None:
         reverse("auth-settings"),
         {
             "display": {"themePreference": "neon"},
-            "recommendation": {"genericnessSensitivity": 11},
+            "recommendation": {
+                "genericnessSensitivity": 11,
+                "recommendationFormulaWeights": {"personalFit": 101},
+            },
         },
         format="json",
     )
@@ -189,6 +236,7 @@ def test_settings_endpoint_validates_range_and_choices() -> None:
     assert payload["error"]["code"] == "invalid_choice"
     assert "themePreference" in payload["error"]["details"]["display"]
     assert "genericnessSensitivity" in payload["error"]["details"]["recommendation"]
+    assert "recommendationFormulaWeights" in payload["error"]["details"]["recommendation"]
 
 
 def test_auth_endpoints_appear_in_openapi_schema() -> None:

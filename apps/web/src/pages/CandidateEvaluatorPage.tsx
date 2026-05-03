@@ -243,8 +243,11 @@ export function CandidateEvaluatorPage() {
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
         {userSettings ? (
           <div className="rounded-2xl border border-risky/30 bg-risky/10 p-4 text-sm text-risky xl:col-span-2">
-            Candidate Evaluator is using your saved genericness sensitivity: {userSettings.recommendation.genericnessSensitivity}/10
-            and modern media skepticism: {userSettings.recommendation.modernMediaSkepticismLevel}/10.
+            Candidate Evaluator is using your saved genericness sensitivity:{" "}
+            {userSettings.recommendation.genericnessSensitivity}/10, modern media skepticism:{" "}
+            {userSettings.recommendation.modernMediaSkepticismLevel}/10,
+            recommendation strictness: {userSettings.recommendation.preferredRecommendationStrictness}/10,
+            and modern exceptions: {userSettings.recommendation.allowModernExceptions ? "allowed" : "disabled"}.
           </div>
         ) : null}
 

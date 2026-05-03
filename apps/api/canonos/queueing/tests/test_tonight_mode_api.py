@@ -234,6 +234,54 @@ def test_tonight_mode_uses_saved_defaults_when_request_omits_them() -> None:
     assert any(item["title"] == "Default Novel" for item in recommendations)
 
 
+def test_tonight_mode_uses_advanced_saved_defaults_when_request_omits_context() -> None:
+    client, user = authenticated_client()
+    UserSettings.objects.create(
+        user=user,
+        default_media_types=["audiobook"],
+        default_risk_tolerance="low",
+        default_tonight_available_minutes=60,
+        default_tonight_energy_level="low",
+        default_tonight_focus_level="low",
+        default_tonight_desired_effect="light",
+        recommendation_formula_weights={
+            "personalFit": 24,
+            "moodFit": 35,
+            "qualitySignal": 15,
+            "genericnessPenalty": 15,
+            "regretRiskPenalty": 8,
+            "commitmentCostPenalty": 12,
+        },
+        burnout_sensitivity=8,
+    )
+    QueueItem.objects.create(
+        owner=user,
+        title="Low Energy Audiobook",
+        media_type="audiobook",
+        priority="start_soon",
+        reason="Light audio-only comfort.",
+        estimated_time_minutes=55,
+        mood_compatibility=92,
+        intensity_level=2,
+        complexity_level=3,
+        commitment_level=2,
+        freshness_score=95,
+        queue_position=1,
+    )
+
+    response = client.post(reverse("tonightmode-generate"), {}, format="json")
+
+    assert response.status_code == status.HTTP_201_CREATED
+    session = response.json()["session"]
+    assert session["availableMinutes"] == 60
+    assert session["energyLevel"] == "low"
+    assert session["focusLevel"] == "low"
+    assert session["desiredEffect"] == "light"
+    assert session["preferredMediaTypes"] == ["audiobook"]
+    assert session["riskTolerance"] == "low"
+    assert response.json()["recommendations"][0]["title"] == "Low Energy Audiobook"
+
+
 def test_tonight_mode_schema_is_documented() -> None:
     response = APIClient().get(reverse("schema"))
 

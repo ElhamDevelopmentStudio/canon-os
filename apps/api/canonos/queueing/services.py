@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models, transaction
 from django.utils import timezone
 
+from canonos.accounts.models import UserSettings, default_recommendation_formula_weights
 from canonos.media.models import MediaItem
 
 from .models import QueueItem
@@ -211,14 +212,16 @@ def recalculate_queue_for_user(user: AbstractUser) -> QueueRecalculationResult:
 
 def score_queue_item(item: QueueItem, *, now=None) -> QueueScore:  # noqa: ANN001
     now = now or timezone.now()
+    settings, _ = UserSettings.objects.get_or_create(user=item.owner)
+    burnout_pressure = 0.8 + (settings.burnout_sensitivity * 0.08)
     freshness = _decayed_freshness(item, now=now)
     priority_score = {
         QueueItem.Priority.START_SOON: 18.0,
         QueueItem.Priority.SAMPLE_FIRST: 8.0,
         QueueItem.Priority.LATER: -4.0,
     }.get(item.priority, 0.0)
-    commitment_penalty = item.commitment_level * 2.3
-    complexity_penalty = max(item.complexity_level - 7, 0) * 2.5
+    commitment_penalty = item.commitment_level * 2.3 * burnout_pressure
+    complexity_penalty = max(item.complexity_level - 7, 0) * 2.5 * burnout_pressure
     intensity_balance = 5.0 if 3 <= item.intensity_level <= 7 else -3.0
     short_fit_bonus = 6.0 if (item.estimated_time_minutes or 999) <= 90 else 0.0
     score = (
@@ -232,7 +235,7 @@ def score_queue_item(item: QueueItem, *, now=None) -> QueueScore:  # noqa: ANN00
         - complexity_penalty
     )
     score = round(_clamp(score, 0, 100), 2)
-    archive = _should_archive(item, score, freshness)
+    archive = _should_archive(item, score, freshness, settings=settings)
     next_priority = _priority_from_score(score, archive)
     return QueueScore(
         item_id=str(item.id),
@@ -247,9 +250,10 @@ def score_queue_item(item: QueueItem, *, now=None) -> QueueScore:  # noqa: ANN00
 def generate_tonight_recommendations(
     user: AbstractUser, context: TonightContext
 ) -> list[dict[str, object]]:
+    settings, _ = UserSettings.objects.get_or_create(user=user)
     candidates = _collect_queue_candidates(user) + _collect_planned_media_candidates(user)
     filtered = [
-        _score_candidate(candidate, context)
+        _score_candidate(candidate, context, settings)
         for candidate in candidates
         if _fits_time(candidate, context)
     ]
@@ -376,18 +380,29 @@ def _fits_time(candidate: TonightCandidate, context: TonightContext) -> bool:
     return candidate.estimated_time_minutes <= max(context.available_minutes, 1)
 
 
-def _score_candidate(candidate: TonightCandidate, context: TonightContext) -> dict[str, object]:
+def _score_candidate(
+    candidate: TonightCandidate,
+    context: TonightContext,
+    settings: UserSettings,
+) -> dict[str, object]:
+    weights = _formula_weights(settings)
+    personal_ratio = _weight_ratio(weights, "personalFit")
+    mood_ratio = _weight_ratio(weights, "moodFit")
+    quality_ratio = _weight_ratio(weights, "qualitySignal")
+    commitment_ratio = _weight_ratio(weights, "commitmentCostPenalty")
+    burnout_pressure = max(settings.burnout_sensitivity - 5, 0)
     score = 40.0
-    score += _priority_score(candidate.priority)
-    score += _time_score(candidate, context)
-    score += _energy_score(candidate, context)
-    score += _focus_score(candidate, context)
-    score += _desired_effect_score(candidate, context)
+    score += _priority_score(candidate.priority) * personal_ratio
+    score += _time_score(candidate, context) * commitment_ratio
+    score += _energy_score(candidate, context) * mood_ratio
+    score += _focus_score(candidate, context) * mood_ratio
+    score += _desired_effect_score(candidate, context) * quality_ratio
     score += _risk_score(candidate, context)
-    score += _media_preference_score(candidate, context)
-    score += _personal_rating_score(candidate)
-    score += _queue_v2_context_score(candidate, context)
-    score -= min(candidate.queue_position, 20) * 0.25
+    score += _media_preference_score(candidate, context) * personal_ratio
+    score += _personal_rating_score(candidate) * quality_ratio
+    score += _queue_v2_context_score(candidate, context, settings)
+    score -= min(candidate.queue_position, 20) * 0.25 * commitment_ratio
+    score -= min(candidate.times_recommended * burnout_pressure * 0.8, 14.0)
     slot = _recommendation_slot(candidate, context)
     score = round(max(score, 0.0), 2)
     return {
@@ -556,14 +571,23 @@ def _slot_order(slot: str) -> int:
     return {"safe": 0, "challenging": 1, "wildcard": 2}.get(slot, 3)
 
 
-def _queue_v2_context_score(candidate: TonightCandidate, context: TonightContext) -> float:
+def _queue_v2_context_score(
+    candidate: TonightCandidate,
+    context: TonightContext,
+    settings: UserSettings,
+) -> float:
     score = 0.0
+    burnout_pressure = 0.8 + (settings.burnout_sensitivity * 0.08)
     score += (candidate.mood_compatibility - 50) * 0.16
     score += (candidate.freshness_score - 50) * 0.1
 
     if context.energy_level == "low":
         score += 8.0 if candidate.intensity_level <= 4 else -candidate.intensity_level
-        score += 6.0 if candidate.commitment_level <= 4 else -(candidate.commitment_level * 1.2)
+        score += (
+            6.0
+            if candidate.commitment_level <= 4
+            else -(candidate.commitment_level * 1.2 * burnout_pressure)
+        )
     elif context.energy_level == "high":
         score += 6.0 if candidate.intensity_level >= 6 else 2.0
     else:
@@ -577,8 +601,23 @@ def _queue_v2_context_score(candidate: TonightCandidate, context: TonightContext
         score += 5.0 if 3 <= candidate.complexity_level <= 7 else -2.0
 
     if candidate.times_recommended >= 3:
-        score -= min(candidate.times_recommended * 2.0, 12.0)
+        score -= min(candidate.times_recommended * 2.0 * burnout_pressure, 14.0)
     return score
+
+
+def _formula_weights(settings: UserSettings) -> dict[str, float]:
+    defaults = default_recommendation_formula_weights()
+    configured = settings.recommendation_formula_weights or {}
+    return {
+        key: float(configured.get(key, default_value)) for key, default_value in defaults.items()
+    }
+
+
+def _weight_ratio(weights: dict[str, float], key: str) -> float:
+    default_value = float(default_recommendation_formula_weights()[key])
+    if default_value <= 0:
+        return 1.0
+    return max(weights.get(key, default_value), 0.0) / default_value
 
 
 def _mark_queue_items_recommended(recommendations: list[dict[str, object]]) -> None:
@@ -637,12 +676,20 @@ def _decayed_freshness(item: QueueItem, *, now) -> float:  # noqa: ANN001
     return _clamp(freshness, 0, 100)
 
 
-def _should_archive(item: QueueItem, score: float, freshness: float) -> bool:
+def _should_archive(
+    item: QueueItem,
+    score: float,
+    freshness: float,
+    *,
+    settings: UserSettings,
+) -> bool:
+    strict_score_threshold = 30 + max(settings.burnout_sensitivity - 5, 0) * 2
+    strict_freshness_threshold = 24 + max(settings.burnout_sensitivity - 5, 0) * 4
     if item.is_archived:
         return True
-    if score < 30:
+    if score < strict_score_threshold:
         return True
-    if freshness < 24 and item.times_recommended >= 2:
+    if freshness < strict_freshness_threshold and item.times_recommended >= 2:
         return True
     return item.priority == QueueItem.Priority.LATER and score < 38
 

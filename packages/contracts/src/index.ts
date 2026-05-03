@@ -167,12 +167,16 @@ export {
 } from "./taste";
 export type {
   DisplaySettings,
+  DefaultTonightModeSettings,
+  NotificationPreferences,
+  RecommendationFormulaWeightKey,
+  RecommendationFormulaWeights,
   RecommendationSettings,
   ThemePreference,
   UserSettings,
   UserSettingsUpdateRequest,
 } from "./settings";
-export { THEME_PREFERENCES } from "./settings";
+export { RECOMMENDATION_FORMULA_WEIGHT_KEYS, THEME_PREFERENCES } from "./settings";
 export type {
   DesiredEffect,
   EnergyLevel,

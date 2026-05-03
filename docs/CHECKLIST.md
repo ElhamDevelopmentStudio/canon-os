@@ -2639,45 +2639,45 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M17-BE-001 Add recommendation formula weights to UserSettings.
-- [ ] CP-M17-BE-002 Add default Tonight Mode values to UserSettings.
-- [ ] CP-M17-BE-003 Add preferred recommendation strictness field.
-- [ ] CP-M17-BE-004 Add allow modern exceptions field.
-- [ ] CP-M17-BE-005 Add burnout sensitivity field.
-- [ ] CP-M17-BE-006 Add completion detox strictness field.
-- [ ] CP-M17-BE-007 Add notification preferences field.
-- [ ] CP-M17-BE-008 Create migration for advanced settings.
-- [ ] CP-M17-BE-009 Update settings serializer.
-- [ ] CP-M17-BE-010 Update recommendation services to use advanced settings.
-- [ ] CP-M17-BE-011 Add test for strictness effect on Candidate Evaluator.
-- [ ] CP-M17-BE-012 Add test for allow modern exceptions effect.
+- [x] CP-M17-BE-001 Add recommendation formula weights to UserSettings.
+- [x] CP-M17-BE-002 Add default Tonight Mode values to UserSettings.
+- [x] CP-M17-BE-003 Add preferred recommendation strictness field.
+- [x] CP-M17-BE-004 Add allow modern exceptions field.
+- [x] CP-M17-BE-005 Add burnout sensitivity field.
+- [x] CP-M17-BE-006 Add completion detox strictness field.
+- [x] CP-M17-BE-007 Add notification preferences field.
+- [x] CP-M17-BE-008 Create migration for advanced settings.
+- [x] CP-M17-BE-009 Update settings serializer.
+- [x] CP-M17-BE-010 Update recommendation services to use advanced settings.
+- [x] CP-M17-BE-011 Add test for strictness effect on Candidate Evaluator.
+- [x] CP-M17-BE-012 Add test for allow modern exceptions effect.
 
 ### Frontend Tasks
 
-- [ ] CP-M17-FE-001 Add Advanced Recommendation Settings section.
-- [ ] CP-M17-FE-002 Add formula weight controls.
-- [ ] CP-M17-FE-003 Add default Tonight Mode controls.
-- [ ] CP-M17-FE-004 Add recommendation strictness control.
-- [ ] CP-M17-FE-005 Add allow modern exceptions toggle.
-- [ ] CP-M17-FE-006 Add burnout sensitivity control.
-- [ ] CP-M17-FE-007 Add detox strictness control.
-- [ ] CP-M17-FE-008 Add notification preferences controls.
-- [ ] CP-M17-FE-009 Add Reset To Recommended Defaults button.
-- [ ] CP-M17-FE-010 Add explanation text for each setting.
+- [x] CP-M17-FE-001 Add Advanced Recommendation Settings section.
+- [x] CP-M17-FE-002 Add formula weight controls.
+- [x] CP-M17-FE-003 Add default Tonight Mode controls.
+- [x] CP-M17-FE-004 Add recommendation strictness control.
+- [x] CP-M17-FE-005 Add allow modern exceptions toggle.
+- [x] CP-M17-FE-006 Add burnout sensitivity control.
+- [x] CP-M17-FE-007 Add detox strictness control.
+- [x] CP-M17-FE-008 Add notification preferences controls.
+- [x] CP-M17-FE-009 Add Reset To Recommended Defaults button.
+- [x] CP-M17-FE-010 Add explanation text for each setting.
 
 ### Integration Tasks
 
-- [ ] CP-M17-INT-001 Connect advanced settings to settings endpoint.
-- [ ] CP-M17-INT-002 Confirm changed settings affect Candidate Evaluator.
-- [ ] CP-M17-INT-003 Confirm changed settings affect Tonight Mode.
-- [ ] CP-M17-INT-004 Confirm changed settings affect Detox decisions.
+- [x] CP-M17-INT-001 Connect advanced settings to settings endpoint.
+- [x] CP-M17-INT-002 Confirm changed settings affect Candidate Evaluator.
+- [x] CP-M17-INT-003 Confirm changed settings affect Tonight Mode.
+- [x] CP-M17-INT-004 Confirm changed settings affect Detox decisions.
 
 ### QA Tasks
 
-- [ ] CP-M17-QA-001 Save advanced settings.
-- [ ] CP-M17-QA-002 Reset advanced settings.
-- [ ] CP-M17-QA-003 Verify settings persist after refresh.
-- [ ] CP-M17-QA-004 Verify settings change recommendation behavior.
+- [x] CP-M17-QA-001 Save advanced settings.
+- [x] CP-M17-QA-002 Reset advanced settings.
+- [x] CP-M17-QA-003 Verify settings persist after refresh.
+- [x] CP-M17-QA-004 Verify settings change recommendation behavior.
 
 ---
 
@@ -3045,16 +3045,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M16-QA-003.
-**Last completed task name:** Confirm visualizations are readable on mobile.
-**Last completed milestone:** CP-M16 — Data Visualization And Insight Pages.
+**Last completed task ID:** CP-M17-QA-004.
+**Last completed task name:** Verify settings change recommendation behavior.
+**Last completed milestone:** CP-M17 — Advanced Settings And Personalization.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M17 — Advanced Settings And Personalization.
-**Next recommended task:** CP-M17-BE-001 Add recommendation formula weights to UserSettings.
+**Current milestone:** CP-M18 — Security, Privacy, And Data Protection.
+**Next recommended task:** CP-M18-BE-001 Audit every queryset for owner/user filtering.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M16 Data Visualization And Insight Pages is complete. The backend now exposes owner-scoped analytics endpoints for consumption timeline, rating distribution, media type distribution, dimension trends, genericness vs satisfaction, regret vs time cost, top creators, and top themes. The frontend adds shared analytics contracts, an Insights API client, a responsive `/insights` page with loading/empty/error/success states, sidebar navigation, and Dashboard links. Automated coverage includes backend empty/sample analytics tests, frontend Insights/Dashboard/App tests, Playwright browser-to-backend Insights coverage for empty and sample mobile states, and updated API/frontend/testing/manual documentation.
+CP-M17 Advanced Settings And Personalization is complete. User settings now persist recommendation formula weights, default Tonight Mode context, recommendation strictness, modern exception handling, burnout sensitivity, Completion Detox strictness, and notification preferences. Candidate Evaluator, Tonight Mode, queue scoring, and Completion Detox read those saved preferences, while the Settings page exposes accessible controls, reset-to-default behavior, explanatory copy, persistence after refresh, and browser e2e coverage for the cross-page effects. Documentation and manual tests now describe the advanced settings contract.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3071,4 +3071,5 @@ CP-M16 Data Visualization And Insight Pages is complete. The backend now exposes
 - CP-M14 completed: unified search, command palette navigation, URL-backed advanced Library filters, browser e2e, and manual documentation are in place.
 - CP-M15 completed: jobs API, polling hooks, Jobs page, header notifications, and background job records for metadata, graph, narrative, import, and export are in place.
 - CP-M16 completed: analytics endpoints, shared contracts, responsive Insights page, Dashboard/sidebar links, and browser e2e coverage are in place.
-- CP-M17 is next: advanced settings and personalization fields plus recommendation behavior integration.
+- CP-M17 completed: advanced personalization settings, frontend controls, recommendation behavior integration, browser e2e, and docs are in place.
+- CP-M18 is next: security, privacy, and data protection audit starting with owner/user queryset filtering.

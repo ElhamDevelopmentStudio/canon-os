@@ -166,6 +166,117 @@ def test_candidate_evaluation_uses_saved_genericness_sensitivity() -> None:
     )
 
 
+def test_candidate_evaluation_uses_preferred_recommendation_strictness() -> None:
+    client, user = authenticated_client()
+    UserSettings.objects.create(
+        user=user,
+        preferred_recommendation_strictness=1,
+        preferred_scoring_strictness=1,
+    )
+    lenient_candidate = Candidate.objects.create(
+        owner=user,
+        title="Borderline but promising",
+        media_type="movie",
+        premise="A modest but original chamber drama with a clear stop point.",
+        hype_level=5,
+        expected_genericness=3,
+        expected_time_cost_minutes=95,
+    )
+
+    lenient_response = client.post(
+        reverse("candidate-evaluate", args=[lenient_candidate.id]), format="json"
+    )
+
+    assert lenient_response.status_code == status.HTTP_200_OK
+    UserSettings.objects.filter(user=user).update(
+        preferred_recommendation_strictness=10,
+        preferred_scoring_strictness=10,
+    )
+    strict_candidate = Candidate.objects.create(
+        owner=user,
+        title="Borderline but promising again",
+        media_type="movie",
+        premise="A modest but original chamber drama with a clear stop point.",
+        hype_level=5,
+        expected_genericness=3,
+        expected_time_cost_minutes=95,
+    )
+
+    strict_response = client.post(
+        reverse("candidate-evaluate", args=[strict_candidate.id]), format="json"
+    )
+
+    assert strict_response.status_code == status.HTTP_200_OK
+    decision_rank = {"watch_now": 3, "sample": 2, "delay": 1, "skip": 0}
+    lenient_evaluation = lenient_response.json()["evaluation"]
+    strict_evaluation = strict_response.json()["evaluation"]
+    assert (
+        decision_rank[strict_evaluation["decision"]] < decision_rank[lenient_evaluation["decision"]]
+    )
+    assert any(
+        "recommendation strictness" in reason.lower()
+        for reason in strict_evaluation["reasonsAgainst"]
+    )
+
+
+def test_candidate_evaluation_respects_allow_modern_exceptions() -> None:
+    client, user = authenticated_client()
+    UserSettings.objects.create(
+        user=user,
+        allow_modern_exceptions=True,
+        modern_media_skepticism_level=10,
+        genericness_sensitivity=7,
+    )
+    allowed_candidate = Candidate.objects.create(
+        owner=user,
+        title="Modern auteur exception",
+        media_type="movie",
+        release_year=2024,
+        known_creator="Distinctive Director",
+        premise="Original authorial voice with patient craft and low genericness.",
+        source_of_interest="Niche festival note",
+        hype_level=3,
+        expected_genericness=2,
+        expected_time_cost_minutes=110,
+    )
+
+    allowed_response = client.post(
+        reverse("candidate-evaluate", args=[allowed_candidate.id]), format="json"
+    )
+
+    assert allowed_response.status_code == status.HTTP_200_OK
+    UserSettings.objects.filter(user=user).update(allow_modern_exceptions=False)
+    blocked_candidate = Candidate.objects.create(
+        owner=user,
+        title="Modern auteur exception blocked",
+        media_type="movie",
+        release_year=2024,
+        known_creator="Distinctive Director",
+        premise="Original authorial voice with patient craft and low genericness.",
+        source_of_interest="Niche festival note",
+        hype_level=3,
+        expected_genericness=2,
+        expected_time_cost_minutes=110,
+    )
+
+    blocked_response = client.post(
+        reverse("candidate-evaluate", args=[blocked_candidate.id]), format="json"
+    )
+
+    assert blocked_response.status_code == status.HTTP_200_OK
+    allowed_evaluation = allowed_response.json()["evaluation"]
+    blocked_evaluation = blocked_response.json()["evaluation"]
+    assert allowed_evaluation["riskScore"] < blocked_evaluation["riskScore"]
+    assert any(
+        "creator voice" in reason.lower() or "distinctive craft" in reason.lower()
+        for reason in allowed_evaluation["reasonsFor"]
+    )
+    assert any(
+        "modern exceptions are disabled" in reason.lower()
+        for reason in blocked_evaluation["reasonsAgainst"]
+    )
+
+
 def test_candidate_privacy_for_list_detail_evaluation_and_update() -> None:
     owner = create_user("candidate-owner@example.com")
     other = create_user("candidate-other@example.com")

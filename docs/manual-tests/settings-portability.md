@@ -1,26 +1,45 @@
 # Settings and Portability Manual Test
 
-## Happy path: save basic settings
+## Happy path: save advanced settings
 
 1. Log in and open **Settings**.
-   - Expected: The Settings page shows Profile settings, Display settings, Recommendation settings, and Import and export.
+   - Expected: The Settings page shows Profile settings, Display settings, Advanced Recommendation Settings, and Import and export.
 2. Change **Display name** to a new value.
    - Expected: The Save Settings button becomes enabled.
 3. Change **Theme preference** to Dark.
    - Expected: No error appears before saving.
 4. Change **Default risk tolerance** to High and set **Genericness sensitivity** to 9.
    - Expected: The controls show the new values.
-5. Click **Save Settings**.
+5. In **Default Tonight Mode**, set **Default Tonight minutes** to 45, **Default Tonight energy** to Low, **Default Tonight focus** to Deep, and **Default Tonight desired effect** to Light.
+   - Expected: The controls show the new defaults.
+6. Set **Recommendation strictness** to 7, **Burnout sensitivity** to 8, **Completion detox strictness** to 9, **Personal fit** to 36, and **Quality signal** to 24.
+   - Expected: Each slider/input shows the selected value and nearby copy explains how it affects recommendations.
+7. Turn off **Allow modern exceptions** and turn on **Browser notifications**.
+   - Expected: The toggles show the selected states.
+8. Click **Save Settings**.
    - Expected: A “Settings saved.” confirmation appears and the app shell switches to dark mode.
-6. Refresh the browser.
-   - Expected: The saved display name, risk tolerance, and slider values are still shown.
+9. Refresh the browser.
+   - Expected: The saved display name, risk tolerance, Tonight defaults, strictness sliders, formula weights, and notification toggle values are still shown.
+
+## Happy path: reset advanced recommendation defaults
+
+1. Open **Settings** and change several Advanced Recommendation Settings without saving.
+   - Expected: Save Settings and Reset Changes become enabled.
+2. Click **Reset To Recommended Defaults**.
+   - Expected: Formula weights, Tonight defaults, strictness sliders, modern exception behavior, and notification preferences return to CanonOS defaults.
+3. Click **Save Settings**.
+   - Expected: A success confirmation appears and a refresh keeps the recommended defaults.
 
 ## Settings influence checks
 
-1. After saving Default risk tolerance as High, open **Tonight Mode**.
-   - Expected: Risk tolerance defaults to High.
+1. After saving Default risk tolerance as High and Default Tonight Mode as 45 minutes, Low energy, Deep focus, and Light desired effect, open **Tonight Mode**.
+   - Expected: Tonight Mode defaults to High risk tolerance, 45 minutes, Low energy, Deep focus, and Light desired effect.
 2. Open **Candidate Evaluator**.
-   - Expected: The page shows the saved genericness sensitivity and modern media skepticism values.
+   - Expected: The page shows the saved genericness sensitivity, modern media skepticism, recommendation strictness, and whether modern exceptions are allowed.
+3. Evaluate a modern candidate after turning **Allow modern exceptions** off.
+   - Expected: The explanation warns that a modern-work exception was detected but modern exceptions are disabled.
+4. Open **Completion Detox** and evaluate a borderline completion decision after raising **Completion detox strictness**.
+   - Expected: The decision is at least as strict as before; borderline items are more likely to be paused or dropped.
 
 ## Error path: settings validation
 

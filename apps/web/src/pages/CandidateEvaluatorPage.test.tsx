@@ -226,6 +226,30 @@ describe("CandidateEvaluatorPage", () => {
           modernMediaSkepticismLevel: 5,
           genericnessSensitivity: 6,
           preferredScoringStrictness: 5,
+          recommendationFormulaWeights: {
+            personalFit: 30,
+            moodFit: 20,
+            qualitySignal: 20,
+            genericnessPenalty: 15,
+            regretRiskPenalty: 10,
+            commitmentCostPenalty: 5,
+          },
+          defaultTonightMode: {
+            availableMinutes: 90,
+            energyLevel: "medium",
+            focusLevel: "medium",
+            desiredEffect: "quality",
+          },
+          preferredRecommendationStrictness: 5,
+          allowModernExceptions: true,
+          burnoutSensitivity: 5,
+          completionDetoxStrictness: 5,
+          notificationPreferences: {
+            browserNotifications: false,
+            emailDigest: false,
+            recommendationReminders: true,
+            completionDetoxReminders: true,
+          },
         },
         updatedAt: "2026-01-01T00:00:00Z",
       },
@@ -277,7 +301,7 @@ describe("CandidateEvaluatorPage", () => {
     expect(screen.getByRole("heading", { name: /narrative dna signals/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /critic council results/i })).toBeInTheDocument();
     expect(screen.getByText(/clear guardrails/i)).toBeInTheDocument();
-    expect(screen.getByText(/modern exception/i)).toBeInTheDocument();
+    expect(screen.getByText(/modern exception based on red flags/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /add to queue/i })).toBeEnabled();
   });
 

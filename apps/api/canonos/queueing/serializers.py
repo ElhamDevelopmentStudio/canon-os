@@ -199,19 +199,22 @@ class QueueRecalculateResponseSerializer(serializers.Serializer):
 
 class TonightModeRequestSerializer(serializers.Serializer):
     availableMinutes = serializers.IntegerField(
-        source="available_minutes", min_value=1, max_value=1440
+        source="available_minutes", min_value=1, max_value=1440, required=False
     )
     energyLevel = serializers.ChoiceField(
         source="energy_level",
         choices=TonightModeSession.EnergyLevel.choices,
+        required=False,
     )
     focusLevel = serializers.ChoiceField(
         source="focus_level",
         choices=TonightModeSession.FocusLevel.choices,
+        required=False,
     )
     desiredEffect = serializers.ChoiceField(
         source="desired_effect",
         choices=TonightModeSession.DesiredEffect.choices,
+        required=False,
     )
     preferredMediaTypes = serializers.ListField(
         source="preferred_media_types",

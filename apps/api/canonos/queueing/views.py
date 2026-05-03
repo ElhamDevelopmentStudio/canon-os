@@ -185,6 +185,22 @@ class TonightModeView(APIView):
         user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
         context_data = {
             **serializer.validated_data,
+            "available_minutes": serializer.validated_data.get(
+                "available_minutes",
+                user_settings.default_tonight_available_minutes,
+            ),
+            "energy_level": serializer.validated_data.get(
+                "energy_level",
+                user_settings.default_tonight_energy_level,
+            ),
+            "focus_level": serializer.validated_data.get(
+                "focus_level",
+                user_settings.default_tonight_focus_level,
+            ),
+            "desired_effect": serializer.validated_data.get(
+                "desired_effect",
+                user_settings.default_tonight_desired_effect,
+            ),
             "preferred_media_types": serializer.validated_data.get(
                 "preferred_media_types", user_settings.default_media_types
             ),

@@ -197,7 +197,7 @@ Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi
 
 ### Settings And Portability UI
 
-Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. Anti-Generic rule API calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`. The Settings page owns profile preferences, recommendation defaults, theme preferences, Anti-Generic rule toggles/weights/reset, import preview/confirm, JSON export, and media/ratings CSV export. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
+Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. Anti-Generic rule API calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`. The Settings page owns profile preferences, theme preferences, Advanced Recommendation Settings, Anti-Generic rule toggles/weights/reset, import preview/confirm, JSON export, and media/ratings CSV export. Advanced Recommendation Settings include default media and risk preferences, default Tonight Mode context, formula weights, recommendation strictness, modern exception behavior, burnout sensitivity, Completion Detox strictness, notification preferences, and a reset-to-recommended-defaults action. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
 
 ## Metadata enrichment UI
 

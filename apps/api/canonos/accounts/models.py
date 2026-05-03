@@ -9,6 +9,26 @@ def default_settings_media_types() -> list[str]:
     return ["movie", "anime", "novel", "audiobook"]
 
 
+def default_recommendation_formula_weights() -> dict[str, int]:
+    return {
+        "personalFit": 30,
+        "moodFit": 20,
+        "qualitySignal": 20,
+        "genericnessPenalty": 15,
+        "regretRiskPenalty": 10,
+        "commitmentCostPenalty": 5,
+    }
+
+
+def default_notification_preferences() -> dict[str, bool]:
+    return {
+        "browserNotifications": False,
+        "emailDigest": False,
+        "recommendationReminders": True,
+        "completionDetoxReminders": True,
+    }
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
@@ -37,6 +57,23 @@ class UserSettings(models.Model):
         LIGHT = "light", "Light"
         DARK = "dark", "Dark"
 
+    class EnergyLevel(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        HIGH = "high", "High"
+
+    class FocusLevel(models.TextChoices):
+        LOW = "low", "Low"
+        MEDIUM = "medium", "Medium"
+        DEEP = "deep", "Deep"
+
+    class DesiredEffect(models.TextChoices):
+        COMFORT = "comfort", "Comfort"
+        QUALITY = "quality", "Quality"
+        SURPRISE = "surprise", "Surprise"
+        LIGHT = "light", "Light"
+        DEEP = "deep", "Deep"
+
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="settings"
     )
@@ -57,6 +94,46 @@ class UserSettings(models.Model):
     preferred_scoring_strictness = models.PositiveSmallIntegerField(
         default=5,
         validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    recommendation_formula_weights = models.JSONField(
+        default=default_recommendation_formula_weights,
+        blank=True,
+    )
+    default_tonight_available_minutes = models.PositiveIntegerField(
+        default=90,
+        validators=[MinValueValidator(1), MaxValueValidator(1440)],
+    )
+    default_tonight_energy_level = models.CharField(
+        max_length=16,
+        choices=EnergyLevel.choices,
+        default=EnergyLevel.MEDIUM,
+    )
+    default_tonight_focus_level = models.CharField(
+        max_length=16,
+        choices=FocusLevel.choices,
+        default=FocusLevel.MEDIUM,
+    )
+    default_tonight_desired_effect = models.CharField(
+        max_length=24,
+        choices=DesiredEffect.choices,
+        default=DesiredEffect.QUALITY,
+    )
+    preferred_recommendation_strictness = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    allow_modern_exceptions = models.BooleanField(default=True)
+    burnout_sensitivity = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    completion_detox_strictness = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    notification_preferences = models.JSONField(
+        default=default_notification_preferences,
+        blank=True,
     )
     theme_preference = models.CharField(
         max_length=16,

@@ -14,6 +14,29 @@ function normalizeSettings(settings: UserSettings): UserSettings {
       modernMediaSkepticismLevel: Number(settings.recommendation.modernMediaSkepticismLevel),
       genericnessSensitivity: Number(settings.recommendation.genericnessSensitivity),
       preferredScoringStrictness: Number(settings.recommendation.preferredScoringStrictness),
+      preferredRecommendationStrictness: Number(
+        settings.recommendation.preferredRecommendationStrictness,
+      ),
+      burnoutSensitivity: Number(settings.recommendation.burnoutSensitivity),
+      completionDetoxStrictness: Number(settings.recommendation.completionDetoxStrictness),
+      defaultTonightMode: {
+        ...settings.recommendation.defaultTonightMode,
+        availableMinutes: Number(settings.recommendation.defaultTonightMode.availableMinutes),
+      },
+      recommendationFormulaWeights: {
+        personalFit: Number(settings.recommendation.recommendationFormulaWeights.personalFit),
+        moodFit: Number(settings.recommendation.recommendationFormulaWeights.moodFit),
+        qualitySignal: Number(settings.recommendation.recommendationFormulaWeights.qualitySignal),
+        genericnessPenalty: Number(
+          settings.recommendation.recommendationFormulaWeights.genericnessPenalty,
+        ),
+        regretRiskPenalty: Number(
+          settings.recommendation.recommendationFormulaWeights.regretRiskPenalty,
+        ),
+        commitmentCostPenalty: Number(
+          settings.recommendation.recommendationFormulaWeights.commitmentCostPenalty,
+        ),
+      },
     },
   };
 }

@@ -1,16 +1,26 @@
 import {
+  DESIRED_EFFECTS,
+  ENERGY_LEVELS,
   EXPORT_FORMATS,
+  FOCUS_LEVELS,
   IMPORT_SOURCE_TYPES,
   MEDIA_TYPES,
+  RECOMMENDATION_FORMULA_WEIGHT_KEYS,
   RISK_TOLERANCES,
   THEME_PREFERENCES,
   type AntiGenericRule,
+  type DesiredEffect,
+  type EnergyLevel,
   type ExportFormat,
   type ExportRestoreDryRunResult,
   type ExportResult,
+  type FocusLevel,
   type ImportBatch,
   type ImportSourceType,
   type MediaType,
+  type NotificationPreferences,
+  type RecommendationFormulaWeightKey,
+  type RecommendationFormulaWeights,
   type RiskTolerance,
   type ThemePreference,
   type UserSettings,
@@ -46,10 +56,17 @@ import {
 } from "@/features/portability/portabilityLabels";
 import { updateUserSettings, useUserSettings } from "@/features/settings/settingsApi";
 import {
+  recommendationFormulaWeightHelp,
+  recommendationFormulaWeightLabels,
   riskToleranceLabels,
   settingsMediaTypeLabels,
   themePreferenceLabels,
 } from "@/features/settings/settingsLabels";
+import {
+  desiredEffectLabels,
+  energyLevelLabels,
+  focusLevelLabels,
+} from "@/features/tonight-mode/tonightLabels";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/stores/appStore";
@@ -64,7 +81,63 @@ type SettingsDraft = {
   modernMediaSkepticismLevel: string;
   genericnessSensitivity: string;
   preferredScoringStrictness: string;
+  recommendationFormulaWeights: Record<RecommendationFormulaWeightKey, string>;
+  defaultTonightAvailableMinutes: string;
+  defaultTonightEnergyLevel: EnergyLevel;
+  defaultTonightFocusLevel: FocusLevel;
+  defaultTonightDesiredEffect: DesiredEffect;
+  preferredRecommendationStrictness: string;
+  allowModernExceptions: boolean;
+  burnoutSensitivity: string;
+  completionDetoxStrictness: string;
+  notificationPreferences: NotificationPreferences;
 };
+
+const recommendedRecommendationDefaults = {
+  defaultMediaTypes: ["movie", "anime", "novel", "audiobook"] as MediaType[],
+  defaultRiskTolerance: "medium" as RiskTolerance,
+  modernMediaSkepticismLevel: "5",
+  genericnessSensitivity: "6",
+  preferredScoringStrictness: "5",
+  recommendationFormulaWeights: {
+    personalFit: "30",
+    moodFit: "20",
+    qualitySignal: "20",
+    genericnessPenalty: "15",
+    regretRiskPenalty: "10",
+    commitmentCostPenalty: "5",
+  } satisfies Record<RecommendationFormulaWeightKey, string>,
+  defaultTonightAvailableMinutes: "90",
+  defaultTonightEnergyLevel: "medium" as EnergyLevel,
+  defaultTonightFocusLevel: "medium" as FocusLevel,
+  defaultTonightDesiredEffect: "quality" as DesiredEffect,
+  preferredRecommendationStrictness: "5",
+  allowModernExceptions: true,
+  burnoutSensitivity: "5",
+  completionDetoxStrictness: "5",
+  notificationPreferences: {
+    browserNotifications: false,
+    emailDigest: false,
+    recommendationReminders: true,
+    completionDetoxReminders: true,
+  },
+};
+
+function formulaWeightsToDraft(
+  weights: RecommendationFormulaWeights,
+): Record<RecommendationFormulaWeightKey, string> {
+  return Object.fromEntries(
+    RECOMMENDATION_FORMULA_WEIGHT_KEYS.map((key) => [key, String(weights[key])]),
+  ) as Record<RecommendationFormulaWeightKey, string>;
+}
+
+function formulaWeightsToRequest(
+  weights: Record<RecommendationFormulaWeightKey, string>,
+): RecommendationFormulaWeights {
+  return Object.fromEntries(
+    RECOMMENDATION_FORMULA_WEIGHT_KEYS.map((key) => [key, Number(weights[key])]),
+  ) as RecommendationFormulaWeights;
+}
 
 function settingsToDraft(settings: UserSettings): SettingsDraft {
   return {
@@ -77,6 +150,22 @@ function settingsToDraft(settings: UserSettings): SettingsDraft {
     modernMediaSkepticismLevel: String(settings.recommendation.modernMediaSkepticismLevel),
     genericnessSensitivity: String(settings.recommendation.genericnessSensitivity),
     preferredScoringStrictness: String(settings.recommendation.preferredScoringStrictness),
+    recommendationFormulaWeights: formulaWeightsToDraft(
+      settings.recommendation.recommendationFormulaWeights,
+    ),
+    defaultTonightAvailableMinutes: String(
+      settings.recommendation.defaultTonightMode.availableMinutes,
+    ),
+    defaultTonightEnergyLevel: settings.recommendation.defaultTonightMode.energyLevel,
+    defaultTonightFocusLevel: settings.recommendation.defaultTonightMode.focusLevel,
+    defaultTonightDesiredEffect: settings.recommendation.defaultTonightMode.desiredEffect,
+    preferredRecommendationStrictness: String(
+      settings.recommendation.preferredRecommendationStrictness,
+    ),
+    allowModernExceptions: settings.recommendation.allowModernExceptions,
+    burnoutSensitivity: String(settings.recommendation.burnoutSensitivity),
+    completionDetoxStrictness: String(settings.recommendation.completionDetoxStrictness),
+    notificationPreferences: settings.recommendation.notificationPreferences,
   };
 }
 
@@ -96,6 +185,18 @@ function draftToRequest(draft: SettingsDraft): UserSettingsUpdateRequest {
       modernMediaSkepticismLevel: Number(draft.modernMediaSkepticismLevel),
       genericnessSensitivity: Number(draft.genericnessSensitivity),
       preferredScoringStrictness: Number(draft.preferredScoringStrictness),
+      recommendationFormulaWeights: formulaWeightsToRequest(draft.recommendationFormulaWeights),
+      defaultTonightMode: {
+        availableMinutes: Number(draft.defaultTonightAvailableMinutes),
+        energyLevel: draft.defaultTonightEnergyLevel,
+        focusLevel: draft.defaultTonightFocusLevel,
+        desiredEffect: draft.defaultTonightDesiredEffect,
+      },
+      preferredRecommendationStrictness: Number(draft.preferredRecommendationStrictness),
+      allowModernExceptions: draft.allowModernExceptions,
+      burnoutSensitivity: Number(draft.burnoutSensitivity),
+      completionDetoxStrictness: Number(draft.completionDetoxStrictness),
+      notificationPreferences: draft.notificationPreferences,
     },
   };
 }
@@ -135,6 +236,44 @@ export function SettingsPage() {
           : [...current.defaultMediaTypes, mediaType],
       };
     });
+    setSavedMessage(null);
+    setFormError(null);
+  }
+
+  function updateFormulaWeight(field: RecommendationFormulaWeightKey, value: string) {
+    setDraft((current) =>
+      current
+        ? {
+            ...current,
+            recommendationFormulaWeights: {
+              ...current.recommendationFormulaWeights,
+              [field]: value,
+            },
+          }
+        : current,
+    );
+    setSavedMessage(null);
+    setFormError(null);
+  }
+
+  function updateNotificationPreference(field: keyof NotificationPreferences, value: boolean) {
+    setDraft((current) =>
+      current
+        ? {
+            ...current,
+            notificationPreferences: {
+              ...current.notificationPreferences,
+              [field]: value,
+            },
+          }
+        : current,
+    );
+    setSavedMessage(null);
+    setFormError(null);
+  }
+
+  function resetRecommendationDefaults() {
+    setDraft((current) => (current ? { ...current, ...recommendedRecommendationDefaults } : current));
     setSavedMessage(null);
     setFormError(null);
   }
@@ -235,13 +374,24 @@ export function SettingsPage() {
             </div>
           </SectionCard>
 
-          <SectionCard title="Recommendation settings">
-            <h2 className="text-xl font-semibold">Recommendation settings</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">
-              These defaults inform Candidate Evaluator risk scoring and Tonight Mode defaults.
-            </p>
+          <SectionCard title="Advanced Recommendation Settings">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-semibold">Advanced Recommendation Settings</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Tune CanonOS without hiding the formula. These values affect Candidate Evaluator, Tonight Mode, and Completion Detox.
+                </p>
+              </div>
+              <Button type="button" variant="secondary" onClick={resetRecommendationDefaults}>
+                Reset To Recommended Defaults
+              </Button>
+            </div>
+
             <fieldset className="mt-5 grid gap-3">
               <legend className="text-sm font-semibold">Default media types</legend>
+              <p className="text-sm text-muted-foreground">
+                Tonight Mode uses these when you do not choose media types manually.
+              </p>
               <div className="flex flex-wrap gap-2">
                 {MEDIA_TYPES.map((type) => (
                   <label
@@ -258,6 +408,7 @@ export function SettingsPage() {
                 ))}
               </div>
             </fieldset>
+
             <div className="mt-5 grid gap-4 md:grid-cols-2">
               <SelectField
                 label="Default risk tolerance"
@@ -266,21 +417,127 @@ export function SettingsPage() {
                 value={draft.defaultRiskTolerance}
                 onChange={(value) => updateDraft("defaultRiskTolerance", value)}
               />
+              <TextField
+                label="Default Tonight minutes"
+                max={1440}
+                min={1}
+                type="number"
+                value={draft.defaultTonightAvailableMinutes}
+                onChange={(value) => updateDraft("defaultTonightAvailableMinutes", value)}
+              />
+              <SelectField
+                label="Default Tonight energy"
+                labels={energyLevelLabels}
+                options={ENERGY_LEVELS}
+                value={draft.defaultTonightEnergyLevel}
+                onChange={(value) => updateDraft("defaultTonightEnergyLevel", value)}
+              />
+              <SelectField
+                label="Default Tonight focus"
+                labels={focusLevelLabels}
+                options={FOCUS_LEVELS}
+                value={draft.defaultTonightFocusLevel}
+                onChange={(value) => updateDraft("defaultTonightFocusLevel", value)}
+              />
+              <SelectField
+                label="Default Tonight desired effect"
+                labels={desiredEffectLabels}
+                options={DESIRED_EFFECTS}
+                value={draft.defaultTonightDesiredEffect}
+                onChange={(value) => updateDraft("defaultTonightDesiredEffect", value)}
+              />
               <RangeField
+                helpText="Adds caution for recent releases when actual risk signals exist."
                 label="Modern media skepticism level"
                 value={draft.modernMediaSkepticismLevel}
                 onChange={(value) => updateDraft("modernMediaSkepticismLevel", value)}
               />
               <RangeField
+                helpText="Raises the penalty for expected genericness and Anti-Generic red flags."
                 label="Genericness sensitivity"
                 value={draft.genericnessSensitivity}
                 onChange={(value) => updateDraft("genericnessSensitivity", value)}
               />
               <RangeField
-                label="Preferred scoring strictness"
-                value={draft.preferredScoringStrictness}
-                onChange={(value) => updateDraft("preferredScoringStrictness", value)}
+                helpText="Makes Candidate Evaluator require stronger evidence before watch-now/sample decisions."
+                label="Recommendation strictness"
+                value={draft.preferredRecommendationStrictness}
+                onChange={(value) => {
+                  updateDraft("preferredRecommendationStrictness", value);
+                  updateDraft("preferredScoringStrictness", value);
+                }}
               />
+              <RangeField
+                helpText="Increases fatigue penalties for repeated, stale, or high-commitment queue items."
+                label="Burnout sensitivity"
+                value={draft.burnoutSensitivity}
+                onChange={(value) => updateDraft("burnoutSensitivity", value)}
+              />
+              <RangeField
+                helpText="Makes sample-boundary drop or pause advice trigger at higher motivation scores."
+                label="Completion detox strictness"
+                value={draft.completionDetoxStrictness}
+                onChange={(value) => updateDraft("completionDetoxStrictness", value)}
+              />
+            </div>
+
+            <fieldset className="mt-6 grid gap-4">
+              <legend className="text-sm font-semibold">Formula weights</legend>
+              <p className="text-sm leading-6 text-muted-foreground">
+                Defaults mirror the SRS scoring model. Higher positive weights lift fit; higher penalty weights protect time.
+              </p>
+              <div className="grid gap-4 md:grid-cols-2">
+                {RECOMMENDATION_FORMULA_WEIGHT_KEYS.map((key) => (
+                  <RangeField
+                    helpText={recommendationFormulaWeightHelp[key]}
+                    key={key}
+                    label={recommendationFormulaWeightLabels[key]}
+                    max={50}
+                    suffix="%"
+                    value={draft.recommendationFormulaWeights[key]}
+                    onChange={(value) => updateFormulaWeight(key, value)}
+                  />
+                ))}
+              </div>
+            </fieldset>
+
+            <div className="mt-6 grid gap-3 rounded-2xl border border-border bg-background p-4">
+              <h3 className="font-semibold">Modern exceptions and notifications</h3>
+              <p className="text-sm leading-6 text-muted-foreground">
+                Modern exception support prevents recent, distinctive works from being punished only because of release year. Notification preferences are stored now so reminders can use the same contract later.
+              </p>
+              <div className="grid gap-3 md:grid-cols-2">
+                <ToggleField
+                  checked={draft.allowModernExceptions}
+                  description="Let Candidate Evaluator reduce recency caution when creator voice or low-genericness evidence is present."
+                  label="Allow modern exceptions"
+                  onChange={(value) => updateDraft("allowModernExceptions", value)}
+                />
+                <ToggleField
+                  checked={draft.notificationPreferences.recommendationReminders}
+                  description="Prepare reminders for queued recommendations and Tonight Mode follow-up."
+                  label="Recommendation reminders"
+                  onChange={(value) => updateNotificationPreference("recommendationReminders", value)}
+                />
+                <ToggleField
+                  checked={draft.notificationPreferences.completionDetoxReminders}
+                  description="Prepare gentle check-ins at sample boundaries."
+                  label="Completion Detox reminders"
+                  onChange={(value) => updateNotificationPreference("completionDetoxReminders", value)}
+                />
+                <ToggleField
+                  checked={draft.notificationPreferences.browserNotifications}
+                  description="Store browser-notification preference; permission prompt will be added when notifications ship."
+                  label="Browser notifications"
+                  onChange={(value) => updateNotificationPreference("browserNotifications", value)}
+                />
+                <ToggleField
+                  checked={draft.notificationPreferences.emailDigest}
+                  description="Store weekly digest preference for future notification integrations."
+                  label="Email digest"
+                  onChange={(value) => updateNotificationPreference("emailDigest", value)}
+                />
+              </div>
             </div>
           </SectionCard>
 
@@ -299,6 +556,7 @@ function SettingsSubnav() {
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">Settings Sections</p>
       <ul className="mt-4 grid gap-2 text-sm">
         <li className="rounded-xl bg-muted px-3 py-2 font-medium text-foreground">Profile & Preferences</li>
+        <li className="rounded-xl px-3 py-2 text-muted-foreground">Advanced Recommendations</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Anti-Generic Rules</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Data & Integrations</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Account & Security</li>
@@ -307,11 +565,32 @@ function SettingsSubnav() {
   );
 }
 
-function TextField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+function TextField({
+  label,
+  max,
+  min,
+  type = "text",
+  value,
+  onChange,
+}: {
+  label: string;
+  max?: number;
+  min?: number;
+  type?: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <label className="grid gap-1.5 text-sm font-medium">
       {label}
-      <input className={fieldClassName} value={value} onChange={(event) => onChange(event.target.value)} />
+      <input
+        className={fieldClassName}
+        max={max}
+        min={min}
+        type={type}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
     </label>
   );
 }
@@ -343,22 +622,69 @@ function SelectField<T extends string>({
   );
 }
 
-function RangeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+function RangeField({
+  helpText,
+  label,
+  max = 10,
+  min = 0,
+  suffix,
+  value,
+  onChange,
+}: {
+  helpText?: string;
+  label: string;
+  max?: number;
+  min?: number;
+  suffix?: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
   return (
     <label className="grid gap-2 text-sm font-medium">
       <span className="flex items-center justify-between gap-3">
         {label}
-        <span className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">{value}/10</span>
+        <span className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
+          {value}
+          {suffix ?? `/${max}`}
+        </span>
       </span>
+      {helpText ? <span className="text-xs leading-5 text-muted-foreground">{helpText}</span> : null}
       <input
         aria-label={label}
-        max={10}
-        min={0}
+        max={max}
+        min={min}
         step={1}
         type="range"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       />
+    </label>
+  );
+}
+
+function ToggleField({
+  checked,
+  description,
+  label,
+  onChange,
+}: {
+  checked: boolean;
+  description: string;
+  label: string;
+  onChange: (value: boolean) => void;
+}) {
+  return (
+    <label className="flex items-start gap-3 rounded-xl border border-border p-3 text-sm">
+      <input
+        checked={checked}
+        className="mt-1"
+        type="checkbox"
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <span>
+        <span className="block font-medium">{label}</span>
+        <span className="mt-1 block leading-5 text-muted-foreground">{description}</span>
+      </span>
     </label>
   );
 }
