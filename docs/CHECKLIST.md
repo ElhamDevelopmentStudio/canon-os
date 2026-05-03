@@ -2258,84 +2258,84 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M11-SH-001 Define `CanonSeason` type.
-- [ ] CP-M11-SH-002 Define `CanonSeasonItem` type.
-- [ ] CP-M11-SH-003 Define `CanonTheme` type.
-- [ ] CP-M11-SH-004 Document Canon Builder behavior.
+- [x] CP-M11-SH-001 Define `CanonSeason` type.
+- [x] CP-M11-SH-002 Define `CanonSeasonItem` type.
+- [x] CP-M11-SH-003 Define `CanonTheme` type.
+- [x] CP-M11-SH-004 Document Canon Builder behavior.
 
 ### Backend Tasks
 
-- [ ] CP-M11-BE-001 Create canon app.
-- [ ] CP-M11-BE-002 Create CanonSeason model.
-- [ ] CP-M11-BE-003 Add owner/user foreign key.
-- [ ] CP-M11-BE-004 Add title field.
-- [ ] CP-M11-BE-005 Add theme field.
-- [ ] CP-M11-BE-006 Add description field.
-- [ ] CP-M11-BE-007 Add status field.
-- [ ] CP-M11-BE-008 Add start date field.
-- [ ] CP-M11-BE-009 Add end date field.
-- [ ] CP-M11-BE-010 Create CanonSeasonItem model.
-- [ ] CP-M11-BE-011 Add season foreign key.
-- [ ] CP-M11-BE-012 Add media item foreign key nullable.
-- [ ] CP-M11-BE-013 Add candidate foreign key nullable.
-- [ ] CP-M11-BE-014 Add title snapshot field.
-- [ ] CP-M11-BE-015 Add order field.
-- [ ] CP-M11-BE-016 Add reason included field.
-- [ ] CP-M11-BE-017 Add what to pay attention to field.
-- [ ] CP-M11-BE-018 Add completion status field.
-- [ ] CP-M11-BE-019 Create canon serializers.
-- [ ] CP-M11-BE-020 Create seasons list endpoint.
-- [ ] CP-M11-BE-021 Create season create endpoint.
-- [ ] CP-M11-BE-022 Create season detail endpoint.
-- [ ] CP-M11-BE-023 Create season update endpoint.
-- [ ] CP-M11-BE-024 Create season delete endpoint.
-- [ ] CP-M11-BE-025 Create season item add endpoint.
-- [ ] CP-M11-BE-026 Create season item update endpoint.
-- [ ] CP-M11-BE-027 Create season item reorder endpoint.
-- [ ] CP-M11-BE-028 Create season item delete endpoint.
-- [ ] CP-M11-BE-029 Add test for season creation.
-- [ ] CP-M11-BE-030 Add test for season item reorder.
+- [x] CP-M11-BE-001 Create canon app.
+- [x] CP-M11-BE-002 Create CanonSeason model.
+- [x] CP-M11-BE-003 Add owner/user foreign key.
+- [x] CP-M11-BE-004 Add title field.
+- [x] CP-M11-BE-005 Add theme field.
+- [x] CP-M11-BE-006 Add description field.
+- [x] CP-M11-BE-007 Add status field.
+- [x] CP-M11-BE-008 Add start date field.
+- [x] CP-M11-BE-009 Add end date field.
+- [x] CP-M11-BE-010 Create CanonSeasonItem model.
+- [x] CP-M11-BE-011 Add season foreign key.
+- [x] CP-M11-BE-012 Add media item foreign key nullable.
+- [x] CP-M11-BE-013 Add candidate foreign key nullable.
+- [x] CP-M11-BE-014 Add title snapshot field.
+- [x] CP-M11-BE-015 Add order field.
+- [x] CP-M11-BE-016 Add reason included field.
+- [x] CP-M11-BE-017 Add what to pay attention to field.
+- [x] CP-M11-BE-018 Add completion status field.
+- [x] CP-M11-BE-019 Create canon serializers.
+- [x] CP-M11-BE-020 Create seasons list endpoint.
+- [x] CP-M11-BE-021 Create season create endpoint.
+- [x] CP-M11-BE-022 Create season detail endpoint.
+- [x] CP-M11-BE-023 Create season update endpoint.
+- [x] CP-M11-BE-024 Create season delete endpoint.
+- [x] CP-M11-BE-025 Create season item add endpoint.
+- [x] CP-M11-BE-026 Create season item update endpoint.
+- [x] CP-M11-BE-027 Create season item reorder endpoint.
+- [x] CP-M11-BE-028 Create season item delete endpoint.
+- [x] CP-M11-BE-029 Add test for season creation.
+- [x] CP-M11-BE-030 Add test for season item reorder.
 
 ### Frontend Tasks
 
-- [ ] CP-M11-FE-001 Create canon API client file.
-- [ ] CP-M11-FE-002 Create Personal Canon page skeleton.
-- [ ] CP-M11-FE-003 Add page title.
-- [ ] CP-M11-FE-004 Add Create Season button.
-- [ ] CP-M11-FE-005 Create season card component.
-- [ ] CP-M11-FE-006 Add season status badge.
-- [ ] CP-M11-FE-007 Add season progress display.
-- [ ] CP-M11-FE-008 Create season form modal.
-- [ ] CP-M11-FE-009 Add title field to season form.
-- [ ] CP-M11-FE-010 Add theme field to season form.
-- [ ] CP-M11-FE-011 Add description textarea.
-- [ ] CP-M11-FE-012 Add Season Detail page skeleton.
-- [ ] CP-M11-FE-013 Add season header.
-- [ ] CP-M11-FE-014 Add season item list.
-- [ ] CP-M11-FE-015 Create season item card.
-- [ ] CP-M11-FE-016 Add reason included display.
-- [ ] CP-M11-FE-017 Add what to pay attention to display.
-- [ ] CP-M11-FE-018 Add Add Item button.
-- [ ] CP-M11-FE-019 Add reorder controls.
-- [ ] CP-M11-FE-020 Add mark item complete button.
-- [ ] CP-M11-FE-021 Add season reflection section.
+- [x] CP-M11-FE-001 Create canon API client file.
+- [x] CP-M11-FE-002 Create Personal Canon page skeleton.
+- [x] CP-M11-FE-003 Add page title.
+- [x] CP-M11-FE-004 Add Create Season button.
+- [x] CP-M11-FE-005 Create season card component.
+- [x] CP-M11-FE-006 Add season status badge.
+- [x] CP-M11-FE-007 Add season progress display.
+- [x] CP-M11-FE-008 Create season form modal.
+- [x] CP-M11-FE-009 Add title field to season form.
+- [x] CP-M11-FE-010 Add theme field to season form.
+- [x] CP-M11-FE-011 Add description textarea.
+- [x] CP-M11-FE-012 Add Season Detail page skeleton.
+- [x] CP-M11-FE-013 Add season header.
+- [x] CP-M11-FE-014 Add season item list.
+- [x] CP-M11-FE-015 Create season item card.
+- [x] CP-M11-FE-016 Add reason included display.
+- [x] CP-M11-FE-017 Add what to pay attention to display.
+- [x] CP-M11-FE-018 Add Add Item button.
+- [x] CP-M11-FE-019 Add reorder controls.
+- [x] CP-M11-FE-020 Add mark item complete button.
+- [x] CP-M11-FE-021 Add season reflection section.
 
 ### Integration Tasks
 
-- [ ] CP-M11-INT-001 Connect Canon page to seasons list endpoint.
-- [ ] CP-M11-INT-002 Connect Create Season form to create endpoint.
-- [ ] CP-M11-INT-003 Connect Season Detail page to detail endpoint.
-- [ ] CP-M11-INT-004 Connect Add Item button to item add endpoint.
-- [ ] CP-M11-INT-005 Connect reorder controls to reorder endpoint.
-- [ ] CP-M11-INT-006 Connect mark complete button to item update endpoint.
+- [x] CP-M11-INT-001 Connect Canon page to seasons list endpoint.
+- [x] CP-M11-INT-002 Connect Create Season form to create endpoint.
+- [x] CP-M11-INT-003 Connect Season Detail page to detail endpoint.
+- [x] CP-M11-INT-004 Connect Add Item button to item add endpoint.
+- [x] CP-M11-INT-005 Connect reorder controls to reorder endpoint.
+- [x] CP-M11-INT-006 Connect mark complete button to item update endpoint.
 
 ### QA Tasks
 
-- [ ] CP-M11-QA-001 Create a canon season.
-- [ ] CP-M11-QA-002 Add three items to season.
-- [ ] CP-M11-QA-003 Reorder season items.
-- [ ] CP-M11-QA-004 Mark season item complete.
-- [ ] CP-M11-QA-005 Confirm season progress updates.
+- [x] CP-M11-QA-001 Create a canon season.
+- [x] CP-M11-QA-002 Add three items to season.
+- [x] CP-M11-QA-003 Reorder season items.
+- [x] CP-M11-QA-004 Mark season item complete.
+- [x] CP-M11-QA-005 Confirm season progress updates.
 
 ---
 

@@ -9,6 +9,8 @@ export const APP_ROUTES = {
   tasteProfile: "/taste-profile",
   tasteEvolution: "/taste-evolution",
   completionDetox: "/completion-detox",
+  seasons: "/seasons",
+  canonSeasonDetail: "/seasons/:seasonId",
   tasteGraph: "/taste-graph",
   aftertasteLog: "/aftertaste-log",
   queue: "/queue",

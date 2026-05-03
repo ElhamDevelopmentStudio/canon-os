@@ -25,8 +25,8 @@
 | 22 | `/app/anti-generic` | Anti-Generic Filter |
 | 23 | `/app/discovery` | Media Archaeologist |
 | 24 | `/critic-council` | Critic Council |
-| 25 | `/app/canon/seasons` | Personal Canon Seasons |
-| 26 | `/app/canon/seasons/:seasonId` | Season Detail |
+| CP-M11 | `/seasons` | Personal Canon Seasons |
+| CP-M11 | `/seasons/:seasonId` | Season Detail |
 | 27 | `/app/adaptation` | Adaptation Intelligence |
 | 28 | `/app/search` | Global Search Results |
 | 29 | `/app/insights` | Insights and Reports |

@@ -203,6 +203,29 @@ export type {
   TimeSavedEntry,
 } from "./detox";
 export { DETOX_DECISIONS } from "./detox";
+
+export type {
+  CanonItemCanonStatus,
+  CanonItemCompletionStatus,
+  CanonSeason,
+  CanonSeasonCreateRequest,
+  CanonSeasonItem,
+  CanonSeasonItemCreateRequest,
+  CanonSeasonItemReorderRequest,
+  CanonSeasonItemReorderResponse,
+  CanonSeasonItemUpdateRequest,
+  CanonSeasonListResponse,
+  CanonSeasonStatus,
+  CanonSeasonUpdateRequest,
+  CanonTheme,
+  CanonThemeKey,
+} from "./canon";
+export {
+  CANON_ITEM_CANON_STATUSES,
+  CANON_ITEM_COMPLETION_STATUSES,
+  CANON_SEASON_STATUSES,
+  CANON_THEME_KEYS,
+} from "./canon";
 export * from "./narrative";
 
 export type {

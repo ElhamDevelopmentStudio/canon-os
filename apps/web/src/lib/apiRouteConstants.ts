@@ -29,6 +29,7 @@ export const API_ROUTES = {
   tasteEvolution: "/taste-evolution/",
   tasteEvolutionGenerate: "/taste-evolution/generate/",
   candidates: "/candidates/",
+  canonSeasons: "/seasons/",
   criticPersonas: "/critic-personas/",
   councilSessions: "/council-sessions/",
   discoveryGenerate: "/discovery/generate/",

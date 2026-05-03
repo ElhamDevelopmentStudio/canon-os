@@ -18,6 +18,8 @@ import { TonightModePage } from "@/pages/TonightModePage";
 import { TasteProfilePage } from "@/pages/TasteProfilePage";
 import { TasteEvolutionPage } from "@/pages/TasteEvolutionPage";
 import { CompletionDetoxPage } from "@/pages/CompletionDetoxPage";
+import { PersonalCanonPage } from "@/pages/PersonalCanonPage";
+import { CanonSeasonDetailPage } from "@/pages/CanonSeasonDetailPage";
 import { TasteGraphPage } from "@/pages/TasteGraphPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { SettingsPage } from "@/pages/SettingsPage";
@@ -33,6 +35,8 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.tasteProfile.slice(1), element: <TasteProfilePage /> },
   { path: APP_ROUTES.tasteEvolution.slice(1), element: <TasteEvolutionPage /> },
   { path: APP_ROUTES.completionDetox.slice(1), element: <CompletionDetoxPage /> },
+  { path: APP_ROUTES.seasons.slice(1), element: <PersonalCanonPage /> },
+  { path: "seasons/:seasonId", element: <CanonSeasonDetailPage /> },
   { path: APP_ROUTES.tasteGraph.slice(1), element: <TasteGraphPage /> },
   { path: APP_ROUTES.aftertasteLog.slice(1), element: <AftertasteLogPage /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },

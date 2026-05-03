@@ -33,6 +33,8 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/taste-evolution` | Taste Evolution Journal | Generate/list snapshots, show rating/medium/genericness/regret/fatigue/favorite-dimension trends, and expose current insight. |
 | `/completion-detox` | Completion Detox | Evaluate sample boundaries, toggle rules, mark media dropped/paused, show time saved, and list decisions. |
+| `/seasons` | Personal Canon | Create and list themed canon seasons with progress. |
+| `/seasons/:seasonId` | Canon Season Detail | Add mixed-source season items, reorder, complete, canon-mark, and reflect. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
 | `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items, recalculate priority, and restore archived items. |
 | `/settings` | Settings | Update profile/settings and run import/export flows. |
@@ -207,6 +209,10 @@ The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exp
 ### Completion Detox UI
 
 Completion Detox lives at `/completion-detox`. API calls live in `apps/web/src/features/detox/detoxApi.ts`. The page supports loading, empty, error, and success states; total/current-month time saved metrics; active sample rule toggles; media selector; current progress and motivation inputs; Evaluate Drop/Pause; decision result actions for Mark As Dropped, Mark As Paused, and Continue Anyway; and decision history. Media Detail shows a checkpoint warning when a planned/consuming item has an enabled matching detox rule.
+
+### Personal Canon UI
+
+Personal Canon lives at `/seasons` and `/seasons/:seasonId`. API calls live in `apps/web/src/features/canon/canonApi.ts`, and labels live in `apps/web/src/features/canon/canonLabels.ts`. The list page supports loading, empty, error, and success states; create season modal; season cards; status badges; item counts; and progress bars. The detail page supports mixed media/candidate/custom item creation, reason and attention notes, reorder controls, completion toggles, canon status controls, reflection prompts, and summary notes.
 
 ### Taste Evolution UI
 

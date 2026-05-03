@@ -88,6 +88,7 @@ describe("App", () => {
       APP_ROUTES.tasteProfile,
       APP_ROUTES.tasteEvolution,
       APP_ROUTES.completionDetox,
+      APP_ROUTES.seasons,
       APP_ROUTES.tasteGraph,
       APP_ROUTES.aftertasteLog,
       APP_ROUTES.queue,

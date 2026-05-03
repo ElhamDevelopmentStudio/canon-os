@@ -131,6 +131,26 @@ Candidate records are user-owned and require an authenticated session. The API s
 
 Candidate statuses are `unevaluated`, `watch_now`, `sample`, `delay`, and `skip`. Evaluation decisions are `watch_now`, `sample`, `delay`, and `skip`. Scoring details are documented in `docs/candidate-evaluator.md`.
 
+## Personal Canon API Contract
+
+Personal Canon seasons and items are user-owned and require an authenticated session. They power the `/seasons` and `/seasons/:seasonId` browser flows.
+
+Endpoints:
+
+- `GET /api/seasons/` lists the current user's canon seasons with progress and ordered items.
+- `POST /api/seasons/` creates a season with title, theme, description, status, optional dates, and reflection notes.
+- `GET /api/seasons/{id}/` returns one owned season with reflection prompts and ordered items.
+- `PATCH /api/seasons/{id}/` updates season metadata, status, dates, or reflection notes.
+- `DELETE /api/seasons/{id}/` deletes one owned season and its items.
+- `POST /api/seasons/{id}/items/` adds a custom, media-linked, or candidate-linked item.
+- `PATCH /api/seasons/{seasonId}/items/{itemId}/` updates item notes, completion status, canon status, source, or order.
+- `DELETE /api/seasons/{seasonId}/items/{itemId}/` removes one season item and compacts order.
+- `POST /api/seasons/{id}/items/reorder/` persists a new item order.
+
+Themes are `moral_collapse`, `anti_heroes_done_right`, `forgotten_masterpieces`, `modern_works_worth_it`, `atmosphere_over_plot`, and `custom`. Item completion statuses are `planned`, `in_progress`, `completed`, and `skipped`. Canon statuses are `unmarked`, `personal_canon`, `near_canon`, `rejected`, and `historically_important`.
+
+Shared TypeScript contracts live in `packages/contracts/src/canon.ts`; frontend calls live in `apps/web/src/features/canon/canonApi.ts`; product behavior is documented in `docs/personal-canon.md`.
+
 ## Anti-Generic Filter API Contract
 
 Anti-Generic rules and evaluations are user-owned and require an authenticated session. Candidate evaluation automatically creates and embeds an Anti-Generic result.

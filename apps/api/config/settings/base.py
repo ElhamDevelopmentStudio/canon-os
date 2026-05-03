@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "canonos.anti_generic",
     "canonos.aftertaste",
     "canonos.candidates",
+    "canonos.canon",
     "canonos.common",
     "canonos.council",
     "canonos.dashboard",

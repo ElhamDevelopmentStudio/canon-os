@@ -1,5 +1,6 @@
 import {
   Ban,
+  BookMarked,
   BookOpen,
   ClipboardList,
   Compass,
@@ -78,6 +79,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.completionDetox,
     icon: Ban,
     description: "Neutral sample rules for dropping, pausing, and saving time.",
+  },
+  {
+    label: "Personal Canon",
+    route: APP_ROUTES.seasons,
+    icon: BookMarked,
+    description: "Themed exploration seasons, ordered works, and reflection prompts.",
   },
   {
     label: "TasteGraph",
