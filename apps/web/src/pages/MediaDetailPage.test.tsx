@@ -1,12 +1,19 @@
-import type { MediaItem, NarrativeAnalysisResult, TasteDimension } from "@canonos/contracts";
+import type { AdaptationPath, AdaptationRelation, MediaItem, NarrativeAnalysisResult, TasteDimension } from "@canonos/contracts";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { deleteMediaItem, useMediaItem } from "@/features/media/mediaApi";
+import { deleteMediaItem, useMediaItem, useMediaItems } from "@/features/media/mediaApi";
 import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
 import { requestNarrativeAnalysis, useNarrativeAnalysis } from "@/features/narrative/narrativeApi";
+import {
+  createAdaptationRelation,
+  deleteAdaptationRelation,
+  generateAdaptationPath,
+  useAdaptationMap,
+  useAdaptationRelations,
+} from "@/features/adaptations/adaptationsApi";
 import { MediaDetailPage } from "@/pages/MediaDetailPage";
 
 vi.mock("@/features/detox/detoxApi", () => ({
@@ -22,6 +29,7 @@ vi.mock("@/features/detox/detoxApi", () => ({
 vi.mock("@/features/media/mediaApi", () => ({
   deleteMediaItem: vi.fn(),
   useMediaItem: vi.fn(),
+  useMediaItems: vi.fn(),
 }));
 
 vi.mock("@/features/media/tasteApi", () => ({
@@ -36,6 +44,14 @@ vi.mock("@/features/metadata/metadataApi", () => ({
 vi.mock("@/features/narrative/narrativeApi", () => ({
   requestNarrativeAnalysis: vi.fn(),
   useNarrativeAnalysis: vi.fn(),
+}));
+
+vi.mock("@/features/adaptations/adaptationsApi", () => ({
+  createAdaptationRelation: vi.fn(),
+  deleteAdaptationRelation: vi.fn(),
+  generateAdaptationPath: vi.fn(),
+  useAdaptationMap: vi.fn(),
+  useAdaptationRelations: vi.fn(),
 }));
 
 const media: MediaItem = {
@@ -60,6 +76,58 @@ const media: MediaItem = {
   scores: [],
   latestAftertaste: null,
   externalMetadata: null,
+};
+
+const adaptationSource: MediaItem = {
+  ...media,
+  id: "c0bbef6d-f2f1-45f5-b870-c43f3b84d255",
+  title: "Roadside Picnic",
+  originalTitle: "Пикник на обочине",
+  mediaType: "novel",
+  creator: "Arkady and Boris Strugatsky",
+  runtimeMinutes: null,
+  pageCount: 224,
+  personalRating: 9,
+};
+
+const adaptationRelation: AdaptationRelation = {
+  id: "f6a1d572-55e7-4991-bc34-a7cb6a604c7c",
+  sourceMediaItemId: adaptationSource.id,
+  adaptationMediaItemId: media.id,
+  sourceTitle: adaptationSource.title,
+  adaptationTitle: media.title,
+  sourceMediaType: "novel",
+  adaptationMediaType: "movie",
+  relationType: "novel_to_film",
+  completeness: "loose",
+  faithfulnessScore: 74,
+  pacingPreservationScore: 82,
+  soulPreservationScore: 91,
+  recommendedExperienceOrder: "read_first",
+  notes: "Loose but spiritually aligned adaptation.",
+  createdAt: "2026-01-03T00:00:00Z",
+  updatedAt: "2026-01-03T00:00:00Z",
+};
+
+const adaptationPath: AdaptationPath = {
+  mediaItemId: media.id,
+  mediaTitle: media.title,
+  relations: [adaptationRelation],
+  recommendation: {
+    recommendation: "read_first",
+    label: "Read first",
+    rationale: "Roadside Picnic and Stalker preserve the soul but diverge in plot.",
+    confidenceScore: 82,
+    risks: [
+      {
+        kind: "changed_tone",
+        label: "Changed tone",
+        severity: "medium",
+        reason: "Loose relation may diverge from source intent.",
+      },
+    ],
+  },
+  createdAt: "2026-01-03T00:00:00Z",
 };
 
 const dimensions: TasteDimension[] = [
@@ -124,11 +192,17 @@ const analysis: NarrativeAnalysisResult = {
 };
 
 const mockedUseMediaItem = vi.mocked(useMediaItem);
+const mockedUseMediaItems = vi.mocked(useMediaItems);
 const mockedUseTasteDimensions = vi.mocked(useTasteDimensions);
 const mockedUseNarrativeAnalysis = vi.mocked(useNarrativeAnalysis);
 const mockedRequestNarrativeAnalysis = vi.mocked(requestNarrativeAnalysis);
 const mockedDeleteMediaItem = vi.mocked(deleteMediaItem);
 const mockedUpsertMediaScores = vi.mocked(upsertMediaScores);
+const mockedUseAdaptationRelations = vi.mocked(useAdaptationRelations);
+const mockedUseAdaptationMap = vi.mocked(useAdaptationMap);
+const mockedCreateAdaptationRelation = vi.mocked(createAdaptationRelation);
+const mockedDeleteAdaptationRelation = vi.mocked(deleteAdaptationRelation);
+const mockedGenerateAdaptationPath = vi.mocked(generateAdaptationPath);
 
 function renderPage() {
   render(
@@ -165,9 +239,33 @@ describe("MediaDetailPage Narrative DNA", () => {
       isValidating: false,
       mutate: vi.fn(),
     } as unknown as ReturnType<typeof useNarrativeAnalysis>);
+    mockedUseMediaItems.mockReturnValue({
+      data: { count: 2, next: null, previous: null, results: [media, adaptationSource] },
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useMediaItems>);
+    mockedUseAdaptationRelations.mockReturnValue({
+      data: { count: 1, next: null, previous: null, results: [adaptationRelation] },
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useAdaptationRelations>);
+    mockedUseAdaptationMap.mockReturnValue({
+      data: adaptationPath,
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useAdaptationMap>);
     mockedRequestNarrativeAnalysis.mockResolvedValue(analysis);
     mockedUpsertMediaScores.mockResolvedValue({ results: [] });
     mockedDeleteMediaItem.mockResolvedValue();
+    mockedCreateAdaptationRelation.mockResolvedValue(adaptationRelation);
+    mockedDeleteAdaptationRelation.mockResolvedValue();
+    mockedGenerateAdaptationPath.mockResolvedValue(adaptationPath);
   });
 
   it("shows the Narrative DNA tab empty state and requests analysis", async () => {
@@ -204,4 +302,55 @@ describe("MediaDetailPage Narrative DNA", () => {
     expect(within(screen.getByRole("tabpanel")).getByText(/Basis: saved media notes/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /refresh narrative dna/i })).toBeInTheDocument();
   });
+
+  it("displays adaptation relations and generates an experience path", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole("tab", { name: /adaptations/i }));
+
+    expect(screen.getByText(/Roadside Picnic → Stalker/i)).toBeInTheDocument();
+    expect(screen.getByText(/Loose but spiritually aligned adaptation/i)).toBeInTheDocument();
+    expect(screen.getByText(/Best Experience Path/i)).toBeInTheDocument();
+    expect(screen.getByText(/Roadside Picnic and Stalker preserve/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /get experience path/i }));
+    expect(mockedGenerateAdaptationPath).toHaveBeenCalledWith(media.id);
+  });
+
+  it("creates and deletes adaptation relations from the Adaptations tab", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole("tab", { name: /adaptations/i }));
+    await user.click(screen.getByRole("button", { name: /^add adaptation relation$/i }));
+
+    const dialog = screen.getByRole("dialog", { name: /add adaptation relation/i });
+    await user.selectOptions(within(dialog).getByLabelText(/source media/i), adaptationSource.id);
+    await user.selectOptions(within(dialog).getByLabelText(/adaptation media/i), media.id);
+    await user.selectOptions(within(dialog).getByLabelText(/relation type/i), "novel_to_film");
+    await user.selectOptions(within(dialog).getByLabelText(/completeness/i), "complete");
+    await user.clear(within(dialog).getByLabelText(/faithfulness score/i));
+    await user.type(within(dialog).getByLabelText(/faithfulness score/i), "88");
+    await user.type(within(dialog).getByLabelText(/pacing preservation score/i), "80");
+    await user.type(within(dialog).getByLabelText(/soul preservation score/i), "92");
+    await user.type(within(dialog).getByLabelText(/comparison notes/i), "Faithful enough but more contemplative.");
+    await user.click(within(dialog).getByRole("button", { name: /save relation/i }));
+
+    expect(mockedCreateAdaptationRelation).toHaveBeenCalledWith(
+      expect.objectContaining({
+        sourceMediaItemId: adaptationSource.id,
+        adaptationMediaItemId: media.id,
+        relationType: "novel_to_film",
+        completeness: "complete",
+        faithfulnessScore: 88,
+        pacingPreservationScore: 80,
+        soulPreservationScore: 92,
+      }),
+    );
+
+    await user.click(screen.getByRole("button", { name: /remove relation/i }));
+    expect(mockedDeleteAdaptationRelation).toHaveBeenCalledWith(adaptationRelation.id);
+  });
+
 });

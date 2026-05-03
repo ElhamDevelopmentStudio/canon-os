@@ -2,6 +2,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { mergeRootEnv } from './root-env.mjs';
 
 const root = process.cwd();
 const pidFile = path.join(root, 'tmp', 'canonos-local-services.json');
@@ -31,7 +32,7 @@ for (const [service] of availableServices) {
   const child = spawn('corepack', ['pnpm', `dev:${service}`], {
     cwd: root,
     stdio: 'inherit',
-    env: process.env,
+    env: mergeRootEnv(root),
   });
   children.push(child);
 }

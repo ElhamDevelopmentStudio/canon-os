@@ -24,6 +24,27 @@ export type {
 export { CANDIDATE_STATUSES, EVALUATION_DECISIONS } from "./candidates";
 
 export type {
+  AdaptationCompleteness,
+  AdaptationPath,
+  AdaptationRelation,
+  AdaptationRelationCreateRequest,
+  AdaptationRelationListResponse,
+  AdaptationRelationType,
+  AdaptationRelationUpdateRequest,
+  AdaptationRisk,
+  AdaptationRiskKind,
+  AdaptationRiskSeverity,
+  ExperienceOrderRecommendation,
+  ExperienceOrderRecommendationValue,
+} from "./adaptations";
+export {
+  ADAPTATION_COMPLETENESS_LEVELS,
+  ADAPTATION_RELATION_TYPES,
+  ADAPTATION_RISK_KINDS,
+  EXPERIENCE_ORDER_RECOMMENDATIONS,
+} from "./adaptations";
+
+export type {
   DiscoveryAnalysis,
   DiscoveryEra,
   DiscoveryGenerateResponse,

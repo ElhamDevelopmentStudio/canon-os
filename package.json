@@ -8,7 +8,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "lint": "node --check scripts/run-workspace-command.mjs && node --check scripts/service-command.mjs && node --check scripts/dev-all.mjs && node --check scripts/stop-local-services.mjs && node --check scripts/test-root-foundation.mjs && node --check scripts/run-with-root-env.mjs && node scripts/run-workspace-command.mjs lint",
+    "lint": "node --check scripts/run-workspace-command.mjs && node --check scripts/service-command.mjs && node --check scripts/dev-all.mjs && node --check scripts/stop-local-services.mjs && node --check scripts/test-root-foundation.mjs && node --check scripts/root-env.mjs && node --check scripts/run-with-root-env.mjs && node scripts/run-workspace-command.mjs lint",
     "format": "node scripts/run-workspace-command.mjs format",
     "format:check": "node scripts/run-workspace-command.mjs format:check",
     "typecheck": "node scripts/run-workspace-command.mjs typecheck",

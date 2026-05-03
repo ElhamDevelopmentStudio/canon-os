@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
+import { AdaptationsPanel } from "@/features/adaptations/AdaptationsPanel";
 import { useDetoxRules } from "@/features/detox/detoxApi";
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
@@ -263,6 +264,11 @@ export function MediaDetailPage() {
                 onRequest={handleRequestNarrativeAnalysis}
               />
             ),
+          },
+          {
+            id: "adaptations",
+            label: "Adaptations",
+            panel: <AdaptationsPanel media={data} />,
           },
         ]}
         onChange={setActiveAnalysisTab}

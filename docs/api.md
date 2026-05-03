@@ -212,6 +212,25 @@ Analysis payloads include status, eight trait scores, confidence, summary, extra
 
 
 
+
+## Adaptation Intelligence API Contract
+
+Adaptation relations are user-owned and require an authenticated session. They power the **Adaptations** tab on Media Detail.
+
+Endpoints:
+
+- `GET /api/adaptations/relations/` lists the current user's relations. Optional filters: `mediaItemId`, `sourceMediaItemId`, `adaptationMediaItemId`, and `relationType`.
+- `POST /api/adaptations/relations/` creates a source/adaptation relation between two owned media items.
+- `GET /api/adaptations/relations/{id}/` returns one owner-scoped relation.
+- `PATCH /api/adaptations/relations/{id}/` updates relation metadata, completeness, scores, recommended order, or notes.
+- `DELETE /api/adaptations/relations/{id}/` deletes one owner-scoped relation.
+- `GET /api/media-items/{id}/adaptation-map/` returns relations involving one owned media item plus the current experience path recommendation.
+- `POST /api/media-items/{id}/adaptation-path/` recalculates the best experience path from current relation evidence.
+
+Relation types include `source_to_adaptation`, `adaptation_to_source`, `remake`, `alternate_version`, `inspired_by`, `audiobook_version`, `manga_to_anime`, `novel_to_film`, and `novel_to_show`. Completeness values are `complete`, `partial`, `incomplete`, `loose`, and `unknown`. Recommended orders are `read_first`, `watch_first`, `listen_first`, `adaptation_sufficient`, `source_preferred`, and `skip_adaptation`.
+
+Path recommendations include rationale, confidence, and risk signals for incomplete adaptations, weak endings, compression, changed tone, poor narration, low faithfulness, pacing loss, and soul loss. Shared contracts live in `packages/contracts/src/adaptations.ts`; frontend calls live in `apps/web/src/features/adaptations/adaptationsApi.ts`; behavior is documented in `docs/adaptation-intelligence.md`.
+
 ## Critic Council API Contract
 
 Critic Council endpoints are user-owned and require an authenticated session. They generate deterministic multi-persona explanations for candidates, media items, or freeform decision prompts.

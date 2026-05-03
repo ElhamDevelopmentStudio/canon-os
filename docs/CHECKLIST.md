@@ -2345,69 +2345,69 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M12-SH-001 Define `AdaptationRelation` type.
-- [ ] CP-M12-SH-002 Define `AdaptationPath` type.
-- [ ] CP-M12-SH-003 Define `ExperienceOrderRecommendation` type.
-- [ ] CP-M12-SH-004 Document adaptation intelligence behavior.
+- [x] CP-M12-SH-001 Define `AdaptationRelation` type.
+- [x] CP-M12-SH-002 Define `AdaptationPath` type.
+- [x] CP-M12-SH-003 Define `ExperienceOrderRecommendation` type.
+- [x] CP-M12-SH-004 Document adaptation intelligence behavior.
 
 ### Backend Tasks
 
-- [ ] CP-M12-BE-001 Create adaptations app.
-- [ ] CP-M12-BE-002 Create AdaptationRelation model.
-- [ ] CP-M12-BE-003 Add owner/user foreign key.
-- [ ] CP-M12-BE-004 Add source media item foreign key.
-- [ ] CP-M12-BE-005 Add adaptation media item foreign key.
-- [ ] CP-M12-BE-006 Add relation type field.
-- [ ] CP-M12-BE-007 Add completeness field.
-- [ ] CP-M12-BE-008 Add faithfulness score field.
-- [ ] CP-M12-BE-009 Add pacing preservation score field.
-- [ ] CP-M12-BE-010 Add soul preservation score field.
-- [ ] CP-M12-BE-011 Add recommended experience order field.
-- [ ] CP-M12-BE-012 Add notes field.
-- [ ] CP-M12-BE-013 Create adaptation serializers.
-- [ ] CP-M12-BE-014 Create relation list endpoint.
-- [ ] CP-M12-BE-015 Create relation create endpoint.
-- [ ] CP-M12-BE-016 Create relation update endpoint.
-- [ ] CP-M12-BE-017 Create relation delete endpoint.
-- [ ] CP-M12-BE-018 Create adaptation path recommendation service.
-- [ ] CP-M12-BE-019 Create path recommendation endpoint.
-- [ ] CP-M12-BE-020 Add test for relation creation.
-- [ ] CP-M12-BE-021 Add test for path recommendation.
+- [x] CP-M12-BE-001 Create adaptations app.
+- [x] CP-M12-BE-002 Create AdaptationRelation model.
+- [x] CP-M12-BE-003 Add owner/user foreign key.
+- [x] CP-M12-BE-004 Add source media item foreign key.
+- [x] CP-M12-BE-005 Add adaptation media item foreign key.
+- [x] CP-M12-BE-006 Add relation type field.
+- [x] CP-M12-BE-007 Add completeness field.
+- [x] CP-M12-BE-008 Add faithfulness score field.
+- [x] CP-M12-BE-009 Add pacing preservation score field.
+- [x] CP-M12-BE-010 Add soul preservation score field.
+- [x] CP-M12-BE-011 Add recommended experience order field.
+- [x] CP-M12-BE-012 Add notes field.
+- [x] CP-M12-BE-013 Create adaptation serializers.
+- [x] CP-M12-BE-014 Create relation list endpoint.
+- [x] CP-M12-BE-015 Create relation create endpoint.
+- [x] CP-M12-BE-016 Create relation update endpoint.
+- [x] CP-M12-BE-017 Create relation delete endpoint.
+- [x] CP-M12-BE-018 Create adaptation path recommendation service.
+- [x] CP-M12-BE-019 Create path recommendation endpoint.
+- [x] CP-M12-BE-020 Add test for relation creation.
+- [x] CP-M12-BE-021 Add test for path recommendation.
 
 ### Frontend Tasks
 
-- [ ] CP-M12-FE-001 Create adaptations API client file.
-- [ ] CP-M12-FE-002 Add Adaptations tab to Media Detail page.
-- [ ] CP-M12-FE-003 Add relation list section.
-- [ ] CP-M12-FE-004 Create adaptation relation card.
-- [ ] CP-M12-FE-005 Add source/adaptation label display.
-- [ ] CP-M12-FE-006 Add faithfulness score display.
-- [ ] CP-M12-FE-007 Add pacing preservation score display.
-- [ ] CP-M12-FE-008 Add soul preservation score display.
-- [ ] CP-M12-FE-009 Add recommended order display.
-- [ ] CP-M12-FE-010 Add Add Adaptation Relation button.
-- [ ] CP-M12-FE-011 Create adaptation relation modal.
-- [ ] CP-M12-FE-012 Add source selector.
-- [ ] CP-M12-FE-013 Add adaptation selector.
-- [ ] CP-M12-FE-014 Add relation type selector.
-- [ ] CP-M12-FE-015 Add scores fields.
-- [ ] CP-M12-FE-016 Add notes textarea.
-- [ ] CP-M12-FE-017 Add Get Experience Path button.
-- [ ] CP-M12-FE-018 Add path recommendation card.
+- [x] CP-M12-FE-001 Create adaptations API client file.
+- [x] CP-M12-FE-002 Add Adaptations tab to Media Detail page.
+- [x] CP-M12-FE-003 Add relation list section.
+- [x] CP-M12-FE-004 Create adaptation relation card.
+- [x] CP-M12-FE-005 Add source/adaptation label display.
+- [x] CP-M12-FE-006 Add faithfulness score display.
+- [x] CP-M12-FE-007 Add pacing preservation score display.
+- [x] CP-M12-FE-008 Add soul preservation score display.
+- [x] CP-M12-FE-009 Add recommended order display.
+- [x] CP-M12-FE-010 Add Add Adaptation Relation button.
+- [x] CP-M12-FE-011 Create adaptation relation modal.
+- [x] CP-M12-FE-012 Add source selector.
+- [x] CP-M12-FE-013 Add adaptation selector.
+- [x] CP-M12-FE-014 Add relation type selector.
+- [x] CP-M12-FE-015 Add scores fields.
+- [x] CP-M12-FE-016 Add notes textarea.
+- [x] CP-M12-FE-017 Add Get Experience Path button.
+- [x] CP-M12-FE-018 Add path recommendation card.
 
 ### Integration Tasks
 
-- [ ] CP-M12-INT-001 Connect relation modal to create endpoint.
-- [ ] CP-M12-INT-002 Connect relation list to list endpoint.
-- [ ] CP-M12-INT-003 Connect Get Experience Path button to recommendation endpoint.
-- [ ] CP-M12-INT-004 Display path recommendation on Media Detail page.
+- [x] CP-M12-INT-001 Connect relation modal to create endpoint.
+- [x] CP-M12-INT-002 Connect relation list to list endpoint.
+- [x] CP-M12-INT-003 Connect Get Experience Path button to recommendation endpoint.
+- [x] CP-M12-INT-004 Display path recommendation on Media Detail page.
 
 ### QA Tasks
 
-- [ ] CP-M12-QA-001 Create novel-to-show adaptation relation.
-- [ ] CP-M12-QA-002 Create anime-to-manga/source relation if applicable.
-- [ ] CP-M12-QA-003 Generate experience path recommendation.
-- [ ] CP-M12-QA-004 Confirm adaptations appear on both related media detail pages.
+- [x] CP-M12-QA-001 Create novel-to-show adaptation relation.
+- [x] CP-M12-QA-002 Create anime-to-manga/source relation if applicable.
+- [x] CP-M12-QA-003 Generate experience path recommendation.
+- [x] CP-M12-QA-004 Confirm adaptations appear on both related media detail pages.
 
 ---
 

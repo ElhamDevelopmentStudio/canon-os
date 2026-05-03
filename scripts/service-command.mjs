@@ -2,6 +2,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
+import { mergeRootEnv } from './root-env.mjs';
 
 const service = process.argv[2];
 const root = process.cwd();
@@ -44,7 +45,7 @@ if (!existsSync(path.join(config.cwd, config.readinessFile))) {
 const child = spawn(config.command, config.args, {
   cwd: config.cwd,
   stdio: 'inherit',
-  env: process.env,
+  env: mergeRootEnv(root),
 });
 
 child.on('exit', (code, signal) => {

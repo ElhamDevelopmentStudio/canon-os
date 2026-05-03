@@ -28,6 +28,7 @@ User-facing features must also update the matching manual test document under `d
 | Taste Evolution Journal | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/taste-evolution.md` |
 | Completion Detox | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/completion-detox.md` |
 | Personal Canon | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/personal-canon.md` |
+| Adaptation Intelligence | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/adaptation-intelligence.md` |
 | Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
@@ -99,6 +100,7 @@ Tests must:
 - Taste Evolution: empty timeline load, create scored completed works and regret/generic aftertaste evidence, generate a snapshot, assert trend/insight network payloads, render the timeline, and confirm Dashboard shows the latest insight.
 - Completion Detox: seeded sample rules, browser evaluation for drop/continue decisions, rule disable behavior, media status update to dropped, decision history, and time-saved summary.
 - Personal Canon: create a themed season, add custom/media/candidate items, reorder items, mark completion, set canon status, save reflection notes, and assert season/item network payloads.
+- Adaptation Intelligence: create a source/adaptation relation from Media Detail, assert relation create/delete and path recommendation network payloads, and confirm the relation appears on both linked detail pages.
 - Settings: update profile/display/recommendation preferences, persist after refresh, apply theme, feed Tonight Mode defaults, and surface Candidate Evaluator settings.
 - Import/export: CSV preview/confirm, invalid-row no-write behavior, JSON export download, and media/ratings CSV export download through Settings.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.

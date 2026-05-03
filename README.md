@@ -62,12 +62,7 @@ The repository is being built module by module from `docs/CHECKLIST.md`. Run all
 
    ```bash
    corepack pnpm --filter @canonos/api run bootstrap
-   DATABASE_URL=postgresql://canonos:canonos@localhost:15432/canonos \
-   REDIS_URL=redis://localhost:16379/0 \
-   CELERY_BROKER_URL=redis://localhost:16379/0 \
-   CELERY_RESULT_BACKEND=redis://localhost:16379/1 \
-   DJANGO_SETTINGS_MODULE=config.settings.local \
-   apps/api/.venv/bin/python apps/api/manage.py migrate --noinput
+   node scripts/run-with-root-env.mjs apps/api/.venv/bin/python apps/api/manage.py migrate --noinput
    ```
 
 4. Start app processes in separate terminals when developing interactively:
@@ -78,7 +73,7 @@ The repository is being built module by module from `docs/CHECKLIST.md`. Run all
    corepack pnpm dev:worker
    ```
 
-The root `.env` is the frontend environment source of truth. Do not create `apps/web/.env`. Use `VITE_API_BASE_URL=http://localhost:8000/api` when the browser should call Django directly; otherwise Vite can proxy `/api` to `VITE_API_PROXY_TARGET`.
+The root `.env` is the frontend and local service environment source of truth. The `dev:*` scripts load it automatically. Do not create `apps/web/.env`. Use `VITE_API_BASE_URL=http://localhost:8000/api` when the browser should call Django directly; otherwise Vite can proxy `/api` to `VITE_API_PROXY_TARGET`.
 
 ## Service URLs
 

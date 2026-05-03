@@ -25,7 +25,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | --- | --- | --- |
 | `/` | Dashboard | Authenticated overview, dashboard summary, recent activity, quick media create. |
 | `/library` | Media Library | Create, list, filter, edit, and delete user-owned media. |
-| `/library/:mediaId` | Media Detail | Read one media item, update taste scores, show latest aftertaste. |
+| `/library/:mediaId` | Media Detail | Read one media item, update taste scores, run Narrative DNA, manage adaptation relations/path recommendations, and show latest aftertaste. |
 | `/candidates` | Candidate Evaluator | Create/update/evaluate candidates, add candidates to library or queue. |
 | `/discover` | Media Archaeologist | Generate deep-cut discovery trails, save trails, and add results to queue. |
 | `/critic-council` | Critic Council | Run critic debates, tune critic personas, apply final decisions to candidates. |

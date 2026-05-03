@@ -16,6 +16,8 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
     assert payload["endpoints"]["taste_evolution"] == "/api/taste-evolution/"
     assert payload["endpoints"]["detox_rules"] == "/api/detox/rules/"
     assert payload["endpoints"]["canon_seasons"] == "/api/seasons/"
+    assert payload["endpoints"]["adaptation_relations"] == "/api/adaptations/relations/"
+    assert payload["endpoints"]["media_adaptation_map"] == "/api/media-items/{id}/adaptation-map/"
     assert {module["name"] for module in payload["mvp_modules"]} >= {
         "health",
         "auth",
@@ -27,6 +29,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
         "taste_evolution",
         "completion_detox",
         "personal_canon",
+        "adaptation_intelligence",
         "tonight_mode",
     }
 

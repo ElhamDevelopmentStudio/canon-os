@@ -10,6 +10,7 @@ export const API_ROUTES = {
   authSettings: "/auth/settings/",
   aftertaste: "/aftertaste/",
   aftertastePrompts: "/aftertaste/prompts/",
+  adaptationRelations: "/adaptations/relations/",
   dashboardSummary: "/dashboard/summary/",
   detoxRules: "/detox/rules/",
   detoxEvaluate: "/detox/evaluate/",
