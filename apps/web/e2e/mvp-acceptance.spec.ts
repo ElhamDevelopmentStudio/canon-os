@@ -26,6 +26,7 @@ const routes = [
   { label: "Dashboard", path: "/", heading: /private media command center/i },
   { label: "Library", path: "/library", heading: "Library" },
   { label: "Candidates", path: "/candidates", heading: "Candidate Evaluator" },
+  { label: "Media Archaeologist", path: "/discover", heading: "Media Archaeologist" },
   { label: "Tonight Mode", path: "/tonight", heading: "Tonight Mode" },
   { label: "Taste Profile", path: "/taste-profile", heading: "Taste Profile" },
   { label: "TasteGraph", path: "/taste-graph", heading: "TasteGraph" },

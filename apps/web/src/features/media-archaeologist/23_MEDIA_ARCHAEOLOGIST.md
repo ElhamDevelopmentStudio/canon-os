@@ -2,7 +2,7 @@
 
 ## Route
 
-`/app/discovery`
+`/discover`
 
 ## Purpose
 
@@ -51,14 +51,15 @@ Use `AppShell`. Active sidebar item: Media Archaeologist.
 
 | Element / Control | Required Function |
 |---|---|
-| Start Dig | Run discovery search from parameters and taste graph. |
+| Generate Discovery Trail | Run discovery search from parameters and saved taste/library signals. |
 | Starting point | Accept media/theme/creator/mood/free text. |
 | Medium/Era/Region | Filter discovery. |
 | Obscurity | Control mainstream vs deep-cut level. |
 | Goal | Set discovery intent. |
 | Details | Open result detail. |
 | Evaluate | Open Candidate Evaluator. |
-| Queue | Add result to queue. |
+| Add To Queue | Add result to Adaptive Queue. |
+| Save Trail | Persist generated trail for later review. |
 | Expansion Map | Show reasoning path from known taste to new territory. |
 
 ## Data Needed

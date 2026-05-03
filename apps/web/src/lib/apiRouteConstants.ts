@@ -22,6 +22,8 @@ export const API_ROUTES = {
   tasteGraphEdges: "/taste-graph/edges/",
   tasteGraphRebuild: "/taste-graph/rebuild/",
   candidates: "/candidates/",
+  discoveryGenerate: "/discovery/generate/",
+  discoveryTrails: "/discovery/trails/",
   antiGenericRules: "/anti-generic/rules/",
   antiGenericEvaluate: "/anti-generic/evaluate/",
   queueItems: "/queue-items/",

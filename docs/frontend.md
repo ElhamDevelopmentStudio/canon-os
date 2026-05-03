@@ -27,6 +27,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/library` | Media Library | Create, list, filter, edit, and delete user-owned media. |
 | `/library/:mediaId` | Media Detail | Read one media item, update taste scores, show latest aftertaste. |
 | `/candidates` | Candidate Evaluator | Create/update/evaluate candidates, add candidates to library or queue. |
+| `/discover` | Media Archaeologist | Generate deep-cut discovery trails, save trails, and add results to queue. |
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
@@ -165,6 +166,10 @@ The grid loads default dimensions with `useTasteDimensions`, validates the 0-10 
 ### Candidate Evaluator UI
 
 Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidateApi.ts`. The page supports save, evaluate, add-to-library, add-to-queue, skip, result explanation, history selection, loading, empty, error, and success states. Evaluation results include the server-provided Anti-Generic section with verdict, genericness risk, time-waste risk, positive exceptions, and detected red flags.
+
+### Media Archaeologist UI
+
+Media Archaeologist lives at `/discover`. Discovery API calls live in `apps/web/src/features/discovery/discoveryApi.ts`, and labels live in `apps/web/src/features/discovery/discoveryLabels.ts`. The page supports mode, medium, era, country/language, theme, mood, creator, favorite-work, and narrative-pattern inputs; generated result cards with discovery/obscurity/confidence scores; expansion and risk explanations; Save Trail; saved trail list/delete; Add To Queue; loading, empty, error, and success states.
 
 ### Queue And Tonight Mode UI
 

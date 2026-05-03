@@ -3,6 +3,7 @@ export const APP_ROUTES = {
   library: "/library",
   mediaDetail: "/library/:mediaId",
   candidates: "/candidates",
+  discovery: "/discover",
   tonight: "/tonight",
   tasteProfile: "/taste-profile",
   tasteGraph: "/taste-graph",

@@ -8,6 +8,7 @@ import { PublicRoute } from "@/components/auth/PublicRoute";
 import { RouteErrorFallback } from "@/components/feedback/RouteErrorFallback";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { CandidateEvaluatorPage } from "@/pages/CandidateEvaluatorPage";
+import { MediaArchaeologistPage } from "@/pages/MediaArchaeologistPage";
 import { LibraryPage } from "@/pages/LibraryPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { MediaDetailPage } from "@/pages/MediaDetailPage";
@@ -23,6 +24,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.library.slice(1), element: <LibraryPage /> },
   { path: "library/:mediaId", element: <MediaDetailPage /> },
   { path: APP_ROUTES.candidates.slice(1), element: <CandidateEvaluatorPage /> },
+  { path: APP_ROUTES.discovery.slice(1), element: <MediaArchaeologistPage /> },
   { path: APP_ROUTES.tonight.slice(1), element: <TonightModePage /> },
   { path: APP_ROUTES.tasteProfile.slice(1), element: <TasteProfilePage /> },
   { path: APP_ROUTES.tasteGraph.slice(1), element: <TasteGraphPage /> },

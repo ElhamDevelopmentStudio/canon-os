@@ -145,6 +145,20 @@ Evaluation payloads include genericness risk, time-waste risk, positive exceptio
 
 Shared TypeScript contracts live in `packages/contracts/src/antiGeneric.ts`; frontend rule calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`.
 
+## Media Archaeologist API Contract
+
+Discovery endpoints are user-owned and require an authenticated browser session. They power the `/discover` Media Archaeologist page.
+
+Endpoints:
+
+- `POST /api/discovery/generate/` creates an unsaved discovery trail from mode, theme, mood, era, country/language, medium, creator, narrative pattern, favorite work, or source media item.
+- `GET /api/discovery/trails/` lists saved trails for the current user.
+- `POST /api/discovery/trails/` saves a generated trail for the current user.
+- `GET /api/discovery/trails/{id}/` returns one owner-scoped saved trail.
+- `DELETE /api/discovery/trails/{id}/` deletes one owner-scoped saved trail.
+
+Generate responses include the normalized search frame, underexplored media/era/country-language analysis, an unsaved `draft`, ranked `results`, and `generatedAt`. Each result includes discovery, obscurity, and confidence scores plus expansion reasons, risk rationale, and a suggested action. Shared TypeScript contracts live in `packages/contracts/src/discovery.ts`; frontend calls live in `apps/web/src/features/discovery/discoveryApi.ts`. Product behavior is documented in `docs/discovery.md`.
+
 
 ## Queue API Contract
 

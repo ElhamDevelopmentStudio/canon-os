@@ -17,6 +17,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
         "health",
         "auth",
         "library",
+        "discovery",
         "candidates",
         "tonight_mode",
     }

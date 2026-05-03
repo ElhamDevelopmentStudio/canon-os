@@ -89,6 +89,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Dashboard: `docs/manual-tests/dashboard.md`
 - Candidate evaluator: `docs/manual-tests/candidate-evaluator.md`
 - Queue and Tonight Mode: `docs/manual-tests/queue-tonight.md`
+- Media Archaeologist: `docs/manual-tests/media-archaeologist.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 
@@ -1869,72 +1870,72 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M06-SH-001 Define `DiscoverySearchRequest` type.
-- [ ] CP-M06-SH-002 Define `DiscoveryResult` type.
-- [ ] CP-M06-SH-003 Define `DiscoveryTrail` type.
-- [ ] CP-M06-SH-004 Define `DiscoveryReason` type.
-- [ ] CP-M06-SH-005 Document Media Archaeologist behavior.
+- [x] CP-M06-SH-001 Define `DiscoverySearchRequest` type.
+- [x] CP-M06-SH-002 Define `DiscoveryResult` type.
+- [x] CP-M06-SH-003 Define `DiscoveryTrail` type.
+- [x] CP-M06-SH-004 Define `DiscoveryReason` type.
+- [x] CP-M06-SH-005 Document Media Archaeologist behavior.
 
 ### Backend Tasks
 
-- [ ] CP-M06-BE-001 Create discovery app.
-- [ ] CP-M06-BE-002 Create DiscoveryTrail model.
-- [ ] CP-M06-BE-003 Add owner/user foreign key.
-- [ ] CP-M06-BE-004 Add trail name field.
-- [ ] CP-M06-BE-005 Add trail theme field.
-- [ ] CP-M06-BE-006 Add trail description field.
-- [ ] CP-M06-BE-007 Add source media item foreign key nullable.
-- [ ] CP-M06-BE-008 Add result items JSON field.
-- [ ] CP-M06-BE-009 Add created at field.
-- [ ] CP-M06-BE-010 Create discovery service module.
-- [ ] CP-M06-BE-011 Implement underexplored media type detection.
-- [ ] CP-M06-BE-012 Implement underexplored era detection.
-- [ ] CP-M06-BE-013 Implement underexplored country/language detection.
-- [ ] CP-M06-BE-014 Implement creator-adjacent discovery logic.
-- [ ] CP-M06-BE-015 Implement theme-adjacent discovery logic.
-- [ ] CP-M06-BE-016 Implement obscure/deep-cut scoring placeholder.
-- [ ] CP-M06-BE-017 Create discovery generate endpoint.
-- [ ] CP-M06-BE-018 Create discovery trails list endpoint.
-- [ ] CP-M06-BE-019 Create discovery trail detail endpoint.
-- [ ] CP-M06-BE-020 Create save discovery trail endpoint.
-- [ ] CP-M06-BE-021 Add test for underexplored type detection.
-- [ ] CP-M06-BE-022 Add test for discovery trail creation.
+- [x] CP-M06-BE-001 Create discovery app.
+- [x] CP-M06-BE-002 Create DiscoveryTrail model.
+- [x] CP-M06-BE-003 Add owner/user foreign key.
+- [x] CP-M06-BE-004 Add trail name field.
+- [x] CP-M06-BE-005 Add trail theme field.
+- [x] CP-M06-BE-006 Add trail description field.
+- [x] CP-M06-BE-007 Add source media item foreign key nullable.
+- [x] CP-M06-BE-008 Add result items JSON field.
+- [x] CP-M06-BE-009 Add created at field.
+- [x] CP-M06-BE-010 Create discovery service module.
+- [x] CP-M06-BE-011 Implement underexplored media type detection.
+- [x] CP-M06-BE-012 Implement underexplored era detection.
+- [x] CP-M06-BE-013 Implement underexplored country/language detection.
+- [x] CP-M06-BE-014 Implement creator-adjacent discovery logic.
+- [x] CP-M06-BE-015 Implement theme-adjacent discovery logic.
+- [x] CP-M06-BE-016 Implement obscure/deep-cut scoring placeholder.
+- [x] CP-M06-BE-017 Create discovery generate endpoint.
+- [x] CP-M06-BE-018 Create discovery trails list endpoint.
+- [x] CP-M06-BE-019 Create discovery trail detail endpoint.
+- [x] CP-M06-BE-020 Create save discovery trail endpoint.
+- [x] CP-M06-BE-021 Add test for underexplored type detection.
+- [x] CP-M06-BE-022 Add test for discovery trail creation.
 
 ### Frontend Tasks
 
-- [ ] CP-M06-FE-001 Create discovery API client file.
-- [ ] CP-M06-FE-002 Create Media Archaeologist page skeleton.
-- [ ] CP-M06-FE-003 Add page title.
-- [ ] CP-M06-FE-004 Add discovery mode selector.
-- [ ] CP-M06-FE-005 Add deep-cut search form.
-- [ ] CP-M06-FE-006 Add preferred medium selector.
-- [ ] CP-M06-FE-007 Add era selector.
-- [ ] CP-M06-FE-008 Add country/language selector.
-- [ ] CP-M06-FE-009 Add theme input.
-- [ ] CP-M06-FE-010 Add Generate Discovery Trail button.
-- [ ] CP-M06-FE-011 Create discovery result card.
-- [ ] CP-M06-FE-012 Add why this expands your taste section.
-- [ ] CP-M06-FE-013 Add why it may fail section.
-- [ ] CP-M06-FE-014 Add Add To Queue button.
-- [ ] CP-M06-FE-015 Add Save Trail button.
-- [ ] CP-M06-FE-016 Add saved trails list.
-- [ ] CP-M06-FE-017 Add loading state.
-- [ ] CP-M06-FE-018 Add empty state.
-- [ ] CP-M06-FE-019 Add error state.
+- [x] CP-M06-FE-001 Create discovery API client file.
+- [x] CP-M06-FE-002 Create Media Archaeologist page skeleton.
+- [x] CP-M06-FE-003 Add page title.
+- [x] CP-M06-FE-004 Add discovery mode selector.
+- [x] CP-M06-FE-005 Add deep-cut search form.
+- [x] CP-M06-FE-006 Add preferred medium selector.
+- [x] CP-M06-FE-007 Add era selector.
+- [x] CP-M06-FE-008 Add country/language selector.
+- [x] CP-M06-FE-009 Add theme input.
+- [x] CP-M06-FE-010 Add Generate Discovery Trail button.
+- [x] CP-M06-FE-011 Create discovery result card.
+- [x] CP-M06-FE-012 Add why this expands your taste section.
+- [x] CP-M06-FE-013 Add why it may fail section.
+- [x] CP-M06-FE-014 Add Add To Queue button.
+- [x] CP-M06-FE-015 Add Save Trail button.
+- [x] CP-M06-FE-016 Add saved trails list.
+- [x] CP-M06-FE-017 Add loading state.
+- [x] CP-M06-FE-018 Add empty state.
+- [x] CP-M06-FE-019 Add error state.
 
 ### Integration Tasks
 
-- [ ] CP-M06-INT-001 Connect discovery form to generate endpoint.
-- [ ] CP-M06-INT-002 Connect Add To Queue from discovery result.
-- [ ] CP-M06-INT-003 Connect Save Trail button to save endpoint.
-- [ ] CP-M06-INT-004 Load saved discovery trails.
+- [x] CP-M06-INT-001 Connect discovery form to generate endpoint.
+- [x] CP-M06-INT-002 Connect Add To Queue from discovery result.
+- [x] CP-M06-INT-003 Connect Save Trail button to save endpoint.
+- [x] CP-M06-INT-004 Load saved discovery trails.
 
 ### QA Tasks
 
-- [ ] CP-M06-QA-001 Generate discovery trail with no filters.
-- [ ] CP-M06-QA-002 Generate discovery trail with media type filter.
-- [ ] CP-M06-QA-003 Save a discovery trail.
-- [ ] CP-M06-QA-004 Add discovery result to queue.
+- [x] CP-M06-QA-001 Generate discovery trail with no filters.
+- [x] CP-M06-QA-002 Generate discovery trail with media type filter.
+- [x] CP-M06-QA-003 Save a discovery trail.
+- [x] CP-M06-QA-004 Add discovery result to queue.
 
 ---
 
@@ -3039,16 +3040,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M05-QA-003.
-**Last completed task name:** Confirm archived queue items do not appear in Tonight Mode.
-**Last completed milestone:** CP-M05 — Adaptive Queue v2.
+**Last completed task ID:** CP-M06-QA-004.
+**Last completed task name:** Add discovery result to queue.
+**Last completed milestone:** CP-M06 — Media Archaeologist.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M06 — Media Archaeologist.
-**Next recommended task:** CP-M06-SH-001 Define `DiscoverySearchRequest` type.
+**Current milestone:** CP-M07 — Narrative DNA Analyzer.
+**Next recommended task:** CP-M07-SH-001 Define `NarrativeDNA` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M05 Adaptive Queue v2 is complete. Queue items now store mood compatibility, intensity, complexity, commitment, freshness, recommendation history, and archive state. Backend work adds deterministic queue scoring, freshness decay, owner-scoped priority recalculation, low-fit archive behavior, a recalculation endpoint, a Celery task, API root/schema coverage, and Tonight Mode ranking that excludes archived items while using Queue v2 signals. Frontend work adds a Recalculate Queue action, queue insight and fatigue warning cards, Queue v2 metrics on cards, a low-priority archive section with restore, Tonight Mode Queue v2 fit badges, updated documentation/manual tests, and browser e2e coverage for recalculation, archive exclusion, and restore.
+CP-M06 Media Archaeologist is complete. Shared contracts now define discovery searches, results, reasons, analyses, and saved trails. Backend work adds the owner-scoped discovery app, DiscoveryTrail model/migration/admin, deterministic deep-cut catalog scoring, underexplored medium/era/country-language analysis, generate/list/detail/save/delete endpoints, API root/schema coverage, and backend tests. Frontend work adds the `/discover` Media Archaeologist route, sidebar navigation, accessible discovery form, generated result cards with expansion/risk explanations, saved trails list, Save Trail and Add To Queue actions, loading/empty/error/success states, documentation/manual tests, and Playwright browser-to-backend coverage for no-filter generation, media-filter generation, saving a trail, and queue handoff.
 
 ## 9.3 Important Notes For The Next Agent
 

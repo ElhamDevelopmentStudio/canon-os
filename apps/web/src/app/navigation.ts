@@ -1,6 +1,7 @@
 import {
   BookOpen,
   ClipboardList,
+  Compass,
   Gauge,
   Library,
   ListChecks,
@@ -38,6 +39,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.candidates,
     icon: Sparkles,
     description: "Pre-watch, pre-read, and pre-listen evaluations.",
+  },
+  {
+    label: "Media Archaeologist",
+    route: APP_ROUTES.discovery,
+    icon: Compass,
+    description: "Deep-cut discovery trails and cross-medium expansion maps.",
   },
   {
     label: "Tonight Mode",

@@ -22,6 +22,22 @@ export type {
   EvaluationDecision,
 } from "./candidates";
 export { CANDIDATE_STATUSES, EVALUATION_DECISIONS } from "./candidates";
+
+export type {
+  DiscoveryAnalysis,
+  DiscoveryEra,
+  DiscoveryGenerateResponse,
+  DiscoveryMode,
+  DiscoveryReason,
+  DiscoveryReasonKind,
+  DiscoveryResult,
+  DiscoverySearchRequest,
+  DiscoveryTrail,
+  DiscoveryTrailDraft,
+  DiscoveryTrailListResponse,
+} from "./discovery";
+export { DISCOVERY_ERAS, DISCOVERY_MODES, DISCOVERY_REASON_KINDS } from "./discovery";
+
 export type {
   DashboardCounts,
   DashboardMediaItem,
