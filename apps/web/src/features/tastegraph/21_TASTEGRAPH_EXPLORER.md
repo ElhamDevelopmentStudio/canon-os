@@ -91,3 +91,4 @@ Use `AppShell`. Active sidebar item: TasteGraph.
 ## Implementation Notes
 
 Graph can be simple initially but must keep canvas + rail + table layout.
+Current implementation uses deterministic summary cards and text graph output. Rebuilds include media, creator, dimension, aftertaste, medium, and completed Narrative DNA trait evidence.

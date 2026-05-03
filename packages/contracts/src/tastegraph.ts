@@ -8,6 +8,7 @@ export const GRAPH_NODE_TYPES = [
   "theme",
   "tag",
   "medium",
+  "narrative_trait",
 ] as const;
 export type GraphNodeType = (typeof GRAPH_NODE_TYPES)[number];
 
@@ -18,6 +19,7 @@ export const GRAPH_EDGE_TYPES = [
   "medium_signal",
   "tagged_as",
   "theme_signal",
+  "narrative_signal",
 ] as const;
 export type GraphEdgeType = (typeof GRAPH_EDGE_TYPES)[number];
 
@@ -49,6 +51,7 @@ export type TasteGraphEvidenceCounts = {
   creatorNodeCount: number;
   dimensionNodeCount: number;
   aftertasteSignalNodeCount: number;
+  narrativeTraitNodeCount: number;
   edgeCount: number;
 };
 

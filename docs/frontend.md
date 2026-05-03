@@ -171,6 +171,10 @@ Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidate
 
 Media Archaeologist lives at `/discover`. Discovery API calls live in `apps/web/src/features/discovery/discoveryApi.ts`, and labels live in `apps/web/src/features/discovery/discoveryLabels.ts`. The page supports mode, medium, era, country/language, theme, mood, creator, favorite-work, and narrative-pattern inputs; generated result cards with discovery/obscurity/confidence scores; expansion and risk explanations; Save Trail; saved trail list/delete; Add To Queue; loading, empty, error, and success states.
 
+### Narrative DNA UI
+
+Narrative DNA lives inside Media Detail as a real tab next to the Taste scorecard. API calls live in `apps/web/src/features/narrative/narrativeApi.ts`, and labels live in `apps/web/src/features/narrative/narrativeLabels.ts`. The tab supports empty, loading/running, error, and completed states; optional manual notes; Request/Refresh Narrative DNA; status badge; eight trait scores; extracted trait descriptions; source basis/confidence; and evidence notes that state the allowed data basis. Candidate Evaluator displays `Narrative DNA signals` when completed analyses affect scoring, and TasteGraph signal counts include narrative trait nodes after rebuild.
+
 ### Queue And Tonight Mode UI
 
 Queue API calls live in `apps/web/src/features/queue/queueApi.ts`. The Queue page supports search, filters, add/edit modal, remove confirmation, move up/down reorder, Recalculate Queue, Queue v2 metric displays, insight/fatigue cards, low-priority archive visibility, restore, loading, empty, error, and success states. Tonight Mode uses queue v2 fields plus settings defaults to generate deterministic recommendations and supports starting, queueing, and deferring recommendations while excluding archived queue items.

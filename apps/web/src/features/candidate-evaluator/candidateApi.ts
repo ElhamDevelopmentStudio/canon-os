@@ -41,6 +41,11 @@ function normalizeEvaluation(evaluation: NonNullable<Candidate["latestEvaluation
     confidenceScore: Number(evaluation.confidenceScore),
     likelyFitScore: Number(evaluation.likelyFitScore),
     riskScore: Number(evaluation.riskScore),
+    narrativeSignals: evaluation.narrativeSignals.map((signal) => ({
+      ...signal,
+      impact: Number(signal.impact),
+      averageScore: Number(signal.averageScore),
+    })),
     antiGenericEvaluation: normalizeAntiGenericEvaluation(evaluation.antiGenericEvaluation),
   };
 }

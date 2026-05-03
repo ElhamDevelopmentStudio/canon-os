@@ -23,6 +23,7 @@ User-facing features must also update the matching manual test document under `d
 | Candidate Evaluator | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/candidate-evaluator.md` |
 | Anti-Generic Filter | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/anti-generic-filter.md` |
 | Media Archaeologist | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/media-archaeologist.md` |
+| Narrative DNA Analyzer | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/narrative-dna.md` |
 | Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
@@ -85,6 +86,7 @@ Tests must:
 - Candidate evaluator: create candidate, evaluate candidate, update candidate, add candidate to library, add evaluated candidate to queue, and assert embedded Anti-Generic evaluation payloads.
 - Anti-Generic Filter: high-genericness red flag scoring, modern positive exception scoring, Settings rule disable/save, and re-evaluation output changes.
 - Media Archaeologist: generate discovery trail with no filters, regenerate with media type filter, save a discovery trail, list saved trails, and add a discovery result to the queue.
+- Narrative DNA Analyzer: request analysis from the Media Detail tab, verify completed trait/evidence output, and confirm Candidate Evaluator receives narrative signals from completed analysis history.
 - Queue: create, list, edit, reorder, delete, recalculate priority, archive low-fit items, and restore archived items.
 - Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, defer queue item, show Queue v2 fit fields, and exclude archived queue items.
 - Aftertaste Log: create a completed media item, load prompts, create aftertaste, edit aftertaste, verify latest aftertaste on Media Detail, and delete aftertaste.

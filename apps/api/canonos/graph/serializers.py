@@ -47,6 +47,7 @@ class TasteGraphEvidenceCountsSerializer(serializers.Serializer):
     creatorNodeCount = serializers.IntegerField()
     dimensionNodeCount = serializers.IntegerField()
     aftertasteSignalNodeCount = serializers.IntegerField()
+    narrativeTraitNodeCount = serializers.IntegerField()
     edgeCount = serializers.IntegerField()
 
 

@@ -6,7 +6,7 @@
 
 ## Purpose
 
-Complete record for one media item: metadata, scores, notes, evaluations, aftertaste, relationships.
+Complete record for one media item: metadata, scores, Narrative DNA, notes, evaluations, aftertaste, relationships.
 
 ## Required Layout
 
@@ -92,3 +92,4 @@ Use `AppShell`. Active sidebar item: Library. Use right decision rail.
 ## Implementation Notes
 
 Media Detail is the canonical source of truth for one item.
+Current implementation includes a tabbed Taste scorecard / Narrative DNA section. Narrative DNA requests call the real backend and display source basis, confidence, trait scores, extracted traits, and evidence notes.

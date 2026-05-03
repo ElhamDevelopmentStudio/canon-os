@@ -13,6 +13,7 @@ from django.utils.text import slugify
 
 from canonos.aftertaste.models import AftertasteEntry
 from canonos.media.models import MediaItem
+from canonos.narrative.models import NarrativeAnalysis
 from canonos.taste.models import MediaScore, TasteDimension
 
 from .models import GraphEdge, GraphNode
@@ -73,6 +74,23 @@ def rebuild_taste_graph_for_user(user: User) -> GraphRebuildResult:
                 weight=_aftertaste_weight(entry),
                 evidence=_aftertaste_evidence(entry),
             )
+
+        narrative_analyses = NarrativeAnalysis.objects.filter(
+            owner=user,
+            status=NarrativeAnalysis.Status.COMPLETED,
+        ).select_related("media_item")
+        for analysis in narrative_analyses:
+            media_node = ensure_media_node(user, analysis.media_item)
+            for trait in analysis.extracted_traits:
+                trait_node = ensure_narrative_trait_node(user, trait)
+                ensure_edge(
+                    owner=user,
+                    source_node=trait_node,
+                    target_node=media_node,
+                    edge_type=GraphEdge.EdgeType.NARRATIVE_SIGNAL,
+                    weight=_narrative_trait_weight(trait),
+                    evidence=_narrative_trait_evidence(analysis, trait),
+                )
 
     return GraphRebuildResult(
         node_count=GraphNode.objects.filter(owner=user).count(),
@@ -160,6 +178,21 @@ def ensure_medium_edge(user: User, media_node: GraphNode, media_item: MediaItem)
     )
 
 
+def ensure_narrative_trait_node(user: User, trait: dict[str, Any]) -> GraphNode:
+    key = str(trait.get("key", "unknown"))
+    label = str(trait.get("label", key.replace("_", " ").title()))
+    return ensure_node(
+        owner=user,
+        node_type=GraphNode.NodeType.NARRATIVE_TRAIT,
+        slug=f"narrative-{_stable_slug(key)}",
+        label=label,
+        metadata={
+            "traitKey": key,
+            "description": trait.get("description", ""),
+        },
+    )
+
+
 def ensure_node(
     *,
     owner: User,
@@ -213,6 +246,9 @@ def build_taste_graph_summary(user: User) -> dict[str, Any]:
             "aftertasteSignalNodeCount": nodes.filter(
                 node_type=GraphNode.NodeType.AFTERTASTE_SIGNAL
             ).count(),
+            "narrativeTraitNodeCount": nodes.filter(
+                node_type=GraphNode.NodeType.NARRATIVE_TRAIT
+            ).count(),
             "edgeCount": edge_count,
         },
         "strongestThemes": _rank_nodes(
@@ -227,6 +263,7 @@ def build_taste_graph_summary(user: User) -> dict[str, Any]:
             edges.filter(
                 Q(edge_type=GraphEdge.EdgeType.DIMENSION_SIGNAL)
                 | Q(edge_type=GraphEdge.EdgeType.AFTERTASTE_SIGNAL)
+                | Q(edge_type=GraphEdge.EdgeType.NARRATIVE_SIGNAL)
             ),
             node_side="target",
         )[:5],
@@ -338,6 +375,22 @@ def _aftertaste_evidence(entry: AftertasteEntry) -> str:
     if entry.appetite_effect:
         details.append(f"appetite: {entry.get_appetite_effect_display()}")
     return f"Aftertaste for {entry.media_item.title}: {', '.join(details)}."
+
+
+def _narrative_trait_weight(trait: dict[str, Any]) -> Decimal:
+    score = Decimal(str(trait.get("score", 50))) / Decimal("100")
+    return score.quantize(Decimal("0.01"))
+
+
+def _narrative_trait_evidence(
+    analysis: NarrativeAnalysis,
+    trait: dict[str, Any],
+) -> str:
+    label = str(trait.get("label", "Narrative trait"))
+    score = trait.get("score", "unknown")
+    evidence = str(trait.get("evidence", "")).strip()
+    suffix = f" {evidence}" if evidence else ""
+    return f"Narrative DNA for {analysis.media_item.title}: {label} scored {score}/100.{suffix}"
 
 
 def _evidence_count_label(count: int) -> str:

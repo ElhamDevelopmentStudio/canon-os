@@ -4,7 +4,7 @@ TasteGraph is CanonOS' private graph of media evidence. It connects works, creat
 
 ## Concepts
 
-- **GraphNode**: an owner-scoped graph vertex. Current node types are `media`, `creator`, `dimension`, `aftertaste_signal`, `medium`, with `theme` and `tag` reserved for later taxonomy modules.
+- **GraphNode**: an owner-scoped graph vertex. Current node types are `media`, `creator`, `dimension`, `aftertaste_signal`, `medium`, and `narrative_trait`, with `theme` and `tag` reserved for later taxonomy modules.
 - **GraphEdge**: a weighted owner-scoped connection between two nodes. Positive weights show affinity or supporting evidence; negative weights show risk, regret, genericness, or weak-fit evidence.
 - **TasteGraphSummary**: a read model for the UI. It reports counts, strongest connected themes/dimensions, strongest creators, strongest media, weak/negative signals, and a simple text graph.
 
@@ -19,6 +19,7 @@ Current evidence sources:
 3. Media type becomes a `medium` node and `medium_signal` edge.
 4. Score dimensions become `dimension` nodes and `dimension_signal` edges.
 5. Aftertaste entries become `aftertaste_signal` nodes and `aftertaste_signal` edges.
+6. Completed Narrative DNA analyses become `narrative_trait` nodes and `narrative_signal` edges.
 
 ## Privacy and ownership rules
 

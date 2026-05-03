@@ -10,6 +10,7 @@ The MVP Candidate Evaluator is deterministic and inspectable. It does not call a
 - `expectedTimeCostMinutes` as a rough commitment estimate.
 - Owner-scoped completed media with personal ratings.
 - Owner-scoped taste scores split into positive and negative dimensions.
+- Owner-scoped completed Narrative DNA analyses when available.
 
 ## Score Components
 
@@ -19,6 +20,7 @@ The MVP Candidate Evaluator is deterministic and inspectable. It does not call a
 - **Time cost penalty:** long candidates are penalized before the final decision; short candidates are easier to sample.
 - **Genericness penalty:** high expected genericness directly raises risk and adds an explanation warning.
 - **Anti-Generic Filter:** every evaluation runs the owner-scoped Anti-Generic service, embeds the latest `antiGenericEvaluation`, increases risk from detected red flags, and reduces risk from positive exceptions.
+- **Narrative DNA signals:** completed analyses can add fit bonuses for matching atmosphere, character complexity, or thematic weight, and can add risk when a candidate premise conflicts with the user's freshness or ending-dependency history.
 
 ## Decision Mapping
 
@@ -29,4 +31,4 @@ The backend computes a final score from likely fit, risk, time cost, and capped 
 - `delay`: not a clear no, but mood, time, or evidence should improve first.
 - `skip`: protect time unless new evidence changes the risk profile.
 
-The response always includes the decision, confidence score, likely fit score, risk score, reasons for, reasons against, best mood, recommended action, and Anti-Generic result. The frontend displays the server response as-is and does not duplicate scoring logic.
+The response always includes the decision, confidence score, likely fit score, risk score, reasons for, reasons against, `narrativeSignals`, best mood, recommended action, and Anti-Generic result. The frontend displays the server response as-is and does not duplicate scoring logic.

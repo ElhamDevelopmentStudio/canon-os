@@ -165,3 +165,4 @@ export type {
   PositiveExceptionSignal,
 } from "./antiGeneric";
 export { ANTI_GENERIC_FINAL_VERDICTS } from "./antiGeneric";
+export * from "./narrative";

@@ -13,6 +13,7 @@ export const API_ROUTES = {
   dashboardSummary: "/dashboard/summary/",
   mediaItems: "/media-items/",
   metadataMatches: "/metadata/matches/",
+  narrativeAnalyses: "/narrative-analyses/",
   importPreview: "/imports/preview/",
   exportRequest: "/exports/",
   tasteDimensions: "/taste-dimensions/",

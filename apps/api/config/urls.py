@@ -39,6 +39,7 @@ api_urlpatterns = [
     path("", include("canonos.imports.urls")),
     path("", include("canonos.media.urls")),
     path("", include("canonos.metadata.urls")),
+    path("", include("canonos.narrative.urls")),
     path("", include("canonos.queueing.urls")),
     path("", include("canonos.taste.urls")),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),

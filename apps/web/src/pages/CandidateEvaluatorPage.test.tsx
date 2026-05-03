@@ -51,6 +51,13 @@ const evaluatedCandidate: Candidate = {
     riskScore: 24,
     reasonsFor: ["Strong director signal."],
     reasonsAgainst: ["Sample before committing."],
+    narrativeSignals: [{
+      traitKey: "atmosphere",
+      label: "Atmosphere match",
+      impact: 6,
+      averageScore: 82,
+      evidence: "Your completed Narrative DNA history leans toward atmosphere-heavy works.",
+    }],
     bestMood: "Focused and curious",
     recommendedAction: "Sample the first meaningful unit.",
 
@@ -212,6 +219,7 @@ describe("CandidateEvaluatorPage", () => {
 
     expect(screen.getByText(/Strong director signal/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /anti-generic filter/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /narrative dna signals/i })).toBeInTheDocument();
     expect(screen.getByText(/modern exception/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /add to queue/i })).toBeEnabled();
   });

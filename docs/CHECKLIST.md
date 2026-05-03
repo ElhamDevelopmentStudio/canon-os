@@ -90,6 +90,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Candidate evaluator: `docs/manual-tests/candidate-evaluator.md`
 - Queue and Tonight Mode: `docs/manual-tests/queue-tonight.md`
 - Media Archaeologist: `docs/manual-tests/media-archaeologist.md`
+- Narrative DNA: `docs/manual-tests/narrative-dna.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 
@@ -1945,78 +1946,78 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M07-SH-001 Define `NarrativeDNA` type.
-- [ ] CP-M07-SH-002 Define `NarrativeTrait` type.
-- [ ] CP-M07-SH-003 Define `NarrativeAnalysisRequest` type.
-- [ ] CP-M07-SH-004 Define `NarrativeAnalysisResult` type.
-- [ ] CP-M07-SH-005 Document Narrative DNA trait definitions.
+- [x] CP-M07-SH-001 Define `NarrativeDNA` type.
+- [x] CP-M07-SH-002 Define `NarrativeTrait` type.
+- [x] CP-M07-SH-003 Define `NarrativeAnalysisRequest` type.
+- [x] CP-M07-SH-004 Define `NarrativeAnalysisResult` type.
+- [x] CP-M07-SH-005 Document Narrative DNA trait definitions.
 
 ### Backend Tasks
 
-- [ ] CP-M07-BE-001 Create narrative app.
-- [ ] CP-M07-BE-002 Create NarrativeAnalysis model.
-- [ ] CP-M07-BE-003 Add owner/user foreign key.
-- [ ] CP-M07-BE-004 Add media item foreign key.
-- [ ] CP-M07-BE-005 Add analysis status field.
-- [ ] CP-M07-BE-006 Add character complexity score.
-- [ ] CP-M07-BE-007 Add plot complexity score.
-- [ ] CP-M07-BE-008 Add pacing density score.
-- [ ] CP-M07-BE-009 Add thematic weight score.
-- [ ] CP-M07-BE-010 Add moral ambiguity score.
-- [ ] CP-M07-BE-011 Add atmosphere score.
-- [ ] CP-M07-BE-012 Add ending dependency score.
-- [ ] CP-M07-BE-013 Add trope freshness score.
-- [ ] CP-M07-BE-014 Add analysis summary field.
-- [ ] CP-M07-BE-015 Add extracted traits JSON field.
-- [ ] CP-M07-BE-016 Add evidence notes field.
-- [ ] CP-M07-BE-017 Create migration for NarrativeAnalysis.
-- [ ] CP-M07-BE-018 Create narrative analysis serializer.
-- [ ] CP-M07-BE-019 Create narrative analysis service.
-- [ ] CP-M07-BE-020 Create manual analysis generation from user notes.
-- [ ] CP-M07-BE-021 Create optional AI provider abstraction.
-- [ ] CP-M07-BE-022 Create narrative analysis request endpoint.
-- [ ] CP-M07-BE-023 Create narrative analysis detail endpoint.
-- [ ] CP-M07-BE-024 Create Celery task for narrative analysis.
-- [ ] CP-M07-BE-025 Add test for manual analysis generation.
-- [ ] CP-M07-BE-026 Add test for analysis request endpoint.
-- [ ] CP-M07-BE-027 Add test for analysis status transitions.
+- [x] CP-M07-BE-001 Create narrative app.
+- [x] CP-M07-BE-002 Create NarrativeAnalysis model.
+- [x] CP-M07-BE-003 Add owner/user foreign key.
+- [x] CP-M07-BE-004 Add media item foreign key.
+- [x] CP-M07-BE-005 Add analysis status field.
+- [x] CP-M07-BE-006 Add character complexity score.
+- [x] CP-M07-BE-007 Add plot complexity score.
+- [x] CP-M07-BE-008 Add pacing density score.
+- [x] CP-M07-BE-009 Add thematic weight score.
+- [x] CP-M07-BE-010 Add moral ambiguity score.
+- [x] CP-M07-BE-011 Add atmosphere score.
+- [x] CP-M07-BE-012 Add ending dependency score.
+- [x] CP-M07-BE-013 Add trope freshness score.
+- [x] CP-M07-BE-014 Add analysis summary field.
+- [x] CP-M07-BE-015 Add extracted traits JSON field.
+- [x] CP-M07-BE-016 Add evidence notes field.
+- [x] CP-M07-BE-017 Create migration for NarrativeAnalysis.
+- [x] CP-M07-BE-018 Create narrative analysis serializer.
+- [x] CP-M07-BE-019 Create narrative analysis service.
+- [x] CP-M07-BE-020 Create manual analysis generation from user notes.
+- [x] CP-M07-BE-021 Create optional AI provider abstraction.
+- [x] CP-M07-BE-022 Create narrative analysis request endpoint.
+- [x] CP-M07-BE-023 Create narrative analysis detail endpoint.
+- [x] CP-M07-BE-024 Create Celery task for narrative analysis.
+- [x] CP-M07-BE-025 Add test for manual analysis generation.
+- [x] CP-M07-BE-026 Add test for analysis request endpoint.
+- [x] CP-M07-BE-027 Add test for analysis status transitions.
 
 ### Frontend Tasks
 
-- [ ] CP-M07-FE-001 Create narrative API client file.
-- [ ] CP-M07-FE-002 Add Narrative DNA tab to Media Detail page.
-- [ ] CP-M07-FE-003 Create narrative trait score grid.
-- [ ] CP-M07-FE-004 Add character complexity display.
-- [ ] CP-M07-FE-005 Add plot complexity display.
-- [ ] CP-M07-FE-006 Add pacing density display.
-- [ ] CP-M07-FE-007 Add thematic weight display.
-- [ ] CP-M07-FE-008 Add moral ambiguity display.
-- [ ] CP-M07-FE-009 Add atmosphere display.
-- [ ] CP-M07-FE-010 Add ending dependency display.
-- [ ] CP-M07-FE-011 Add trope freshness display.
-- [ ] CP-M07-FE-012 Add Request Analysis button.
-- [ ] CP-M07-FE-013 Add analysis status badge.
-- [ ] CP-M07-FE-014 Add analysis summary section.
-- [ ] CP-M07-FE-015 Add extracted traits section.
-- [ ] CP-M07-FE-016 Add evidence notes section.
-- [ ] CP-M07-FE-017 Add loading state while analysis is running.
-- [ ] CP-M07-FE-018 Add empty state before analysis.
-- [ ] CP-M07-FE-019 Add error state for failed analysis.
+- [x] CP-M07-FE-001 Create narrative API client file.
+- [x] CP-M07-FE-002 Add Narrative DNA tab to Media Detail page.
+- [x] CP-M07-FE-003 Create narrative trait score grid.
+- [x] CP-M07-FE-004 Add character complexity display.
+- [x] CP-M07-FE-005 Add plot complexity display.
+- [x] CP-M07-FE-006 Add pacing density display.
+- [x] CP-M07-FE-007 Add thematic weight display.
+- [x] CP-M07-FE-008 Add moral ambiguity display.
+- [x] CP-M07-FE-009 Add atmosphere display.
+- [x] CP-M07-FE-010 Add ending dependency display.
+- [x] CP-M07-FE-011 Add trope freshness display.
+- [x] CP-M07-FE-012 Add Request Analysis button.
+- [x] CP-M07-FE-013 Add analysis status badge.
+- [x] CP-M07-FE-014 Add analysis summary section.
+- [x] CP-M07-FE-015 Add extracted traits section.
+- [x] CP-M07-FE-016 Add evidence notes section.
+- [x] CP-M07-FE-017 Add loading state while analysis is running.
+- [x] CP-M07-FE-018 Add empty state before analysis.
+- [x] CP-M07-FE-019 Add error state for failed analysis.
 
 ### Integration Tasks
 
-- [ ] CP-M07-INT-001 Connect Request Analysis button to analysis endpoint.
-- [ ] CP-M07-INT-002 Poll or refresh analysis status.
-- [ ] CP-M07-INT-003 Display completed analysis on Media Detail page.
-- [ ] CP-M07-INT-004 Use narrative DNA fields in Candidate Evaluator.
-- [ ] CP-M07-INT-005 Use narrative DNA fields in TasteGraph rebuild.
+- [x] CP-M07-INT-001 Connect Request Analysis button to analysis endpoint.
+- [x] CP-M07-INT-002 Poll or refresh analysis status.
+- [x] CP-M07-INT-003 Display completed analysis on Media Detail page.
+- [x] CP-M07-INT-004 Use narrative DNA fields in Candidate Evaluator.
+- [x] CP-M07-INT-005 Use narrative DNA fields in TasteGraph rebuild.
 
 ### QA Tasks
 
-- [ ] CP-M07-QA-001 Request narrative analysis for media with notes.
-- [ ] CP-M07-QA-002 Confirm analysis status updates.
-- [ ] CP-M07-QA-003 Confirm completed analysis appears in UI.
-- [ ] CP-M07-QA-004 Confirm Candidate Evaluator uses narrative traits.
+- [x] CP-M07-QA-001 Request narrative analysis for media with notes.
+- [x] CP-M07-QA-002 Confirm analysis status updates.
+- [x] CP-M07-QA-003 Confirm completed analysis appears in UI.
+- [x] CP-M07-QA-004 Confirm Candidate Evaluator uses narrative traits.
 
 ---
 
@@ -3040,16 +3041,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M06-QA-004.
-**Last completed task name:** Add discovery result to queue.
-**Last completed milestone:** CP-M06 — Media Archaeologist.
+**Last completed task ID:** CP-M07-QA-004.
+**Last completed task name:** Confirm Candidate Evaluator uses narrative traits.
+**Last completed milestone:** CP-M07 — Narrative DNA Analyzer.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M07 — Narrative DNA Analyzer.
-**Next recommended task:** CP-M07-SH-001 Define `NarrativeDNA` type.
+**Current milestone:** CP-M08 — Critic Council.
+**Next recommended task:** CP-M08-SH-001 Define `CriticPersona` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M06 Media Archaeologist is complete. Shared contracts now define discovery searches, results, reasons, analyses, and saved trails. Backend work adds the owner-scoped discovery app, DiscoveryTrail model/migration/admin, deterministic deep-cut catalog scoring, underexplored medium/era/country-language analysis, generate/list/detail/save/delete endpoints, API root/schema coverage, and backend tests. Frontend work adds the `/discover` Media Archaeologist route, sidebar navigation, accessible discovery form, generated result cards with expansion/risk explanations, saved trails list, Save Trail and Add To Queue actions, loading/empty/error/success states, documentation/manual tests, and Playwright browser-to-backend coverage for no-filter generation, media-filter generation, saving a trail, and queue handoff.
+CP-M07 Narrative DNA Analyzer is complete. Shared contracts now define NarrativeDNA, traits, requests, results, status events, source bases, and candidate narrative signals. Backend work adds the owner-scoped narrative app, NarrativeAnalysis model/migration/admin, deterministic local heuristic provider plus disabled external-provider abstraction, request/detail/list/correction endpoints, status transitions, Celery task, Candidate Evaluator narrative-signal scoring, TasteGraph narrative trait nodes/edges, API root/schema coverage, and backend tests. Frontend work adds the Media Detail Narrative DNA tab with request/refresh, status badge, score grid, summary, extracted traits, evidence notes, loading/empty/error states, candidate narrative-signal display, docs/manual tests, and Playwright browser-to-backend coverage for analysis plus candidate integration.
 
 ## 9.3 Important Notes For The Next Agent
 

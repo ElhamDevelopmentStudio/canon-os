@@ -84,6 +84,7 @@ class CandidateEvaluation(models.Model):
     )
     reasons_for = models.JSONField(default=list, blank=True)
     reasons_against = models.JSONField(default=list, blank=True)
+    narrative_signals = models.JSONField(default=list, blank=True)
     best_mood = models.CharField(max_length=160, blank=True)
     recommended_action = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

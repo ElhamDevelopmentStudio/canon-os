@@ -1,4 +1,5 @@
-import { ArrowLeft, Pencil, RefreshCcw, Trash2 } from "lucide-react";
+import type { NarrativeAnalysisResult, NarrativeTrait, TasteDimension } from "@canonos/contracts";
+import { ArrowLeft, Dna, Pencil, RefreshCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -10,6 +11,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageActionBar } from "@/components/layout/PageActionBar";
+import { PageTabs } from "@/components/layout/PageTabs";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
@@ -26,7 +28,15 @@ import { refreshMetadata } from "@/features/metadata/metadataApi";
 import { externalProviderLabels } from "@/features/metadata/metadataLabels";
 import { MediaFormModal } from "@/features/media/MediaFormModal";
 import { mediaTypeLabels, statusLabels } from "@/features/media/mediaLabels";
+import { requestNarrativeAnalysis, useNarrativeAnalysis } from "@/features/narrative/narrativeApi";
+import {
+  narrativeSourceBasisLabels,
+  narrativeStatusLabels,
+  narrativeStatusTone,
+  narrativeTraitLabels,
+} from "@/features/narrative/narrativeLabels";
 import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
+import { ApiError } from "@/lib/errors";
 
 type ScoreDraftMap = Record<string, ScoreDraft>;
 
@@ -43,16 +53,26 @@ export function MediaDetailPage() {
   const navigate = useNavigate();
   const { data, error, isLoading, mutate } = useMediaItem(mediaId);
   const {
+    data: narrativeAnalysis,
+    error: narrativeError,
+    isLoading: isLoadingNarrative,
+    mutate: mutateNarrativeAnalysis,
+  } = useNarrativeAnalysis(mediaId);
+  const {
     data: dimensions,
     error: dimensionsError,
     isLoading: isLoadingDimensions,
   } = useTasteDimensions(Boolean(data));
+  const [activeAnalysisTab, setActiveAnalysisTab] = useState("taste-scorecard");
   const [scoreDrafts, setScoreDrafts] = useState<ScoreDraftMap>({});
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSavingScores, setIsSavingScores] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [scoreError, setScoreError] = useState<string | null>(null);
+  const [narrativeNotes, setNarrativeNotes] = useState("");
+  const [isRequestingNarrative, setIsRequestingNarrative] = useState(false);
+  const [narrativeRequestError, setNarrativeRequestError] = useState<string | null>(null);
   const [isRefreshingMetadata, setIsRefreshingMetadata] = useState(false);
   const [metadataError, setMetadataError] = useState<string | null>(null);
 
@@ -109,6 +129,26 @@ export function MediaDetailPage() {
     }
   }
 
+  async function handleRequestNarrativeAnalysis(forceRefresh = false) {
+    if (!data) return;
+    setIsRequestingNarrative(true);
+    setNarrativeRequestError(null);
+    try {
+      await requestNarrativeAnalysis(data.id, {
+        manualNotes: narrativeNotes || data.notes,
+        forceRefresh,
+        provider: "local_heuristic",
+      });
+      await mutateNarrativeAnalysis();
+    } catch (caught) {
+      setNarrativeRequestError(
+        caught instanceof Error ? caught.message : "Could not request Narrative DNA analysis.",
+      );
+    } finally {
+      setIsRequestingNarrative(false);
+    }
+  }
+
   if (isLoading) {
     return <LoadingState title="Loading media detail" message="Fetching this library item." />;
   }
@@ -118,6 +158,8 @@ export function MediaDetailPage() {
   if (!data) {
     return <EmptyState title="Media item not found" message="This item may have been deleted or is unavailable." />;
   }
+  const hasNoNarrativeAnalysis = narrativeError instanceof ApiError && narrativeError.status === 404;
+  const visibleNarrativeError = hasNoNarrativeAnalysis ? undefined : narrativeError;
 
   return (
     <div className="flex flex-col gap-6">
@@ -182,26 +224,44 @@ export function MediaDetailPage() {
         </SectionCard>
       </section>
 
-      <SectionCard title="Taste scorecard">
-        <div className="grid gap-4">
-          <p className="text-sm leading-6 text-muted-foreground">
-            Scores explain why the work succeeded or failed beyond the overall rating.
-          </p>
-          {scoreError ? <ErrorState title="Score save failed" message={scoreError} /> : null}
-          <DimensionScoreGrid
-            dimensions={dimensions}
-            drafts={scoreDrafts}
-            error={dimensionsError}
-            isLoading={isLoadingDimensions}
-            onChange={setScoreDrafts}
-          />
-          <div className="flex justify-end">
-            <Button disabled={isSavingScores || !dimensions?.length} type="button" onClick={() => void handleSaveScores()}>
-              {isSavingScores ? "Saving scores…" : "Save scores"}
-            </Button>
-          </div>
-        </div>
-      </SectionCard>
+      <PageTabs
+        activeTab={activeAnalysisTab}
+        tabs={[
+          {
+            id: "taste-scorecard",
+            label: "Taste scorecard",
+            panel: (
+              <TasteScorecardPanel
+                dimensions={dimensions}
+                dimensionsError={dimensionsError}
+                isLoadingDimensions={isLoadingDimensions}
+                isSavingScores={isSavingScores}
+                scoreDrafts={scoreDrafts}
+                scoreError={scoreError}
+                onSaveScores={handleSaveScores}
+                onScoreDraftChange={setScoreDrafts}
+              />
+            ),
+          },
+          {
+            id: "narrative-dna",
+            label: "Narrative DNA",
+            panel: (
+              <NarrativeDnaPanel
+                analysis={narrativeAnalysis}
+                error={visibleNarrativeError}
+                isLoading={isLoadingNarrative && !hasNoNarrativeAnalysis}
+                isRequesting={isRequestingNarrative}
+                notes={narrativeNotes}
+                requestError={narrativeRequestError}
+                onNotesChange={setNarrativeNotes}
+                onRequest={handleRequestNarrativeAnalysis}
+              />
+            ),
+          },
+        ]}
+        onChange={setActiveAnalysisTab}
+      />
 
       <SectionCard title="Aftertaste">
         {data.latestAftertaste ? (
@@ -323,6 +383,207 @@ export function MediaDetailPage() {
       />
     </div>
   );
+}
+
+function TasteScorecardPanel({
+  dimensions,
+  dimensionsError,
+  isLoadingDimensions,
+  isSavingScores,
+  scoreDrafts,
+  scoreError,
+  onSaveScores,
+  onScoreDraftChange,
+}: {
+  dimensions?: TasteDimension[];
+  dimensionsError?: Error;
+  isLoadingDimensions: boolean;
+  isSavingScores: boolean;
+  scoreDrafts: ScoreDraftMap;
+  scoreError: string | null;
+  onSaveScores: () => void;
+  onScoreDraftChange: (drafts: ScoreDraftMap) => void;
+}) {
+  return (
+    <SectionCard title="Taste scorecard">
+      <div className="grid gap-4">
+        <p className="text-sm leading-6 text-muted-foreground">
+          Scores explain why the work succeeded or failed beyond the overall rating.
+        </p>
+        {scoreError ? <ErrorState title="Score save failed" message={scoreError} /> : null}
+        <DimensionScoreGrid
+          dimensions={dimensions}
+          drafts={scoreDrafts}
+          error={dimensionsError}
+          isLoading={isLoadingDimensions}
+          onChange={onScoreDraftChange}
+        />
+        <div className="flex justify-end">
+          <Button
+            disabled={isSavingScores || !dimensions?.length}
+            type="button"
+            onClick={() => void onSaveScores()}
+          >
+            {isSavingScores ? "Saving scores…" : "Save scores"}
+          </Button>
+        </div>
+      </div>
+    </SectionCard>
+  );
+}
+
+function NarrativeDnaPanel({
+  analysis,
+  error,
+  isLoading,
+  isRequesting,
+  notes,
+  requestError,
+  onNotesChange,
+  onRequest,
+}: {
+  analysis?: NarrativeAnalysisResult | null;
+  error?: Error;
+  isLoading: boolean;
+  isRequesting: boolean;
+  notes: string;
+  requestError: string | null;
+  onNotesChange: (value: string) => void;
+  onRequest: (forceRefresh?: boolean) => void;
+}) {
+  return (
+    <SectionCard title="Narrative DNA">
+      <div className="grid gap-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <Dna aria-hidden="true" className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold">Narrative DNA</h2>
+            </div>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+              Analyze story structure from notes and metadata without storing full copyrighted
+              source text.
+            </p>
+          </div>
+          {analysis ? (
+            <StatusPill
+              label={narrativeStatusLabels[analysis.status]}
+              tone={narrativeStatusTone[analysis.status]}
+            />
+          ) : null}
+        </div>
+
+        {isLoading ? (
+          <LoadingState title="Loading Narrative DNA" message="Checking whether this item has an analysis." />
+        ) : null}
+        {error ? <ErrorState title="Narrative DNA unavailable" message={error.message} /> : null}
+        {requestError ? <ErrorState title="Narrative analysis failed" message={requestError} /> : null}
+
+        {!isLoading && !error && !analysis ? (
+          <EmptyState
+            title="No Narrative DNA yet"
+            message="Request analysis after adding notes, a premise, or metadata. CanonOS will state the evidence basis and confidence."
+          />
+        ) : null}
+
+        {analysis?.status === "queued" || analysis?.status === "running" ? (
+          <LoadingState title="Narrative analysis running" message="CanonOS is generating trait scores." />
+        ) : null}
+
+        {analysis ? <NarrativeAnalysisSummary analysis={analysis} /> : null}
+
+        <label className="grid gap-1.5 text-sm font-medium">
+          Narrative analysis notes
+          <textarea
+            className="min-h-28 resize-y rounded-xl border border-input bg-background px-3 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            placeholder="Optional notes about pacing, themes, character arcs, atmosphere, ending, or what felt fresh/generic."
+            value={notes}
+            onChange={(event) => onNotesChange(event.target.value)}
+          />
+        </label>
+
+        <div className="flex flex-wrap gap-3">
+          <Button disabled={isRequesting} type="button" onClick={() => void onRequest(Boolean(analysis))}>
+            {isRequesting
+              ? "Requesting…"
+              : analysis
+                ? "Refresh Narrative DNA"
+                : "Request Narrative Analysis"}
+          </Button>
+          {analysis ? (
+            <p className="self-center text-xs text-muted-foreground">
+              Source: {narrativeSourceBasisLabels[analysis.sourceBasis]} · confidence{" "}
+              {analysis.confidenceScore}/100
+            </p>
+          ) : null}
+        </div>
+      </div>
+    </SectionCard>
+  );
+}
+
+function NarrativeAnalysisSummary({ analysis }: { analysis: NarrativeAnalysisResult }) {
+  const traits = orderedNarrativeTraits(analysis);
+  return (
+    <div className="grid gap-5">
+      <div className="rounded-2xl border border-border bg-background p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="font-semibold">Analysis summary</h3>
+          <ScoreBadge label="confidence" score={analysis.confidenceScore} tone="promising" />
+        </div>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{analysis.analysisSummary}</p>
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {traits.map((trait) => (
+          <div className="rounded-2xl border border-border bg-background p-4" key={trait.key}>
+            <p className="text-sm font-medium text-muted-foreground">{narrativeTraitLabels[trait.key]}</p>
+            <div className="mt-2">
+              <ScoreBadge score={trait.score} tone={scoreToneForNarrativeTrait(trait.score)} />
+            </div>
+            <p className="mt-3 text-xs leading-5 text-muted-foreground">{trait.evidence}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl border border-border bg-background p-4">
+        <h3 className="font-semibold">Extracted traits</h3>
+        <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
+          {analysis.extractedTraits.map((trait) => (
+            <li className="rounded-xl bg-muted/50 p-3" key={`${analysis.id}-${trait.key}`}>
+              <span className="font-medium text-foreground">{trait.label}</span>: {trait.description}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-background p-4">
+        <h3 className="font-semibold">Evidence notes</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{analysis.evidenceNotes}</p>
+      </div>
+    </div>
+  );
+}
+
+function orderedNarrativeTraits(analysis: NarrativeAnalysisResult): NarrativeTrait[] {
+  const byKey = new Map(analysis.extractedTraits.map((trait) => [trait.key, trait]));
+  return [
+    "character_complexity",
+    "plot_complexity",
+    "pacing_density",
+    "thematic_weight",
+    "moral_ambiguity",
+    "atmosphere",
+    "ending_dependency",
+    "trope_freshness",
+  ].map((key) => byKey.get(key as NarrativeTrait["key"])).filter(Boolean) as NarrativeTrait[];
+}
+
+function scoreToneForNarrativeTrait(score: number) {
+  if (score >= 75) return "excellent";
+  if (score >= 55) return "promising";
+  if (score >= 35) return "risky";
+  return "avoid";
 }
 
 function Metadata({ label, value }: { label: string; value?: string | null }) {

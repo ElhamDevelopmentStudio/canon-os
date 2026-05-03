@@ -92,3 +92,4 @@ Use `AppShell`. Active sidebar item: Candidate Evaluator. Two-column workbench p
 ## Implementation Notes
 
 Keep this page fast and focused; do not turn it into a full metadata editor.
+Current implementation displays Anti-Generic and Narrative DNA signal sections when the backend evaluation returns those evidence payloads.

@@ -16,6 +16,7 @@ class GraphNode(models.Model):
         THEME = "theme", "Theme"
         TAG = "tag", "Tag"
         MEDIUM = "medium", "Medium"
+        NARRATIVE_TRAIT = "narrative_trait", "Narrative trait"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
@@ -55,6 +56,7 @@ class GraphEdge(models.Model):
         MEDIUM_SIGNAL = "medium_signal", "Medium signal"
         TAGGED_AS = "tagged_as", "Tagged as"
         THEME_SIGNAL = "theme_signal", "Theme signal"
+        NARRATIVE_SIGNAL = "narrative_signal", "Narrative signal"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(

@@ -8,6 +8,7 @@ from django.db.models import Avg, Count
 from canonos.accounts.models import UserSettings
 from canonos.anti_generic.services import evaluate_anti_generic_for_candidate
 from canonos.media.models import MediaItem
+from canonos.narrative.services import narrative_trait_bonus_for_candidate
 from canonos.taste.models import MediaScore, TasteDimension
 
 from .models import Candidate, CandidateEvaluation
@@ -85,22 +86,30 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     )
     strictness_penalty = (settings.preferred_scoring_strictness - 5) * 2
     anti_generic = evaluate_anti_generic_for_candidate(user, candidate)
+    narrative_bonus, narrative_risk, narrative_signals = narrative_trait_bonus_for_candidate(
+        user,
+        candidate.media_type,
+        candidate.premise,
+    )
+    likely_fit_with_narrative = clamp(likely_fit + narrative_bonus)
     risk = clamp(
         (genericness * genericness_weight)
         + max(time_penalty, 0)
         + max(hype - 7, 0) * 4
         + modern_skepticism_penalty
+        + narrative_risk
         + (anti_generic.genericness_risk_score * 0.35)
         + (anti_generic.time_waste_risk_score * 0.2)
         - (anti_generic.positive_exception_score * 0.25)
     )
     final_score = clamp(
-        likely_fit - (risk * 0.45) - time_penalty + min(hype, 8) - strictness_penalty
+        likely_fit_with_narrative - (risk * 0.45) - time_penalty + min(hype, 8) - strictness_penalty
     )
     confidence = clamp(
         45
         + min(score_count * 4, 30)
         + (10 if type_bonus else 0)
+        + (8 if narrative_signals else 0)
         - (10 if not candidate.premise else 0)
     )
 
@@ -114,8 +123,14 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         decision = CandidateEvaluation.Decision.SKIP
 
     reasons_for = [*type_reasons]
+    reasons_against = []
     if candidate.premise:
         reasons_for.append("The premise gives enough signal for a meaningful first-pass judgment.")
+    for signal in narrative_signals:
+        if signal["impact"] >= 0:
+            reasons_for.append(signal["evidence"])
+        else:
+            reasons_against.append(signal["evidence"])
     if positive_avg >= 7:
         reasons_for.append(
             "Your scored history shows strong positive taste signals to compare against."
@@ -125,7 +140,6 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
     if not reasons_for:
         reasons_for.append("There is enough basic metadata to save and revisit this candidate.")
 
-    reasons_against = []
     if genericness >= 7:
         reasons_against.append("Expected genericness is high, so sample before committing.")
     elif genericness >= 5:
@@ -173,10 +187,11 @@ def evaluate_candidate(user: User, candidate: Candidate) -> CandidateEvaluation:
         candidate=candidate,
         decision=decision,
         confidence_score=confidence,
-        likely_fit_score=likely_fit,
+        likely_fit_score=likely_fit_with_narrative,
         risk_score=risk,
         reasons_for=reasons_for[:4],
         reasons_against=reasons_against[:4],
+        narrative_signals=narrative_signals,
         best_mood=best_mood,
         recommended_action=action_by_decision[decision],
     )

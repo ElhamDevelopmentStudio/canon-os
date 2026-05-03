@@ -25,6 +25,7 @@ class CandidateEvaluationSerializer(serializers.ModelSerializer):
         child=serializers.CharField(),
         read_only=True,
     )
+    narrativeSignals = serializers.ListField(source="narrative_signals", read_only=True)
     bestMood = serializers.CharField(source="best_mood", read_only=True)
     recommendedAction = serializers.CharField(source="recommended_action", read_only=True)
     antiGenericEvaluation = serializers.SerializerMethodField()
@@ -41,6 +42,7 @@ class CandidateEvaluationSerializer(serializers.ModelSerializer):
             "riskScore",
             "reasonsFor",
             "reasonsAgainst",
+            "narrativeSignals",
             "bestMood",
             "recommendedAction",
             "antiGenericEvaluation",

@@ -22,6 +22,7 @@ function normalizeSummary(summary: TasteGraphSummary): TasteGraphSummary {
       creatorNodeCount: Number(summary.evidenceCounts.creatorNodeCount),
       dimensionNodeCount: Number(summary.evidenceCounts.dimensionNodeCount),
       aftertasteSignalNodeCount: Number(summary.evidenceCounts.aftertasteSignalNodeCount),
+      narrativeTraitNodeCount: Number(summary.evidenceCounts.narrativeTraitNodeCount),
       edgeCount: Number(summary.evidenceCounts.edgeCount),
     },
     strongestThemes: normalizeItems(summary.strongestThemes),

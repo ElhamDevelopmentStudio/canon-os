@@ -159,6 +159,20 @@ Endpoints:
 
 Generate responses include the normalized search frame, underexplored media/era/country-language analysis, an unsaved `draft`, ranked `results`, and `generatedAt`. Each result includes discovery, obscurity, and confidence scores plus expansion reasons, risk rationale, and a suggested action. Shared TypeScript contracts live in `packages/contracts/src/discovery.ts`; frontend calls live in `apps/web/src/features/discovery/discoveryApi.ts`. Product behavior is documented in `docs/discovery.md`.
 
+## Narrative DNA API Contract
+
+Narrative DNA endpoints are user-owned and require an authenticated session. They analyze story properties from allowed user notes and metadata, not full copyrighted source text.
+
+Endpoints:
+
+- `GET /api/narrative-analyses/` lists current user's analyses, optionally filtered by `mediaItemId`.
+- `GET /api/narrative-analyses/{id}/` returns one owner-scoped analysis.
+- `PATCH /api/narrative-analyses/{id}/` lets the user correct scores, summary, or evidence notes.
+- `GET /api/media-items/{id}/narrative-analysis/` returns the current analysis for one owned media item.
+- `POST /api/media-items/{id}/narrative-analysis/` requests or refreshes analysis from `manualNotes`, `forceRefresh`, and `provider`.
+
+Analysis payloads include status, eight trait scores, confidence, summary, extracted traits, evidence notes, source basis, provider, algorithm version, status events, and timestamps. Candidate evaluations embed `narrativeSignals` when completed analyses influence fit/risk scoring, and TasteGraph rebuilds add narrative trait nodes/edges. Shared contracts live in `packages/contracts/src/narrative.ts`; product rules live in `docs/narrative-dna.md`.
+
 
 ## Queue API Contract
 

@@ -18,6 +18,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
         "auth",
         "library",
         "discovery",
+        "narrative_dna",
         "candidates",
         "tonight_mode",
     }

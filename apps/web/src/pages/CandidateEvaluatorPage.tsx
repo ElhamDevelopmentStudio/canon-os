@@ -8,6 +8,7 @@ import type {
 import { MEDIA_TYPES } from "@canonos/contracts";
 import {
   BookOpenCheck,
+  Dna,
   LibraryBig,
   PlayCircle,
   RotateCcw,
@@ -419,6 +420,9 @@ function EvaluationResultCard({
         </div>
 
         {evaluation.antiGenericEvaluation ? <AntiGenericSection evaluation={evaluation.antiGenericEvaluation} /> : null}
+        {evaluation.narrativeSignals.length > 0 ? (
+          <NarrativeSignalSection signals={evaluation.narrativeSignals} />
+        ) : null}
 
         <ReasonList title="Why it may work" reasons={evaluation.reasonsFor} />
         <ReasonList title="Risks / reasons against" reasons={evaluation.reasonsAgainst} />
@@ -490,6 +494,32 @@ function AntiGenericSection({ evaluation }: { evaluation: AntiGenericEvaluation 
           title="Positive exceptions"
         />
       </div>
+    </section>
+  );
+}
+
+function NarrativeSignalSection({ signals }: { signals: CandidateEvaluation["narrativeSignals"] }) {
+  return (
+    <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4" aria-labelledby="narrative-signals-heading">
+      <h3 className="flex items-center gap-2 font-semibold" id="narrative-signals-heading">
+        <Dna aria-hidden="true" className="h-4 w-4 text-primary" />
+        Narrative DNA signals
+      </h3>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Candidate scoring used completed Narrative DNA traits from your media library.
+      </p>
+      <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
+        {signals.map((signal) => (
+          <li className="rounded-xl bg-background p-3" key={`${signal.traitKey}-${signal.label}`}>
+            <span className="font-medium text-foreground">{signal.label}</span>
+            <span className="ml-2 text-xs">
+              {signal.impact > 0 ? "+" : ""}
+              {signal.impact} · avg {signal.averageScore}/100
+            </span>
+            <p className="mt-1 leading-5">{signal.evidence}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

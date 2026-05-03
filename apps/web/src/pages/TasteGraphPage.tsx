@@ -67,7 +67,7 @@ function TasteGraphContent({ graph, onRebuild }: { graph: TasteGraphSummary; onR
         <MetricCard helper="Owner-scoped graph nodes." label="Nodes" value={graph.nodeCount} />
         <MetricCard helper="Weighted evidence connections." label="Edges" value={graph.edgeCount} />
         <MetricCard helper="Media connected to the graph." label="Media nodes" value={graph.evidenceCounts.mediaNodeCount} />
-        <MetricCard helper="Creators, dimensions, and aftertaste." label="Signal nodes" value={graph.evidenceCounts.creatorNodeCount + graph.evidenceCounts.dimensionNodeCount + graph.evidenceCounts.aftertasteSignalNodeCount} />
+        <MetricCard helper="Creators, dimensions, aftertaste, and Narrative DNA." label="Signal nodes" value={graph.evidenceCounts.creatorNodeCount + graph.evidenceCounts.dimensionNodeCount + graph.evidenceCounts.aftertasteSignalNodeCount + graph.evidenceCounts.narrativeTraitNodeCount} />
       </section>
 
       {graph.isEmpty ? (
