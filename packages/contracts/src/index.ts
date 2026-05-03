@@ -52,10 +52,13 @@ export type {
   QueueItem,
   QueueItemCreateRequest,
   QueueItemListResponse,
+  QueueRecalculateResponse,
+  QueueRecalculateSummary,
   QueueItemUpdateRequest,
   QueuePriority,
   QueueReorderRequest,
   QueueReorderResponse,
+  QueueScore,
 } from "./queue";
 export { QUEUE_PRIORITIES } from "./queue";
 export type {

@@ -30,7 +30,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
-| `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items. |
+| `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items, recalculate priority, and restore archived items. |
 | `/settings` | Settings | Update profile/settings and run import/export flows. |
 | `/login` | Login | Public login form. Redirects authenticated users to `/`. |
 | `/register` | Register | Public registration form. Redirects authenticated users to `/`. |
@@ -168,7 +168,7 @@ Candidate API calls live in `apps/web/src/features/candidate-evaluator/candidate
 
 ### Queue And Tonight Mode UI
 
-Queue API calls live in `apps/web/src/features/queue/queueApi.ts`. The Queue page supports search, filters, add/edit modal, remove confirmation, move up/down reorder, loading, empty, error, and success states. Tonight Mode uses queue and settings defaults to generate deterministic recommendations and supports starting, queueing, and deferring recommendations.
+Queue API calls live in `apps/web/src/features/queue/queueApi.ts`. The Queue page supports search, filters, add/edit modal, remove confirmation, move up/down reorder, Recalculate Queue, Queue v2 metric displays, insight/fatigue cards, low-priority archive visibility, restore, loading, empty, error, and success states. Tonight Mode uses queue v2 fields plus settings defaults to generate deterministic recommendations and supports starting, queueing, and deferring recommendations while excluding archived queue items.
 
 ### Aftertaste And Taste Profile UI
 

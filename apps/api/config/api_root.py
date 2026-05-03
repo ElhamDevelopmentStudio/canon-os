@@ -29,6 +29,7 @@ API_ROOT_PAYLOAD = {
         "taste_graph_rebuild": "/api/taste-graph/rebuild/",
         "candidates": "/api/candidates/",
         "queue_items": "/api/queue-items/",
+        "queue_recalculate": "/api/queue-items/recalculate/",
         "tonight_mode": "/api/queue/tonight/",
         "schema": "/api/schema/",
         "swagger_docs": "/api/docs/swagger/",

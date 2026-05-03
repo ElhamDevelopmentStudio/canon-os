@@ -1821,45 +1821,45 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M05-BE-001 Add mood compatibility field to QueueItem.
-- [ ] CP-M05-BE-002 Add intensity level field to QueueItem.
-- [ ] CP-M05-BE-003 Add complexity level field to QueueItem.
-- [ ] CP-M05-BE-004 Add commitment level field to QueueItem.
-- [ ] CP-M05-BE-005 Add freshness score field to QueueItem.
-- [ ] CP-M05-BE-006 Add last recommended at field.
-- [ ] CP-M05-BE-007 Add times recommended field.
-- [ ] CP-M05-BE-008 Create migration for queue v2 fields.
-- [ ] CP-M05-BE-009 Create queue scoring service.
-- [ ] CP-M05-BE-010 Add queue decay logic.
-- [ ] CP-M05-BE-011 Add queue priority recalculation endpoint.
-- [ ] CP-M05-BE-012 Add Celery task for queue recalculation.
-- [ ] CP-M05-BE-013 Add test for queue scoring.
-- [ ] CP-M05-BE-014 Add test for queue recalculation.
+- [x] CP-M05-BE-001 Add mood compatibility field to QueueItem.
+- [x] CP-M05-BE-002 Add intensity level field to QueueItem.
+- [x] CP-M05-BE-003 Add complexity level field to QueueItem.
+- [x] CP-M05-BE-004 Add commitment level field to QueueItem.
+- [x] CP-M05-BE-005 Add freshness score field to QueueItem.
+- [x] CP-M05-BE-006 Add last recommended at field.
+- [x] CP-M05-BE-007 Add times recommended field.
+- [x] CP-M05-BE-008 Create migration for queue v2 fields.
+- [x] CP-M05-BE-009 Create queue scoring service.
+- [x] CP-M05-BE-010 Add queue decay logic.
+- [x] CP-M05-BE-011 Add queue priority recalculation endpoint.
+- [x] CP-M05-BE-012 Add Celery task for queue recalculation.
+- [x] CP-M05-BE-013 Add test for queue scoring.
+- [x] CP-M05-BE-014 Add test for queue recalculation.
 
 ### Frontend Tasks
 
-- [ ] CP-M05-FE-001 Add mood compatibility display to queue item card.
-- [ ] CP-M05-FE-002 Add intensity display to queue item card.
-- [ ] CP-M05-FE-003 Add complexity display to queue item card.
-- [ ] CP-M05-FE-004 Add commitment display to queue item card.
-- [ ] CP-M05-FE-005 Add Recalculate Queue button.
-- [ ] CP-M05-FE-006 Add queue insight card.
-- [ ] CP-M05-FE-007 Add queue fatigue warning card.
-- [ ] CP-M05-FE-008 Add low-priority archive section.
-- [ ] CP-M05-FE-009 Add restore from archive action.
+- [x] CP-M05-FE-001 Add mood compatibility display to queue item card.
+- [x] CP-M05-FE-002 Add intensity display to queue item card.
+- [x] CP-M05-FE-003 Add complexity display to queue item card.
+- [x] CP-M05-FE-004 Add commitment display to queue item card.
+- [x] CP-M05-FE-005 Add Recalculate Queue button.
+- [x] CP-M05-FE-006 Add queue insight card.
+- [x] CP-M05-FE-007 Add queue fatigue warning card.
+- [x] CP-M05-FE-008 Add low-priority archive section.
+- [x] CP-M05-FE-009 Add restore from archive action.
 
 ### Integration Tasks
 
-- [ ] CP-M05-INT-001 Connect Recalculate Queue button to endpoint.
-- [ ] CP-M05-INT-002 Refresh queue after recalculation.
-- [ ] CP-M05-INT-003 Use queue v2 fields in Tonight Mode ranking.
-- [ ] CP-M05-INT-004 Confirm low-priority archive behavior works.
+- [x] CP-M05-INT-001 Connect Recalculate Queue button to endpoint.
+- [x] CP-M05-INT-002 Refresh queue after recalculation.
+- [x] CP-M05-INT-003 Use queue v2 fields in Tonight Mode ranking.
+- [x] CP-M05-INT-004 Confirm low-priority archive behavior works.
 
 ### QA Tasks
 
-- [ ] CP-M05-QA-001 Recalculate queue with multiple items.
-- [ ] CP-M05-QA-002 Confirm queue order changes based on scores.
-- [ ] CP-M05-QA-003 Confirm archived queue items do not appear in Tonight Mode.
+- [x] CP-M05-QA-001 Recalculate queue with multiple items.
+- [x] CP-M05-QA-002 Confirm queue order changes based on scores.
+- [x] CP-M05-QA-003 Confirm archived queue items do not appear in Tonight Mode.
 
 ---
 
@@ -3039,16 +3039,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M04-QA-004.
-**Last completed task name:** Confirm Anti-Generic UI is understandable.
-**Last completed milestone:** CP-M04 — Anti-Generic Filter.
+**Last completed task ID:** CP-M05-QA-003.
+**Last completed task name:** Confirm archived queue items do not appear in Tonight Mode.
+**Last completed milestone:** CP-M05 — Adaptive Queue v2.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M05 — Adaptive Queue v2.
-**Next recommended task:** CP-M05-BE-001 Add mood compatibility field to QueueItem.
+**Current milestone:** CP-M06 — Media Archaeologist.
+**Next recommended task:** CP-M06-SH-001 Define `DiscoverySearchRequest` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M04 Anti-Generic Filter is complete. Shared contracts now define genericness signals, positive exception signals, rule payloads, evaluation payloads, and final verdicts. Backend work adds the `canonos.anti_generic` app, owner-scoped `AntiGenericRule` and `AntiGenericEvaluation` models/migration, default rule seeding, deterministic scoring, rule list/update/reset endpoints, standalone evaluation endpoint, candidate evaluator integration, admin registration, API root entries, and backend tests for red flags, modern exceptions, disabled rules, ownership, endpoints, and embedded candidate results. Frontend work adds the Anti-Generic API client, Candidate Evaluator result section with risk meters and signal lists, Settings rule controls, documentation, manual tests, and Playwright coverage for high-risk candidates, modern exceptions, and rule update effects.
+CP-M05 Adaptive Queue v2 is complete. Queue items now store mood compatibility, intensity, complexity, commitment, freshness, recommendation history, and archive state. Backend work adds deterministic queue scoring, freshness decay, owner-scoped priority recalculation, low-fit archive behavior, a recalculation endpoint, a Celery task, API root/schema coverage, and Tonight Mode ranking that excludes archived items while using Queue v2 signals. Frontend work adds a Recalculate Queue action, queue insight and fatigue warning cards, Queue v2 metrics on cards, a low-priority archive section with restore, Tonight Mode Queue v2 fit badges, updated documentation/manual tests, and browser e2e coverage for recalculation, archive exclusion, and restore.
 
 ## 9.3 Important Notes For The Next Agent
 

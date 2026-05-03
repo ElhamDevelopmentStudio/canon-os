@@ -7,11 +7,26 @@
 2. Select **Add Queue Item**.
    - Expected: A modal opens with title, media type, priority, estimated time, best mood, reason, cancel, and save controls.
 3. Enter a title, choose a media type, set priority to **Start Soon**, add a reason, and save.
-   - Expected: The item appears in the Start Soon lane with media type, priority, time, mood, and reason.
+   - Expected: The item appears in the Start Soon lane with media type, priority, time, mood, reason, mood compatibility, intensity, complexity, commitment, freshness, and recommendation count.
 4. Select the item edit button, change priority to **Delay / Archive**, and save.
    - Expected: The item moves to the Delay / Archive lane.
 5. Use move up/down controls on queue cards.
    - Expected: Queue order changes and a success message appears.
+
+## Queue v2 happy path: recalculate and restore archive
+
+1. Add at least two queue items:
+   - one short, strong item with a focused/quality reason;
+   - one very long item set to **Delay / Archive** with a fatigue or wrong-mood reason.
+   - Expected: Both items appear on the Queue page.
+2. Select **Recalculate Queue**.
+   - Expected: A success message appears, the Queue insight card updates, and fatigue warnings appear if any item is stale, repeated, or too high-commitment.
+3. Check the three priority lanes.
+   - Expected: The strongest item moves toward **Start Soon** and weak-but-active items move toward **Sample First** or **Delay / Archive**.
+4. Check **Low-priority archive**.
+   - Expected: Very low-fit or fatigued items appear there and the helper text says archived items stay out of Tonight Mode.
+5. Select **Restore** on an archived item.
+   - Expected: The item moves back to **Sample First** and a success message confirms the restore.
 
 ## Queue from Candidate Evaluator
 
@@ -49,7 +64,16 @@
 4. Enter 120 available minutes, choose medium or deep focus, choose a desired effect, and select preferred media types.
    - Expected: The form accepts the choices without leaving the page.
 5. Select **Generate Tonight Plan**.
-   - Expected: Recommendation cards appear with Safe choice, Challenging choice, and/or Wildcard choice labels, reasons, media badges, fit scores, and time estimates.
+   - Expected: Recommendation cards appear with Safe choice, Challenging choice, and/or Wildcard choice labels, reasons, media badges, fit scores, time estimates, mood fit, commitment, and freshness.
+
+## Tonight Mode edge case: archived items stay out
+
+1. Use the Queue v2 recalculate flow to archive one long low-fit item.
+   - Expected: The item is visible in **Low-priority archive**.
+2. Open **Tonight Mode**, set enough available time for that long item, and generate a plan.
+   - Expected: The archived item is not recommended, while active matching queue items can still appear.
+3. Return to **Queue** and restore the archived item.
+   - Expected: A future Tonight Mode run can consider it again if it fits the current state.
 
 ## Tonight Mode actions
 

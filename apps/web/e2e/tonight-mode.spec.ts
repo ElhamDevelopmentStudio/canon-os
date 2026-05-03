@@ -17,7 +17,7 @@ async function addQueueItem(page: Page, title: string, priority: "Start Soon" | 
   const createResponse = waitForApiResponse(page, "POST", "/api/queue-items/", 201);
   await dialog.getByRole("button", { name: "Save" }).click();
   await createResponse;
-  await expect(page.getByText(title)).toBeVisible();
+  await expect(page.getByRole("heading", { name: title })).toBeVisible();
 }
 
 async function addPlannedMedia(page: Page, title: string) {

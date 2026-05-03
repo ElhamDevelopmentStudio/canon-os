@@ -3,6 +3,7 @@ from __future__ import annotations
 import uuid
 
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from canonos.candidates.models import Candidate
@@ -45,6 +46,29 @@ class QueueItem(models.Model):
     reason = models.TextField(blank=True)
     estimated_time_minutes = models.PositiveIntegerField(null=True, blank=True)
     best_mood = models.CharField(max_length=160, blank=True)
+    mood_compatibility = models.PositiveSmallIntegerField(
+        default=50,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    intensity_level = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    complexity_level = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    commitment_level = models.PositiveSmallIntegerField(
+        default=5,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
+    freshness_score = models.FloatField(
+        default=100.0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    last_recommended_at = models.DateTimeField(null=True, blank=True)
+    times_recommended = models.PositiveIntegerField(default=0)
+    is_archived = models.BooleanField(default=False)
     queue_position = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -57,6 +81,10 @@ class QueueItem(models.Model):
                 name="queue_owner_priority_idx",
             ),
             models.Index(fields=["media_type"], name="queue_media_type_idx"),
+            models.Index(
+                fields=["owner", "is_archived", "queue_position"],
+                name="queue_owner_archive_idx",
+            ),
         ]
 
     def __str__(self) -> str:

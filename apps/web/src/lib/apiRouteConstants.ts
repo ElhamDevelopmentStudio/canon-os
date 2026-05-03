@@ -25,6 +25,7 @@ export const API_ROUTES = {
   antiGenericRules: "/anti-generic/rules/",
   antiGenericEvaluate: "/anti-generic/evaluate/",
   queueItems: "/queue-items/",
+  queueRecalculate: "/queue-items/recalculate/",
   tonightMode: "/queue/tonight/",
   schema: "/schema/",
   swaggerDocs: "/docs/swagger/",

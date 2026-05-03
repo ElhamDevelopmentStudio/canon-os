@@ -12,12 +12,15 @@ class QueueItemAdmin(admin.ModelAdmin):
         "owner",
         "media_type",
         "priority",
+        "mood_compatibility",
+        "freshness_score",
+        "is_archived",
         "queue_position",
         "updated_at",
     )
-    list_filter = ("media_type", "priority", "created_at")
+    list_filter = ("media_type", "priority", "is_archived", "created_at")
     search_fields = ("title", "reason", "best_mood", "owner__username")
-    readonly_fields = ("id", "created_at", "updated_at")
+    readonly_fields = ("id", "last_recommended_at", "created_at", "updated_at")
 
 
 @admin.register(TonightModeSession)

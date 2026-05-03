@@ -14,6 +14,7 @@ from canonos.accounts.models import UserSettings
 from .models import QueueItem, TonightModeSession
 from .serializers import (
     QueueItemSerializer,
+    QueueRecalculateResponseSerializer,
     QueueReorderResponseSerializer,
     QueueReorderSerializer,
     TonightModeRequestSerializer,
@@ -27,6 +28,7 @@ from .serializers import (
         parameters=[
             OpenApiParameter("mediaType", str, description="Filter by media type."),
             OpenApiParameter("priority", str, description="Filter by queue priority."),
+            OpenApiParameter("isArchived", bool, description="Filter archived queue items."),
             OpenApiParameter("search", str, description="Search title, reason, or best mood."),
         ],
         summary="List current user's queue items",
@@ -60,12 +62,15 @@ class QueueItemViewSet(viewsets.ModelViewSet):
         )
         media_type = self.request.query_params.get("mediaType")
         priority = self.request.query_params.get("priority")
+        archived = self.request.query_params.get("isArchived")
         search = self.request.query_params.get("search")
 
         if media_type:
             queryset = queryset.filter(media_type=media_type)
         if priority:
             queryset = queryset.filter(priority=priority)
+        if archived is not None:
+            queryset = queryset.filter(is_archived=archived.casefold() in {"1", "true", "yes"})
         if search:
             queryset = queryset.filter(
                 Q(title__icontains=search)
@@ -119,11 +124,48 @@ class QueueItemViewSet(viewsets.ModelViewSet):
                 item.save(update_fields=["queue_position", "updated_at"])
 
         ordered_items = QueueItem.objects.filter(owner=request.user).order_by(
+            "is_archived",
             "queue_position",
             "-updated_at",
             "title",
         )
         return Response({"results": QueueItemSerializer(ordered_items, many=True).data})
+
+    @extend_schema(
+        responses={200: QueueRecalculateResponseSerializer},
+        summary="Recalculate adaptive queue priority",
+        description=(
+            "Re-score current user's queue items with mood compatibility, intensity, "
+            "complexity, commitment, freshness decay, and low-priority archive behavior."
+        ),
+    )
+    @action(detail=False, methods=["post"])
+    def recalculate(self, request):  # noqa: ANN001, ANN201
+        from .services import recalculate_queue_for_user
+
+        result = recalculate_queue_for_user(request.user)
+        payload = {
+            "results": QueueItemSerializer(result.items, many=True).data,
+            "scores": [
+                {
+                    "itemId": score.item_id,
+                    "score": score.score,
+                    "freshnessScore": score.freshness_score,
+                    "priority": score.priority,
+                    "isArchived": score.is_archived,
+                    "reason": score.reason,
+                }
+                for score in result.scores
+            ],
+            "summary": {
+                "activeCount": result.active_count,
+                "archivedCount": result.archived_count,
+                "averageScore": result.average_score,
+                "topInsight": result.top_insight,
+                "fatigueWarnings": result.fatigue_warnings,
+            },
+        }
+        return Response(payload)
 
 
 class TonightModeView(APIView):

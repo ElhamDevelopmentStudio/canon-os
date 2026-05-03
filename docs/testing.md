@@ -22,7 +22,7 @@ User-facing features must also update the matching manual test document under `d
 | Taste scoring/profile | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/taste-profile.md` |
 | Candidate Evaluator | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/candidate-evaluator.md` |
 | Anti-Generic Filter | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/anti-generic-filter.md` |
-| Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight-mode.md` |
+| Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
 | API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
@@ -83,8 +83,8 @@ Tests must:
 - Taste/profile scoring: taste dimension load and media score upsert from the media detail UI.
 - Candidate evaluator: create candidate, evaluate candidate, update candidate, add candidate to library, add evaluated candidate to queue, and assert embedded Anti-Generic evaluation payloads.
 - Anti-Generic Filter: high-genericness red flag scoring, modern positive exception scoring, Settings rule disable/save, and re-evaluation output changes.
-- Queue: create, list, edit, reorder, delete.
-- Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, and defer queue item.
+- Queue: create, list, edit, reorder, delete, recalculate priority, archive low-fit items, and restore archived items.
+- Tonight Mode: generate recommendations from queue/planned media, empty state, add recommendation to queue, start linked media, defer queue item, show Queue v2 fit fields, and exclude archived queue items.
 - Aftertaste Log: create a completed media item, load prompts, create aftertaste, edit aftertaste, verify latest aftertaste on Media Detail, and delete aftertaste.
 - Taste Profile: load empty profile, create scored media, add aftertaste evidence, reload profile, verify summary/red flags/influential works, and refresh.
 - Settings: update profile/display/recommendation preferences, persist after refresh, apply theme, feed Tonight Mode defaults, and surface Candidate Evaluator settings.

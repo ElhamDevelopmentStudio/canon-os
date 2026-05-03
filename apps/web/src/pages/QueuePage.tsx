@@ -1,5 +1,12 @@
-import { MEDIA_TYPES, QUEUE_PRIORITIES, type MediaType, type QueueItem, type QueuePriority } from "@canonos/contracts";
-import { ArrowDown, ArrowUp, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  MEDIA_TYPES,
+  QUEUE_PRIORITIES,
+  type MediaType,
+  type QueueItem,
+  type QueuePriority,
+  type QueueRecalculateSummary,
+} from "@canonos/contracts";
+import { ArrowDown, ArrowUp, Pencil, Plus, RefreshCw, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
@@ -16,6 +23,7 @@ import { mediaTypeLabels } from "@/features/media/mediaLabels";
 import {
   createQueueItem,
   deleteQueueItem,
+  recalculateQueue,
   reorderQueueItems,
   updateQueueItem,
   useQueueItems,
@@ -52,8 +60,16 @@ export function QueuePage() {
   const [deleteTarget, setDeleteTarget] = useState<QueueItem | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [isRecalculating, setIsRecalculating] = useState(false);
+  const [lastRecalculationSummary, setLastRecalculationSummary] = useState<QueueRecalculateSummary | null>(null);
   const { data, error, isLoading, mutate } = useQueueItems({ mediaType, priority, search });
   const items = useMemo(() => data?.results ?? [], [data]);
+  const activeItems = useMemo(() => items.filter((item) => !item.isArchived), [items]);
+  const archivedItems = useMemo(() => items.filter((item) => item.isArchived), [items]);
+  const queueSummary = useMemo(
+    () => lastRecalculationSummary ?? summarizeQueue(items),
+    [items, lastRecalculationSummary],
+  );
 
   function openAddModal() {
     setEditingItem(null);
@@ -99,6 +115,38 @@ export function QueuePage() {
     }
   }
 
+  async function runRecalculation() {
+    setActionError(null);
+    setActionMessage(null);
+    setIsRecalculating(true);
+    try {
+      const response = await recalculateQueue();
+      setLastRecalculationSummary(response.summary);
+      await mutate();
+      setActionMessage("Queue recalculated with mood fit, freshness, and commitment cost.");
+    } catch (caught) {
+      setActionError(caught instanceof Error ? caught.message : "Could not recalculate queue.");
+    } finally {
+      setIsRecalculating(false);
+    }
+  }
+
+  async function restoreArchivedItem(item: QueueItem) {
+    setActionError(null);
+    setActionMessage(null);
+    try {
+      await updateQueueItem(item.id, {
+        isArchived: false,
+        priority: "sample_first",
+        freshnessScore: Math.max(item.freshnessScore, 55),
+      });
+      await mutate();
+      setActionMessage(`${item.title} restored to Sample First.`);
+    } catch (caught) {
+      setActionError(caught instanceof Error ? caught.message : "Could not restore queue item.");
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <section>
@@ -137,6 +185,16 @@ export function QueuePage() {
             <Plus aria-hidden="true" className="h-4 w-4" />
             Add Queue Item
           </Button>
+          <Button
+            className="w-full gap-2 sm:w-auto"
+            disabled={isRecalculating}
+            type="button"
+            variant="secondary"
+            onClick={() => void runRecalculation()}
+          >
+            <RefreshCw aria-hidden="true" className="h-4 w-4" />
+            {isRecalculating ? "Recalculating..." : "Recalculate Queue"}
+          </Button>
         </PageActionBar>
       </SectionCard>
 
@@ -144,6 +202,9 @@ export function QueuePage() {
       {error ? <ErrorState title="Queue unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {actionError ? <ErrorState title="Queue action failed" message={actionError} /> : null}
       {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
+      {!isLoading && !error && items.length > 0 ? (
+        <QueueInsights summary={queueSummary} />
+      ) : null}
       {!isLoading && !error && items.length === 0 ? (
         <EmptyState
           title="No queue items match this view"
@@ -152,11 +213,11 @@ export function QueuePage() {
           onAction={openAddModal}
         />
       ) : null}
-      {!isLoading && !error && items.length > 0 ? (
+      {!isLoading && !error && activeItems.length > 0 ? (
         <div className="grid gap-6 xl:grid-cols-3">
           {columnPriorities.map((columnPriority) => (
             <QueueColumn
-              items={items.filter((item) => item.priority === columnPriority)}
+              items={activeItems.filter((item) => item.priority === columnPriority)}
               key={columnPriority}
               priority={columnPriority}
               onDelete={setDeleteTarget}
@@ -165,6 +226,10 @@ export function QueuePage() {
             />
           ))}
         </div>
+      ) : null}
+
+      {!isLoading && !error && items.length > 0 ? (
+        <ArchiveSection items={archivedItems} onDelete={setDeleteTarget} onRestore={restoreArchivedItem} />
       ) : null}
 
       <SectionCard title="Queue rules">
@@ -245,6 +310,18 @@ function QueueCard({
         <div><dt className="inline font-semibold">Time: </dt><dd className="inline text-muted-foreground">{item.estimatedTimeMinutes ? `${item.estimatedTimeMinutes} min` : "Unknown"}</dd></div>
         <div><dt className="inline font-semibold">Reason: </dt><dd className="inline text-muted-foreground">{item.reason || "No reason recorded yet."}</dd></div>
       </dl>
+      <div className="mt-4 grid gap-3">
+        <MetricBar label="Mood compatibility" max={100} value={item.moodCompatibility} />
+        <div className="grid gap-2 text-xs text-muted-foreground sm:grid-cols-3">
+          <MetricBadge label="Intensity" value={`${item.intensityLevel}/10`} />
+          <MetricBadge label="Complexity" value={`${item.complexityLevel}/10`} />
+          <MetricBadge label="Commitment" value={`${item.commitmentLevel}/10`} />
+        </div>
+        <div className="flex flex-wrap gap-2 text-xs">
+          <StatusPill label={`${Math.round(item.freshnessScore)}% freshness`} tone={item.freshnessScore < 40 ? "warning" : "success"} />
+          <StatusPill label={`${item.timesRecommended} recommendation${item.timesRecommended === 1 ? "" : "s"}`} tone={item.timesRecommended >= 3 ? "warning" : "neutral"} />
+        </div>
+      </div>
       <div className="mt-4 flex flex-wrap gap-2">
         <Button aria-label={`Move ${item.title} up`} size="sm" type="button" variant="secondary" onClick={() => onMove(item, "up")}><ArrowUp aria-hidden="true" className="h-4 w-4" /></Button>
         <Button aria-label={`Move ${item.title} down`} size="sm" type="button" variant="secondary" onClick={() => onMove(item, "down")}><ArrowDown aria-hidden="true" className="h-4 w-4" /></Button>
@@ -252,6 +329,113 @@ function QueueCard({
         <Button aria-label={`Remove ${item.title}`} size="sm" type="button" variant="ghost" onClick={() => onDelete(item)}><Trash2 aria-hidden="true" className="h-4 w-4" /></Button>
       </div>
     </article>
+  );
+}
+
+function QueueInsights({ summary }: { summary: QueueRecalculateSummary }) {
+  return (
+    <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+      <SectionCard title="Queue insight">
+        <div className="flex flex-wrap items-center gap-3">
+          <StatusPill label={`${summary.activeCount} active`} tone="success" />
+          <StatusPill label={`${summary.archivedCount} archived`} tone={summary.archivedCount > 0 ? "warning" : "neutral"} />
+          <StatusPill label={`${Math.round(summary.averageScore)} average fit`} tone={summary.averageScore >= 60 ? "success" : "warning"} />
+        </div>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">{summary.topInsight}</p>
+      </SectionCard>
+      <SectionCard title="Queue fatigue warnings">
+        {summary.fatigueWarnings.length > 0 ? (
+          <ul className="grid gap-2 text-sm leading-6 text-risky">
+            {summary.fatigueWarnings.map((warning) => (
+              <li key={warning}>• {warning}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm leading-6 text-muted-foreground">
+            No fatigue warnings yet. Recalculate after several Tonight Mode sessions to catch stale or over-recommended items.
+          </p>
+        )}
+      </SectionCard>
+    </div>
+  );
+}
+
+function ArchiveSection({
+  items,
+  onDelete,
+  onRestore,
+}: {
+  items: QueueItem[];
+  onDelete: (item: QueueItem) => void;
+  onRestore: (item: QueueItem) => void | Promise<void>;
+}) {
+  return (
+    <SectionCard title="Low-priority archive">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Low-priority archive</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Archived items stay out of Tonight Mode until you restore them.
+          </p>
+        </div>
+        <StatusPill label={`${items.length} archived`} tone={items.length > 0 ? "warning" : "neutral"} />
+      </div>
+      {items.length === 0 ? (
+        <p className="mt-4 rounded-2xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+          Nothing is archived. Low-fit or fatigued items will land here after recalculation.
+        </p>
+      ) : (
+        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          {items.map((item) => (
+            <article className="rounded-2xl border border-border bg-background p-4" key={item.id}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-semibold">{item.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {Math.round(item.freshnessScore)}% freshness · {item.commitmentLevel}/10 commitment
+                  </p>
+                </div>
+                <MediaTypeBadge type={item.mediaType} label={mediaTypeLabels[item.mediaType]} />
+              </div>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.reason || "Archived because it is not a strong fit right now."}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button className="gap-2" size="sm" type="button" variant="secondary" onClick={() => void onRestore(item)}>
+                  <RotateCcw aria-hidden="true" className="h-4 w-4" />
+                  Restore
+                </Button>
+                <Button aria-label={`Remove ${item.title}`} size="sm" type="button" variant="ghost" onClick={() => onDelete(item)}>
+                  <Trash2 aria-hidden="true" className="h-4 w-4" />
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </SectionCard>
+  );
+}
+
+function MetricBar({ label, max, value }: { label: string; max: number; value: number }) {
+  const width = `${Math.min(Math.max((value / max) * 100, 0), 100)}%`;
+  return (
+    <div className="grid gap-1.5">
+      <div className="flex items-center justify-between gap-2 text-xs font-semibold">
+        <span>{label}</span>
+        <span className="text-muted-foreground">{Math.round(value)}%</span>
+      </div>
+      <div className="h-2 rounded-full bg-muted">
+        <div className="h-2 rounded-full bg-primary" style={{ width }} />
+      </div>
+    </div>
+  );
+}
+
+function MetricBadge({ label, value }: { label: string; value: string }) {
+  return (
+    <span className="rounded-xl border border-border bg-muted/40 px-2.5 py-2">
+      <span className="font-semibold text-foreground">{label}: </span>
+      {value}
+    </span>
   );
 }
 
@@ -390,6 +574,47 @@ function queueItemToDraft(item: QueueItem): QueueDraft {
     estimatedTimeMinutes: item.estimatedTimeMinutes?.toString() ?? "",
     bestMood: item.bestMood,
   };
+}
+
+function summarizeQueue(items: QueueItem[]): QueueRecalculateSummary {
+  const activeItems = items.filter((item) => !item.isArchived);
+  const archivedItems = items.filter((item) => item.isArchived);
+  const averageScore = activeItems.length
+    ? activeItems.reduce((total, item) => total + approximateQueueFit(item), 0) / activeItems.length
+    : 0;
+  const topItem = activeItems.reduce<QueueItem | null>((best, item) => {
+    if (!best) return item;
+    return approximateQueueFit(item) > approximateQueueFit(best) ? item : best;
+  }, null);
+  const warnings: string[] = [];
+  const repeated = activeItems.filter((item) => item.timesRecommended >= 3).length;
+  const stale = activeItems.filter((item) => item.freshnessScore < 40).length;
+  const highCommitment = activeItems.filter((item) => item.commitmentLevel >= 8 && item.priority === "start_soon").length;
+  if (repeated) warnings.push(`${repeated} active item(s) have been recommended repeatedly.`);
+  if (stale) warnings.push(`${stale} active item(s) have low freshness.`);
+  if (highCommitment) warnings.push(`${highCommitment} high-commitment item(s) are still Start Soon.`);
+  return {
+    activeCount: activeItems.length,
+    archivedCount: archivedItems.length,
+    averageScore,
+    topInsight: topItem
+      ? `${topItem.title} currently looks strongest based on mood compatibility and freshness.`
+      : "No active queue items are ready; add or restore items before Tonight Mode.",
+    fatigueWarnings: warnings,
+  };
+}
+
+function approximateQueueFit(item: QueueItem): number {
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      item.moodCompatibility * 0.45
+      + item.freshnessScore * 0.35
+      + (10 - item.commitmentLevel) * 2
+      - Math.max(item.complexityLevel - 7, 0) * 3,
+    ),
+  );
 }
 
 const fieldClassName = cn(

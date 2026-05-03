@@ -40,6 +40,11 @@ export type TonightModeRecommendation = {
   mediaItemId: string | null;
   candidateId: string | null;
   priority: QueuePriority | null;
+  moodCompatibility: number;
+  intensityLevel: number;
+  complexityLevel: number;
+  commitmentLevel: number;
+  freshnessScore: number;
 };
 
 export type TonightModeSession = {

@@ -2,6 +2,7 @@ import type {
   QueueItem,
   QueueItemCreateRequest,
   QueueItemListResponse,
+  QueueRecalculateResponse,
   QueueItemUpdateRequest,
   QueueReorderResponse,
 } from "@canonos/contracts";
@@ -32,6 +33,12 @@ function normalizeQueueItem(item: QueueItem): QueueItem {
     ...item,
     estimatedTimeMinutes:
       item.estimatedTimeMinutes === null ? null : Number(item.estimatedTimeMinutes),
+    moodCompatibility: Number(item.moodCompatibility),
+    intensityLevel: Number(item.intensityLevel),
+    complexityLevel: Number(item.complexityLevel),
+    commitmentLevel: Number(item.commitmentLevel),
+    freshnessScore: Number(item.freshnessScore),
+    timesRecommended: Number(item.timesRecommended),
     queuePosition: Number(item.queuePosition),
   };
 }
@@ -70,4 +77,25 @@ export async function reorderQueueItems(itemIds: string[]): Promise<QueueReorder
   const response = await api.post<QueueReorderResponse>(`${API_ROUTES.queueItems}reorder/`, { itemIds });
   await globalMutate((key) => typeof key === "string" && key.startsWith(API_ROUTES.queueItems));
   return { results: response.data.results.map(normalizeQueueItem) };
+}
+
+export async function recalculateQueue(): Promise<QueueRecalculateResponse> {
+  await getCsrfToken();
+  const response = await api.post<QueueRecalculateResponse>(API_ROUTES.queueRecalculate);
+  await globalMutate((key) => typeof key === "string" && key.startsWith(API_ROUTES.queueItems));
+  return {
+    ...response.data,
+    results: response.data.results.map(normalizeQueueItem),
+    scores: response.data.scores.map((score) => ({
+      ...score,
+      score: Number(score.score),
+      freshnessScore: Number(score.freshnessScore),
+    })),
+    summary: {
+      ...response.data.summary,
+      activeCount: Number(response.data.summary.activeCount),
+      archivedCount: Number(response.data.summary.archivedCount),
+      averageScore: Number(response.data.summary.averageScore),
+    },
+  };
 }

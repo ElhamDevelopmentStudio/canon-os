@@ -95,6 +95,9 @@ def test_tonight_mode_returns_three_recommendation_slots() -> None:
         priority="start_soon",
         reason="High quality and focused.",
         estimated_time_minutes=95,
+        mood_compatibility=88,
+        commitment_level=5,
+        freshness_score=100,
         queue_position=1,
     )
     QueueItem.objects.create(
@@ -104,6 +107,11 @@ def test_tonight_mode_returns_three_recommendation_slots() -> None:
         priority="sample_first",
         reason="Surprising and weird sample.",
         estimated_time_minutes=24,
+        mood_compatibility=78,
+        intensity_level=8,
+        complexity_level=6,
+        commitment_level=2,
+        freshness_score=100,
         queue_position=2,
     )
     MediaItem.objects.create(
@@ -130,10 +138,57 @@ def test_tonight_mode_returns_three_recommendation_slots() -> None:
     assert response.status_code == status.HTTP_201_CREATED
     payload = response.json()
     assert payload["safeChoice"]["slot"] == "safe"
+    assert payload["safeChoice"]["moodCompatibility"] == 88
     assert payload["challengingChoice"]["slot"] == "challenging"
     assert payload["wildcardChoice"]["slot"] == "wildcard"
     assert len(payload["recommendations"]) >= 3
     assert TonightModeSession.objects.get(owner=user).generated_recommendations
+
+
+def test_tonight_mode_excludes_archived_queue_items_and_uses_queue_v2_fields() -> None:
+    client, user = authenticated_client()
+    QueueItem.objects.create(
+        owner=user,
+        title="Fresh Short Choice",
+        media_type="movie",
+        priority="start_soon",
+        reason="Fresh and compatible.",
+        estimated_time_minutes=45,
+        mood_compatibility=95,
+        intensity_level=3,
+        complexity_level=4,
+        commitment_level=2,
+        freshness_score=100,
+        queue_position=1,
+    )
+    QueueItem.objects.create(
+        owner=user,
+        title="Archived Marathon",
+        media_type="tv_show",
+        priority="later",
+        reason="Archived because it is too stale.",
+        estimated_time_minutes=900,
+        mood_compatibility=5,
+        intensity_level=9,
+        complexity_level=9,
+        commitment_level=10,
+        freshness_score=10,
+        is_archived=True,
+        queue_position=2,
+    )
+
+    response = client.post(
+        reverse("tonightmode-generate"),
+        tonight_payload(availableMinutes=1000, energyLevel="low", focusLevel="low"),
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_201_CREATED
+    recommendations = response.json()["recommendations"]
+    titles = [item["title"] for item in recommendations]
+    assert "Fresh Short Choice" in titles
+    assert "Archived Marathon" not in titles
+    assert recommendations[0]["moodCompatibility"] == 95
 
 
 def test_tonight_mode_uses_saved_defaults_when_request_omits_them() -> None:

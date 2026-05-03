@@ -331,6 +331,9 @@ function RecommendationCard({
           label={recommendation.estimatedTimeMinutes ? `${recommendation.estimatedTimeMinutes} min` : "Flexible time"}
           tone="neutral"
         />
+        <StatusPill label={`${recommendation.moodCompatibility}% mood fit`} tone="active" />
+        <StatusPill label={`${recommendation.commitmentLevel}/10 commitment`} tone={recommendation.commitmentLevel >= 8 ? "warning" : "neutral"} />
+        <StatusPill label={`${Math.round(recommendation.freshnessScore)}% fresh`} tone={recommendation.freshnessScore < 40 ? "warning" : "success"} />
       </div>
       <p className="mt-4 text-sm leading-6 text-muted-foreground">{recommendation.reason}</p>
       <div className="mt-5 flex flex-wrap gap-2">

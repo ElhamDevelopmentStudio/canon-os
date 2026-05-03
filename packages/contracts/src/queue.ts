@@ -13,6 +13,14 @@ export type QueueItem = {
   reason: string;
   estimatedTimeMinutes: number | null;
   bestMood: string;
+  moodCompatibility: number;
+  intensityLevel: number;
+  complexityLevel: number;
+  commitmentLevel: number;
+  freshnessScore: number;
+  lastRecommendedAt: string | null;
+  timesRecommended: number;
+  isArchived: boolean;
   queuePosition: number;
   createdAt: string;
   updatedAt: string;
@@ -27,6 +35,13 @@ export type QueueItemCreateRequest = {
   reason?: string;
   estimatedTimeMinutes?: number | null;
   bestMood?: string;
+  moodCompatibility?: number;
+  intensityLevel?: number;
+  complexityLevel?: number;
+  commitmentLevel?: number;
+  freshnessScore?: number;
+  timesRecommended?: number;
+  isArchived?: boolean;
 };
 
 export type QueueItemUpdateRequest = Partial<QueueItemCreateRequest & { queuePosition: number }>;
@@ -44,4 +59,27 @@ export type QueueReorderRequest = {
 
 export type QueueReorderResponse = {
   results: QueueItem[];
+};
+
+export type QueueScore = {
+  itemId: string;
+  score: number;
+  freshnessScore: number;
+  priority: QueuePriority;
+  isArchived: boolean;
+  reason: string;
+};
+
+export type QueueRecalculateSummary = {
+  activeCount: number;
+  archivedCount: number;
+  averageScore: number;
+  topInsight: string;
+  fatigueWarnings: string[];
+};
+
+export type QueueRecalculateResponse = {
+  results: QueueItem[];
+  scores: QueueScore[];
+  summary: QueueRecalculateSummary;
 };

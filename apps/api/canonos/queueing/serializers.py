@@ -6,6 +6,7 @@ from canonos.candidates.models import Candidate
 from canonos.media.models import MediaItem
 
 from .models import QueueItem, TonightModeSession
+from .services import infer_queue_metric_defaults
 
 
 class QueueItemSerializer(serializers.ModelSerializer):
@@ -32,6 +33,46 @@ class QueueItemSerializer(serializers.ModelSerializer):
         allow_null=True,
     )
     bestMood = serializers.CharField(source="best_mood", required=False, allow_blank=True)
+    moodCompatibility = serializers.IntegerField(
+        source="mood_compatibility",
+        min_value=0,
+        max_value=100,
+        required=False,
+    )
+    intensityLevel = serializers.IntegerField(
+        source="intensity_level",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    complexityLevel = serializers.IntegerField(
+        source="complexity_level",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    commitmentLevel = serializers.IntegerField(
+        source="commitment_level",
+        min_value=0,
+        max_value=10,
+        required=False,
+    )
+    freshnessScore = serializers.FloatField(
+        source="freshness_score",
+        min_value=0,
+        max_value=100,
+        required=False,
+    )
+    lastRecommendedAt = serializers.DateTimeField(
+        source="last_recommended_at",
+        read_only=True,
+    )
+    timesRecommended = serializers.IntegerField(
+        source="times_recommended",
+        min_value=0,
+        required=False,
+    )
+    isArchived = serializers.BooleanField(source="is_archived", required=False)
     queuePosition = serializers.IntegerField(
         source="queue_position",
         min_value=0,
@@ -52,11 +93,19 @@ class QueueItemSerializer(serializers.ModelSerializer):
             "reason",
             "estimatedTimeMinutes",
             "bestMood",
+            "moodCompatibility",
+            "intensityLevel",
+            "complexityLevel",
+            "commitmentLevel",
+            "freshnessScore",
+            "lastRecommendedAt",
+            "timesRecommended",
+            "isArchived",
             "queuePosition",
             "createdAt",
             "updatedAt",
         ]
-        read_only_fields = ["id", "createdAt", "updatedAt"]
+        read_only_fields = ["id", "lastRecommendedAt", "createdAt", "updatedAt"]
 
     def validate(self, attrs):  # noqa: ANN001, ANN201
         request = self.context["request"]
@@ -94,6 +143,20 @@ class QueueItemSerializer(serializers.ModelSerializer):
 
         attrs["title"] = title
         attrs["media_type"] = media_type
+        should_infer_metrics = self.instance is None
+        if should_infer_metrics:
+            defaults = infer_queue_metric_defaults(
+                title=title,
+                media_type=media_type,
+                priority=attrs.get("priority", QueueItem.Priority.START_SOON),
+                estimated_time_minutes=attrs.get("estimated_time_minutes"),
+                best_mood=attrs.get("best_mood", ""),
+                reason=attrs.get("reason", ""),
+            )
+            attrs.setdefault("mood_compatibility", defaults.mood_compatibility)
+            attrs.setdefault("intensity_level", defaults.intensity_level)
+            attrs.setdefault("complexity_level", defaults.complexity_level)
+            attrs.setdefault("commitment_level", defaults.commitment_level)
         return attrs
 
 
@@ -106,6 +169,32 @@ class QueueReorderSerializer(serializers.Serializer):
 
 class QueueReorderResponseSerializer(serializers.Serializer):
     results = QueueItemSerializer(many=True)
+
+
+class QueueScoreSerializer(serializers.Serializer):
+    itemId = serializers.UUIDField(source="item_id")
+    score = serializers.FloatField()
+    freshnessScore = serializers.FloatField(source="freshness_score")
+    priority = serializers.ChoiceField(choices=QueueItem.Priority.choices)
+    isArchived = serializers.BooleanField(source="is_archived")
+    reason = serializers.CharField()
+
+
+class QueueRecalculateSummarySerializer(serializers.Serializer):
+    activeCount = serializers.IntegerField(source="active_count")
+    archivedCount = serializers.IntegerField(source="archived_count")
+    averageScore = serializers.FloatField(source="average_score")
+    topInsight = serializers.CharField(source="top_insight")
+    fatigueWarnings = serializers.ListField(
+        source="fatigue_warnings",
+        child=serializers.CharField(),
+    )
+
+
+class QueueRecalculateResponseSerializer(serializers.Serializer):
+    results = QueueItemSerializer(many=True)
+    scores = QueueScoreSerializer(many=True)
+    summary = QueueRecalculateSummarySerializer()
 
 
 class TonightModeRequestSerializer(serializers.Serializer):
@@ -149,6 +238,11 @@ class TonightModeRecommendationSerializer(serializers.Serializer):
     mediaItemId = serializers.UUIDField(allow_null=True)
     candidateId = serializers.UUIDField(allow_null=True)
     priority = serializers.ChoiceField(choices=QueueItem.Priority.choices, allow_null=True)
+    moodCompatibility = serializers.IntegerField(min_value=0, max_value=100)
+    intensityLevel = serializers.IntegerField(min_value=0, max_value=10)
+    complexityLevel = serializers.IntegerField(min_value=0, max_value=10)
+    commitmentLevel = serializers.IntegerField(min_value=0, max_value=10)
+    freshnessScore = serializers.FloatField(min_value=0, max_value=100)
 
 
 class TonightModeSessionSerializer(serializers.ModelSerializer):

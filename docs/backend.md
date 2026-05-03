@@ -24,7 +24,7 @@ The API app lives in `apps/api` and uses Django REST Framework, PostgreSQL-ready
 | `canonos.taste` | Default taste dimensions, media score upserts, taste profile summary. | `/api/taste-dimensions/`, `/api/media-items/{media_id}/scores/`, `/api/taste-profile/` |
 | `canonos.candidates` | Candidate intake, deterministic evaluation, library/queue conversion. | `/api/candidates/`, `/api/candidates/{id}/evaluate/`, `/api/candidates/{id}/add-to-library/` |
 | `canonos.anti_generic` | Owner-scoped genericness red flags, positive exception rules, and candidate Anti-Generic evaluations. | `/api/anti-generic/rules/`, `/api/anti-generic/evaluate/` |
-| `canonos.queueing` | Adaptive queue CRUD, reorder, and Tonight Mode planning. | `/api/queue-items/`, `/api/queue-items/reorder/`, `/api/queue/tonight/` |
+| `canonos.queueing` | Adaptive queue CRUD, reorder, dynamic recalculation/archive behavior, and Tonight Mode planning. | `/api/queue-items/`, `/api/queue-items/reorder/`, `/api/queue-items/recalculate/`, `/api/queue/tonight/` |
 | `canonos.dashboard` | Authenticated overview metrics and recent activity. | `/api/dashboard/summary/` |
 | `canonos.aftertaste` | Reflection prompts and user aftertaste entries. | `/api/aftertaste/prompts/`, `/api/aftertaste/` |
 | `canonos.imports` | CSV import preview/confirm and JSON/CSV export requests/downloads. | `/api/imports/preview/`, `/api/imports/{batch_id}/confirm/`, `/api/exports/`, `/api/exports/{export_id}/download/` |
@@ -76,3 +76,7 @@ The `canonos.graph` app owns `GraphNode` and `GraphEdge`. Its rebuild service is
 ## Anti-Generic Filter service
 
 The `canonos.anti_generic` app owns `AntiGenericRule` and `AntiGenericEvaluation`. Rules are seeded per user, editable through Settings, and evaluated only for owner-scoped candidates/media. Candidate evaluation calls the Anti-Generic service before scoring so red flags and positive exceptions shape risk without adding release-year-only bias.
+
+## Adaptive Queue v2 service
+
+The `canonos.queueing` app owns Queue v2 metrics on `QueueItem`: mood compatibility, intensity, complexity, commitment, freshness, recommendation history, and archive state. The deterministic recalculation service updates priority/order, applies freshness decay, archives fatigued low-fit items, and returns score reasons for the UI. The Celery task `canonos.queueing.recalculate_queue` calls the same service for background recalculation. Tonight Mode excludes archived queue items and uses Queue v2 metrics when ranking current-session recommendations.

@@ -156,8 +156,9 @@ Queue items are user-owned and require an authenticated session. Endpoints:
 - `PATCH /api/queue-items/{id}/` updates priority, reason, mood, estimated time, or snapshot fields.
 - `DELETE /api/queue-items/{id}/` removes the item from the queue only.
 - `POST /api/queue-items/reorder/` rewrites queue order for the current user.
+- `POST /api/queue-items/recalculate/` rescales queue priority, freshness, and low-priority archive state.
 
-List filters: `mediaType`, `priority`, and `search`. Queue priorities are `start_soon`, `sample_first`, and `later`. Product rules are documented in `docs/queue.md`.
+List filters: `mediaType`, `priority`, `isArchived`, and `search`. Queue priorities are `start_soon`, `sample_first`, and `later`. Queue v2 fields include `moodCompatibility`, `intensityLevel`, `complexityLevel`, `commitmentLevel`, `freshnessScore`, `lastRecommendedAt`, `timesRecommended`, and `isArchived`. Product rules are documented in `docs/queue.md`.
 
 ## Settings API Contract
 
@@ -181,7 +182,7 @@ Every new API endpoint must be covered through a real browser e2e user flow when
 
 ## Tonight Mode
 
-- `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request includes available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance. The response includes up to five recommendations plus safe, challenging, and wildcard slots when available.
+- `POST /api/queue/tonight/` generates and persists a Tonight Mode session for the authenticated user. The request includes available minutes, energy level, focus level, desired effect, preferred media types, and risk tolerance. The response includes up to five non-archived queue/planned-media recommendations plus safe, challenging, and wildcard slots when available. Queue recommendations include v2 fit fields so the browser can show mood fit, commitment, and freshness.
 
 ## Aftertaste API Contract
 
