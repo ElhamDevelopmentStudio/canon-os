@@ -32,3 +32,7 @@ The backend computes a final score from likely fit, risk, time cost, and capped 
 - `skip`: protect time unless new evidence changes the risk profile.
 
 The response always includes the decision, confidence score, likely fit score, risk score, reasons for, reasons against, `narrativeSignals`, best mood, recommended action, and Anti-Generic result. The frontend displays the server response as-is and does not duplicate scoring logic.
+
+## Critic Council Integration
+
+Critic Council sessions can attach to a candidate through `candidateId`. Running the council reuses the latest deterministic candidate evaluation or creates one if needed, then stores critic opinions and a synthesized final decision. Applying the decision updates the candidate status, and Candidate Evaluator displays attached Critic Council sessions for the selected candidate.

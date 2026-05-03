@@ -174,6 +174,23 @@ Endpoints:
 Analysis payloads include status, eight trait scores, confidence, summary, extracted traits, evidence notes, source basis, provider, algorithm version, status events, and timestamps. Candidate evaluations embed `narrativeSignals` when completed analyses influence fit/risk scoring, and TasteGraph rebuilds add narrative trait nodes/edges. Shared contracts live in `packages/contracts/src/narrative.ts`; product rules live in `docs/narrative-dna.md`.
 
 
+
+## Critic Council API Contract
+
+Critic Council endpoints are user-owned and require an authenticated session. They generate deterministic multi-persona explanations for candidates, media items, or freeform decision prompts.
+
+Endpoints:
+
+- `GET /api/critic-personas/` lists the current user's seeded critic personas.
+- `PATCH /api/critic-personas/{id}/` updates `isEnabled` and `weight` for one owned persona.
+- `POST /api/critic-personas/reset/` restores default personas.
+- `GET /api/council-sessions/` lists saved council sessions, optionally filtered by `candidateId` or `mediaItemId`.
+- `POST /api/council-sessions/` runs the council for `prompt`, `candidateId`, and/or `mediaItemId`.
+- `GET /api/council-sessions/{id}/` returns one owner-scoped session.
+- `POST /api/council-sessions/{id}/apply-to-candidate/` applies the final decision to the linked candidate status.
+
+Default personas are Ruthless Critic, Historian, Modern Defender, Anime Specialist, Literary Editor, Mood Doctor, Completion Strategist, and Wildcard. Council output includes ordered critic opinions plus a final decision that explicitly synthesizes disagreement rather than averaging votes. Shared contracts live in `packages/contracts/src/council.ts`; frontend calls live in `apps/web/src/features/critic-council/councilApi.ts`; product rules live in `docs/critic-council.md`.
+
 ## Queue API Contract
 
 Queue items are user-owned and require an authenticated session. Endpoints:

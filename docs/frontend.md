@@ -28,6 +28,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/library/:mediaId` | Media Detail | Read one media item, update taste scores, show latest aftertaste. |
 | `/candidates` | Candidate Evaluator | Create/update/evaluate candidates, add candidates to library or queue. |
 | `/discover` | Media Archaeologist | Generate deep-cut discovery trails, save trails, and add results to queue. |
+| `/critic-council` | Critic Council | Run critic debates, tune critic personas, apply final decisions to candidates. |
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
@@ -174,6 +175,11 @@ Media Archaeologist lives at `/discover`. Discovery API calls live in `apps/web/
 ### Narrative DNA UI
 
 Narrative DNA lives inside Media Detail as a real tab next to the Taste scorecard. API calls live in `apps/web/src/features/narrative/narrativeApi.ts`, and labels live in `apps/web/src/features/narrative/narrativeLabels.ts`. The tab supports empty, loading/running, error, and completed states; optional manual notes; Request/Refresh Narrative DNA; status badge; eight trait scores; extracted trait descriptions; source basis/confidence; and evidence notes that state the allowed data basis. Candidate Evaluator displays `Narrative DNA signals` when completed analyses affect scoring, and TasteGraph signal counts include narrative trait nodes after rebuild.
+
+
+### Critic Council UI
+
+Critic Council lives at `/critic-council`. API calls live in `apps/web/src/features/critic-council/councilApi.ts`, and labels live in `apps/web/src/features/critic-council/councilLabels.ts`. The page supports prompt entry, candidate/media selectors, Run Council, final decision display, Add Decision To Candidate, ordered critic opinion cards, recent council history, and critic settings for enabled toggles plus weights. Candidate Evaluator displays attached Critic Council results for the selected candidate.
 
 ### Queue And Tonight Mode UI
 

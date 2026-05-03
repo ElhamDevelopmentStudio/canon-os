@@ -23,6 +23,8 @@ export const API_ROUTES = {
   tasteGraphEdges: "/taste-graph/edges/",
   tasteGraphRebuild: "/taste-graph/rebuild/",
   candidates: "/candidates/",
+  criticPersonas: "/critic-personas/",
+  councilSessions: "/council-sessions/",
   discoveryGenerate: "/discovery/generate/",
   discoveryTrails: "/discovery/trails/",
   antiGenericRules: "/anti-generic/rules/",

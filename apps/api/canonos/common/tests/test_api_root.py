@@ -20,6 +20,7 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
         "discovery",
         "narrative_dna",
         "candidates",
+        "critic_council",
         "tonight_mode",
     }
 

@@ -4,6 +4,7 @@ export const APP_ROUTES = {
   mediaDetail: "/library/:mediaId",
   candidates: "/candidates",
   discovery: "/discover",
+  criticCouncil: "/critic-council",
   tonight: "/tonight",
   tasteProfile: "/taste-profile",
   tasteGraph: "/taste-graph",

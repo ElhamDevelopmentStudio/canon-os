@@ -3,6 +3,7 @@ import type {
   Candidate,
   CandidateCreateRequest,
   CandidateEvaluation,
+  CouncilSession,
   MediaType,
 } from "@canonos/contracts";
 import { MEDIA_TYPES } from "@canonos/contracts";
@@ -40,6 +41,8 @@ import {
   candidateStatusTone,
   evaluationDecisionLabels,
 } from "@/features/candidate-evaluator/candidateLabels";
+import { useCouncilSessions } from "@/features/critic-council/councilApi";
+import { councilDecisionTone } from "@/features/critic-council/councilLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
 import { createQueueItem } from "@/features/queue/queueApi";
 import { useUserSettings } from "@/features/settings/settingsApi";
@@ -254,6 +257,7 @@ export function CandidateEvaluatorPage() {
             onAddToQueue={() => void addToQueue()}
             onSkip={() => void skipCandidate()}
           />
+          {selectedCandidate ? <CandidateCouncilSessions candidateId={selectedCandidate.id} /> : null}
         </div>
       </div>
 
@@ -447,6 +451,47 @@ function EvaluationResultCard({
           </Button>
         </div>
       </div>
+    </SectionCard>
+  );
+}
+
+function CandidateCouncilSessions({ candidateId }: { candidateId: string }) {
+  const { data, error, isLoading, mutate } = useCouncilSessions({ candidateId });
+  const sessions = data?.results ?? [];
+
+  return (
+    <SectionCard title="Critic Council results">
+      <h2 className="text-lg font-semibold">Critic Council results</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Council debates attached to this candidate appear here after you run Critic Council.
+      </p>
+      {isLoading ? <LoadingState title="Loading council results" message="Fetching candidate debates." /> : null}
+      {error ? <ErrorState title="Council results unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
+      {!isLoading && !error && sessions.length === 0 ? (
+        <p className="mt-4 rounded-2xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+          No Critic Council result is attached to this candidate yet.
+        </p>
+      ) : null}
+      {!isLoading && !error && sessions.length > 0 ? (
+        <div className="mt-4 grid gap-3">
+          {sessions.slice(0, 3).map((session: CouncilSession) => (
+            <article className="rounded-2xl border border-border bg-background p-4" key={session.id}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-semibold">{session.finalDecision.label}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                    {session.finalDecision.explanation}
+                  </p>
+                </div>
+                <StatusPill
+                  label={session.finalDecision.label}
+                  tone={councilDecisionTone[session.finalDecision.decision]}
+                />
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : null}
     </SectionCard>
   );
 }

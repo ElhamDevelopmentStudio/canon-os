@@ -2,7 +2,7 @@
 
 ## Route
 
-`/app/critics`
+`/critic-council`
 
 ## Purpose
 
@@ -23,12 +23,12 @@ Use `AppShell`. Active sidebar item: Critic Council.
 | CORE                       | ------------------------------------------------------------------------------------------------------------------------ |
 |   Dashboard                | +------------------------------------------+ +------------------------------------------+                                |
 |   Tonight Mode             | | Council Input                            | | Final Recommendation                     |                                |
-|   Candidate Evaluator      | | Candidate / Question [                 ] | | Decision: Not run yet                    |                                |
+|   Candidate Evaluator      | | Candidate / Media / Question [        ] | | Decision: Not run yet                    |                                |
 |   Library                  | | Council members                          | | Confidence: --                           |                                |
 |   Adaptive Queue           | | [x] Ruthless Critic   [x] Historian      | | Best action: --                          |                                |
 |                            | | [x] Modern Defender   [x] Anime Specialist| | [Run Council]                            |                               |
 | INTELLIGENCE               | | [x] Literary Editor   [x] Mood Doctor    | +------------------------------------------+                                |
-|   Taste Profile            | | [x] Wildcard                             |                                                                             |
+|   Taste Profile            | | [x] Completion Strategist [x] Wildcard |                                                                             |
 |   TasteGraph               | | [Run Council]                            |                                                                             |
 |   Anti-Generic Filter      | +------------------------------------------+                                                                             |
 |   Media Archaeologist      | +--------------------------------------------------------------------------------+                                       |
@@ -88,3 +88,12 @@ Use `AppShell`. Active sidebar item: Critic Council.
 ## Implementation Notes
 
 Personality-driven but visually restrained.
+
+
+## Implemented Notes
+
+- Route is `/critic-council` in the current Vite app.
+- Critic personas are owner-scoped backend records with enabled toggles and weights.
+- The backend supports Ruthless Critic, Historian, Modern Defender, Anime Specialist, Literary Editor, Mood Doctor, Completion Strategist, and Wildcard.
+- Council sessions can link to a candidate, a media item, both, or a freeform prompt.
+- Final decisions can be applied back to the selected candidate.

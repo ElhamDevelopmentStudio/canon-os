@@ -91,6 +91,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Queue and Tonight Mode: `docs/manual-tests/queue-tonight.md`
 - Media Archaeologist: `docs/manual-tests/media-archaeologist.md`
 - Narrative DNA: `docs/manual-tests/narrative-dna.md`
+- Critic Council: `docs/manual-tests/critic-council.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 
@@ -2027,80 +2028,80 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M08-SH-001 Define `CriticPersona` type.
-- [ ] CP-M08-SH-002 Define `CriticOpinion` type.
-- [ ] CP-M08-SH-003 Define `CouncilSession` type.
-- [ ] CP-M08-SH-004 Define `CouncilFinalDecision` type.
-- [ ] CP-M08-SH-005 Document critic persona behavior.
+- [x] CP-M08-SH-001 Define `CriticPersona` type.
+- [x] CP-M08-SH-002 Define `CriticOpinion` type.
+- [x] CP-M08-SH-003 Define `CouncilSession` type.
+- [x] CP-M08-SH-004 Define `CouncilFinalDecision` type.
+- [x] CP-M08-SH-005 Document critic persona behavior.
 
 ### Backend Tasks
 
-- [ ] CP-M08-BE-001 Create council app.
-- [ ] CP-M08-BE-002 Create CriticPersona model.
-- [ ] CP-M08-BE-003 Add name field.
-- [ ] CP-M08-BE-004 Add role field.
-- [ ] CP-M08-BE-005 Add description field.
-- [ ] CP-M08-BE-006 Add weight field.
-- [ ] CP-M08-BE-007 Add is enabled field.
-- [ ] CP-M08-BE-008 Create CouncilSession model.
-- [ ] CP-M08-BE-009 Add owner/user foreign key.
-- [ ] CP-M08-BE-010 Add candidate foreign key nullable.
-- [ ] CP-M08-BE-011 Add media item foreign key nullable.
-- [ ] CP-M08-BE-012 Add prompt/context field.
-- [ ] CP-M08-BE-013 Add critic opinions JSON field.
-- [ ] CP-M08-BE-014 Add final decision field.
-- [ ] CP-M08-BE-015 Add final explanation field.
-- [ ] CP-M08-BE-016 Seed default Ruthless Critic persona.
-- [ ] CP-M08-BE-017 Seed default Historian persona.
-- [ ] CP-M08-BE-018 Seed default Modern Defender persona.
-- [ ] CP-M08-BE-019 Seed default Anime Specialist persona.
-- [ ] CP-M08-BE-020 Seed default Literary Editor persona.
-- [ ] CP-M08-BE-021 Seed default Mood Doctor persona.
-- [ ] CP-M08-BE-022 Seed default Wildcard persona.
-- [ ] CP-M08-BE-023 Create council generation service.
-- [ ] CP-M08-BE-024 Create council session endpoint.
-- [ ] CP-M08-BE-025 Create critic personas list endpoint.
-- [ ] CP-M08-BE-026 Create critic persona update endpoint.
-- [ ] CP-M08-BE-027 Add test for default personas.
-- [ ] CP-M08-BE-028 Add test for council session generation.
+- [x] CP-M08-BE-001 Create council app.
+- [x] CP-M08-BE-002 Create CriticPersona model.
+- [x] CP-M08-BE-003 Add name field.
+- [x] CP-M08-BE-004 Add role field.
+- [x] CP-M08-BE-005 Add description field.
+- [x] CP-M08-BE-006 Add weight field.
+- [x] CP-M08-BE-007 Add is enabled field.
+- [x] CP-M08-BE-008 Create CouncilSession model.
+- [x] CP-M08-BE-009 Add owner/user foreign key.
+- [x] CP-M08-BE-010 Add candidate foreign key nullable.
+- [x] CP-M08-BE-011 Add media item foreign key nullable.
+- [x] CP-M08-BE-012 Add prompt/context field.
+- [x] CP-M08-BE-013 Add critic opinions JSON field.
+- [x] CP-M08-BE-014 Add final decision field.
+- [x] CP-M08-BE-015 Add final explanation field.
+- [x] CP-M08-BE-016 Seed default Ruthless Critic persona.
+- [x] CP-M08-BE-017 Seed default Historian persona.
+- [x] CP-M08-BE-018 Seed default Modern Defender persona.
+- [x] CP-M08-BE-019 Seed default Anime Specialist persona.
+- [x] CP-M08-BE-020 Seed default Literary Editor persona.
+- [x] CP-M08-BE-021 Seed default Mood Doctor persona.
+- [x] CP-M08-BE-022 Seed default Wildcard persona.
+- [x] CP-M08-BE-023 Create council generation service.
+- [x] CP-M08-BE-024 Create council session endpoint.
+- [x] CP-M08-BE-025 Create critic personas list endpoint.
+- [x] CP-M08-BE-026 Create critic persona update endpoint.
+- [x] CP-M08-BE-027 Add test for default personas.
+- [x] CP-M08-BE-028 Add test for council session generation.
 
 ### Frontend Tasks
 
-- [ ] CP-M08-FE-001 Create council API client file.
-- [ ] CP-M08-FE-002 Create Critic Council page skeleton.
-- [ ] CP-M08-FE-003 Add page title.
-- [ ] CP-M08-FE-004 Add council prompt form.
-- [ ] CP-M08-FE-005 Add candidate selector.
-- [ ] CP-M08-FE-006 Add media item selector.
-- [ ] CP-M08-FE-007 Add Run Council button.
-- [ ] CP-M08-FE-008 Create critic opinion card.
-- [ ] CP-M08-FE-009 Add Ruthless Critic opinion display.
-- [ ] CP-M08-FE-010 Add Historian opinion display.
-- [ ] CP-M08-FE-011 Add Modern Defender opinion display.
-- [ ] CP-M08-FE-012 Add Anime Specialist opinion display.
-- [ ] CP-M08-FE-013 Add Literary Editor opinion display.
-- [ ] CP-M08-FE-014 Add Mood Doctor opinion display.
-- [ ] CP-M08-FE-015 Add Wildcard opinion display.
-- [ ] CP-M08-FE-016 Add final council decision card.
-- [ ] CP-M08-FE-017 Add Add Decision To Candidate button.
-- [ ] CP-M08-FE-018 Add critic settings section.
-- [ ] CP-M08-FE-019 Add enable/disable critic toggle.
-- [ ] CP-M08-FE-020 Add critic weight control.
+- [x] CP-M08-FE-001 Create council API client file.
+- [x] CP-M08-FE-002 Create Critic Council page skeleton.
+- [x] CP-M08-FE-003 Add page title.
+- [x] CP-M08-FE-004 Add council prompt form.
+- [x] CP-M08-FE-005 Add candidate selector.
+- [x] CP-M08-FE-006 Add media item selector.
+- [x] CP-M08-FE-007 Add Run Council button.
+- [x] CP-M08-FE-008 Create critic opinion card.
+- [x] CP-M08-FE-009 Add Ruthless Critic opinion display.
+- [x] CP-M08-FE-010 Add Historian opinion display.
+- [x] CP-M08-FE-011 Add Modern Defender opinion display.
+- [x] CP-M08-FE-012 Add Anime Specialist opinion display.
+- [x] CP-M08-FE-013 Add Literary Editor opinion display.
+- [x] CP-M08-FE-014 Add Mood Doctor opinion display.
+- [x] CP-M08-FE-015 Add Wildcard opinion display.
+- [x] CP-M08-FE-016 Add final council decision card.
+- [x] CP-M08-FE-017 Add Add Decision To Candidate button.
+- [x] CP-M08-FE-018 Add critic settings section.
+- [x] CP-M08-FE-019 Add enable/disable critic toggle.
+- [x] CP-M08-FE-020 Add critic weight control.
 
 ### Integration Tasks
 
-- [ ] CP-M08-INT-001 Connect Run Council button to council endpoint.
-- [ ] CP-M08-INT-002 Display critic opinions in correct order.
-- [ ] CP-M08-INT-003 Connect critic settings to update endpoint.
-- [ ] CP-M08-INT-004 Attach council result to candidate if selected.
-- [ ] CP-M08-INT-005 Show council result from Candidate detail page.
+- [x] CP-M08-INT-001 Connect Run Council button to council endpoint.
+- [x] CP-M08-INT-002 Display critic opinions in correct order.
+- [x] CP-M08-INT-003 Connect critic settings to update endpoint.
+- [x] CP-M08-INT-004 Attach council result to candidate if selected.
+- [x] CP-M08-INT-005 Show council result from Candidate detail page.
 
 ### QA Tasks
 
-- [ ] CP-M08-QA-001 Run council on a candidate.
-- [ ] CP-M08-QA-002 Run council on a media item.
-- [ ] CP-M08-QA-003 Disable a critic and rerun council.
-- [ ] CP-M08-QA-004 Confirm final decision is visible and actionable.
+- [x] CP-M08-QA-001 Run council on a candidate.
+- [x] CP-M08-QA-002 Run council on a media item.
+- [x] CP-M08-QA-003 Disable a critic and rerun council.
+- [x] CP-M08-QA-004 Confirm final decision is visible and actionable.
 
 ---
 
@@ -3041,16 +3042,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M07-QA-004.
-**Last completed task name:** Confirm Candidate Evaluator uses narrative traits.
-**Last completed milestone:** CP-M07 — Narrative DNA Analyzer.
+**Last completed task ID:** CP-M08-QA-004.
+**Last completed task name:** Confirm final decision is visible and actionable.
+**Last completed milestone:** CP-M08 — Critic Council.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M08 — Critic Council.
-**Next recommended task:** CP-M08-SH-001 Define `CriticPersona` type.
+**Current milestone:** CP-M09 — Taste Evolution Journal.
+**Next recommended task:** CP-M09-SH-001 Define `TasteEvolutionSnapshot` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M07 Narrative DNA Analyzer is complete. Shared contracts now define NarrativeDNA, traits, requests, results, status events, source bases, and candidate narrative signals. Backend work adds the owner-scoped narrative app, NarrativeAnalysis model/migration/admin, deterministic local heuristic provider plus disabled external-provider abstraction, request/detail/list/correction endpoints, status transitions, Celery task, Candidate Evaluator narrative-signal scoring, TasteGraph narrative trait nodes/edges, API root/schema coverage, and backend tests. Frontend work adds the Media Detail Narrative DNA tab with request/refresh, status badge, score grid, summary, extracted traits, evidence notes, loading/empty/error states, candidate narrative-signal display, docs/manual tests, and Playwright browser-to-backend coverage for analysis plus candidate integration.
+CP-M08 Critic Council is complete. Shared contracts now define CriticPersona, CriticOpinion, CouncilSession, CouncilFinalDecision, filters, requests, and apply responses. Backend work adds the owner-scoped council app, CriticPersona and CouncilSession models/migrations/admin, seeded default personas including Completion Strategist, deterministic council generation, persona list/update/reset endpoints, session list/create/detail/apply endpoints, API root/schema coverage, and backend tests. Frontend work adds the `/critic-council` route/sidebar entry, council prompt form, candidate/media selectors, Run Council, ordered critic opinion cards, final decision card, Add Decision To Candidate, critic enable/weight settings, Candidate Evaluator attached-results display, docs/manual tests, and Playwright browser-to-backend coverage for candidate/media debate, persona disable/rerun, and apply-to-candidate.
 
 ## 9.3 Important Notes For The Next Agent
 

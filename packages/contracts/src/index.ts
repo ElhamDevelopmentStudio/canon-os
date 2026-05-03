@@ -166,3 +166,18 @@ export type {
 } from "./antiGeneric";
 export { ANTI_GENERIC_FINAL_VERDICTS } from "./antiGeneric";
 export * from "./narrative";
+
+export type {
+  CouncilApplyResponse,
+  CouncilFinalDecision,
+  CouncilSession,
+  CouncilSessionCreateRequest,
+  CouncilSessionFilters,
+  CouncilSessionListResponse,
+  CriticOpinion,
+  CriticPersona,
+  CriticPersonaListResponse,
+  CriticPersonaRole,
+  CriticPersonaUpdateRequest,
+} from "./council";
+export { CRITIC_PERSONA_ROLES } from "./council";

@@ -22,7 +22,7 @@
 | 21 | `/app/tastegraph` | TasteGraph Explorer |
 | 22 | `/app/anti-generic` | Anti-Generic Filter |
 | 23 | `/app/discovery` | Media Archaeologist |
-| 24 | `/app/critics` | Critic Council |
+| 24 | `/critic-council` | Critic Council |
 | 25 | `/app/canon/seasons` | Personal Canon Seasons |
 | 26 | `/app/canon/seasons/:seasonId` | Season Detail |
 | 27 | `/app/adaptation` | Adaptation Intelligence |

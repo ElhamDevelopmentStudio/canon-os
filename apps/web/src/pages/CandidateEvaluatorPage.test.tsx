@@ -1,4 +1,4 @@
-import type { Candidate, CandidateEvaluateResponse, CandidateListResponse, QueueItem } from "@canonos/contracts";
+import type { Candidate, CandidateEvaluateResponse, CandidateListResponse, CouncilSessionListResponse, QueueItem } from "@canonos/contracts";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -10,6 +10,7 @@ import {
   updateCandidate,
   useCandidates,
 } from "@/features/candidate-evaluator/candidateApi";
+import { useCouncilSessions } from "@/features/critic-council/councilApi";
 import { createQueueItem } from "@/features/queue/queueApi";
 import { useUserSettings } from "@/features/settings/settingsApi";
 import { CandidateEvaluatorPage } from "@/pages/CandidateEvaluatorPage";
@@ -20,6 +21,10 @@ vi.mock("@/features/queue/queueApi", () => ({
 
 vi.mock("@/features/settings/settingsApi", () => ({
   useUserSettings: vi.fn(),
+}));
+
+vi.mock("@/features/critic-council/councilApi", () => ({
+  useCouncilSessions: vi.fn(),
 }));
 
 vi.mock("@/features/candidate-evaluator/candidateApi", () => ({
@@ -103,6 +108,34 @@ const unevaluatedCandidate: Candidate = {
 };
 
 
+const councilSessions: CouncilSessionListResponse = {
+  count: 1,
+  next: null,
+  previous: null,
+  results: [
+    {
+      id: "2c2fd73b-ecf8-4b32-b125-e7c8c424f35e",
+      candidateId: evaluatedCandidate.id,
+      candidateTitle: evaluatedCandidate.title,
+      mediaItemId: null,
+      mediaItemTitle: null,
+      prompt: "Debate this candidate.",
+      context: {},
+      criticOpinions: [],
+      finalDecision: {
+        decision: "sample",
+        label: "Sample",
+        confidenceScore: 72,
+        disagreementScore: 34,
+        explanation: "Final decision: Sample for Perfect Blue with clear guardrails.",
+        appliedToCandidate: false,
+      },
+      createdAt: "2026-01-05T00:00:00Z",
+      updatedAt: "2026-01-05T00:00:00Z",
+    },
+  ],
+};
+
 const sampleQueueItem: QueueItem = {
   id: "6b420311-fd25-45ea-9dc8-076f86b3b8b8",
   mediaItemId: null,
@@ -139,12 +172,23 @@ const evaluationResponse: CandidateEvaluateResponse = {
 };
 
 const mockedUseCandidates = vi.mocked(useCandidates);
+const mockedUseCouncilSessions = vi.mocked(useCouncilSessions);
 const mockedCreateCandidate = vi.mocked(createCandidate);
 const mockedEvaluateCandidate = vi.mocked(evaluateCandidate);
 const mockedUpdateCandidate = vi.mocked(updateCandidate);
 const mockedAddCandidateToLibrary = vi.mocked(addCandidateToLibrary);
 const mockedCreateQueueItem = vi.mocked(createQueueItem);
 const mockedUseUserSettings = vi.mocked(useUserSettings);
+
+function mockCouncilSessions(data: CouncilSessionListResponse = councilSessions) {
+  mockedUseCouncilSessions.mockReturnValue({
+    data,
+    error: undefined,
+    isLoading: false,
+    isValidating: false,
+    mutate: vi.fn(),
+  } as unknown as ReturnType<typeof useCouncilSessions>);
+}
 
 function mockCandidates(data: CandidateListResponse = sampleList) {
   mockedUseCandidates.mockReturnValue({
@@ -160,6 +204,7 @@ describe("CandidateEvaluatorPage", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mockCandidates();
+    mockCouncilSessions();
     mockedUseUserSettings.mockReturnValue({
       data: {
         id: 1,
@@ -220,6 +265,8 @@ describe("CandidateEvaluatorPage", () => {
     expect(screen.getByText(/Strong director signal/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /anti-generic filter/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /narrative dna signals/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /critic council results/i })).toBeInTheDocument();
+    expect(screen.getByText(/clear guardrails/i)).toBeInTheDocument();
     expect(screen.getByText(/modern exception/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /add to queue/i })).toBeEnabled();
   });

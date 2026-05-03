@@ -4,6 +4,7 @@ import {
   Compass,
   Gauge,
   Library,
+  MessageSquare,
   ListChecks,
   Moon,
   Network,
@@ -45,6 +46,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.discovery,
     icon: Compass,
     description: "Deep-cut discovery trails and cross-medium expansion maps.",
+  },
+  {
+    label: "Critic Council",
+    route: APP_ROUTES.criticCouncil,
+    icon: MessageSquare,
+    description: "Multi-perspective debates for candidates and media decisions.",
   },
   {
     label: "Tonight Mode",

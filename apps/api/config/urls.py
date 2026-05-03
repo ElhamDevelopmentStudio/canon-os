@@ -32,6 +32,7 @@ api_urlpatterns = [
     path("", include("canonos.anti_generic.urls")),
     path("", include("canonos.aftertaste.urls")),
     path("", include("canonos.candidates.urls")),
+    path("", include("canonos.council.urls")),
     path("", include("canonos.dashboard.urls")),
     path("", include("canonos.discovery.urls")),
     path("health/", include("canonos.health.urls")),
