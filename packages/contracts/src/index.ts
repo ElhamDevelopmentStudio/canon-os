@@ -188,6 +188,21 @@ export type {
   PositiveExceptionSignal,
 } from "./antiGeneric";
 export { ANTI_GENERIC_FINAL_VERDICTS } from "./antiGeneric";
+
+export type {
+  DetoxDecision,
+  DetoxDecisionListResponse,
+  DetoxDecisionValue,
+  DetoxEvaluateRequest,
+  DetoxEvaluateResponse,
+  DetoxRule,
+  DetoxRuleCondition,
+  DetoxRuleListResponse,
+  DetoxRuleUpdateRequest,
+  DetoxTimeSavedSummary,
+  TimeSavedEntry,
+} from "./detox";
+export { DETOX_DECISIONS } from "./detox";
 export * from "./narrative";
 
 export type {

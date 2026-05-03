@@ -146,6 +146,22 @@ Evaluation payloads include genericness risk, time-waste risk, positive exceptio
 
 Shared TypeScript contracts live in `packages/contracts/src/antiGeneric.ts`; frontend rule calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`.
 
+
+## Completion Detox API Contract
+
+Completion Detox rules and decisions are user-owned and require an authenticated session. Evaluations are neutral checkpoints: they record a recommendation and time-saved estimate, while media status changes remain explicit user actions through the media endpoint.
+
+Endpoints:
+
+- `GET /api/detox/rules/` lists the current user's sample rules, seeding defaults when missing.
+- `PATCH /api/detox/rules/{id}/` updates `isEnabled`, `sampleLimit`, or `condition` for one owned rule.
+- `POST /api/detox/rules/reset/` restores the default movie, TV, anime, and novel sample rules.
+- `POST /api/detox/evaluate/` evaluates an owned media item from `mediaItemId`, `progressValue`, and `motivationScore`, then stores a `DetoxDecision`.
+- `GET /api/detox/decisions/` lists recent owner-scoped decisions.
+- `GET /api/detox/time-saved/` summarizes total/current-month time saved plus recent entries.
+
+Decision payloads include the media item, matched rule, decision (`drop`, `pause`, `delay`, `archive`, or `continue`), neutral reason, progress, motivation, and estimated time saved. Shared TypeScript contracts live in `packages/contracts/src/detox.ts`; frontend calls live in `apps/web/src/features/detox/detoxApi.ts`; product rules live in `docs/completion-detox.md`.
+
 ## Media Archaeologist API Contract
 
 Discovery endpoints are user-owned and require an authenticated browser session. They power the `/discover` Media Archaeologist page.

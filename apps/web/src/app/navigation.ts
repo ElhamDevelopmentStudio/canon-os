@@ -1,4 +1,5 @@
 import {
+  Ban,
   BookOpen,
   ClipboardList,
   Compass,
@@ -71,6 +72,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.tasteEvolution,
     icon: TrendingUp,
     description: "Historical shifts in ratings, mediums, regret, fatigue, and favorite dimensions.",
+  },
+  {
+    label: "Completion Detox",
+    route: APP_ROUTES.completionDetox,
+    icon: Ban,
+    description: "Neutral sample rules for dropping, pausing, and saving time.",
   },
   {
     label: "TasteGraph",

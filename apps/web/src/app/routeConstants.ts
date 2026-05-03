@@ -8,6 +8,7 @@ export const APP_ROUTES = {
   tonight: "/tonight",
   tasteProfile: "/taste-profile",
   tasteEvolution: "/taste-evolution",
+  completionDetox: "/completion-detox",
   tasteGraph: "/taste-graph",
   aftertasteLog: "/aftertaste-log",
   queue: "/queue",

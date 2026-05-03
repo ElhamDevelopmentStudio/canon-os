@@ -21,6 +21,7 @@
 | 20 | `/app/taste-profile` | Taste Profile |
 | 21 | `/app/tastegraph` | TasteGraph Explorer |
 | CP-M09 | `/taste-evolution` | Taste Evolution Journal |
+| CP-M10 | `/completion-detox` | Completion Detox |
 | 22 | `/app/anti-generic` | Anti-Generic Filter |
 | 23 | `/app/discovery` | Media Archaeologist |
 | 24 | `/critic-council` | Critic Council |

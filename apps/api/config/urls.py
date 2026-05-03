@@ -34,6 +34,7 @@ api_urlpatterns = [
     path("", include("canonos.candidates.urls")),
     path("", include("canonos.council.urls")),
     path("", include("canonos.dashboard.urls")),
+    path("", include("canonos.detox.urls")),
     path("", include("canonos.discovery.urls")),
     path("", include("canonos.evolution.urls")),
     path("health/", include("canonos.health.urls")),

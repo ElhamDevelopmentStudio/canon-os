@@ -1,9 +1,10 @@
-import type { NarrativeAnalysisResult, NarrativeTrait, TasteDimension } from "@canonos/contracts";
+import type { DetoxRule, MediaItem, NarrativeAnalysisResult, NarrativeTrait, TasteDimension } from "@canonos/contracts";
 import { ArrowLeft, Dna, Pencil, RefreshCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
+import { useDetoxRules } from "@/features/detox/detoxApi";
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
 import { StatusPill, type StatusTone } from "@/components/data-display/StatusPill";
@@ -52,6 +53,7 @@ export function MediaDetailPage() {
   const { mediaId } = useParams();
   const navigate = useNavigate();
   const { data, error, isLoading, mutate } = useMediaItem(mediaId);
+  const { data: detoxRules } = useDetoxRules();
   const {
     data: narrativeAnalysis,
     error: narrativeError,
@@ -160,6 +162,7 @@ export function MediaDetailPage() {
   }
   const hasNoNarrativeAnalysis = narrativeError instanceof ApiError && narrativeError.status === 404;
   const visibleNarrativeError = hasNoNarrativeAnalysis ? undefined : narrativeError;
+  const detoxRule = findDetoxRuleForMedia(data, detoxRules?.results);
 
   return (
     <div className="flex flex-col gap-6">
@@ -223,6 +226,8 @@ export function MediaDetailPage() {
           </div>
         </SectionCard>
       </section>
+
+      {detoxRule ? <DetoxWarningCard media={data} rule={detoxRule} /> : null}
 
       <PageTabs
         activeTab={activeAnalysisTab}
@@ -383,6 +388,38 @@ export function MediaDetailPage() {
       />
     </div>
   );
+}
+
+function findDetoxRuleForMedia(media: MediaItem, rules?: DetoxRule[]): DetoxRule | null {
+  if (media.status !== "planned" && media.status !== "consuming") {
+    return null;
+  }
+  return rules?.find((rule) => rule.isEnabled && (!rule.mediaType || rule.mediaType === media.mediaType)) ?? null;
+}
+
+function DetoxWarningCard({ media, rule }: { media: MediaItem; rule: DetoxRule }) {
+  return (
+    <SectionCard title="Completion Detox warning">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-semibold">Completion Detox checkpoint available</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+            {rule.name} applies to {media.title}. At around {rule.sampleLimit} {progressUnitLabel(media.mediaType)},
+            check whether continuing still feels voluntary.
+          </p>
+        </div>
+        <Button asChild type="button" variant="secondary">
+          <Link to={APP_ROUTES.completionDetox}>Open Completion Detox</Link>
+        </Button>
+      </div>
+    </SectionCard>
+  );
+}
+
+function progressUnitLabel(mediaType: MediaItem["mediaType"]): string {
+  if (mediaType === "movie" || mediaType === "audiobook") return "minutes";
+  if (mediaType === "tv_show" || mediaType === "anime") return "episodes";
+  return "pages";
 }
 
 function TasteScorecardPanel({

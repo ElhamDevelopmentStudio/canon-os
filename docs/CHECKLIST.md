@@ -93,6 +93,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Narrative DNA: `docs/manual-tests/narrative-dna.md`
 - Critic Council: `docs/manual-tests/critic-council.md`
 - Taste Evolution Journal: `docs/manual-tests/taste-evolution.md`
+- Completion Detox: `docs/manual-tests/completion-detox.md`
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 
@@ -2179,75 +2180,75 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M10-SH-001 Define `DetoxRule` type.
-- [ ] CP-M10-SH-002 Define `DetoxDecision` type.
-- [ ] CP-M10-SH-003 Define `TimeSavedEntry` type.
-- [ ] CP-M10-SH-004 Document Completion Detox behavior.
+- [x] CP-M10-SH-001 Define `DetoxRule` type.
+- [x] CP-M10-SH-002 Define `DetoxDecision` type.
+- [x] CP-M10-SH-003 Define `TimeSavedEntry` type.
+- [x] CP-M10-SH-004 Document Completion Detox behavior.
 
 ### Backend Tasks
 
-- [ ] CP-M10-BE-001 Create detox app.
-- [ ] CP-M10-BE-002 Create DetoxRule model.
-- [ ] CP-M10-BE-003 Add owner/user foreign key.
-- [ ] CP-M10-BE-004 Add rule name field.
-- [ ] CP-M10-BE-005 Add rule description field.
-- [ ] CP-M10-BE-006 Add media type field nullable.
-- [ ] CP-M10-BE-007 Add sample limit field.
-- [ ] CP-M10-BE-008 Add condition JSON field.
-- [ ] CP-M10-BE-009 Add is enabled field.
-- [ ] CP-M10-BE-010 Create DetoxDecision model.
-- [ ] CP-M10-BE-011 Add media item foreign key.
-- [ ] CP-M10-BE-012 Add decision field.
-- [ ] CP-M10-BE-013 Add reason field.
-- [ ] CP-M10-BE-014 Add estimated time saved minutes field.
-- [ ] CP-M10-BE-015 Add created at field.
-- [ ] CP-M10-BE-016 Seed default movie sample rule.
-- [ ] CP-M10-BE-017 Seed default TV episode sample rule.
-- [ ] CP-M10-BE-018 Seed default anime episode sample rule.
-- [ ] CP-M10-BE-019 Seed default novel page/sample rule.
-- [ ] CP-M10-BE-020 Create detox evaluation service.
-- [ ] CP-M10-BE-021 Create detox evaluate endpoint.
-- [ ] CP-M10-BE-022 Create detox rules endpoint.
-- [ ] CP-M10-BE-023 Create detox decision list endpoint.
-- [ ] CP-M10-BE-024 Create time saved summary endpoint.
-- [ ] CP-M10-BE-025 Add test for detox rule seed.
-- [ ] CP-M10-BE-026 Add test for detox evaluation.
-- [ ] CP-M10-BE-027 Add test for time saved summary.
+- [x] CP-M10-BE-001 Create detox app.
+- [x] CP-M10-BE-002 Create DetoxRule model.
+- [x] CP-M10-BE-003 Add owner/user foreign key.
+- [x] CP-M10-BE-004 Add rule name field.
+- [x] CP-M10-BE-005 Add rule description field.
+- [x] CP-M10-BE-006 Add media type field nullable.
+- [x] CP-M10-BE-007 Add sample limit field.
+- [x] CP-M10-BE-008 Add condition JSON field.
+- [x] CP-M10-BE-009 Add is enabled field.
+- [x] CP-M10-BE-010 Create DetoxDecision model.
+- [x] CP-M10-BE-011 Add media item foreign key.
+- [x] CP-M10-BE-012 Add decision field.
+- [x] CP-M10-BE-013 Add reason field.
+- [x] CP-M10-BE-014 Add estimated time saved minutes field.
+- [x] CP-M10-BE-015 Add created at field.
+- [x] CP-M10-BE-016 Seed default movie sample rule.
+- [x] CP-M10-BE-017 Seed default TV episode sample rule.
+- [x] CP-M10-BE-018 Seed default anime episode sample rule.
+- [x] CP-M10-BE-019 Seed default novel page/sample rule.
+- [x] CP-M10-BE-020 Create detox evaluation service.
+- [x] CP-M10-BE-021 Create detox evaluate endpoint.
+- [x] CP-M10-BE-022 Create detox rules endpoint.
+- [x] CP-M10-BE-023 Create detox decision list endpoint.
+- [x] CP-M10-BE-024 Create time saved summary endpoint.
+- [x] CP-M10-BE-025 Add test for detox rule seed.
+- [x] CP-M10-BE-026 Add test for detox evaluation.
+- [x] CP-M10-BE-027 Add test for time saved summary.
 
 ### Frontend Tasks
 
-- [ ] CP-M10-FE-001 Create detox API client file.
-- [ ] CP-M10-FE-002 Create Completion Detox page skeleton.
-- [ ] CP-M10-FE-003 Add page title.
-- [ ] CP-M10-FE-004 Add time saved metric card.
-- [ ] CP-M10-FE-005 Add active detox rules section.
-- [ ] CP-M10-FE-006 Add rule toggle controls.
-- [ ] CP-M10-FE-007 Add Detox Evaluate form.
-- [ ] CP-M10-FE-008 Add media item selector to form.
-- [ ] CP-M10-FE-009 Add current progress input.
-- [ ] CP-M10-FE-010 Add current motivation input.
-- [ ] CP-M10-FE-011 Add Evaluate Drop/Pause button.
-- [ ] CP-M10-FE-012 Add detox decision result card.
-- [ ] CP-M10-FE-013 Add Mark As Dropped button.
-- [ ] CP-M10-FE-014 Add Mark As Paused button.
-- [ ] CP-M10-FE-015 Add Continue Anyway button.
-- [ ] CP-M10-FE-016 Add decision history list.
+- [x] CP-M10-FE-001 Create detox API client file.
+- [x] CP-M10-FE-002 Create Completion Detox page skeleton.
+- [x] CP-M10-FE-003 Add page title.
+- [x] CP-M10-FE-004 Add time saved metric card.
+- [x] CP-M10-FE-005 Add active detox rules section.
+- [x] CP-M10-FE-006 Add rule toggle controls.
+- [x] CP-M10-FE-007 Add Detox Evaluate form.
+- [x] CP-M10-FE-008 Add media item selector to form.
+- [x] CP-M10-FE-009 Add current progress input.
+- [x] CP-M10-FE-010 Add current motivation input.
+- [x] CP-M10-FE-011 Add Evaluate Drop/Pause button.
+- [x] CP-M10-FE-012 Add detox decision result card.
+- [x] CP-M10-FE-013 Add Mark As Dropped button.
+- [x] CP-M10-FE-014 Add Mark As Paused button.
+- [x] CP-M10-FE-015 Add Continue Anyway button.
+- [x] CP-M10-FE-016 Add decision history list.
 
 ### Integration Tasks
 
-- [ ] CP-M10-INT-001 Connect Detox page to rules endpoint.
-- [ ] CP-M10-INT-002 Connect evaluation form to detox evaluate endpoint.
-- [ ] CP-M10-INT-003 Connect Mark As Dropped to media status update.
-- [ ] CP-M10-INT-004 Connect Mark As Paused to media status update.
-- [ ] CP-M10-INT-005 Connect time saved metric to summary endpoint.
-- [ ] CP-M10-INT-006 Show detox warning on Media Detail page.
+- [x] CP-M10-INT-001 Connect Detox page to rules endpoint.
+- [x] CP-M10-INT-002 Connect evaluation form to detox evaluate endpoint.
+- [x] CP-M10-INT-003 Connect Mark As Dropped to media status update.
+- [x] CP-M10-INT-004 Connect Mark As Paused to media status update.
+- [x] CP-M10-INT-005 Connect time saved metric to summary endpoint.
+- [x] CP-M10-INT-006 Show detox warning on Media Detail page.
 
 ### QA Tasks
 
-- [ ] CP-M10-QA-001 Evaluate a show for dropping.
-- [ ] CP-M10-QA-002 Mark a media item as dropped from detox decision.
-- [ ] CP-M10-QA-003 Confirm time saved metric increases.
-- [ ] CP-M10-QA-004 Disable a detox rule and confirm behavior changes.
+- [x] CP-M10-QA-001 Evaluate a show for dropping.
+- [x] CP-M10-QA-002 Mark a media item as dropped from detox decision.
+- [x] CP-M10-QA-003 Confirm time saved metric increases.
+- [x] CP-M10-QA-004 Disable a detox rule and confirm behavior changes.
 
 ---
 
@@ -3043,16 +3044,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M09-QA-004.
-**Last completed task name:** Confirm Dashboard shows latest insight.
-**Last completed milestone:** CP-M09 — Taste Evolution Journal.
+**Last completed task ID:** CP-M10-QA-004.
+**Last completed task name:** Disable a detox rule and confirm behavior changes.
+**Last completed milestone:** CP-M10 — Completion Detox System.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M10 — Completion Detox System.
-**Next recommended task:** CP-M10-SH-001 Define `DetoxRule` type.
+**Current milestone:** CP-M11 — Personal Canon Builder.
+**Next recommended task:** CP-M11-SH-001 Define `CanonSeason` type.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M09 Taste Evolution Journal is complete. Shared contracts now define TasteEvolutionSnapshot, TasteTrend, TasteChangeInsight, evidence counts, generate requests, and timeline responses. Backend work adds the owner-scoped evolution app, TasteEvolutionSnapshot model/migration/admin, deterministic snapshot generation, monthly rating/medium/genericness tolerance/regret/completion fatigue/favorite dimension trends, insight generation, timeline and generate endpoints, Celery monthly snapshot placeholder, API root/schema coverage, and backend tests. Frontend work adds the `/taste-evolution` route/sidebar entry, evolution API client, Generate Snapshot flow, loading/empty/error/success states, trend cards, current insights, snapshot history, Dashboard latest taste shift card, docs/manual tests, and Playwright browser-to-backend coverage for empty timeline, scored completed works, snapshot generation, timeline rendering, and dashboard insight integration.
+CP-M10 Completion Detox System is complete. Shared contracts now define DetoxRule, DetoxDecision, TimeSavedEntry, evaluation requests/responses, rule list responses, and time-saved summaries. Backend work adds the owner-scoped detox app, DetoxRule and DetoxDecision models/migration/admin, default movie/TV/anime/novel sample rules, deterministic evaluation service, rules/evaluate/decisions/time-saved endpoints, API root/schema coverage, and backend tests for seeding, evaluation, disabled-rule behavior, owner scoping, and time saved. Frontend work adds the `/completion-detox` route/sidebar entry, detox API client, time-saved metrics, active rule toggles, evaluation form, decision result actions, decision history, Media Detail checkpoint warning, docs/manual tests, and Playwright browser-to-backend coverage for drop recommendations, marking media dropped, time saved, and disabled-rule continue behavior.
 
 ## 9.3 Important Notes For The Next Agent
 

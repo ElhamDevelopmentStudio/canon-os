@@ -32,6 +32,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/tonight` | Tonight Mode | Generate and act on recommendations from queue and context. |
 | `/taste-profile` | Taste Profile | Show taste dimensions, score rollups, red flags, and influential works. |
 | `/taste-evolution` | Taste Evolution Journal | Generate/list snapshots, show rating/medium/genericness/regret/fatigue/favorite-dimension trends, and expose current insight. |
+| `/completion-detox` | Completion Detox | Evaluate sample boundaries, toggle rules, mark media dropped/paused, show time saved, and list decisions. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
 | `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items, recalculate priority, and restore archived items. |
 | `/settings` | Settings | Update profile/settings and run import/export flows. |
@@ -201,6 +202,11 @@ The media add/edit dialog includes an external metadata search section. Search r
 ## TasteGraph UI
 
 The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exposes a **Rebuild TasteGraph** action, and renders loading, empty, error, success, rebuild status, summary cards, ranked signal sections, and a simple text graph view.
+
+
+### Completion Detox UI
+
+Completion Detox lives at `/completion-detox`. API calls live in `apps/web/src/features/detox/detoxApi.ts`. The page supports loading, empty, error, and success states; total/current-month time saved metrics; active sample rule toggles; media selector; current progress and motivation inputs; Evaluate Drop/Pause; decision result actions for Mark As Dropped, Mark As Paused, and Continue Anyway; and decision history. Media Detail shows a checkpoint warning when a planned/consuming item has an enabled matching detox rule.
 
 ### Taste Evolution UI
 

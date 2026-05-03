@@ -9,6 +9,16 @@ import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi
 import { requestNarrativeAnalysis, useNarrativeAnalysis } from "@/features/narrative/narrativeApi";
 import { MediaDetailPage } from "@/pages/MediaDetailPage";
 
+vi.mock("@/features/detox/detoxApi", () => ({
+  useDetoxRules: () => ({
+    data: { count: 0, next: null, previous: null, results: [] },
+    error: undefined,
+    isLoading: false,
+    isValidating: false,
+    mutate: vi.fn(),
+  }),
+}));
+
 vi.mock("@/features/media/mediaApi", () => ({
   deleteMediaItem: vi.fn(),
   useMediaItem: vi.fn(),
