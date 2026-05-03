@@ -28,10 +28,10 @@ def authenticated_client(user: User | None = None) -> tuple[APIClient, User]:
     return client, user
 
 
-def create_graph_evidence(user: User) -> MediaItem:
+def create_graph_evidence(user: User, title: str = "Stalker") -> MediaItem:
     item = MediaItem.objects.create(
         owner=user,
-        title="Stalker",
+        title=title,
         media_type=MediaItem.MediaType.MOVIE,
         creator="Andrei Tarkovsky",
         status=MediaItem.ConsumptionStatus.COMPLETED,
@@ -102,7 +102,8 @@ def test_graph_summary_and_rebuild_endpoints_are_owner_scoped() -> None:
     client, user = authenticated_client()
     create_graph_evidence(user)
     other = create_user("other-graph@example.com")
-    MediaItem.objects.create(owner=other, title="Private", media_type="movie", status="planned")
+    other_item = create_graph_evidence(other, title="Private Graph Work")
+    rebuild_taste_graph_for_user(other)
 
     rebuild_response = client.post(reverse("taste-graph-rebuild"), format="json")
     summary_response = client.get(reverse("taste-graph-summary"))
@@ -117,9 +118,10 @@ def test_graph_summary_and_rebuild_endpoints_are_owner_scoped() -> None:
     assert summary["evidenceCounts"]["mediaNodeCount"] == 1
     assert summary["strongestCreators"][0]["label"] == "Andrei Tarkovsky"
     assert nodes_response.status_code == status.HTTP_200_OK
-    assert all(node["label"] != "Private" for node in nodes_response.json()["results"])
+    assert all(node["label"] != other_item.title for node in nodes_response.json()["results"])
     assert edges_response.status_code == status.HTTP_200_OK
     assert edges_response.json()["results"]
+    assert all(edge["sourceLabel"] != other_item.title for edge in edges_response.json()["results"])
 
 
 def test_graph_rebuild_task_uses_same_service() -> None:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
 from django.middleware.csrf import get_token
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -8,11 +9,18 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import UserProfile, UserSettings
+from canonos.common.throttles import AuthEndpointThrottle
+
+from .audit import log_audit_event
+from .models import AuditEvent, UserProfile, UserSettings
 from .permissions import IsAuthenticatedUser
+from .privacy import delete_personal_canonos_data, personal_data_counts
 from .serializers import (
+    AccountDeletionResponseSerializer,
     AuthSessionSerializer,
+    DataDeletionResponseSerializer,
     LoginSerializer,
+    PersonalDataSummarySerializer,
     ProfileUpdateSerializer,
     RegisterSerializer,
     UserProfileSerializer,
@@ -48,6 +56,7 @@ class CsrfTokenView(APIView):
 class RegisterView(APIView):
     authentication_classes: list[type] = []
     permission_classes = [AllowAny]
+    throttle_classes = [AuthEndpointThrottle]
 
     @extend_schema(
         auth=[],
@@ -70,6 +79,7 @@ class RegisterView(APIView):
 class LoginView(APIView):
     authentication_classes: list[type] = []
     permission_classes = [AllowAny]
+    throttle_classes = [AuthEndpointThrottle]
 
     @extend_schema(
         auth=[],
@@ -82,6 +92,11 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         login(request, serializer.validated_data["user"])
+        log_audit_event(
+            event_type=AuditEvent.EventType.LOGIN,
+            user=serializer.validated_data["user"],
+            request=request,
+        )
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 
 
@@ -95,6 +110,7 @@ class LogoutView(APIView):
         description="Clear the session and return anonymous state with a fresh CSRF token.",
     )
     def post(self, request):  # noqa: ANN001, ANN201
+        log_audit_event(event_type=AuditEvent.EventType.LOGOUT, user=request.user, request=request)
         logout(request)
         return Response(auth_session_payload(request, csrf_token=get_token(request)))
 
@@ -182,4 +198,76 @@ class CurrentUserSettingsView(APIView):
         serializer = UserSettingsSerializer(settings, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        log_audit_event(
+            event_type=AuditEvent.EventType.SETTINGS_UPDATED,
+            user=request.user,
+            request=request,
+            metadata={
+                "sections": sorted(request.data.keys()) if hasattr(request.data, "keys") else []
+            },
+        )
         return Response(UserSettingsSerializer(settings).data)
+
+
+class PersonalDataSummaryView(APIView):
+    permission_classes = [IsAuthenticatedUser]
+
+    @extend_schema(
+        responses=PersonalDataSummarySerializer,
+        summary="Summarize current user's private CanonOS data",
+        description="Return owner-scoped record counts before export or deletion.",
+    )
+    def get(self, request):  # noqa: ANN001, ANN201
+        counts = personal_data_counts(request.user)
+        return Response({"counts": counts, "totalRecords": sum(counts.values())})
+
+
+class DeletePersonalDataView(APIView):
+    permission_classes = [IsAuthenticatedUser]
+
+    @extend_schema(
+        request=None,
+        responses=DataDeletionResponseSerializer,
+        summary="Delete current user's CanonOS product data",
+        description=(
+            "Remove private media history, notes, scores, graph, queue, jobs, imports, "
+            "exports, and analysis records while keeping the login account and settings."
+        ),
+    )
+    def delete(self, request):  # noqa: ANN001, ANN201
+        log_audit_event(
+            event_type=AuditEvent.EventType.DATA_DELETION_REQUESTED,
+            user=request.user,
+            request=request,
+            metadata={"counts": personal_data_counts(request.user)},
+        )
+        result = delete_personal_canonos_data(request.user)
+        return Response(
+            {
+                "deletedCounts": result.deleted_counts,
+                "totalDeleted": result.total_deleted,
+                "message": "Your CanonOS product data was deleted.",
+            }
+        )
+
+
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticatedUser]
+
+    @extend_schema(
+        request=None,
+        responses=AccountDeletionResponseSerializer,
+        summary="Delete current user account",
+        description="Delete the authenticated account and clear the browser session.",
+    )
+    def delete(self, request):  # noqa: ANN001, ANN201
+        user: User = request.user
+        log_audit_event(
+            event_type=AuditEvent.EventType.ACCOUNT_DELETION_REQUESTED,
+            user=user,
+            request=request,
+            metadata={"counts": personal_data_counts(user), "email": user.email},
+        )
+        logout(request)
+        user.delete()
+        return Response({"deleted": True, "message": "Your CanonOS account was deleted."})

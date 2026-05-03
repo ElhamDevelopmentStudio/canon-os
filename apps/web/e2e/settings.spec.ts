@@ -1,6 +1,7 @@
 import { test, expect } from "./helpers/fixtures";
 import type { Page } from "@playwright/test";
 import { registerViaUi } from "./helpers/auth";
+import { uniqueTitle } from "./helpers/data";
 import { expectApiJson, waitForApiResponse } from "./helpers/network";
 
 async function setRangeValue(page: Page, label: string, value: string) {
@@ -14,6 +15,11 @@ async function setRangeValue(page: Page, label: string, value: string) {
     },
     value,
   );
+}
+
+async function openAddMedia(page: Page) {
+  await page.getByRole("button", { name: "Add Media" }).first().click();
+  await expect(page.getByRole("dialog", { name: "Add media" })).toBeVisible();
 }
 
 test.describe("settings browser-to-backend flow", () => {
@@ -116,5 +122,89 @@ test.describe("settings browser-to-backend flow", () => {
     await expect(page.getByText("modern media skepticism: 8/10")).toBeVisible();
     await expect(page.getByText("recommendation strictness: 7/10")).toBeVisible();
     await expect(page.getByText("modern exceptions: disabled")).toBeVisible();
+  });
+
+  test("exports private data and deletes data/account with strong confirmation", async ({ page }) => {
+    await registerViaUi(page);
+    const title = uniqueTitle("Privacy Media");
+
+    const initialListResponse = waitForApiResponse(page, "GET", "/api/media-items/", 200);
+    await page.goto("/library");
+    await initialListResponse;
+    await openAddMedia(page);
+    await page.getByLabel("Title", { exact: true }).fill(title);
+    await page.getByLabel("Notes").fill("Private note that must be exportable and deletable.");
+    const createMediaResponse = waitForApiResponse(page, "POST", "/api/media-items/", 201);
+    await page.getByRole("button", { name: "Save media" }).click();
+    await createMediaResponse;
+    await expect(page.getByRole("link", { name: title })).toBeVisible();
+
+    const privacySummaryResponse = waitForApiResponse(page, "GET", "/api/auth/data/", 200);
+    await page.goto("/settings");
+    const privacySummary = await expectApiJson<{ counts: { mediaItems: number }; totalRecords: number }>(
+      await privacySummaryResponse,
+    );
+    expect(privacySummary.counts.mediaItems).toBeGreaterThanOrEqual(1);
+    expect(privacySummary.totalRecords).toBeGreaterThan(0);
+    await expect(page.getByRole("heading", { name: "Privacy and security" })).toBeVisible();
+    await expect(page.getByText("private media history, ratings, taste scores")).toBeVisible();
+    await expect(page.getByText("External metadata snapshots store provider IDs")).toBeVisible();
+
+    const exportResponsePromise = waitForApiResponse(page, "POST", "/api/exports/", 201);
+    await page.getByRole("button", { name: "Export My Data" }).click();
+    const exportPayload = await expectApiJson<{ recordCount: number; filename: string }>(
+      await exportResponsePromise,
+    );
+    expect(exportPayload.recordCount).toBeGreaterThanOrEqual(1);
+    await expect(page.getByText("Privacy export ready")).toBeVisible();
+    await expect(page.getByText(`Latest privacy export: ${exportPayload.filename}`)).toBeVisible();
+
+    await page.getByRole("button", { name: "Delete All CanonOS Data" }).click();
+    const dataDialog = page.getByRole("dialog", { name: "Delete all CanonOS data?" });
+    await expect(dataDialog).toBeVisible();
+    await expect(dataDialog.getByRole("button", { name: "Delete All CanonOS Data" })).toBeDisabled();
+    await dataDialog.getByLabel("Type DELETE MY DATA to confirm").fill("DELETE MY DATA");
+    const dataDeleteResponsePromise = waitForApiResponse(
+      page,
+      "DELETE",
+      "/api/auth/data/delete/",
+      200,
+    );
+    await dataDialog.getByRole("button", { name: "Delete All CanonOS Data" }).click();
+    const dataDeletePayload = await expectApiJson<{
+      deletedCounts: { mediaItems: number };
+      totalDeleted: number;
+    }>(await dataDeleteResponsePromise);
+    expect(dataDeletePayload.deletedCounts.mediaItems).toBeGreaterThanOrEqual(1);
+    expect(dataDeletePayload.totalDeleted).toBeGreaterThan(0);
+    await expect(page.getByText("CanonOS data deleted")).toBeVisible();
+
+    const emptyListResponse = waitForApiResponse(page, "GET", "/api/media-items/", 200);
+    await page.goto("/library");
+    const emptyListPayload = await expectApiJson<{ count: number }>(await emptyListResponse);
+    expect(emptyListPayload.count).toBe(0);
+    await expect(page.getByText("No media items match this view")).toBeVisible();
+
+    const refreshedSummaryResponse = waitForApiResponse(page, "GET", "/api/auth/data/", 200);
+    await page.goto("/settings");
+    const refreshedSummary = await expectApiJson<{ counts: { mediaItems: number } }>(
+      await refreshedSummaryResponse,
+    );
+    expect(refreshedSummary.counts.mediaItems).toBe(0);
+    await page.getByRole("button", { name: "Delete Account" }).click();
+    const accountDialog = page.getByRole("dialog", { name: "Delete your account?" });
+    await expect(accountDialog).toBeVisible();
+    await expect(accountDialog.getByRole("button", { name: "Delete Account" })).toBeDisabled();
+    await accountDialog.getByLabel("Type DELETE MY ACCOUNT to confirm").fill("DELETE MY ACCOUNT");
+    const accountDeleteResponsePromise = waitForApiResponse(
+      page,
+      "DELETE",
+      "/api/auth/account/",
+      200,
+    );
+    await accountDialog.getByRole("button", { name: "Delete Account" }).click();
+    const accountPayload = await expectApiJson<{ deleted: boolean }>(await accountDeleteResponsePromise);
+    expect(accountPayload.deleted).toBe(true);
+    await expect(page).toHaveURL("/register");
   });
 });

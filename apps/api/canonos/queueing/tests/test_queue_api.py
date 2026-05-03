@@ -286,11 +286,14 @@ def test_queue_privacy_for_linked_media_and_reorder() -> None:
         {"itemIds": [str(item.id)]},
         format="json",
     )
+    delete_response = client.delete(reverse("queueitem-detail", args=[item.id]))
 
     assert list_response.json()["results"] == []
     assert detail_response.status_code == status.HTTP_404_NOT_FOUND
     assert create_response.status_code == status.HTTP_400_BAD_REQUEST
     assert reorder_response.status_code == status.HTTP_400_BAD_REQUEST
+    assert delete_response.status_code == status.HTTP_404_NOT_FOUND
+    assert QueueItem.objects.filter(id=item.id).exists()
 
 
 def test_queue_endpoints_appear_in_openapi_schema() -> None:

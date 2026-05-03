@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
 from .models import DetoxDecision, DetoxRule
@@ -69,6 +70,7 @@ class DetoxRuleViewSet(viewsets.ModelViewSet):
 
 class DetoxEvaluateView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=DetoxEvaluateRequestSerializer,

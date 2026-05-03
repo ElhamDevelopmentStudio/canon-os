@@ -26,15 +26,18 @@ import {
   type UserSettings,
   type UserSettingsUpdateRequest,
 } from "@canonos/contracts";
-import { Download, FileUp, RotateCcw, Save } from "lucide-react";
+import { Download, FileUp, RotateCcw, Save, ShieldCheck } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useSWRConfig } from "swr";
+import { useNavigate } from "react-router-dom";
+import useSWR, { useSWRConfig } from "swr";
 
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
+import { useToast } from "@/components/feedback/toastContext";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
+import { DestructiveActionButton } from "@/components/ui/DestructiveActionButton";
 import { Button } from "@/components/ui/button";
 import { resetAntiGenericRules, updateAntiGenericRule, useAntiGenericRules } from "@/features/anti-generic-filter/antiGenericApi";
 import {
@@ -54,7 +57,13 @@ import {
   importSourceTypeLabels,
   importStatusLabels,
 } from "@/features/portability/portabilityLabels";
-import { updateUserSettings, useUserSettings } from "@/features/settings/settingsApi";
+import {
+  deleteAccount,
+  deleteAllCanonOSData,
+  getPersonalDataSummary,
+  updateUserSettings,
+  useUserSettings,
+} from "@/features/settings/settingsApi";
 import {
   recommendationFormulaWeightHelp,
   recommendationFormulaWeightLabels,
@@ -70,6 +79,7 @@ import {
 import { API_ROUTES } from "@/lib/apiRouteConstants";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/stores/appStore";
+import { useAuthStore } from "@/stores/authStore";
 
 type SettingsDraft = {
   displayName: string;
@@ -544,6 +554,8 @@ export function SettingsPage() {
           <AntiGenericRulesSection />
 
           <PortabilitySection />
+
+          <PrivacySection />
         </div>
       </div>
     </form>
@@ -559,7 +571,7 @@ function SettingsSubnav() {
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Advanced Recommendations</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Anti-Generic Rules</li>
         <li className="rounded-xl px-3 py-2 text-muted-foreground">Data & Integrations</li>
-        <li className="rounded-xl px-3 py-2 text-muted-foreground">Account & Security</li>
+        <li className="rounded-xl px-3 py-2 text-muted-foreground">Privacy & Security</li>
       </ul>
     </nav>
   );
@@ -1097,6 +1109,278 @@ function PortabilitySection() {
 
       <ExportHistory jobs={exportJobs} />
     </SectionCard>
+  );
+}
+
+const DATA_DELETION_PHRASE = "DELETE MY DATA";
+const ACCOUNT_DELETION_PHRASE = "DELETE MY ACCOUNT";
+
+function PrivacySection() {
+  const navigate = useNavigate();
+  const { notify } = useToast();
+  const clearSession = useAuthStore((state) => state.clearSession);
+  const { mutate: mutateCache } = useSWRConfig();
+  const { data: summary, error, isLoading, mutate } = useSWR(
+    API_ROUTES.authDataSummary,
+    getPersonalDataSummary,
+  );
+  const [dialog, setDialog] = useState<"data" | "account" | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isDeletingData, setIsDeletingData] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [latestPrivacyExport, setLatestPrivacyExport] = useState<ExportResult | null>(null);
+
+  async function createPrivacyExport() {
+    setIsExporting(true);
+    try {
+      const result = await requestExport("json");
+      setLatestPrivacyExport(result);
+      notify({
+        title: "Privacy export ready",
+        message: `${result.recordCount} records are available from Import and export.`,
+        tone: "success",
+      });
+      await mutateCache(API_ROUTES.exportRequest);
+    } catch (caught) {
+      notify({
+        title: "Export failed",
+        message: caught instanceof Error ? caught.message : "Could not create privacy export.",
+        tone: "error",
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
+  async function confirmDataDeletion() {
+    setIsDeletingData(true);
+    try {
+      const result = await deleteAllCanonOSData();
+      setDialog(null);
+      notify({
+        title: "CanonOS data deleted",
+        message: `${result.totalDeleted} private records were removed. Your account and settings remain.`,
+        tone: "success",
+      });
+      await Promise.all([
+        mutate(),
+        mutateCache(
+          (key) =>
+            typeof key === "string" &&
+            key !== API_ROUTES.authMe &&
+            key !== API_ROUTES.authSettings &&
+            key !== API_ROUTES.authDataSummary,
+          undefined,
+          { revalidate: true },
+        ),
+      ]);
+    } catch (caught) {
+      notify({
+        title: "Data deletion failed",
+        message: caught instanceof Error ? caught.message : "Could not delete CanonOS data.",
+        tone: "error",
+      });
+    } finally {
+      setIsDeletingData(false);
+    }
+  }
+
+  async function confirmAccountDeletion() {
+    setIsDeletingAccount(true);
+    try {
+      await deleteAccount();
+      setDialog(null);
+      clearSession();
+      notify({
+        title: "Account deleted",
+        message: "Your session was cleared and the account was removed.",
+        tone: "success",
+      });
+      await mutateCache(() => true, undefined, { revalidate: false });
+      navigate("/register", { replace: true });
+    } catch (caught) {
+      notify({
+        title: "Account deletion failed",
+        message: caught instanceof Error ? caught.message : "Could not delete your account.",
+        tone: "error",
+      });
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  }
+
+  const countRows = [
+    ["Media items", summary?.counts.mediaItems ?? 0],
+    ["Candidates", summary?.counts.candidates ?? 0],
+    ["Queue items", summary?.counts.queueItems ?? 0],
+    ["Aftertaste notes", summary?.counts.aftertasteEntries ?? 0],
+    ["Taste scores", summary?.counts.mediaScores ?? 0],
+    ["Graph nodes", summary?.counts.graphNodes ?? 0],
+    ["Exports/imports", (summary?.counts.exportJobs ?? 0) + (summary?.counts.importBatches ?? 0)],
+    ["Jobs and analyses", (summary?.counts.backgroundJobs ?? 0) + (summary?.counts.narrativeAnalyses ?? 0)],
+  ] as const;
+
+  return (
+    <SectionCard title="Privacy and security">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h2 className="flex items-center gap-2 text-xl font-semibold">
+            <ShieldCheck aria-hidden="true" className="h-5 w-5 text-primary" />
+            Privacy and security
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            CanonOS stores private media history, ratings, taste scores, queue decisions, aftertaste notes, imports, exports, and analysis history under your account only.
+          </p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            External metadata snapshots store provider IDs, public descriptions, artwork URLs, and ratings for media you attach. They do not send your private notes, ratings, or taste profile to metadata providers.
+          </p>
+        </div>
+        <Button className="gap-2" disabled={isExporting} type="button" variant="secondary" onClick={() => void createPrivacyExport()}>
+          <Download aria-hidden="true" className="h-4 w-4" />
+          {isExporting ? "Preparing export..." : "Export My Data"}
+        </Button>
+      </div>
+
+      {error ? <ErrorState title="Privacy summary unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
+      {isLoading ? <LoadingState title="Loading privacy summary" message="Counting private records before export or deletion." /> : null}
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {countRows.map(([label, count]) => (
+          <dl className="rounded-xl border border-border bg-background p-3" key={label}>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</dt>
+            <dd className="mt-1 text-2xl font-semibold">{count}</dd>
+          </dl>
+        ))}
+      </div>
+
+      <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-4 text-sm leading-6 text-muted-foreground">
+        <p className="font-medium text-foreground">Before destructive changes</p>
+        <p>
+          Export first if you may want a backup. Delete All CanonOS Data removes product records but keeps your login and settings. Delete Account removes the login account and clears the session.
+        </p>
+        {latestPrivacyExport ? (
+          <p className="mt-2 text-foreground">
+            Latest privacy export: {latestPrivacyExport.filename} ({latestPrivacyExport.recordCount} records).
+          </p>
+        ) : null}
+      </div>
+
+      <div className="mt-5 grid gap-4 md:grid-cols-2">
+        <article className="rounded-2xl border border-avoid/30 bg-avoid/5 p-4">
+          <h3 className="font-semibold">Delete All CanonOS Data</h3>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Removes media, candidates, queue, aftertaste, scores, graph, analytics inputs, imports, exports, jobs, and analyses. Your account remains signed in.
+          </p>
+          <DestructiveActionButton
+            className="mt-4"
+            disabled={isDeletingData}
+            onClick={() => setDialog("data")}
+          >
+            Delete All CanonOS Data
+          </DestructiveActionButton>
+        </article>
+
+        <article className="rounded-2xl border border-avoid/30 bg-avoid/5 p-4">
+          <h3 className="font-semibold">Delete Account</h3>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Permanently removes your user account and all account-owned CanonOS records. You will be redirected to registration after deletion.
+          </p>
+          <DestructiveActionButton
+            className="mt-4"
+            disabled={isDeletingAccount}
+            onClick={() => setDialog("account")}
+          >
+            Delete Account
+          </DestructiveActionButton>
+        </article>
+      </div>
+
+      <StrongConfirmationDialog
+        confirmLabel={isDeletingData ? "Deleting data..." : "Delete All CanonOS Data"}
+        isBusy={isDeletingData}
+        message="This removes your CanonOS product data and cannot be undone from inside the app. Your account, profile, and settings remain so you can keep using CanonOS."
+        open={dialog === "data"}
+        phrase={DATA_DELETION_PHRASE}
+        title="Delete all CanonOS data?"
+        onCancel={() => setDialog(null)}
+        onConfirm={() => void confirmDataDeletion()}
+      />
+      <StrongConfirmationDialog
+        confirmLabel={isDeletingAccount ? "Deleting account..." : "Delete Account"}
+        isBusy={isDeletingAccount}
+        message="This removes your login account and clears this session. Export your data first if you need a backup."
+        open={dialog === "account"}
+        phrase={ACCOUNT_DELETION_PHRASE}
+        title="Delete your account?"
+        onCancel={() => setDialog(null)}
+        onConfirm={() => void confirmAccountDeletion()}
+      />
+    </SectionCard>
+  );
+}
+
+function StrongConfirmationDialog({
+  confirmLabel,
+  isBusy,
+  message,
+  onCancel,
+  onConfirm,
+  open,
+  phrase,
+  title,
+}: {
+  confirmLabel: string;
+  isBusy: boolean;
+  message: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+  open: boolean;
+  phrase: string;
+  title: string;
+}) {
+  const [typedPhrase, setTypedPhrase] = useState("");
+
+  useEffect(() => {
+    if (open) setTypedPhrase("");
+  }, [open]);
+
+  if (!open) return null;
+
+  const titleId = `${phrase.toLowerCase().replace(/\s+/g, "-")}-dialog-title`;
+  const confirmed = typedPhrase === phrase;
+
+  return (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-4">
+      <div
+        aria-labelledby={titleId}
+        aria-modal="true"
+        className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl"
+        role="dialog"
+      >
+        <h3 className="text-lg font-semibold" id={titleId}>{title}</h3>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
+        <label className="mt-5 grid gap-2 text-sm font-medium">
+          Type {phrase} to confirm
+          <input
+            autoFocus
+            className={fieldClassName}
+            value={typedPhrase}
+            onChange={(event) => setTypedPhrase(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.preventDefault();
+            }}
+          />
+        </label>
+        <div className="mt-6 flex flex-wrap justify-end gap-3">
+          <Button disabled={isBusy} type="button" variant="ghost" onClick={onCancel}>
+            Cancel
+          </Button>
+          <DestructiveActionButton disabled={!confirmed || isBusy} onClick={onConfirm}>
+            {confirmLabel}
+          </DestructiveActionButton>
+        </div>
+      </div>
+    </div>
   );
 }
 

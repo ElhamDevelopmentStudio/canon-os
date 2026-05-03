@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
+
 from .models import DiscoveryTrail
 from .serializers import (
     DiscoveryGenerateResponseSerializer,
@@ -17,6 +19,7 @@ from .services import build_search, generate_discovery_trail
 
 class DiscoveryGenerateView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=DiscoverySearchRequestSerializer,

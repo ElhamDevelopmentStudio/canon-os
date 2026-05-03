@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from canonos.candidates.models import Candidate
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
 from .models import AntiGenericRule
@@ -47,6 +48,7 @@ class AntiGenericRuleViewSet(viewsets.ModelViewSet):
 
 class AntiGenericEvaluateView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=AntiGenericEvaluateRequestSerializer,

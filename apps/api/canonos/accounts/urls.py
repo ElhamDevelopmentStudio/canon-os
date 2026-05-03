@@ -7,8 +7,11 @@ from .views import (
     CurrentUserProfileView,
     CurrentUserSettingsView,
     CurrentUserView,
+    DeleteAccountView,
+    DeletePersonalDataView,
     LoginView,
     LogoutView,
+    PersonalDataSummaryView,
     RegisterView,
 )
 
@@ -20,4 +23,7 @@ urlpatterns = [
     path("me/", CurrentUserView.as_view(), name="auth-me"),
     path("profile/", CurrentUserProfileView.as_view(), name="auth-profile"),
     path("settings/", CurrentUserSettingsView.as_view(), name="auth-settings"),
+    path("data/", PersonalDataSummaryView.as_view(), name="auth-data-summary"),
+    path("data/delete/", DeletePersonalDataView.as_view(), name="auth-data-delete"),
+    path("account/", DeleteAccountView.as_view(), name="auth-account-delete"),
 ]

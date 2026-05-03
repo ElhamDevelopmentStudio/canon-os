@@ -295,10 +295,18 @@ def test_candidate_privacy_for_list_detail_evaluation_and_update() -> None:
         {"status": "skip"},
         format="json",
     )
+    delete_response = client.delete(reverse("candidate-detail", args=[candidate.id]))
+    add_response = client.post(
+        reverse("candidate-add-to-library", args=[candidate.id]),
+        {"status": "planned"},
+        format="json",
+    )
 
     assert detail_response.status_code == status.HTTP_404_NOT_FOUND
     assert evaluate_response.status_code == status.HTTP_404_NOT_FOUND
     assert update_response.status_code == status.HTTP_404_NOT_FOUND
+    assert delete_response.status_code == status.HTTP_404_NOT_FOUND
+    assert add_response.status_code == status.HTTP_404_NOT_FOUND
     candidate.refresh_from_db()
     assert candidate.status == Candidate.Status.UNEVALUATED
 

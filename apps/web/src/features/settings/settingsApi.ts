@@ -1,4 +1,10 @@
-import type { UserSettings, UserSettingsUpdateRequest } from "@canonos/contracts";
+import type {
+  AccountDeletionResult,
+  DataDeletionResult,
+  PersonalDataSummary,
+  UserSettings,
+  UserSettingsUpdateRequest,
+} from "@canonos/contracts";
 import useSWR from "swr";
 
 import { getCsrfToken } from "@/features/auth/authApi";
@@ -51,4 +57,21 @@ export async function updateUserSettings(request: UserSettingsUpdateRequest): Pr
   await getCsrfToken();
   const response = await api.patch<UserSettings>(API_ROUTES.authSettings, request);
   return normalizeSettings(response.data);
+}
+
+export async function getPersonalDataSummary(): Promise<PersonalDataSummary> {
+  const response = await api.get<PersonalDataSummary>(API_ROUTES.authDataSummary);
+  return response.data;
+}
+
+export async function deleteAllCanonOSData(): Promise<DataDeletionResult> {
+  await getCsrfToken();
+  const response = await api.delete<DataDeletionResult>(API_ROUTES.authDataDelete);
+  return response.data;
+}
+
+export async function deleteAccount(): Promise<AccountDeletionResult> {
+  await getCsrfToken();
+  const response = await api.delete<AccountDeletionResult>(API_ROUTES.authAccountDelete);
+  return response.data;
 }

@@ -2687,53 +2687,53 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M18-BE-001 Audit every queryset for owner/user filtering.
-- [ ] CP-M18-BE-002 Add tests for cross-user access on media endpoints.
-- [ ] CP-M18-BE-003 Add tests for cross-user access on candidate endpoints.
-- [ ] CP-M18-BE-004 Add tests for cross-user access on queue endpoints.
-- [ ] CP-M18-BE-005 Add tests for cross-user access on aftertaste endpoints.
-- [ ] CP-M18-BE-006 Add tests for cross-user access on graph endpoints.
-- [ ] CP-M18-BE-007 Add rate limiting for auth endpoints.
-- [ ] CP-M18-BE-008 Add rate limiting for expensive generation endpoints.
-- [ ] CP-M18-BE-009 Add secure cookie/session settings for production.
-- [ ] CP-M18-BE-010 Add CSRF configuration if session auth is used.
-- [ ] CP-M18-BE-011 Add sensitive settings validation.
-- [ ] CP-M18-BE-012 Add data deletion endpoint.
-- [ ] CP-M18-BE-013 Add account deletion endpoint.
-- [ ] CP-M18-BE-014 Add privacy export endpoint if not covered by export module.
-- [ ] CP-M18-BE-015 Add audit log model for sensitive operations.
-- [ ] CP-M18-BE-016 Log account deletion request.
-- [ ] CP-M18-BE-017 Log data export request.
-- [ ] CP-M18-BE-018 Add test for account deletion.
-- [ ] CP-M18-BE-019 Add test for data deletion.
+- [x] CP-M18-BE-001 Audit every queryset for owner/user filtering.
+- [x] CP-M18-BE-002 Add tests for cross-user access on media endpoints.
+- [x] CP-M18-BE-003 Add tests for cross-user access on candidate endpoints.
+- [x] CP-M18-BE-004 Add tests for cross-user access on queue endpoints.
+- [x] CP-M18-BE-005 Add tests for cross-user access on aftertaste endpoints.
+- [x] CP-M18-BE-006 Add tests for cross-user access on graph endpoints.
+- [x] CP-M18-BE-007 Add rate limiting for auth endpoints.
+- [x] CP-M18-BE-008 Add rate limiting for expensive generation endpoints.
+- [x] CP-M18-BE-009 Add secure cookie/session settings for production.
+- [x] CP-M18-BE-010 Add CSRF configuration if session auth is used.
+- [x] CP-M18-BE-011 Add sensitive settings validation.
+- [x] CP-M18-BE-012 Add data deletion endpoint.
+- [x] CP-M18-BE-013 Add account deletion endpoint.
+- [x] CP-M18-BE-014 Add privacy export endpoint if not covered by export module.
+- [x] CP-M18-BE-015 Add audit log model for sensitive operations.
+- [x] CP-M18-BE-016 Log account deletion request.
+- [x] CP-M18-BE-017 Log data export request.
+- [x] CP-M18-BE-018 Add test for account deletion.
+- [x] CP-M18-BE-019 Add test for data deletion.
 
 ### Frontend Tasks
 
-- [ ] CP-M18-FE-001 Add Privacy section to Settings page.
-- [ ] CP-M18-FE-002 Add Export My Data button.
-- [ ] CP-M18-FE-003 Add Delete All CanonOS Data button.
-- [ ] CP-M18-FE-004 Add Delete Account button.
-- [ ] CP-M18-FE-005 Add strong confirmation dialog for data deletion.
-- [ ] CP-M18-FE-006 Add strong confirmation dialog for account deletion.
-- [ ] CP-M18-FE-007 Add visible explanation of private data stored.
-- [ ] CP-M18-FE-008 Add visible explanation of external metadata usage.
-- [ ] CP-M18-FE-009 Add privacy success/error toasts.
+- [x] CP-M18-FE-001 Add Privacy section to Settings page.
+- [x] CP-M18-FE-002 Add Export My Data button.
+- [x] CP-M18-FE-003 Add Delete All CanonOS Data button.
+- [x] CP-M18-FE-004 Add Delete Account button.
+- [x] CP-M18-FE-005 Add strong confirmation dialog for data deletion.
+- [x] CP-M18-FE-006 Add strong confirmation dialog for account deletion.
+- [x] CP-M18-FE-007 Add visible explanation of private data stored.
+- [x] CP-M18-FE-008 Add visible explanation of external metadata usage.
+- [x] CP-M18-FE-009 Add privacy success/error toasts.
 
 ### Integration Tasks
 
-- [ ] CP-M18-INT-001 Connect Export My Data to export endpoint.
-- [ ] CP-M18-INT-002 Connect Delete All Data button to data deletion endpoint.
-- [ ] CP-M18-INT-003 Connect Delete Account button to account deletion endpoint.
-- [ ] CP-M18-INT-004 Redirect to registration/login after account deletion.
+- [x] CP-M18-INT-001 Connect Export My Data to export endpoint.
+- [x] CP-M18-INT-002 Connect Delete All Data button to data deletion endpoint.
+- [x] CP-M18-INT-003 Connect Delete Account button to account deletion endpoint.
+- [x] CP-M18-INT-004 Redirect to registration/login after account deletion.
 
 ### QA Tasks
 
-- [ ] CP-M18-QA-001 Confirm users cannot access each other's media.
-- [ ] CP-M18-QA-002 Confirm users cannot access each other's candidates.
-- [ ] CP-M18-QA-003 Confirm users cannot access each other's graph data.
-- [ ] CP-M18-QA-004 Confirm export works before deletion.
-- [ ] CP-M18-QA-005 Confirm data deletion removes personal records.
-- [ ] CP-M18-QA-006 Confirm account deletion removes or anonymizes account.
+- [x] CP-M18-QA-001 Confirm users cannot access each other's media.
+- [x] CP-M18-QA-002 Confirm users cannot access each other's candidates.
+- [x] CP-M18-QA-003 Confirm users cannot access each other's graph data.
+- [x] CP-M18-QA-004 Confirm export works before deletion.
+- [x] CP-M18-QA-005 Confirm data deletion removes personal records.
+- [x] CP-M18-QA-006 Confirm account deletion removes or anonymizes account.
 
 ---
 
@@ -3006,7 +3006,7 @@ The MVP is done only when:
 - [x] A user can export media library and ratings as CSV.
 - [ ] API docs are available through Swagger/OpenAPI and Scalar.
 - [ ] The frontend uses the shared layout consistently.
-- [ ] The backend prevents cross-user data leakage.
+- [x] The backend prevents cross-user data leakage.
 - [ ] Manual test docs exist for all MVP user-facing features.
 - [ ] Lint, typecheck, tests, build, and E2E all pass.
 - [ ] The README explains how to run the MVP.
@@ -3030,7 +3030,7 @@ The complete product is done only when:
 - [x] Command palette and advanced search work.
 - [x] Background jobs have visible status.
 - [x] Analytics/Insights page works.
-- [ ] Security and privacy tasks are complete.
+- [x] Security and privacy tasks are complete.
 - [ ] Performance tasks are complete.
 - [ ] Accessibility and responsive UI tasks are complete.
 - [ ] Deployment instructions and infrastructure files exist.
@@ -3045,16 +3045,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M17-QA-004.
-**Last completed task name:** Verify settings change recommendation behavior.
-**Last completed milestone:** CP-M17 — Advanced Settings And Personalization.
+**Last completed task ID:** CP-M18-QA-006.
+**Last completed task name:** Confirm account deletion removes or anonymizes account.
+**Last completed milestone:** CP-M18 — Security, Privacy, And Data Protection.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M18 — Security, Privacy, And Data Protection.
-**Next recommended task:** CP-M18-BE-001 Audit every queryset for owner/user filtering.
+**Current milestone:** CP-M19 — Performance And Scalability.
+**Next recommended task:** CP-M19-BE-001 Add pagination checks to all list endpoints.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M17 Advanced Settings And Personalization is complete. User settings now persist recommendation formula weights, default Tonight Mode context, recommendation strictness, modern exception handling, burnout sensitivity, Completion Detox strictness, and notification preferences. Candidate Evaluator, Tonight Mode, queue scoring, and Completion Detox read those saved preferences, while the Settings page exposes accessible controls, reset-to-default behavior, explanatory copy, persistence after refresh, and browser e2e coverage for the cross-page effects. Documentation and manual tests now describe the advanced settings contract.
+CP-M18 Security, Privacy, And Data Protection is complete. Owner-scoped queryset coverage was audited and strengthened with cross-user tests for media, candidates, queue, aftertaste, and graph data. The API now includes auth and expensive-operation throttles, deployment security checks, explicit production cookie/CSRF security settings, audit events for sensitive operations, JSON privacy export audit logging, personal data summary/deletion endpoints, and account deletion. Settings now has a Privacy and security section with export, typed confirmations for data/account deletion, explanatory privacy copy, toasts, and browser e2e coverage.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3072,4 +3072,5 @@ CP-M17 Advanced Settings And Personalization is complete. User settings now pers
 - CP-M15 completed: jobs API, polling hooks, Jobs page, header notifications, and background job records for metadata, graph, narrative, import, and export are in place.
 - CP-M16 completed: analytics endpoints, shared contracts, responsive Insights page, Dashboard/sidebar links, and browser e2e coverage are in place.
 - CP-M17 completed: advanced personalization settings, frontend controls, recommendation behavior integration, browser e2e, and docs are in place.
-- CP-M18 is next: security, privacy, and data protection audit starting with owner/user queryset filtering.
+- CP-M18 completed: owner-scoped privacy protections, rate limiting, audit logging, data/account deletion, Settings privacy UI, browser e2e, and docs are in place.
+- CP-M19 is next: performance and scalability, starting with pagination checks and large-list safeguards.

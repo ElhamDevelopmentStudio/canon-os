@@ -16,6 +16,7 @@ type AuthState = {
   logout: () => Promise<void>;
   register: (request: RegisterRequest) => Promise<void>;
   clearAuthError: () => void;
+  clearSession: () => void;
 };
 
 function messageForError(error: unknown): string {
@@ -77,4 +78,5 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   clearAuthError: () => set({ error: null }),
+  clearSession: () => set({ currentUser: null, csrfToken: null, status: "unauthenticated", error: null }),
 }));

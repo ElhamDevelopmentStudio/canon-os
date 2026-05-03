@@ -121,6 +121,12 @@ def test_aftertaste_media_ownership_protection() -> None:
 
     list_response = client.get(reverse("aftertasteentry-list"))
     detail_response = client.get(reverse("aftertasteentry-detail", args=[private_entry.id]))
+    update_response = client.patch(
+        reverse("aftertasteentry-detail", args=[private_entry.id]),
+        {"finalThoughts": "Leaked"},
+        format="json",
+    )
+    delete_response = client.delete(reverse("aftertasteentry-detail", args=[private_entry.id]))
     create_response = client.post(
         reverse("aftertasteentry-list"),
         aftertaste_payload(private_media),
@@ -130,8 +136,12 @@ def test_aftertaste_media_ownership_protection() -> None:
     assert list_response.status_code == status.HTTP_200_OK
     assert list_response.json()["results"] == []
     assert detail_response.status_code == status.HTTP_404_NOT_FOUND
+    assert update_response.status_code == status.HTTP_404_NOT_FOUND
+    assert delete_response.status_code == status.HTTP_404_NOT_FOUND
     assert create_response.status_code == status.HTTP_400_BAD_REQUEST
     assert create_response.json()["error"]["details"]["mediaItemId"] == ["Media item not found."]
+    private_entry.refresh_from_db()
+    assert private_entry.final_thoughts == ""
 
 
 def test_media_detail_includes_latest_aftertaste_entry() -> None:

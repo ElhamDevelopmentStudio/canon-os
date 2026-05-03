@@ -150,3 +150,37 @@ class UserSettings(models.Model):
 
     def __str__(self) -> str:
         return f"Settings for {self.user.get_username()}"
+
+
+class AuditEvent(models.Model):
+    class EventType(models.TextChoices):
+        LOGIN = "login", "Login"
+        LOGOUT = "logout", "Logout"
+        DATA_EXPORT_REQUESTED = "data_export_requested", "Data export requested"
+        DATA_DELETION_REQUESTED = "data_deletion_requested", "Data deletion requested"
+        ACCOUNT_DELETION_REQUESTED = "account_deletion_requested", "Account deletion requested"
+        SETTINGS_UPDATED = "settings_updated", "Settings updated"
+
+    actor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_events",
+    )
+    actor_hash = models.CharField(max_length=64, blank=True)
+    event_type = models.CharField(max_length=48, choices=EventType.choices)
+    request_id = models.CharField(max_length=64, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["actor", "-created_at"], name="audit_actor_created_idx"),
+            models.Index(fields=["event_type", "-created_at"], name="audit_event_type_created_idx"),
+            models.Index(fields=["request_id"], name="audit_request_id_idx"),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.event_type} at {self.created_at:%Y-%m-%d %H:%M:%S}"

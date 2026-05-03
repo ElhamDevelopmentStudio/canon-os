@@ -3,10 +3,11 @@ from __future__ import annotations
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 from canonos.metadata.models import ExternalMetadata
 from canonos.metadata.serializers import (
@@ -41,6 +42,7 @@ from canonos.metadata.services import (
 )
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
+@throttle_classes([ExpensiveEndpointThrottle])
 def metadata_matches(request):  # noqa: ANN001, ANN201
     query_serializer = MetadataSearchQuerySerializer(data=request.query_params)
     query_serializer.is_valid(raise_exception=True)
@@ -80,6 +82,7 @@ def attach_media_metadata(request, media_item_id):  # noqa: ANN001, ANN201
 )
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
+@throttle_classes([ExpensiveEndpointThrottle])
 def refresh_media_metadata(request, media_item_id):  # noqa: ANN001, ANN201
     media_item = get_object_or_404(MediaItem, id=media_item_id, owner=request.user)
     metadata = media_item.external_metadata.order_by("-last_refreshed_at").first()

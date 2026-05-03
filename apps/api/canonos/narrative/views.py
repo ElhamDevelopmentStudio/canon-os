@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
 from .models import NarrativeAnalysis
@@ -55,6 +56,11 @@ class NarrativeAnalysisViewSet(viewsets.ModelViewSet):
 
 class MediaNarrativeAnalysisView(APIView):
     permission_classes = [IsAuthenticated]
+
+    def get_throttles(self):  # noqa: ANN201
+        if self.request.method == "POST":
+            return [ExpensiveEndpointThrottle()]
+        return super().get_throttles()
 
     @extend_schema(
         responses={200: NarrativeAnalysisSerializer, 404: dict},

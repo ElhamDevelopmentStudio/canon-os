@@ -67,10 +67,21 @@ Auth endpoints:
 - `GET /api/auth/me/` returns the current auth session for app bootstrap. Anonymous users receive `authenticated: false` instead of an error; authenticated users receive their user and profile.
 - `GET /api/auth/profile/` returns the current profile.
 - `PATCH /api/auth/profile/` updates `displayName`, `timezone`, and/or `preferredLanguage`.
+- `GET /api/auth/data/` returns owner-scoped personal data counts for the Privacy and security Settings panel.
+- `DELETE /api/auth/data/delete/` deletes CanonOS product data for the current user while keeping the account, profile, settings, and a fresh default taste-dimension seed.
+- `DELETE /api/auth/account/` deletes the current user's account after clearing the session.
+
+Auth register/login endpoints are rate limited by `CANONOS_AUTH_RATE` (default `20/min`). Expensive deterministic/generative operations use `CANONOS_EXPENSIVE_RATE` (default `30/min`) so repeated evaluation, recommendation, graph, metadata, discovery, narrative, council, evolution, anti-generic, and detox requests cannot overwhelm the service.
+
+Privacy-sensitive operations are recorded as `AuditEvent` rows for operational accountability: login, logout, settings update, privacy export request, personal data deletion, and account deletion. Account deletion nulls the user reference but keeps a hashed actor fingerprint so the audit marker remains without preserving the account row.
+
+Production deployment checks require a non-default secret key, `ALLOWED_HOSTS`, secure session/CSRF cookies, and no wildcard credentialed CORS. Production settings also enable `Secure`, `HttpOnly`, `SameSite=Lax` session cookies, secure CSRF cookies, HSTS, content type nosniffing, `X-Frame-Options: DENY`, and `Referrer-Policy: same-origin`.
 
 Request/response contracts live in `packages/contracts/src/auth.ts`. Frontend auth calls live in `apps/web/src/features/auth/authApi.ts`, and session state lives in `apps/web/src/stores/authStore.ts`.
 
 The MVP uses Django's built-in user model with email as username. This keeps the early app simple while the schema still uses profile/user-owned records so future multi-user support can evolve without rewriting feature data models.
+
+Privacy request/response contracts live in `packages/contracts/src/privacy.ts`. Settings privacy calls live in `apps/web/src/features/settings/settingsApi.ts`.
 
 ## Media Library API Contract
 

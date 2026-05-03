@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from django.contrib import admin
 
-from .models import UserProfile, UserSettings
+from .models import AuditEvent, UserProfile, UserSettings
 
 
 @admin.register(UserProfile)
@@ -24,3 +24,11 @@ class UserSettingsAdmin(admin.ModelAdmin):
     )
     search_fields = ("user__username", "user__email")
     list_filter = ("default_risk_tolerance", "theme_preference")
+
+
+@admin.register(AuditEvent)
+class AuditEventAdmin(admin.ModelAdmin):
+    list_display = ("event_type", "actor", "request_id", "created_at")
+    search_fields = ("actor__username", "actor__email", "actor_hash", "request_id")
+    list_filter = ("event_type",)
+    readonly_fields = ("actor_hash", "event_type", "request_id", "metadata", "created_at")

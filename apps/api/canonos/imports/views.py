@@ -8,6 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.accounts.audit import log_audit_event
+from canonos.accounts.models import AuditEvent
+
 from .models import ExportJob, ImportBatch
 from .serializers import (
     ExportRequestSerializer,
@@ -138,6 +141,12 @@ class ExportListCreateView(APIView):
         serializer = ExportRequestSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
+            log_audit_event(
+                event_type=AuditEvent.EventType.DATA_EXPORT_REQUESTED,
+                user=request.user,
+                request=request,
+                metadata={"format": serializer.validated_data["format"]},
+            )
             job = create_export_job(
                 user=request.user, export_format=serializer.validated_data["format"]
             )

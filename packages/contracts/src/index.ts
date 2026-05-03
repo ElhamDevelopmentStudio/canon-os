@@ -198,6 +198,7 @@ export {
   TONIGHT_RECOMMENDATION_SOURCES,
 } from "./tonight";
 export * from "./portability";
+export * from "./privacy";
 export type {
   ExternalMediaMatch,
   ExternalMetadataSnapshot,

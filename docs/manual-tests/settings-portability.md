@@ -3,7 +3,7 @@
 ## Happy path: save advanced settings
 
 1. Log in and open **Settings**.
-   - Expected: The Settings page shows Profile settings, Display settings, Advanced Recommendation Settings, and Import and export.
+   - Expected: The Settings page shows Profile settings, Display settings, Advanced Recommendation Settings, Import and export, and Privacy and security.
 2. Change **Display name** to a new value.
    - Expected: The Save Settings button becomes enabled.
 3. Change **Theme preference** to Dark.

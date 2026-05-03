@@ -39,6 +39,22 @@ class AuthSessionSerializer(serializers.Serializer):
     csrfToken = serializers.CharField(required=False)
 
 
+class PersonalDataSummarySerializer(serializers.Serializer):
+    counts = serializers.DictField(child=serializers.IntegerField())
+    totalRecords = serializers.IntegerField()
+
+
+class DataDeletionResponseSerializer(serializers.Serializer):
+    deletedCounts = serializers.DictField(child=serializers.IntegerField())
+    totalDeleted = serializers.IntegerField()
+    message = serializers.CharField()
+
+
+class AccountDeletionResponseSerializer(serializers.Serializer):
+    deleted = serializers.BooleanField()
+    message = serializers.CharField()
+
+
 class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(min_length=8, write_only=True)

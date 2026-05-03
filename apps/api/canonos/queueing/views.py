@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from canonos.accounts.models import UserSettings
+from canonos.common.throttles import ExpensiveEndpointThrottle
 
 from .models import QueueItem, TonightModeSession
 from .serializers import (
@@ -139,7 +140,7 @@ class QueueItemViewSet(viewsets.ModelViewSet):
             "complexity, commitment, freshness decay, and low-priority archive behavior."
         ),
     )
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post"], throttle_classes=[ExpensiveEndpointThrottle])
     def recalculate(self, request):  # noqa: ANN001, ANN201
         from .services import recalculate_queue_for_user
 
@@ -170,6 +171,7 @@ class QueueItemViewSet(viewsets.ModelViewSet):
 
 class TonightModeView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=TonightModeRequestSerializer,

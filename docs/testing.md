@@ -32,6 +32,7 @@ User-facing features must also update the matching manual test document under `d
 | Queue and Tonight Mode | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/queue-tonight.md` |
 | Aftertaste Log | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/aftertaste-log.md` |
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
+| Security/privacy | Backend owner-scope, throttle, audit, deletion, and deploy-check tests; Playwright browser e2e. | `docs/manual-tests/security-privacy.md` |
 | Global search and advanced filters | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/search-and-filters.md` |
 | API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
 
@@ -103,6 +104,7 @@ Tests must:
 - Personal Canon: create a themed season, add custom/media/candidate items, reorder items, mark completion, set canon status, save reflection notes, and assert season/item network payloads.
 - Adaptation Intelligence: create a source/adaptation relation from Media Detail, assert relation create/delete and path recommendation network payloads, and confirm the relation appears on both linked detail pages.
 - Settings: update profile/display/advanced recommendation preferences, reset recommended defaults, persist after refresh, apply theme, feed Tonight Mode saved context defaults, and surface Candidate Evaluator strictness/modern-exception settings.
+- Security/privacy: load personal data summary through Settings, request a JSON privacy export, delete all CanonOS product data with a typed browser confirmation, verify Library data is removed, delete the account with a second typed confirmation, and confirm redirect/session cleanup.
 - Import/export: CSV preview/confirm, duplicate warning review, invalid-row no-write behavior, invalid file-type rejection, import rollback, import/export progress display, JSON export download, media/ratings CSV export download, and restore dry-run validation through Settings.
 - Global search and advanced filters: command palette shortcut, media and candidate result navigation from real search responses, URL-persisted Library filters, active chips, and clear-filter behavior.
 - Background Jobs: metadata refresh, Narrative DNA analysis, TasteGraph rebuild, and export jobs appear through `/api/jobs/`, the Jobs page, and header notifications.

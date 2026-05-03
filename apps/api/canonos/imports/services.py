@@ -1212,6 +1212,28 @@ def build_full_json_export(user: User) -> dict[str, Any]:
                 "preferredScoringStrictness": settings.preferred_scoring_strictness
                 if settings
                 else 5,
+                "recommendationFormulaWeights": settings.recommendation_formula_weights
+                if settings
+                else {},
+                "defaultTonightMode": {
+                    "availableMinutes": settings.default_tonight_available_minutes
+                    if settings
+                    else 90,
+                    "energyLevel": settings.default_tonight_energy_level if settings else "medium",
+                    "focusLevel": settings.default_tonight_focus_level if settings else "medium",
+                    "desiredEffect": settings.default_tonight_desired_effect
+                    if settings
+                    else "quality",
+                },
+                "preferredRecommendationStrictness": settings.preferred_recommendation_strictness
+                if settings
+                else 5,
+                "allowModernExceptions": settings.allow_modern_exceptions if settings else True,
+                "burnoutSensitivity": settings.burnout_sensitivity if settings else 5,
+                "completionDetoxStrictness": settings.completion_detox_strictness
+                if settings
+                else 5,
+                "notificationPreferences": settings.notification_preferences if settings else {},
                 "themePreference": settings.theme_preference if settings else "system",
             },
             "tasteDimensions": [
@@ -1447,6 +1469,37 @@ def apply_profile_and_settings_from_export(user: User, document: dict[str, Any])
         )
         settings.preferred_scoring_strictness = settings_data.get(
             "preferredScoringStrictness", settings.preferred_scoring_strictness
+        )
+        settings.recommendation_formula_weights = settings_data.get(
+            "recommendationFormulaWeights", settings.recommendation_formula_weights
+        )
+        tonight_mode_settings = settings_data.get("defaultTonightMode", {})
+        settings.default_tonight_available_minutes = tonight_mode_settings.get(
+            "availableMinutes", settings.default_tonight_available_minutes
+        )
+        settings.default_tonight_energy_level = tonight_mode_settings.get(
+            "energyLevel", settings.default_tonight_energy_level
+        )
+        settings.default_tonight_focus_level = tonight_mode_settings.get(
+            "focusLevel", settings.default_tonight_focus_level
+        )
+        settings.default_tonight_desired_effect = tonight_mode_settings.get(
+            "desiredEffect", settings.default_tonight_desired_effect
+        )
+        settings.preferred_recommendation_strictness = settings_data.get(
+            "preferredRecommendationStrictness", settings.preferred_recommendation_strictness
+        )
+        settings.allow_modern_exceptions = settings_data.get(
+            "allowModernExceptions", settings.allow_modern_exceptions
+        )
+        settings.burnout_sensitivity = settings_data.get(
+            "burnoutSensitivity", settings.burnout_sensitivity
+        )
+        settings.completion_detox_strictness = settings_data.get(
+            "completionDetoxStrictness", settings.completion_detox_strictness
+        )
+        settings.notification_preferences = settings_data.get(
+            "notificationPreferences", settings.notification_preferences
         )
         settings.theme_preference = settings_data.get("themePreference", settings.theme_preference)
         settings.save()

@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from canonos.candidates.models import Candidate
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
 from .models import CouncilSession, CriticPersona
@@ -89,6 +90,11 @@ class CouncilSessionViewSet(viewsets.ModelViewSet):
     serializer_class = CouncilSessionSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post", "head", "options"]
+
+    def get_throttles(self):  # noqa: ANN201
+        if self.action == "create":
+            return [ExpensiveEndpointThrottle()]
+        return super().get_throttles()
 
     def get_queryset(self):  # noqa: ANN201
         queryset = CouncilSession.objects.filter(owner=self.request.user).select_related(

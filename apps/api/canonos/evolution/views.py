@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
+
 from .models import TasteEvolutionSnapshot
 from .serializers import (
     TasteEvolutionGenerateSerializer,
@@ -38,6 +40,7 @@ class TasteEvolutionTimelineView(APIView):
 
 class TasteEvolutionGenerateView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=TasteEvolutionGenerateSerializer,

@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
+
 from .models import GraphEdge, GraphNode
 from .serializers import (
     GraphEdgeSerializer,
@@ -64,6 +66,7 @@ class GraphEdgeListView(APIView):
 
 class TasteGraphRebuildView(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ExpensiveEndpointThrottle]
 
     @extend_schema(
         request=None,

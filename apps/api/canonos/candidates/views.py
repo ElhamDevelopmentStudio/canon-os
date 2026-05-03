@@ -8,6 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
 from .models import Candidate
@@ -86,7 +87,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
         summary="Evaluate a saved candidate",
         description="Run deterministic fit/risk scoring for a saved candidate.",
     )
-    @action(detail=True, methods=["post"])
+    @action(detail=True, methods=["post"], throttle_classes=[ExpensiveEndpointThrottle])
     def evaluate(self, request, pk=None):  # noqa: ANN001, ANN201
         candidate = self.get_object()
         evaluation = evaluate_candidate(request.user, candidate)

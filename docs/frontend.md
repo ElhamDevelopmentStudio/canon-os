@@ -197,7 +197,14 @@ Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi
 
 ### Settings And Portability UI
 
-Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. Anti-Generic rule API calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`. The Settings page owns profile preferences, theme preferences, Advanced Recommendation Settings, Anti-Generic rule toggles/weights/reset, import preview/confirm, JSON export, and media/ratings CSV export. Advanced Recommendation Settings include default media and risk preferences, default Tonight Mode context, formula weights, recommendation strictness, modern exception behavior, burnout sensitivity, Completion Detox strictness, notification preferences, and a reset-to-recommended-defaults action. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
+Settings API calls live in `apps/web/src/features/settings/settingsApi.ts`. Anti-Generic rule API calls live in `apps/web/src/features/anti-generic-filter/antiGenericApi.ts`. The Settings page owns profile preferences, theme preferences, Advanced Recommendation Settings, Anti-Generic rule toggles/weights/reset, import preview/confirm, JSON export, media/ratings CSV export, and Privacy and security controls. Advanced Recommendation Settings include default media and risk preferences, default Tonight Mode context, formula weights, recommendation strictness, modern exception behavior, burnout sensitivity, Completion Detox strictness, notification preferences, and a reset-to-recommended-defaults action. Import/export flows must preserve user-owned data boundaries and expose invalid-row feedback before confirm.
+
+The Privacy and security panel loads `GET /api/auth/data/`, explains private CanonOS data and external metadata boundaries, lets users request a JSON privacy export, and exposes two destructive flows with strong typed confirmations:
+
+- **Delete All CanonOS Data** requires `DELETE MY DATA`, calls `DELETE /api/auth/data/delete/`, revalidates product caches, and keeps the signed-in account.
+- **Delete Account** requires `DELETE MY ACCOUNT`, calls `DELETE /api/auth/account/`, clears the browser session state, resets cached app data, and redirects to Register.
+
+Both destructive actions use success/error toasts and must stay accessible through labels, semantic buttons, focusable dialogs, and visible confirmation copy.
 
 ## Metadata enrichment UI
 

@@ -133,11 +133,14 @@ def test_users_cannot_see_or_modify_other_users_items() -> None:
     list_response = client.get(reverse("mediaitem-list"))
     detail_response = client.get(reverse("mediaitem-detail", args=[item.id]))
     patch_response = client.patch(reverse("mediaitem-detail", args=[item.id]), {"title": "Leaked"})
+    delete_response = client.delete(reverse("mediaitem-detail", args=[item.id]))
 
     assert list_response.status_code == status.HTTP_200_OK
     assert list_response.json()["count"] == 0
     assert detail_response.status_code == status.HTTP_404_NOT_FOUND
     assert patch_response.status_code == status.HTTP_404_NOT_FOUND
+    assert delete_response.status_code == status.HTTP_404_NOT_FOUND
+    assert MediaItem.objects.filter(id=item.id, title="Private item").exists()
 
 
 def test_media_endpoints_appear_in_openapi_schema() -> None:

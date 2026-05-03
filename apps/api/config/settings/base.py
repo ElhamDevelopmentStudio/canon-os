@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     "canonos.aftertaste",
     "canonos.candidates",
     "canonos.canon",
-    "canonos.common",
+    "canonos.common.apps.CommonConfig",
     "canonos.council",
     "canonos.dashboard",
     "canonos.detox",
@@ -161,6 +161,10 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 25,
+    "DEFAULT_THROTTLE_RATES": {
+        "auth": os.environ.get("CANONOS_AUTH_RATE", "20/min"),
+        "expensive": os.environ.get("CANONOS_EXPENSIVE_RATE", "30/min"),
+    },
     "COERCE_DECIMAL_TO_STRING": False,
     "EXCEPTION_HANDLER": "canonos.common.exceptions.canonos_exception_handler",
 }
@@ -225,7 +229,10 @@ CSRF_TRUSTED_ORIGINS = [
     if origin.strip()
 ]
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_NAME = "sessionid"
 SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 CSRF_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = False
 CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "false").lower() in {
@@ -234,6 +241,10 @@ CSRF_COOKIE_SECURE = os.environ.get("DJANGO_CSRF_COOKIE_SECURE", "false").lower(
     "yes",
     "on",
 }
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
+X_FRAME_OPTIONS = "DENY"
 SESSION_COOKIE_SECURE = os.environ.get("DJANGO_SESSION_COOKIE_SECURE", "false").lower() in {
     "1",
     "true",
