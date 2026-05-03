@@ -8,6 +8,10 @@ import { APP_ROUTES } from "@/app/routeConstants";
 import { protectedRouteChildren } from "@/app/router";
 import { useAuthStore } from "@/stores/authStore";
 
+vi.mock("@/features/jobs/jobsApi", () => ({
+  useBackgroundJobs: () => ({ data: [], error: undefined, isLoading: false, isValidating: false, mutate: vi.fn() }),
+}));
+
 vi.mock("@/features/dashboard/dashboardApi", () => ({
   useDashboardSummary: () => ({
     data: {
@@ -92,6 +96,7 @@ describe("App", () => {
       APP_ROUTES.tasteGraph,
       APP_ROUTES.aftertasteLog,
       APP_ROUTES.queue,
+      APP_ROUTES.jobs,
       APP_ROUTES.settings,
     ]);
     expect(new Set(navRoutes).size).toBe(navRoutes.length);

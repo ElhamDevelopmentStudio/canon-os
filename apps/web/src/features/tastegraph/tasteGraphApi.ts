@@ -1,5 +1,5 @@
 import type { GraphRebuildJob, TasteGraphSummary } from "@canonos/contracts";
-import useSWR from "swr";
+import useSWR, { mutate as globalMutate } from "swr";
 
 import { api } from "@/lib/api";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
@@ -46,5 +46,6 @@ export function useTasteGraphSummary() {
 
 export async function rebuildTasteGraph(): Promise<GraphRebuildJob> {
   const response = await api.post<GraphRebuildJob>(API_ROUTES.tasteGraphRebuild);
+  await globalMutate(API_ROUTES.backgroundJobs);
   return normalizeJob(response.data);
 }

@@ -23,6 +23,7 @@ import { CanonSeasonDetailPage } from "@/pages/CanonSeasonDetailPage";
 import { TasteGraphPage } from "@/pages/TasteGraphPage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { SettingsPage } from "@/pages/SettingsPage";
+import { JobsPage } from "@/pages/JobsPage";
 
 export const protectedRouteChildren: RouteObject[] = [
   { index: true, element: <DashboardPage /> },
@@ -40,6 +41,7 @@ export const protectedRouteChildren: RouteObject[] = [
   { path: APP_ROUTES.tasteGraph.slice(1), element: <TasteGraphPage /> },
   { path: APP_ROUTES.aftertasteLog.slice(1), element: <AftertasteLogPage /> },
   { path: APP_ROUTES.queue.slice(1), element: <QueuePage /> },
+  { path: APP_ROUTES.jobs.slice(1), element: <JobsPage /> },
   { path: APP_ROUTES.settings.slice(1), element: <SettingsPage /> },
 ];
 

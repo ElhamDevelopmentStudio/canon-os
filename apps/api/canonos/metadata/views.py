@@ -21,7 +21,7 @@ from canonos.metadata.services import (
     match_from_dict,
     match_to_dict,
     refresh_job_payload,
-    refresh_metadata,
+    refresh_metadata_with_job,
     search_metadata_matches,
 )
 
@@ -88,8 +88,14 @@ def refresh_media_metadata(request, media_item_id):  # noqa: ANN001, ANN201
             {"detail": "Attach external metadata before refreshing it."},
             status=status.HTTP_404_NOT_FOUND,
         )
-    refreshed = refresh_metadata(metadata)
-    payload = refresh_job_payload(refreshed)
+    refreshed, job = refresh_metadata_with_job(metadata)
+    payload = refresh_job_payload(
+        refreshed,
+        status="failed" if job.status == "failed" else "succeeded",
+        message=job.message or "Metadata refreshed.",
+        job_id=job.id,
+        queued_at=job.created_at,
+    )
     return Response(MetadataRefreshJobSerializer(payload).data, status=status.HTTP_201_CREATED)
 
 

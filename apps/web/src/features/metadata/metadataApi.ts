@@ -1,3 +1,5 @@
+import { mutate as globalMutate } from "swr";
+
 import type {
   ExternalMediaMatch,
   ExternalMetadataSnapshot,
@@ -58,6 +60,7 @@ export async function attachMetadata(mediaItemId: string, match: ExternalMediaMa
 export async function refreshMetadata(mediaItemId: string): Promise<MetadataRefreshJob> {
   await getCsrfToken();
   const response = await api.post<MetadataRefreshJob>(`${API_ROUTES.mediaItems}${mediaItemId}/metadata/refresh/`);
+  await globalMutate(API_ROUTES.backgroundJobs);
   return {
     ...response.data,
     metadata: normalizeMetadata(response.data.metadata),

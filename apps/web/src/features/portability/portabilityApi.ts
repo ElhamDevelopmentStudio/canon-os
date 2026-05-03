@@ -27,25 +27,25 @@ export async function previewImportFile(file: File, sourceType: ImportSourceType
   const response = await api.post<ImportBatch>(API_ROUTES.importPreview, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-  await globalMutate(API_ROUTES.importBatches);
+  await Promise.all([globalMutate(API_ROUTES.importBatches), globalMutate(API_ROUTES.backgroundJobs)]);
   return response.data;
 }
 
 export async function confirmImportBatch(batchId: string): Promise<ImportBatch> {
   const response = await api.post<ImportBatch>(`/imports/${batchId}/confirm/`);
-  await globalMutate(API_ROUTES.importBatches);
+  await Promise.all([globalMutate(API_ROUTES.importBatches), globalMutate(API_ROUTES.backgroundJobs)]);
   return response.data;
 }
 
 export async function rollbackImportBatch(batchId: string): Promise<ImportRollbackResult> {
   const response = await api.post<ImportRollbackResult>(`/imports/${batchId}/rollback/`);
-  await globalMutate(API_ROUTES.importBatches);
+  await Promise.all([globalMutate(API_ROUTES.importBatches), globalMutate(API_ROUTES.backgroundJobs)]);
   return response.data;
 }
 
 export async function requestExport(format: ExportFormat): Promise<ExportResult> {
   const response = await api.post<ExportResult>(API_ROUTES.exportRequest, { format });
-  await globalMutate(API_ROUTES.exportRequest);
+  await Promise.all([globalMutate(API_ROUTES.exportRequest), globalMutate(API_ROUTES.backgroundJobs)]);
   return response.data;
 }
 

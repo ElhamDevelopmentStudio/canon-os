@@ -14,6 +14,7 @@ export const APP_ROUTES = {
   tasteGraph: "/taste-graph",
   aftertasteLog: "/aftertaste-log",
   queue: "/queue",
+  jobs: "/jobs",
   settings: "/settings",
   login: "/login",
   register: "/register",

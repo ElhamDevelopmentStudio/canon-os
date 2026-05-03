@@ -410,8 +410,10 @@ JSON import accepts this export shape and recreates implemented user-owned recor
 - `POST /api/exports/` — create a `json` or `csv` export job.
 - `POST /api/exports/restore-dry-run/` — validate a JSON backup before restore/import.
 - `GET /api/exports/{id}/download/` — download a completed export owned by the current user.
-- `GET /api/jobs/` — list recent owner-scoped background jobs.
+- `GET /api/jobs/` — list the 50 most recent owner-scoped background jobs.
 - `GET /api/jobs/{id}/` — fetch one owner-scoped background job status.
+
+Background job payloads include `jobType`, `status`, `progressTotal`, `progressProcessed`, `progressPercent`, `message`, `result`, `sourceId`, `sourceLabel`, `createdAt`, and `completedAt`. Current job types are import, export, metadata refresh, graph rebuild, and narrative analysis. Import/export, metadata refresh, graph rebuild, and Narrative DNA requests all upsert `BackgroundJob` records so the UI can show recent async work without reading Celery internals directly.
 
 ## External metadata endpoints
 

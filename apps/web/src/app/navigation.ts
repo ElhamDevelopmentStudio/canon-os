@@ -8,6 +8,7 @@ import {
   Library,
   MessageSquare,
   ListChecks,
+  Activity,
   Moon,
   Network,
   Settings,
@@ -103,6 +104,12 @@ export const APP_NAVIGATION: NavigationItem[] = [
     route: APP_ROUTES.queue,
     icon: ListChecks,
     description: "Prioritized candidates and planned consumption.",
+  },
+  {
+    label: "Jobs",
+    route: APP_ROUTES.jobs,
+    icon: Activity,
+    description: "Visible status for imports, exports, metadata, graph, and narrative jobs.",
   },
   {
     label: "Settings",

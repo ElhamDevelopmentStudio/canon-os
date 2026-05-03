@@ -37,6 +37,7 @@ All product pages are registered in `apps/web/src/app/routeConstants.ts` and ren
 | `/seasons/:seasonId` | Canon Season Detail | Add mixed-source season items, reorder, complete, canon-mark, and reflect. |
 | `/aftertaste-log` | Aftertaste Log | Load prompts, create/edit/delete reflections for completed media. |
 | `/queue` | Adaptive Queue | Create/list/edit/reorder/delete queue items, recalculate priority, and restore archived items. |
+| `/jobs` | Background Jobs | View recent imports, exports, metadata refreshes, graph rebuilds, and narrative jobs. |
 | `/settings` | Settings | Update profile/settings and run import/export flows. |
 | `/login` | Login | Public login form. Redirects authenticated users to `/`. |
 | `/register` | Register | Public registration form. Redirects authenticated users to `/`. |
@@ -217,3 +218,7 @@ Personal Canon lives at `/seasons` and `/seasons/:seasonId`. API calls live in `
 ### Taste Evolution UI
 
 Taste Evolution lives at `/taste-evolution`. API calls live in `apps/web/src/features/evolution/evolutionApi.ts`. The page supports loading, empty, error, and success states; Generate Snapshot; trend cards for ratings, mediums, genericness tolerance, regret, completion fatigue, and favorite dimension; current insight cards; and snapshot history. The Dashboard summary displays the latest saved taste change insight when available.
+
+## Background Jobs
+
+Background Jobs lives at `/jobs`. API calls and polling hooks live in `apps/web/src/features/jobs/jobsApi.ts`; reusable status UI lives in `JobStatusBadge`, `JobProgress`, `JobResultSummary`, `JobStatusCard`, and `NotificationsDropdown`. The header dropdown shows recent job notifications, while the Jobs page shows loading, empty, error, and success states with status, progress, result details, and manual refresh.

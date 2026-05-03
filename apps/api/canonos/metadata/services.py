@@ -6,6 +6,8 @@ from decimal import Decimal
 
 from django.utils import timezone
 
+from canonos.jobs.models import BackgroundJob
+from canonos.jobs.services import upsert_background_job
 from canonos.media.models import MediaItem
 from canonos.metadata.models import ExternalMetadata
 from canonos.metadata.providers import ExternalMediaMatch, get_provider, providers_for_media_type
@@ -89,16 +91,73 @@ def refresh_job_payload(
     *,
     status: str = "succeeded",
     message: str = "Metadata refreshed.",
+    job_id: uuid.UUID | None = None,
+    queued_at=None,  # noqa: ANN001
 ) -> dict[str, object]:
     now = timezone.now()
     return {
-        "id": str(uuid.uuid4()),
+        "id": job_id or uuid.uuid4(),
         "status": status,
         "metadata": metadata,
-        "queuedAt": now,
+        "queuedAt": queued_at or now,
         "completedAt": now if status in {"succeeded", "failed"} else None,
         "message": message,
     }
+
+
+def refresh_metadata_with_job(metadata: ExternalMetadata) -> tuple[ExternalMetadata, BackgroundJob]:
+    media_item = metadata.media_item
+    source_label = f"Metadata refresh: {media_item.title}"
+    upsert_background_job(
+        owner=media_item.owner,
+        job_type=BackgroundJob.JobType.METADATA_REFRESH,
+        source_id=metadata.id,
+        source_label=source_label,
+        status=BackgroundJob.Status.PROCESSING,
+        progress_total=1,
+        progress_processed=0,
+        progress_percent=0,
+        message="Refreshing attached external metadata.",
+        result={"metadataId": str(metadata.id), "mediaItemId": str(media_item.id)},
+    )
+    try:
+        refreshed = refresh_metadata(metadata)
+    except Exception as exc:
+        job = upsert_background_job(
+            owner=media_item.owner,
+            job_type=BackgroundJob.JobType.METADATA_REFRESH,
+            source_id=metadata.id,
+            source_label=source_label,
+            status=BackgroundJob.Status.FAILED,
+            progress_total=1,
+            progress_processed=0,
+            progress_percent=100,
+            message=f"Metadata refresh failed: {exc}",
+            result={
+                "metadataId": str(metadata.id),
+                "mediaItemId": str(media_item.id),
+                "error": str(exc),
+            },
+        )
+        return metadata, job
+
+    job = upsert_background_job(
+        owner=media_item.owner,
+        job_type=BackgroundJob.JobType.METADATA_REFRESH,
+        source_id=metadata.id,
+        source_label=source_label,
+        status=BackgroundJob.Status.COMPLETE,
+        progress_total=1,
+        progress_processed=1,
+        progress_percent=100,
+        message="Metadata refreshed.",
+        result={
+            "metadataId": str(refreshed.id),
+            "mediaItemId": str(media_item.id),
+            "provider": refreshed.provider,
+        },
+    )
+    return refreshed, job
 
 
 def match_from_dict(data: dict[str, object]) -> ExternalMediaMatch:

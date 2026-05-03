@@ -11,12 +11,15 @@ import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
+import { JobStatusCard } from "@/features/jobs/JobStatusCard";
+import { useBackgroundJob } from "@/features/jobs/jobsApi";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
 import { rebuildTasteGraph, useTasteGraphSummary } from "@/features/tastegraph/tasteGraphApi";
 
 export function TasteGraphPage() {
   const { data, error, isLoading, isValidating, mutate } = useTasteGraphSummary();
   const [job, setJob] = useState<GraphRebuildJob | null>(null);
+  const { data: backgroundJob } = useBackgroundJob(job?.id);
   const [rebuildError, setRebuildError] = useState<string | null>(null);
   const [isRebuilding, setIsRebuilding] = useState(false);
 
@@ -54,7 +57,8 @@ export function TasteGraphPage() {
       {isLoading ? <LoadingState title="Loading TasteGraph" message="Reading graph nodes and connections." /> : null}
       {error ? <ErrorState title="TasteGraph unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {rebuildError ? <ErrorState title="TasteGraph rebuild failed" message={rebuildError} onRetry={() => void handleRebuild()} /> : null}
-      {job ? <JobStatus job={job} /> : null}
+      {backgroundJob ? <JobStatusCard job={backgroundJob} title="TasteGraph rebuild status" /> : null}
+      {!backgroundJob && job ? <JobStatus job={job} /> : null}
       {!isLoading && !error && data ? <TasteGraphContent graph={data} onRebuild={() => void handleRebuild()} /> : null}
     </div>
   );

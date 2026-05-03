@@ -62,7 +62,7 @@ export async function requestNarrativeAnalysis(
     `${API_ROUTES.mediaItems}${mediaId}/narrative-analysis/`,
     request,
   );
-  await globalMutate(narrativeAnalysisKey(mediaId));
+  await Promise.all([globalMutate(narrativeAnalysisKey(mediaId)), globalMutate(API_ROUTES.backgroundJobs)]);
   return normalizeAnalysis(response.data);
 }
 

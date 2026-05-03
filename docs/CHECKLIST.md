@@ -2532,54 +2532,54 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M15-BE-001 Create jobs app.
-- [ ] CP-M15-BE-002 Create BackgroundJob model.
-- [ ] CP-M15-BE-003 Add owner/user foreign key.
-- [ ] CP-M15-BE-004 Add job type field.
-- [ ] CP-M15-BE-005 Add status field.
-- [ ] CP-M15-BE-006 Add progress field.
-- [ ] CP-M15-BE-007 Add message field.
-- [ ] CP-M15-BE-008 Add result JSON field.
-- [ ] CP-M15-BE-009 Add created at field.
-- [ ] CP-M15-BE-010 Add completed at field.
-- [ ] CP-M15-BE-011 Create job status endpoint.
-- [ ] CP-M15-BE-012 Create jobs list endpoint.
-- [ ] CP-M15-BE-013 Connect metadata refresh to BackgroundJob.
-- [ ] CP-M15-BE-014 Connect graph rebuild to BackgroundJob.
-- [ ] CP-M15-BE-015 Connect narrative analysis to BackgroundJob.
-- [ ] CP-M15-BE-016 Connect import/export to BackgroundJob.
-- [ ] CP-M15-BE-017 Add test for job creation.
-- [ ] CP-M15-BE-018 Add test for job status endpoint.
+- [x] CP-M15-BE-001 Create jobs app.
+- [x] CP-M15-BE-002 Create BackgroundJob model.
+- [x] CP-M15-BE-003 Add owner/user foreign key.
+- [x] CP-M15-BE-004 Add job type field.
+- [x] CP-M15-BE-005 Add status field.
+- [x] CP-M15-BE-006 Add progress field.
+- [x] CP-M15-BE-007 Add message field.
+- [x] CP-M15-BE-008 Add result JSON field.
+- [x] CP-M15-BE-009 Add created at field.
+- [x] CP-M15-BE-010 Add completed at field.
+- [x] CP-M15-BE-011 Create job status endpoint.
+- [x] CP-M15-BE-012 Create jobs list endpoint.
+- [x] CP-M15-BE-013 Connect metadata refresh to BackgroundJob.
+- [x] CP-M15-BE-014 Connect graph rebuild to BackgroundJob.
+- [x] CP-M15-BE-015 Connect narrative analysis to BackgroundJob.
+- [x] CP-M15-BE-016 Connect import/export to BackgroundJob.
+- [x] CP-M15-BE-017 Add test for job creation.
+- [x] CP-M15-BE-018 Add test for job status endpoint.
 
 ### Frontend Tasks
 
-- [ ] CP-M15-FE-001 Create jobs API client file.
-- [ ] CP-M15-FE-002 Create `useBackgroundJob` polling hook.
-- [ ] CP-M15-FE-003 Create job status badge component.
-- [ ] CP-M15-FE-004 Create job progress component.
-- [ ] CP-M15-FE-005 Create Jobs page skeleton.
-- [ ] CP-M15-FE-006 Add jobs list table.
-- [ ] CP-M15-FE-007 Add job type display.
-- [ ] CP-M15-FE-008 Add job status display.
-- [ ] CP-M15-FE-009 Add job progress display.
-- [ ] CP-M15-FE-010 Add job result display.
-- [ ] CP-M15-FE-011 Add notifications dropdown to header.
-- [ ] CP-M15-FE-012 Add recent job notifications.
+- [x] CP-M15-FE-001 Create jobs API client file.
+- [x] CP-M15-FE-002 Create `useBackgroundJob` polling hook.
+- [x] CP-M15-FE-003 Create job status badge component.
+- [x] CP-M15-FE-004 Create job progress component.
+- [x] CP-M15-FE-005 Create Jobs page skeleton.
+- [x] CP-M15-FE-006 Add jobs list table.
+- [x] CP-M15-FE-007 Add job type display.
+- [x] CP-M15-FE-008 Add job status display.
+- [x] CP-M15-FE-009 Add job progress display.
+- [x] CP-M15-FE-010 Add job result display.
+- [x] CP-M15-FE-011 Add notifications dropdown to header.
+- [x] CP-M15-FE-012 Add recent job notifications.
 
 ### Integration Tasks
 
-- [ ] CP-M15-INT-001 Connect job status components to job endpoints.
-- [ ] CP-M15-INT-002 Replace isolated job polling with shared hook.
-- [ ] CP-M15-INT-003 Show job notification when graph rebuild completes.
-- [ ] CP-M15-INT-004 Show job notification when narrative analysis completes.
-- [ ] CP-M15-INT-005 Show job notification when import/export completes.
+- [x] CP-M15-INT-001 Connect job status components to job endpoints.
+- [x] CP-M15-INT-002 Replace isolated job polling with shared hook.
+- [x] CP-M15-INT-003 Show job notification when graph rebuild completes.
+- [x] CP-M15-INT-004 Show job notification when narrative analysis completes.
+- [x] CP-M15-INT-005 Show job notification when import/export completes.
 
 ### QA Tasks
 
-- [ ] CP-M15-QA-001 Start graph rebuild and track job status.
-- [ ] CP-M15-QA-002 Start metadata refresh and track job status.
-- [ ] CP-M15-QA-003 Start export and track job status.
-- [ ] CP-M15-QA-004 Confirm completed jobs appear in notification dropdown.
+- [x] CP-M15-QA-001 Start graph rebuild and track job status.
+- [x] CP-M15-QA-002 Start metadata refresh and track job status.
+- [x] CP-M15-QA-003 Start export and track job status.
+- [x] CP-M15-QA-004 Confirm completed jobs appear in notification dropdown.
 
 ---
 
@@ -3027,7 +3027,7 @@ The complete product is done only when:
 - [ ] Cross-Medium Adaptation Intelligence can store relations and recommend experience order.
 - [x] Import/export works.
 - [x] Command palette and advanced search work.
-- [ ] Background jobs have visible status.
+- [x] Background jobs have visible status.
 - [ ] Analytics/Insights page works.
 - [ ] Security and privacy tasks are complete.
 - [ ] Performance tasks are complete.
@@ -3044,16 +3044,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M14-QA-005.
-**Last completed task name:** Clear advanced Library filters.
-**Last completed milestone:** CP-M14 — Advanced Search, Filters, And Command Palette.
+**Last completed task ID:** CP-M15-QA-004.
+**Last completed task name:** Confirm completed jobs appear in notification dropdown.
+**Last completed milestone:** CP-M15 — Notifications, Job Status, And Async UX.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M15 — Notifications, Job Status, And Async UX.
-**Next recommended task:** CP-M15-BE-001 Create jobs app.
+**Current milestone:** CP-M16 — Data Visualization And Insight Pages.
+**Next recommended task:** CP-M16-BE-001 Create analytics app.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M14 Advanced Search, Filters, And Command Palette is complete. Backend work adds an authenticated unified search endpoint for media, candidates, queue items, and canon seasons plus advanced Library media filters for creator, rating range, Genericness range, Regret range, and completed-date range. Frontend work adds shared search contracts, a global command palette opened from the header or Ctrl+K/⌘K, accessible result rows with navigation targets, URL-backed Library advanced filters, active filter chips, and clear-filter behavior. Automated coverage includes backend search/filter tests, frontend command palette and Library filter tests, Playwright browser-to-backend search/filter flows, and updated API/testing/manual documentation.
+CP-M15 Notifications, Job Status, And Async UX is complete. Existing import/export background job records were extended into a full Jobs module experience: metadata refresh, TasteGraph rebuild, Narrative DNA analysis, and import/export operations now upsert owner-scoped BackgroundJob records; the API exposes job list/detail status; the frontend adds shared jobs contracts, polling hooks, status/progress/result components, a Jobs page, and a header notifications dropdown. Automated coverage includes backend job creation/status tests, frontend Jobs page and notification tests, Playwright browser-to-backend job notification coverage, and updated API/frontend/testing/manual documentation.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3068,4 +3068,5 @@ CP-M14 Advanced Search, Filters, And Command Palette is complete. Backend work a
 - Every new frontend feature should have loading, empty, and error handling where relevant.
 - Every user-facing feature milestone should add or update its manual test doc under `docs/manual-tests/`.
 - CP-M14 completed: unified search, command palette navigation, URL-backed advanced Library filters, browser e2e, and manual documentation are in place.
-- CP-M15 is next: build visible background job status and async UX, starting with the jobs app and BackgroundJob model.
+- CP-M15 completed: jobs API, polling hooks, Jobs page, header notifications, and background job records for metadata, graph, narrative, import, and export are in place.
+- CP-M16 is next: add data visualization and insight pages, starting with analytics endpoints.

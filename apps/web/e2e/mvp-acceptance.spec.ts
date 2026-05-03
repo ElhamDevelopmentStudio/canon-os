@@ -242,7 +242,7 @@ test.describe("MVP acceptance", () => {
     const confirmResponse = waitForApiResponse(page, "POST", `/api/imports/${preview.id}/confirm/`, 200);
     await page.getByRole("button", { name: "Confirm Import" }).click();
     await confirmResponse;
-    await expect(page.getByText("Import complete. Created 1 records.")).toBeVisible();
+    await expect(page.getByLabel("Import and export").getByText("Import complete. Created 1 records.")).toBeVisible();
 
     await page.getByLabel("Export format").selectOption({ label: "Full JSON backup" });
     const jsonExportResponse = waitForApiResponse(page, "POST", "/api/exports/", 201);

@@ -12,6 +12,8 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from canonos.aftertaste.models import AftertasteEntry
+from canonos.jobs.models import BackgroundJob
+from canonos.jobs.services import upsert_background_job
 from canonos.media.models import MediaItem
 from canonos.narrative.models import NarrativeAnalysis
 from canonos.taste.models import MediaScore, TasteDimension
@@ -278,12 +280,61 @@ def build_taste_graph_summary(user: User) -> dict[str, Any]:
 
 def graph_rebuild_job_payload(user: User) -> dict[str, Any]:
     started_at = timezone.now()
-    result = rebuild_taste_graph_for_user(user)
+    source_id = uuid.uuid4()
+    job = upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.GRAPH_REBUILD,
+        source_id=source_id,
+        source_label="TasteGraph rebuild",
+        status=BackgroundJob.Status.PROCESSING,
+        progress_total=1,
+        progress_processed=0,
+        progress_percent=0,
+        message="Rebuilding TasteGraph from media, creator, score, and aftertaste evidence.",
+    )
+    try:
+        result = rebuild_taste_graph_for_user(user)
+    except Exception as exc:
+        finished_at = timezone.now()
+        job = upsert_background_job(
+            owner=user,
+            job_type=BackgroundJob.JobType.GRAPH_REBUILD,
+            source_id=source_id,
+            source_label="TasteGraph rebuild",
+            status=BackgroundJob.Status.FAILED,
+            progress_total=1,
+            progress_processed=0,
+            progress_percent=100,
+            message=f"TasteGraph rebuild failed: {exc}",
+            result={"error": str(exc)},
+        )
+        return {
+            "id": job.id,
+            "status": "failed",
+            "message": job.message,
+            "nodeCount": 0,
+            "edgeCount": 0,
+            "startedAt": started_at.isoformat().replace("+00:00", "Z"),
+            "finishedAt": finished_at.isoformat().replace("+00:00", "Z"),
+        }
+
     finished_at = timezone.now()
+    job = upsert_background_job(
+        owner=user,
+        job_type=BackgroundJob.JobType.GRAPH_REBUILD,
+        source_id=source_id,
+        source_label="TasteGraph rebuild",
+        status=BackgroundJob.Status.COMPLETE,
+        progress_total=1,
+        progress_processed=1,
+        progress_percent=100,
+        message="TasteGraph rebuilt from media, creator, score, and aftertaste evidence.",
+        result={"nodeCount": result.node_count, "edgeCount": result.edge_count},
+    )
     return {
-        "id": uuid.uuid4(),
+        "id": job.id,
         "status": "completed",
-        "message": "TasteGraph rebuilt from media, creator, score, and aftertaste evidence.",
+        "message": job.message,
         "nodeCount": result.node_count,
         "edgeCount": result.edge_count,
         "startedAt": started_at.isoformat().replace("+00:00", "Z"),

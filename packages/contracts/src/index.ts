@@ -249,6 +249,9 @@ export {
   CANON_SEASON_STATUSES,
   CANON_THEME_KEYS,
 } from "./canon";
+
+export type { BackgroundJob, BackgroundJobStatus, BackgroundJobType } from "./jobs";
+export { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from "./jobs";
 export * from "./narrative";
 
 export type {

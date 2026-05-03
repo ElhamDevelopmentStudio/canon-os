@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils import timezone
 
+from canonos.jobs.models import BackgroundJob
+from canonos.jobs.services import upsert_background_job
 from canonos.media.models import MediaItem
 
 from .models import NarrativeAnalysis
@@ -42,8 +44,18 @@ def request_narrative_analysis(
         defaults={"status": NarrativeAnalysis.Status.QUEUED, "status_events": []},
     )
     if not created and analysis.status == NarrativeAnalysis.Status.COMPLETED and not force_refresh:
+        _update_narrative_background_job(
+            analysis,
+            BackgroundJob.Status.COMPLETE,
+            "Narrative DNA analysis already complete.",
+        )
         return analysis
 
+    _update_narrative_background_job(
+        analysis,
+        BackgroundJob.Status.QUEUED,
+        "Narrative DNA analysis queued.",
+    )
     return run_narrative_analysis(
         analysis=analysis,
         manual_notes=manual_notes,
@@ -60,7 +72,17 @@ def run_narrative_analysis(
     provider = get_narrative_provider(provider_key)
     analysis.status_events = []
     _transition(analysis, NarrativeAnalysis.Status.QUEUED)
+    _update_narrative_background_job(
+        analysis,
+        BackgroundJob.Status.QUEUED,
+        "Narrative DNA analysis queued.",
+    )
     _transition(analysis, NarrativeAnalysis.Status.RUNNING)
+    _update_narrative_background_job(
+        analysis,
+        BackgroundJob.Status.PROCESSING,
+        "Analyzing Narrative DNA from notes and metadata.",
+    )
     try:
         result = provider.analyze(media_item=analysis.media_item, notes=manual_notes)
     except Exception as exc:  # noqa: BLE001
@@ -76,6 +98,16 @@ def run_narrative_analysis(
                 "status_events",
                 "updated_at",
             ]
+        )
+        _update_narrative_background_job(
+            analysis,
+            BackgroundJob.Status.FAILED,
+            f"Narrative DNA analysis failed: {exc}",
+            result={
+                "analysisId": str(analysis.id),
+                "mediaItemId": str(analysis.media_item_id),
+                "error": str(exc),
+            },
         )
         return analysis
 
@@ -95,7 +127,47 @@ def run_narrative_analysis(
         analysis.status = NarrativeAnalysis.Status.COMPLETED
         analysis.status_events = [*_events(analysis), _event(NarrativeAnalysis.Status.COMPLETED)]
         analysis.save()
+        _update_narrative_background_job(
+            analysis,
+            BackgroundJob.Status.COMPLETE,
+            "Narrative DNA analysis complete.",
+            result={
+                "analysisId": str(analysis.id),
+                "mediaItemId": str(analysis.media_item_id),
+                "confidenceScore": analysis.confidence_score,
+            },
+        )
     return analysis
+
+
+def _update_narrative_background_job(
+    analysis: NarrativeAnalysis,
+    status: str,
+    message: str,
+    *,
+    result: dict[str, Any] | None = None,
+) -> None:
+    terminal_statuses = {BackgroundJob.Status.COMPLETE, BackgroundJob.Status.FAILED}
+    progress_processed = 1 if status in terminal_statuses else 0
+    progress_percent = 100 if status in terminal_statuses else 0
+    if status == BackgroundJob.Status.PROCESSING:
+        progress_percent = 50
+    upsert_background_job(
+        owner=analysis.owner,
+        job_type=BackgroundJob.JobType.NARRATIVE_ANALYSIS,
+        source_id=analysis.id,
+        source_label=f"Narrative DNA: {analysis.media_item.title}",
+        status=status,
+        progress_total=1,
+        progress_processed=progress_processed,
+        progress_percent=progress_percent,
+        message=message,
+        result=result
+        or {
+            "analysisId": str(analysis.id),
+            "mediaItemId": str(analysis.media_item_id),
+        },
+    )
 
 
 def latest_analysis_for_media(*, owner: User, media_item_id: str) -> NarrativeAnalysis | None:

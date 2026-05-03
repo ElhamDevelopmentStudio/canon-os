@@ -36,7 +36,7 @@ test.describe("import and export browser-to-backend flow", () => {
     const confirmed = await expectApiJson<{ status: string; createdCount: number }>(await confirmResponsePromise);
     expect(confirmed.status).toBe("confirmed");
     expect(confirmed.createdCount).toBe(1);
-    await expect(page.getByText("Import complete. Created 1 records.")).toBeVisible();
+    await expect(page.getByLabel("Import and export").getByText("Import complete. Created 1 records.")).toBeVisible();
 
     const libraryResponse = waitForApiResponse(page, "GET", "/api/media-items/", 200);
     await page.goto("/library");
@@ -102,7 +102,7 @@ test.describe("import and export browser-to-backend flow", () => {
     const rollback = await expectApiJson<{ removedCount: number; batch: { status: string } }>(await rollbackResponsePromise);
     expect(rollback.removedCount).toBe(1);
     expect(rollback.batch.status).toBe("rolled_back");
-    await expect(page.getByText("Import rolled back. Removed 1 records.")).toBeVisible();
+    await expect(page.getByLabel("Import and export").getByText("Import rolled back. Removed 1 records.")).toBeVisible();
 
     const libraryResponse = waitForApiResponse(page, "GET", "/api/media-items/", 200);
     await page.goto("/library");

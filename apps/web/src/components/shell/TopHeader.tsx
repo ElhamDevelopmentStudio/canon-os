@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { APP_ROUTES } from "@/app/routeConstants";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { Button } from "@/components/ui/button";
+import { NotificationsDropdown } from "@/features/jobs/NotificationsDropdown";
 import { useAppStore } from "@/stores/appStore";
 import { useAuthStore } from "@/stores/authStore";
 
@@ -42,6 +43,7 @@ export function TopHeader({ onOpenCommandPalette }: { onOpenCommandPalette: () =
               {currentUser.profile.displayName}
             </span>
           ) : null}
+          <NotificationsDropdown />
           <Button aria-label="Toggle theme mode" size="sm" type="button" variant="secondary" onClick={toggleThemeMode}>
             {themeMode === "dark" ? (
               <Sun aria-hidden="true" className="h-4 w-4" />
