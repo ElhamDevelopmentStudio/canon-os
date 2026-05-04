@@ -3,10 +3,11 @@ import type {
   Candidate,
   CandidateCreateRequest,
   CandidateEvaluation,
+  CandidateStatus,
   CouncilSession,
   MediaType,
 } from "@canonos/contracts";
-import { MEDIA_TYPES } from "@canonos/contracts";
+import { CANDIDATE_STATUSES, MEDIA_TYPES } from "@canonos/contracts";
 import {
   BookOpenCheck,
   Dna,
@@ -22,11 +23,14 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
+import { PaginationControls } from "@/components/data-display/PaginationControls";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { LoadingState } from "@/components/feedback/LoadingState";
+import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
@@ -47,6 +51,8 @@ import { councilDecisionTone } from "@/features/critic-council/councilLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
 import { createQueueItem } from "@/features/queue/queueApi";
 import { useUserSettings } from "@/features/settings/settingsApi";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { DEFAULT_PAGE_SIZE, pageFromSearchParams } from "@/lib/pagination";
 import { cn } from "@/lib/utils";
 
 type CandidateDraft = {
@@ -74,8 +80,18 @@ const emptyDraft: CandidateDraft = {
 };
 
 export function CandidateEvaluatorPage() {
-  const [searchParams] = useSearchParams();
-  const { data, error, isLoading, mutate } = useCandidates();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchDraft, setSearchDraft] = useState(searchParams.get("search") ?? "");
+  const debouncedSearch = useDebouncedValue(searchDraft);
+  const page = pageFromSearchParams(searchParams);
+  const selectedMediaType = (searchParams.get("mediaType") ?? "") as MediaType | "";
+  const selectedStatus = (searchParams.get("status") ?? "") as CandidateStatus | "";
+  const { data, error, isLoading, mutate } = useCandidates({
+    mediaType: selectedMediaType,
+    page,
+    search: debouncedSearch,
+    status: selectedStatus,
+  });
   const { data: userSettings } = useUserSettings();
   const [draft, setDraft] = useState<CandidateDraft>(emptyDraft);
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
@@ -90,6 +106,31 @@ export function CandidateEvaluatorPage() {
   const latestEvaluation = evaluation ?? selectedCandidate?.latestEvaluation ?? null;
   const candidates = useMemo(() => data?.results ?? [], [data]);
   const selectedCandidateId = searchParams.get("candidateId");
+
+  useEffect(() => {
+    const currentSearch = searchParams.get("search") ?? "";
+    if (debouncedSearch === currentSearch) return;
+    const next = new URLSearchParams(searchParams);
+    if (debouncedSearch.trim()) next.set("search", debouncedSearch.trim());
+    else next.delete("search");
+    next.delete("page");
+    setSearchParams(next, { replace: true });
+  }, [debouncedSearch, searchParams, setSearchParams]);
+
+  function updateListFilter(key: "mediaType" | "status", value: string) {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set(key, value);
+    else next.delete(key);
+    next.delete("page");
+    setSearchParams(next, { replace: true });
+  }
+
+  function updatePage(nextPage: number) {
+    const next = new URLSearchParams(searchParams);
+    if (nextPage <= 1) next.delete("page");
+    else next.set("page", String(nextPage));
+    setSearchParams(next, { replace: true });
+  }
 
   useEffect(() => {
     if (!selectedCandidateId || selectedCandidate?.id === selectedCandidateId) return;
@@ -278,7 +319,16 @@ export function CandidateEvaluatorPage() {
         </div>
       </div>
 
-      {isLoading ? <LoadingState title="Loading candidates" message="Fetching evaluator history." /> : null}
+      <CandidateHistoryControls
+        mediaType={selectedMediaType}
+        search={searchDraft}
+        status={selectedStatus}
+        onMediaTypeChange={(value) => updateListFilter("mediaType", value)}
+        onSearchChange={setSearchDraft}
+        onStatusChange={(value) => updateListFilter("status", value)}
+      />
+
+      {isLoading ? <ListSkeleton label="Loading candidates" rows={6} /> : null}
       {error ? <ErrorState title="Candidate history unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {!isLoading && !error && candidates.length === 0 ? (
         <EmptyState
@@ -288,10 +338,77 @@ export function CandidateEvaluatorPage() {
           onAction={resetDraft}
         />
       ) : null}
-      {!isLoading && !error && candidates.length > 0 ? (
-        <CandidateHistory candidates={candidates} selectedId={selectedCandidate?.id} onSelect={loadCandidate} />
+      {!isLoading && !error && data && candidates.length > 0 ? (
+        <>
+          <PaginationControls
+            count={data.count}
+            itemLabel="candidate"
+            page={Number(page)}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onPageChange={updatePage}
+          />
+          <CandidateHistory candidates={candidates} selectedId={selectedCandidate?.id} onSelect={loadCandidate} />
+        </>
       ) : null}
     </div>
+  );
+}
+
+function CandidateHistoryControls({
+  mediaType,
+  search,
+  status,
+  onMediaTypeChange,
+  onSearchChange,
+  onStatusChange,
+}: {
+  mediaType: MediaType | "";
+  search: string;
+  status: CandidateStatus | "";
+  onMediaTypeChange: (value: string) => void;
+  onSearchChange: (value: string) => void;
+  onStatusChange: (value: string) => void;
+}) {
+  return (
+    <SectionCard title="Candidate history controls">
+      <div className="grid gap-3 md:grid-cols-[minmax(14rem,1fr)_12rem_12rem]">
+        <CommandSearchInput
+          aria-label="Search candidate history"
+          value={search}
+          onChange={(event) => onSearchChange(event.target.value)}
+        />
+        <label className="grid gap-1 text-sm font-medium">
+          <span className="sr-only">Filter candidates by media type</span>
+          <select
+            className={fieldClassName}
+            value={mediaType}
+            onChange={(event) => onMediaTypeChange(event.target.value)}
+          >
+            <option value="">All media types</option>
+            {MEDIA_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {mediaTypeLabels[type]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-1 text-sm font-medium">
+          <span className="sr-only">Filter candidates by status</span>
+          <select
+            className={fieldClassName}
+            value={status}
+            onChange={(event) => onStatusChange(event.target.value)}
+          >
+            <option value="">All statuses</option>
+            {CANDIDATE_STATUSES.map((candidateStatus) => (
+              <option key={candidateStatus} value={candidateStatus}>
+                {candidateStatusLabels[candidateStatus]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </SectionCard>
   );
 }
 

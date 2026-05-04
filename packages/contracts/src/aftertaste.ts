@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from "./pagination";
+
 export const AFTERTASTE_APPETITE_EFFECTS = [
   "more_like_this",
   "less_like_this",
@@ -82,12 +84,7 @@ export type AftertasteCreateRequest = {
 
 export type AftertasteUpdateRequest = Partial<AftertasteCreateRequest>;
 
-export type AftertasteEntryListResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: AftertasteEntry[];
-};
+export type AftertasteEntryListResponse = PaginatedResponse<AftertasteEntry>;
 
 export type AftertasteEntryFilters = {
   mediaItemId?: string;

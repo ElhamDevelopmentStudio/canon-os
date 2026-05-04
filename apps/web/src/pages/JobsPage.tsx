@@ -1,9 +1,11 @@
 import type { BackgroundJob } from "@canonos/contracts";
 import { Activity, RefreshCw } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
+import { PaginationControls } from "@/components/data-display/PaginationControls";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
-import { LoadingState } from "@/components/feedback/LoadingState";
+import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
@@ -13,9 +15,20 @@ import { JobResultSummary } from "@/features/jobs/JobResultSummary";
 import { JobStatusBadge } from "@/features/jobs/JobStatusBadge";
 import { backgroundJobTypeLabels } from "@/features/jobs/jobLabels";
 import { useBackgroundJobs } from "@/features/jobs/jobsApi";
+import { DEFAULT_PAGE_SIZE, pageFromSearchParams } from "@/lib/pagination";
 
 export function JobsPage() {
-  const { data: jobs = [], error, isLoading, isValidating, mutate } = useBackgroundJobs();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = pageFromSearchParams(searchParams);
+  const { data, error, isLoading, isValidating, mutate } = useBackgroundJobs({ page });
+  const jobs = data?.results ?? [];
+
+  function updatePage(nextPage: number) {
+    const next = new URLSearchParams(searchParams);
+    if (nextPage <= 1) next.delete("page");
+    else next.set("page", String(nextPage));
+    setSearchParams(next, { replace: true });
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,7 +47,7 @@ export function JobsPage() {
         </PageActionBar>
       </section>
 
-      {isLoading ? <LoadingState title="Loading background jobs" message="Checking recent async work." /> : null}
+      {isLoading ? <ListSkeleton label="Loading background jobs" rows={6} /> : null}
       {error ? <ErrorState title="Background jobs unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {!isLoading && !error && jobs.length === 0 ? (
         <EmptyState
@@ -42,7 +55,18 @@ export function JobsPage() {
           message="Run an import, export, metadata refresh, TasteGraph rebuild, or Narrative DNA analysis to see progress here."
         />
       ) : null}
-      {!isLoading && !error && jobs.length > 0 ? <JobsTable jobs={jobs} /> : null}
+      {!isLoading && !error && data && jobs.length > 0 ? (
+        <>
+          <PaginationControls
+            count={data.count}
+            itemLabel="job"
+            page={Number(page)}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onPageChange={updatePage}
+          />
+          <JobsTable jobs={jobs} />
+        </>
+      ) : null}
     </div>
   );
 }

@@ -97,6 +97,7 @@ Every user-facing feature milestone must create or update one manual test docume
 - Aftertaste log: `docs/manual-tests/aftertaste-log.md`
 - Settings and portability: `docs/manual-tests/settings-portability.md`
 - Insights analytics: `docs/manual-tests/insights.md`
+- Performance and scalability: `docs/manual-tests/performance-scalability.md`
 
 Use `docs/manual-tests/TEMPLATE.md` as the format. Each manual test doc must include a happy path, one error path, and one useful edge case when relevant.
 
@@ -2743,43 +2744,43 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Tasks
 
-- [ ] CP-M19-BE-001 Add pagination checks to all list endpoints.
-- [ ] CP-M19-BE-002 Add select_related/prefetch_related to media list queries.
-- [ ] CP-M19-BE-003 Add select_related/prefetch_related to media detail queries.
-- [ ] CP-M19-BE-004 Add select_related/prefetch_related to queue queries.
-- [ ] CP-M19-BE-005 Add select_related/prefetch_related to candidate queries.
-- [ ] CP-M19-BE-006 Add database index review for media items.
-- [ ] CP-M19-BE-007 Add database index review for scores.
-- [ ] CP-M19-BE-008 Add database index review for graph nodes and edges.
-- [ ] CP-M19-BE-009 Add caching to dashboard summary endpoint.
-- [ ] CP-M19-BE-010 Add caching to taste profile endpoint.
-- [ ] CP-M19-BE-011 Add caching to analytics endpoints.
-- [ ] CP-M19-BE-012 Add cache invalidation after media changes.
-- [ ] CP-M19-BE-013 Add cache invalidation after score changes.
-- [ ] CP-M19-BE-014 Add cache invalidation after aftertaste changes.
-- [ ] CP-M19-BE-015 Add test for pagination.
-- [ ] CP-M19-BE-016 Add basic performance test with large sample dataset.
+- [x] CP-M19-BE-001 Add pagination checks to all list endpoints.
+- [x] CP-M19-BE-002 Add select_related/prefetch_related to media list queries.
+- [x] CP-M19-BE-003 Add select_related/prefetch_related to media detail queries.
+- [x] CP-M19-BE-004 Add select_related/prefetch_related to queue queries.
+- [x] CP-M19-BE-005 Add select_related/prefetch_related to candidate queries.
+- [x] CP-M19-BE-006 Add database index review for media items.
+- [x] CP-M19-BE-007 Add database index review for scores.
+- [x] CP-M19-BE-008 Add database index review for graph nodes and edges.
+- [x] CP-M19-BE-009 Add caching to dashboard summary endpoint.
+- [x] CP-M19-BE-010 Add caching to taste profile endpoint.
+- [x] CP-M19-BE-011 Add caching to analytics endpoints.
+- [x] CP-M19-BE-012 Add cache invalidation after media changes.
+- [x] CP-M19-BE-013 Add cache invalidation after score changes.
+- [x] CP-M19-BE-014 Add cache invalidation after aftertaste changes.
+- [x] CP-M19-BE-015 Add test for pagination.
+- [x] CP-M19-BE-016 Add basic performance test with large sample dataset.
 
 ### Frontend Tasks
 
-- [ ] CP-M19-FE-001 Add pagination controls to Library page.
-- [ ] CP-M19-FE-002 Add pagination controls to Candidates page.
-- [ ] CP-M19-FE-003 Add pagination controls to Aftertaste page.
-- [ ] CP-M19-FE-004 Add pagination controls to Jobs page.
-- [ ] CP-M19-FE-005 Add SWR deduping configuration.
-- [ ] CP-M19-FE-006 Add SWR retry configuration.
-- [ ] CP-M19-FE-007 Add debounced search input behavior.
-- [ ] CP-M19-FE-008 Add lazy-loaded routes for major pages.
-- [ ] CP-M19-FE-009 Add skeleton loading components for large lists.
-- [ ] CP-M19-FE-010 Avoid rendering full large lists without pagination.
+- [x] CP-M19-FE-001 Add pagination controls to Library page.
+- [x] CP-M19-FE-002 Add pagination controls to Candidates page.
+- [x] CP-M19-FE-003 Add pagination controls to Aftertaste page.
+- [x] CP-M19-FE-004 Add pagination controls to Jobs page.
+- [x] CP-M19-FE-005 Add SWR deduping configuration.
+- [x] CP-M19-FE-006 Add SWR retry configuration.
+- [x] CP-M19-FE-007 Add debounced search input behavior.
+- [x] CP-M19-FE-008 Add lazy-loaded routes for major pages.
+- [x] CP-M19-FE-009 Add skeleton loading components for large lists.
+- [x] CP-M19-FE-010 Avoid rendering full large lists without pagination.
 
 ### QA Tasks
 
-- [ ] CP-M19-QA-001 Seed at least 1000 media items.
-- [ ] CP-M19-QA-002 Confirm Library page remains usable.
-- [ ] CP-M19-QA-003 Confirm Dashboard loads in acceptable time.
-- [ ] CP-M19-QA-004 Confirm Taste Profile loads in acceptable time.
-- [ ] CP-M19-QA-005 Confirm search remains usable with large dataset.
+- [x] CP-M19-QA-001 Seed at least 1000 media items.
+- [x] CP-M19-QA-002 Confirm Library page remains usable.
+- [x] CP-M19-QA-003 Confirm Dashboard loads in acceptable time.
+- [x] CP-M19-QA-004 Confirm Taste Profile loads in acceptable time.
+- [x] CP-M19-QA-005 Confirm search remains usable with large dataset.
 
 ---
 
@@ -3031,7 +3032,7 @@ The complete product is done only when:
 - [x] Background jobs have visible status.
 - [x] Analytics/Insights page works.
 - [x] Security and privacy tasks are complete.
-- [ ] Performance tasks are complete.
+- [x] Performance tasks are complete.
 - [ ] Accessibility and responsive UI tasks are complete.
 - [ ] Deployment instructions and infrastructure files exist.
 - [ ] All tests/builds pass.
@@ -3045,16 +3046,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M18-QA-006.
-**Last completed task name:** Confirm account deletion removes or anonymizes account.
-**Last completed milestone:** CP-M18 — Security, Privacy, And Data Protection.
+**Last completed task ID:** CP-M19-QA-005.
+**Last completed task name:** Confirm search remains usable with large dataset.
+**Last completed milestone:** CP-M19 — Performance And Scalability.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M19 — Performance And Scalability.
-**Next recommended task:** CP-M19-BE-001 Add pagination checks to all list endpoints.
+**Current milestone:** CP-M20 — Accessibility, Responsiveness, And UI Polish.
+**Next recommended task:** CP-M20-FE-001 Audit all pages for consistent sidebar usage.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M18 Security, Privacy, And Data Protection is complete. Owner-scoped queryset coverage was audited and strengthened with cross-user tests for media, candidates, queue, aftertaste, and graph data. The API now includes auth and expensive-operation throttles, deployment security checks, explicit production cookie/CSRF security settings, audit events for sensitive operations, JSON privacy export audit logging, personal data summary/deletion endpoints, and account deletion. Settings now has a Privacy and security section with export, typed confirmations for data/account deletion, explanatory privacy copy, toasts, and browser e2e coverage.
+CP-M19 Performance And Scalability is complete. Large owner-scoped lists now use bounded page-number pagination, media/candidate/queue/detail querysets avoid avoidable N+1s, media/score/graph indexes were reviewed and migrated, dashboard/taste/analytics aggregates use short per-user cache entries, and media/score/aftertaste/import/privacy mutations invalidate aggregate caches. Library, Candidate History, Aftertaste Log, and Jobs pages now use URL-backed pagination controls, list skeletons, stable paginated contracts, and debounced search where relevant. Tests cover pagination, 1,000-item media datasets, cache invalidation, and frontend pagination behavior, with docs/manual QA updated.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3073,4 +3074,5 @@ CP-M18 Security, Privacy, And Data Protection is complete. Owner-scoped queryset
 - CP-M16 completed: analytics endpoints, shared contracts, responsive Insights page, Dashboard/sidebar links, and browser e2e coverage are in place.
 - CP-M17 completed: advanced personalization settings, frontend controls, recommendation behavior integration, browser e2e, and docs are in place.
 - CP-M18 completed: owner-scoped privacy protections, rate limiting, audit logging, data/account deletion, Settings privacy UI, browser e2e, and docs are in place.
-- CP-M19 is next: performance and scalability, starting with pagination checks and large-list safeguards.
+- CP-M19 completed: pagination, query optimization, indexes, aggregate caching/invalidation, lazy routes, SWR retry/dedupe, skeleton loading, large-list tests, and docs are in place.
+- CP-M20 is next: accessibility, responsiveness, and UI polish, starting with shared sidebar/header/title/action-bar consistency audits.

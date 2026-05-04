@@ -166,6 +166,33 @@ def test_taste_profile_empty_state() -> None:
     assert TasteDimension.objects.filter(owner=user).count() == len(DEFAULT_TASTE_DIMENSIONS)
 
 
+def test_taste_profile_cache_is_invalidated_after_score_mutation() -> None:
+    client, user = authenticated_client()
+    dimensions = seed_default_taste_dimensions(user)
+    story = next(dimension for dimension in dimensions if dimension.slug == "story_depth")
+    media = MediaItem.objects.create(
+        owner=user,
+        title="Cached Taste",
+        media_type="movie",
+        status="completed",
+    )
+
+    initial_response = client.get(reverse("taste-profile-summary"))
+    assert initial_response.status_code == status.HTTP_200_OK
+    assert initial_response.json()["evidenceCounts"]["scoreCount"] == 0
+
+    score_response = client.put(
+        reverse("media-score-list", args=[media.id]),
+        {"scores": [{"dimensionId": str(story.id), "score": "9.0"}]},
+        format="json",
+    )
+    assert score_response.status_code == status.HTTP_200_OK
+
+    refreshed_response = client.get(reverse("taste-profile-summary"))
+    assert refreshed_response.status_code == status.HTTP_200_OK
+    assert refreshed_response.json()["evidenceCounts"]["scoreCount"] == 1
+
+
 def test_taste_profile_with_scored_media() -> None:
     client, user = authenticated_client()
     dimensions = seed_default_taste_dimensions(user)

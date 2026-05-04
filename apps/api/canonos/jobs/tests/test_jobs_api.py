@@ -96,9 +96,10 @@ def test_jobs_list_and_detail_are_owner_scoped() -> None:
 
     assert list_response.status_code == status.HTTP_200_OK
     payload = list_response.json()
-    assert [job["id"] for job in payload] == [str(visible.id)]
-    assert payload[0]["jobType"] == "import"
-    assert payload[0]["progressPercent"] == 100
+    assert payload["count"] == 1
+    assert [job["id"] for job in payload["results"]] == [str(visible.id)]
+    assert payload["results"][0]["jobType"] == "import"
+    assert payload["results"][0]["progressPercent"] == 100
     assert detail_response.status_code == status.HTTP_200_OK
     assert detail_response.json()["sourceLabel"] == "Owner import"
     assert private_response.status_code == status.HTTP_404_NOT_FOUND

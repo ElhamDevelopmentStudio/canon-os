@@ -1,4 +1,5 @@
 import type { AftertasteEntry } from "./aftertaste";
+import type { PaginatedResponse } from "./pagination";
 import type { MediaScore } from "./taste";
 import type { ExternalMetadataSnapshot } from "./metadata";
 
@@ -52,12 +53,7 @@ export type MediaItemCreateRequest = {
 
 export type MediaItemUpdateRequest = Partial<MediaItemCreateRequest>;
 
-export type MediaItemListResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: MediaItem[];
-};
+export type MediaItemListResponse = PaginatedResponse<MediaItem>;
 
 export type MediaItemFilters = {
   mediaType?: MediaType | "";

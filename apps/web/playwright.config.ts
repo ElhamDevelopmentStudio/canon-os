@@ -20,7 +20,7 @@ export default defineConfig({
   webServer: [
     {
       command:
-        'node ../../scripts/run-with-root-env.mjs bash -lc "cd apps/api && python3 scripts/ensure_venv.py && .venv/bin/python manage.py migrate --noinput && .venv/bin/python manage.py runserver 0.0.0.0:8000"',
+        'node ../../scripts/run-with-root-env.mjs bash -lc "cd apps/api && python3 scripts/ensure_venv.py && CANONOS_AUTH_RATE=1000/min CANONOS_EXPENSIVE_RATE=1000/min .venv/bin/python manage.py migrate --noinput && CANONOS_AUTH_RATE=1000/min CANONOS_EXPENSIVE_RATE=1000/min .venv/bin/python manage.py runserver 0.0.0.0:8000"',
       url: "http://localhost:8000/api/health/",
       reuseExistingServer,
       timeout: 120_000,

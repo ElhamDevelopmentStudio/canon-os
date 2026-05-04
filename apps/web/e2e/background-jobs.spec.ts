@@ -1,5 +1,7 @@
 import type { Page } from "@playwright/test";
 
+import type { BackgroundJobListResponse } from "@canonos/contracts";
+
 import { test, expect } from "./helpers/fixtures";
 import { registerViaUi } from "./helpers/auth";
 import { uniqueTitle } from "./helpers/data";
@@ -80,7 +82,8 @@ test.describe("background jobs browser-to-backend flow", () => {
     await expect(page.getByRole("heading", { name: "Background jobs", exact: true })).toBeVisible();
     const jobsResponse = waitForApiResponse(page, "GET", "/api/jobs/", 200);
     await page.getByRole("button", { name: "Refresh jobs" }).click();
-    const jobs = await expectApiJson<{ jobType: string; status: string; sourceLabel: string }[]>(await jobsResponse);
+    const jobsPayload = await expectApiJson<BackgroundJobListResponse>(await jobsResponse);
+    const jobs = jobsPayload.results;
     expect(jobs.some((job) => job.jobType === "metadata_refresh" && job.status === "complete")).toBe(true);
     expect(jobs.some((job) => job.jobType === "narrative_analysis" && job.status === "complete")).toBe(true);
     expect(jobs.some((job) => job.jobType === "graph_rebuild" && job.status === "complete")).toBe(true);

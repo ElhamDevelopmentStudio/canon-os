@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.cache import invalidate_user_data_cache
+
 from .defaults import DEFAULT_AFTERTASTE_PROMPTS
 from .models import AftertasteEntry
 from .serializers import AftertasteEntrySerializer, AftertastePromptSerializer
@@ -51,6 +53,15 @@ class AftertasteEntryViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: AftertasteEntrySerializer) -> None:
         serializer.save(owner=self.request.user)
+        invalidate_user_data_cache(self.request.user)
+
+    def perform_update(self, serializer: AftertasteEntrySerializer) -> None:
+        serializer.save()
+        invalidate_user_data_cache(self.request.user)
+
+    def perform_destroy(self, instance: AftertasteEntry) -> None:
+        instance.delete()
+        invalidate_user_data_cache(self.request.user)
 
 
 class AftertastePromptView(APIView):

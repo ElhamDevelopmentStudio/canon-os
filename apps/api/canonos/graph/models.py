@@ -41,6 +41,7 @@ class GraphNode(models.Model):
         ]
         indexes = [
             models.Index(fields=["owner", "node_type"], name="graph_node_owner_type_idx"),
+            models.Index(fields=["owner", "updated_at"], name="graph_node_owner_updated_idx"),
             models.Index(fields=["slug"], name="graph_node_slug_idx"),
         ]
 
@@ -94,6 +95,10 @@ class GraphEdge(models.Model):
         ]
         indexes = [
             models.Index(fields=["owner", "edge_type"], name="graph_edge_owner_type_idx"),
+            models.Index(
+                fields=["owner", "source_node", "target_node"], name="graph_edge_owner_nodes_idx"
+            ),
+            models.Index(fields=["owner", "updated_at"], name="graph_edge_owner_updated_idx"),
             models.Index(fields=["source_node"], name="graph_edge_source_idx"),
             models.Index(fields=["target_node"], name="graph_edge_target_idx"),
         ]

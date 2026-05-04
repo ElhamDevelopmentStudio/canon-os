@@ -7,6 +7,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from canonos.accounts.models import UserSettings
+from canonos.anti_generic.models import AntiGenericRule
+from canonos.anti_generic.services import get_rules_for_user
 from canonos.candidates.models import Candidate, CandidateEvaluation
 from canonos.media.models import MediaItem
 from canonos.taste.models import MediaScore
@@ -132,6 +134,41 @@ def test_genericness_and_time_penalties_reduce_candidate_decision() -> None:
     assert evaluation["riskScore"] >= 80
     assert evaluation["decision"] in {"delay", "skip"}
     assert any("genericness" in reason.lower() for reason in evaluation["reasonsAgainst"])
+
+
+def test_candidate_evaluate_response_uses_fresh_anti_generic_rules() -> None:
+    client, user = authenticated_client()
+    candidate = Candidate.objects.create(
+        owner=user,
+        title="Long trend suspect",
+        media_type="tv_show",
+        premise="A dark gritty mystery box with filler episodes and weak ending rumors.",
+        hype_level=9,
+        expected_genericness=9,
+        expected_time_cost_minutes=900,
+    )
+
+    first_response = client.post(reverse("candidate-evaluate", args=[candidate.id]), format="json")
+    assert first_response.status_code == status.HTTP_200_OK
+    assert "filler_heavy_long_series" in {
+        signal["ruleKey"]
+        for signal in first_response.json()["evaluation"]["antiGenericEvaluation"][
+            "detectedSignals"
+        ]
+    }
+
+    get_rules_for_user(user)
+    AntiGenericRule.objects.filter(owner=user, key="filler_heavy_long_series").update(
+        is_enabled=False
+    )
+
+    response = client.post(reverse("candidate-evaluate", args=[candidate.id]), format="json")
+
+    assert response.status_code == status.HTTP_200_OK
+    assert "filler_heavy_long_series" not in {
+        signal["ruleKey"]
+        for signal in response.json()["evaluation"]["antiGenericEvaluation"]["detectedSignals"]
+    }
 
 
 def test_candidate_evaluation_uses_saved_genericness_sensitivity() -> None:

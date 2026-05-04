@@ -3,11 +3,16 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal, InvalidOperation
 
-from django.db.models import Q, QuerySet
+from django.db.models import Prefetch, Q, QuerySet
 from django.utils.dateparse import parse_date
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+
+from canonos.aftertaste.models import AftertasteEntry
+from canonos.common.cache import invalidate_user_data_cache
+from canonos.metadata.models import ExternalMetadata
+from canonos.taste.models import MediaScore
 
 from .models import MediaItem
 from .serializers import MediaItemSerializer
@@ -64,17 +69,26 @@ class MediaItemViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):  # noqa: ANN201
-        queryset = (
-            MediaItem.objects.filter(owner=self.request.user)
-            .prefetch_related(
-                "scores__taste_dimension",
+        queryset = MediaItem.objects.filter(owner=self.request.user).prefetch_related(
+            Prefetch(
+                "scores",
+                queryset=MediaScore.objects.select_related("taste_dimension").order_by(
+                    "taste_dimension__name"
+                ),
+                to_attr="prefetched_scores",
+            ),
+            Prefetch(
                 "aftertaste_entries",
+                queryset=AftertasteEntry.objects.select_related("media_item").order_by(
+                    "-created_at"
+                ),
+                to_attr="prefetched_aftertaste_entries",
+            ),
+            Prefetch(
                 "external_metadata",
-            )
-            .order_by(
-                "-updated_at",
-                "title",
-            )
+                queryset=ExternalMetadata.objects.order_by("-last_refreshed_at"),
+                to_attr="prefetched_external_metadata",
+            ),
         )
         media_type = self.request.query_params.get("mediaType")
         status = self.request.query_params.get("status")
@@ -123,6 +137,15 @@ class MediaItemViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: MediaItemSerializer) -> None:
         serializer.save(owner=self.request.user)
+        invalidate_user_data_cache(self.request.user)
+
+    def perform_update(self, serializer: MediaItemSerializer) -> None:
+        serializer.save()
+        invalidate_user_data_cache(self.request.user)
+
+    def perform_destroy(self, instance: MediaItem) -> None:
+        instance.delete()
+        invalidate_user_data_cache(self.request.user)
 
 
 def _parse_decimal_param(value: str | None) -> Decimal | None:

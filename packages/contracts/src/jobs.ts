@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from "./pagination";
+
 export const BACKGROUND_JOB_TYPES = [
   "import",
   "export",
@@ -31,3 +33,5 @@ export type BackgroundJob = {
   createdAt: string;
   completedAt: string | null;
 };
+
+export type BackgroundJobListResponse = PaginatedResponse<BackgroundJob>;

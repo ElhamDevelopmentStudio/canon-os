@@ -34,6 +34,7 @@ User-facing features must also update the matching manual test document under `d
 | Settings and portability | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/settings-portability.md` |
 | Security/privacy | Backend owner-scope, throttle, audit, deletion, and deploy-check tests; Playwright browser e2e. | `docs/manual-tests/security-privacy.md` |
 | Global search and advanced filters | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/search-and-filters.md` |
+| Performance and scalability | Backend pagination/cache/performance tests plus frontend pagination/skeleton tests. | `docs/manual-tests/performance-scalability.md` |
 | API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
 
 ## Browser-to-Backend E2E Contract

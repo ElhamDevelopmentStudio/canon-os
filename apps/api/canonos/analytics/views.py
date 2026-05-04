@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.cache import cache_user_payload
+
 from .serializers import (
     AnalyticsOverviewSerializer,
     ConsumptionTimelineSerializer,
@@ -36,6 +38,12 @@ class AnalyticsView(APIView):
         serializer = serializer_class(payload)
         return Response(serializer.data)
 
+    def cached_respond(self, request, namespace: str, serializer_class, builder):  # noqa: ANN001, ANN201
+        return self.respond(
+            serializer_class,
+            cache_user_payload(request.user, namespace, lambda: builder(request.user)),
+        )
+
 
 class AnalyticsOverviewView(AnalyticsView):
     @extend_schema(
@@ -44,7 +52,9 @@ class AnalyticsOverviewView(AnalyticsView):
         description="Return all private insight analytics needed by the Insights page.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(AnalyticsOverviewSerializer, build_analytics_overview(request.user))
+        return self.cached_respond(
+            request, "analytics-overview", AnalyticsOverviewSerializer, build_analytics_overview
+        )
 
 
 class ConsumptionTimelineView(AnalyticsView):
@@ -54,7 +64,12 @@ class ConsumptionTimelineView(AnalyticsView):
         description="Group completed and dropped media by month for the current user.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(ConsumptionTimelineSerializer, build_consumption_timeline(request.user))
+        return self.cached_respond(
+            request,
+            "analytics-consumption-timeline",
+            ConsumptionTimelineSerializer,
+            build_consumption_timeline,
+        )
 
 
 class RatingDistributionView(AnalyticsView):
@@ -64,7 +79,12 @@ class RatingDistributionView(AnalyticsView):
         description="Count current user's rated media in simple 0-10 buckets.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(RatingDistributionSerializer, build_rating_distribution(request.user))
+        return self.cached_respond(
+            request,
+            "analytics-rating-distribution",
+            RatingDistributionSerializer,
+            build_rating_distribution,
+        )
 
 
 class MediaTypeDistributionView(AnalyticsView):
@@ -74,8 +94,11 @@ class MediaTypeDistributionView(AnalyticsView):
         description="Summarize current user's library by medium.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(
-            MediaTypeDistributionSerializer, build_media_type_distribution(request.user)
+        return self.cached_respond(
+            request,
+            "analytics-media-type-distribution",
+            MediaTypeDistributionSerializer,
+            build_media_type_distribution,
         )
 
 
@@ -86,7 +109,9 @@ class DimensionTrendsView(AnalyticsView):
         description="Group taste scores by dimension and month for the current user.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(DimensionTrendsSerializer, build_dimension_trends(request.user))
+        return self.cached_respond(
+            request, "analytics-dimension-trends", DimensionTrendsSerializer, build_dimension_trends
+        )
 
 
 class GenericnessSatisfactionView(AnalyticsView):
@@ -96,8 +121,11 @@ class GenericnessSatisfactionView(AnalyticsView):
         description="Compare genericness scores against personal ratings for the current user.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(
-            GenericnessSatisfactionSerializer, build_genericness_satisfaction(request.user)
+        return self.cached_respond(
+            request,
+            "analytics-genericness-satisfaction",
+            GenericnessSatisfactionSerializer,
+            build_genericness_satisfaction,
         )
 
 
@@ -108,7 +136,9 @@ class RegretTimeCostView(AnalyticsView):
         description="Compare regret scores against estimated time cost for the current user.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(RegretTimeCostSerializer, build_regret_time_cost(request.user))
+        return self.cached_respond(
+            request, "analytics-regret-time-cost", RegretTimeCostSerializer, build_regret_time_cost
+        )
 
 
 class TopCreatorsView(AnalyticsView):
@@ -118,7 +148,9 @@ class TopCreatorsView(AnalyticsView):
         description="Rank creators by current user's library evidence.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(TopCreatorsSerializer, build_top_creators(request.user))
+        return self.cached_respond(
+            request, "analytics-top-creators", TopCreatorsSerializer, build_top_creators
+        )
 
 
 class TopThemesView(AnalyticsView):
@@ -130,4 +162,6 @@ class TopThemesView(AnalyticsView):
         ),
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return self.respond(TopThemesSerializer, build_top_themes(request.user))
+        return self.cached_respond(
+            request, "analytics-top-themes", TopThemesSerializer, build_top_themes
+        )

@@ -32,7 +32,7 @@ describe("NotificationsDropdown", () => {
   it("shows recent job notifications and links to the jobs page", async () => {
     const user = userEvent.setup();
     vi.mocked(useBackgroundJobs).mockReturnValue({
-      data: recentJobs,
+      data: { count: recentJobs.length, next: null, previous: null, results: recentJobs },
       error: undefined,
       isLoading: false,
       isValidating: false,

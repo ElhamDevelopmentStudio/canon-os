@@ -478,3 +478,28 @@ Snapshot payloads include `snapshotPeriod`, `snapshotDate`, `aggregateData`, `in
 - `GET /api/taste-graph/nodes/` lists graph nodes, optionally filtered by `nodeType`.
 - `GET /api/taste-graph/edges/` lists graph edges, optionally filtered by `edgeType`.
 - `POST /api/taste-graph/rebuild/` rebuilds the authenticated user's graph and returns a rebuild job payload.
+
+## Pagination, Caching, And Scalability Contract
+
+Large owner-scoped list endpoints must return the shared paginated shape:
+
+```json
+{
+  "count": 1000,
+  "next": "http://localhost:8000/api/media-items/?page=2",
+  "previous": null,
+  "results": []
+}
+```
+
+The default page size is 25. Clients may request `page` and `pageSize`; `pageSize` is capped at 100. New list endpoints should use the shared pagination helper or DRF page-number pagination unless the response is intentionally small/static and documented.
+
+Performance-sensitive querysets must use `select_related` / `prefetch_related` for nested serializer data. Media list/detail prefetches scores, aftertaste, and external metadata; queue queries select linked media/candidates; candidate queries prefetch latest evaluations and Anti-Generic evaluations.
+
+Aggregate endpoints that are expensive but owner-scoped are cached briefly per user:
+
+- `GET /api/dashboard/summary/`
+- `GET /api/taste-profile/summary/`
+- `GET /api/analytics/*`
+
+Media, score, aftertaste, import, and privacy deletion mutations invalidate the current user's aggregate cache version so summaries do not stay stale after evidence changes.

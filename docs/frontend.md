@@ -234,3 +234,18 @@ Background Jobs lives at `/jobs`. API calls and polling hooks live in `apps/web/
 ### Insights UI
 
 Insights lives at `/insights`. API calls live in `apps/web/src/features/insights/analyticsApi.ts`. The page supports loading, empty, error, and success states; metric cards; simple responsive bar visualizations for consumption, ratings, and media types; dimension trend cards; genericness/satisfaction and regret/time-cost insight cards; top creator rankings; and top theme rankings derived from Narrative DNA traits. The Dashboard links to Insights from the quick actions and media type preview.
+
+## Performance And Large List Pattern
+
+API-backed pages must not render full large datasets in the browser. Use the shared helpers added for CP-M19:
+
+- `PaginationControls` for accessible Previous/Next controls and count copy.
+- `ListSkeleton` for large-list loading states.
+- `useDebouncedValue` for search inputs that call list APIs.
+- `paginationParams`, `pageFromSearchParams`, and `DEFAULT_PAGE_SIZE` for stable URL-backed page state.
+
+Library, Candidate History, Aftertaste Log, and Background Jobs use URL-backed page parameters. Library and Candidate search inputs are debounced, and list API clients include `page` / `pageSize` in stable SWR keys.
+
+SWR is configured globally with a deduping interval and bounded retry behavior. Avoid feature-local retry loops unless the endpoint has a documented reason.
+
+Major product routes are lazy-loaded through the app router. Keep route components accessible during loading and prefer shared skeletons inside pages once data fetching starts.

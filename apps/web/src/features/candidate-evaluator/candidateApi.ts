@@ -7,13 +7,31 @@ import type {
   CandidateEvaluateResponse,
   CandidateListResponse,
   CandidateUpdateRequest,
+  MediaType,
+  PaginationParams,
 } from "@canonos/contracts";
 import useSWR, { mutate as globalMutate } from "swr";
 
 import { getCsrfToken } from "@/features/auth/authApi";
 import { api } from "@/lib/api";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
+import { paginationParams } from "@/lib/pagination";
 import { fetcher } from "@/lib/swr";
+
+export type CandidateListParams = PaginationParams & {
+  mediaType?: MediaType | "";
+  status?: Candidate["status"] | "";
+  search?: string;
+};
+
+function candidateListKey(params: CandidateListParams = {}) {
+  const query = paginationParams(params);
+  if (params.mediaType) query.set("mediaType", params.mediaType);
+  if (params.status) query.set("status", params.status);
+  if (params.search?.trim()) query.set("search", params.search.trim());
+  const serialized = query.toString();
+  return `${API_ROUTES.candidates}${serialized ? `?${serialized}` : ""}`;
+}
 
 function normalizeAntiGenericEvaluation(evaluation: AntiGenericEvaluation | null): AntiGenericEvaluation | null {
   if (!evaluation) return null;
@@ -68,8 +86,8 @@ function normalizeEvaluationResponse(response: CandidateEvaluateResponse): Candi
   };
 }
 
-export function useCandidates() {
-  return useSWR(API_ROUTES.candidates, async (url: string) =>
+export function useCandidates(params: CandidateListParams = {}) {
+  return useSWR(candidateListKey(params), async (url: string) =>
     normalizeCandidateList(await fetcher<CandidateListResponse>(url)),
   );
 }

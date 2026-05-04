@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.pagination import paginated_response
 from canonos.common.throttles import ExpensiveEndpointThrottle
 
 from .models import GraphEdge, GraphNode
@@ -42,7 +43,7 @@ class GraphNodeListView(APIView):
         node_type = request.query_params.get("nodeType")
         if node_type:
             queryset = queryset.filter(node_type=node_type)
-        return Response({"results": GraphNodeSerializer(queryset, many=True).data})
+        return paginated_response(request, queryset, GraphNodeSerializer)
 
 
 class GraphEdgeListView(APIView):
@@ -61,7 +62,7 @@ class GraphEdgeListView(APIView):
         edge_type = request.query_params.get("edgeType")
         if edge_type:
             queryset = queryset.filter(edge_type=edge_type)
-        return Response({"results": GraphEdgeSerializer(queryset, many=True).data})
+        return paginated_response(request, queryset, GraphEdgeSerializer)
 
 
 class TasteGraphRebuildView(APIView):

@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -80,6 +81,59 @@ def test_list_media_items_filters_searches_and_orders_by_updated_date() -> None:
     payload = response.json()
     assert payload["count"] == 1
     assert payload["results"][0]["title"] == "Mushishi"
+
+
+def test_list_media_items_is_paginated_with_bounded_page_size() -> None:
+    client, user = authenticated_client()
+    now = timezone.now()
+    MediaItem.objects.bulk_create(
+        [
+            MediaItem(
+                owner=user,
+                title=f"Library item {index:02d}",
+                media_type="movie",
+                status="planned",
+                created_at=now,
+                updated_at=now,
+            )
+            for index in range(30)
+        ]
+    )
+
+    response = client.get(reverse("mediaitem-list"), {"page": "2", "pageSize": "10"})
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["count"] == 30
+    assert payload["next"] is not None
+    assert payload["previous"] is not None
+    assert len(payload["results"]) == 10
+
+
+def test_large_library_dataset_returns_one_page_without_full_render_payload() -> None:
+    client, user = authenticated_client()
+    now = timezone.now()
+    MediaItem.objects.bulk_create(
+        [
+            MediaItem(
+                owner=user,
+                title=f"Scalability sample {index:04d}",
+                media_type="movie",
+                status="planned" if index % 2 else "completed",
+                personal_rating="8.0" if index % 2 == 0 else None,
+                created_at=now,
+                updated_at=now,
+            )
+            for index in range(1000)
+        ]
+    )
+
+    response = client.get(reverse("mediaitem-list"))
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["count"] == 1000
+    assert len(payload["results"]) == 25
 
 
 def test_update_media_item() -> None:

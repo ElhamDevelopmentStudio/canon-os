@@ -5,16 +5,20 @@ import type {
   AftertasteEntryListResponse,
   AftertastePrompt,
   AftertasteUpdateRequest,
+  PaginationParams,
 } from "@canonos/contracts";
 import useSWR, { mutate as globalMutate } from "swr";
 
 import { getCsrfToken } from "@/features/auth/authApi";
 import { api } from "@/lib/api";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
+import { paginationParams } from "@/lib/pagination";
 import { fetcher } from "@/lib/swr";
 
-function aftertasteListKey(filters: AftertasteEntryFilters = {}) {
-  const params = new URLSearchParams();
+type AftertasteListParams = AftertasteEntryFilters & PaginationParams;
+
+function aftertasteListKey(filters: AftertasteListParams = {}) {
+  const params = paginationParams(filters);
   if (filters.mediaItemId) params.set("mediaItemId", filters.mediaItemId);
   const query = params.toString();
   return `${API_ROUTES.aftertaste}${query ? `?${query}` : ""}`;
@@ -36,7 +40,7 @@ async function revalidateAftertasteCaches() {
   await globalMutate((key) => typeof key === "string" && key.startsWith(API_ROUTES.mediaItems));
 }
 
-export function useAftertasteEntries(filters: AftertasteEntryFilters = {}) {
+export function useAftertasteEntries(filters: AftertasteListParams = {}) {
   const key = aftertasteListKey(filters);
   return useSWR(key, async (url: string) => normalizeAftertasteList(await fetcher<AftertasteEntryListResponse>(url)));
 }

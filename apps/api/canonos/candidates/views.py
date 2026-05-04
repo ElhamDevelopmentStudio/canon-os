@@ -1,17 +1,19 @@
 from __future__ import annotations
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from canonos.anti_generic.models import AntiGenericEvaluation
+from canonos.common.cache import invalidate_user_data_cache
 from canonos.common.throttles import ExpensiveEndpointThrottle
 from canonos.media.models import MediaItem
 
-from .models import Candidate
+from .models import Candidate, CandidateEvaluation
 from .serializers import (
     CandidateAddToLibraryResponseSerializer,
     CandidateAddToLibrarySerializer,
@@ -60,7 +62,18 @@ class CandidateViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "head", "options"]
 
     def get_queryset(self):  # noqa: ANN201
-        queryset = Candidate.objects.filter(owner=self.request.user).prefetch_related("evaluations")
+        queryset = Candidate.objects.filter(owner=self.request.user).prefetch_related(
+            Prefetch(
+                "evaluations",
+                queryset=CandidateEvaluation.objects.order_by("-created_at"),
+                to_attr="prefetched_evaluations",
+            ),
+            Prefetch(
+                "anti_generic_evaluations",
+                queryset=AntiGenericEvaluation.objects.order_by("-created_at"),
+                to_attr="prefetched_anti_generic_evaluations",
+            ),
+        )
         media_type = self.request.query_params.get("mediaType")
         candidate_status = self.request.query_params.get("status")
         search = self.request.query_params.get("search")
@@ -91,11 +104,14 @@ class CandidateViewSet(viewsets.ModelViewSet):
     def evaluate(self, request, pk=None):  # noqa: ANN001, ANN201
         candidate = self.get_object()
         evaluation = evaluate_candidate(request.user, candidate)
-        candidate.refresh_from_db()
+        candidate = Candidate.objects.get(owner=request.user, pk=candidate.pk)
         return Response(
             {
                 "candidate": CandidateSerializer(candidate).data,
-                "evaluation": CandidateEvaluationSerializer(evaluation).data,
+                "evaluation": CandidateEvaluationSerializer(
+                    evaluation,
+                    context={"candidate": candidate},
+                ).data,
             }
         )
 
@@ -136,6 +152,7 @@ class CandidateViewSet(viewsets.ModelViewSet):
                 candidate.save(update_fields=["status", "updated_at"])
             else:
                 candidate.save(update_fields=["updated_at"])
+            invalidate_user_data_cache(request.user)
 
         return Response(
             CandidateAddToLibraryResponseSerializer(

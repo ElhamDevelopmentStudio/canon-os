@@ -81,6 +81,8 @@ class MediaScore(models.Model):
         indexes = [
             models.Index(fields=["media_item"], name="media_score_item_idx"),
             models.Index(fields=["taste_dimension"], name="media_score_dimension_idx"),
+            models.Index(fields=["taste_dimension", "score"], name="media_score_dim_score_idx"),
+            models.Index(fields=["media_item", "updated_at"], name="media_score_item_updated_idx"),
         ]
 
     def __str__(self) -> str:

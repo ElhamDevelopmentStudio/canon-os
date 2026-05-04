@@ -52,7 +52,13 @@ class CandidateEvaluationSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(AntiGenericEvaluationSerializer(allow_null=True))
     def get_antiGenericEvaluation(self, obj: CandidateEvaluation):  # noqa: ANN201, N802
-        evaluation = obj.candidate.anti_generic_evaluations.order_by("-created_at").first()
+        candidate = self.context.get("candidate") or obj.candidate
+        prefetched_evaluations = getattr(candidate, "prefetched_anti_generic_evaluations", None)
+        evaluation = (
+            prefetched_evaluations[0]
+            if prefetched_evaluations
+            else candidate.anti_generic_evaluations.order_by("-created_at").first()
+        )
         return AntiGenericEvaluationSerializer(evaluation).data if evaluation else None
 
 
@@ -111,8 +117,17 @@ class CandidateSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(CandidateEvaluationSerializer(allow_null=True))
     def get_latestEvaluation(self, obj: Candidate):  # noqa: ANN201, N802
-        evaluation = obj.evaluations.order_by("-created_at").first()
-        return CandidateEvaluationSerializer(evaluation).data if evaluation else None
+        prefetched_evaluations = getattr(obj, "prefetched_evaluations", None)
+        evaluation = (
+            prefetched_evaluations[0]
+            if prefetched_evaluations
+            else obj.evaluations.order_by("-created_at").first()
+        )
+        return (
+            CandidateEvaluationSerializer(evaluation, context={"candidate": obj}).data
+            if evaluation
+            else None
+        )
 
 
 class CandidateEvaluateSerializer(serializers.Serializer):

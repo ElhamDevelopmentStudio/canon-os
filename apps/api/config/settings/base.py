@@ -159,7 +159,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "canonos.common.pagination.CanonOSPageNumberPagination",
     "PAGE_SIZE": 25,
     "DEFAULT_THROTTLE_RATES": {
         "auth": os.environ.get("CANONOS_AUTH_RATE", "20/min"),

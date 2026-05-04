@@ -4,16 +4,20 @@ import type {
   MediaItemFilters,
   MediaItemListResponse,
   MediaItemUpdateRequest,
+  PaginationParams,
 } from "@canonos/contracts";
 import useSWR, { mutate as globalMutate } from "swr";
 
 import { getCsrfToken } from "@/features/auth/authApi";
 import { api } from "@/lib/api";
 import { API_ROUTES } from "@/lib/apiRouteConstants";
+import { paginationParams } from "@/lib/pagination";
 import { fetcher } from "@/lib/swr";
 
-function mediaListKey(filters: MediaItemFilters = {}) {
-  const params = new URLSearchParams();
+type MediaListParams = MediaItemFilters & PaginationParams;
+
+function mediaListKey(filters: MediaListParams = {}) {
+  const params = paginationParams(filters);
   const setTrimmed = (key: keyof MediaItemFilters, paramName = key) => {
     const value = filters[key];
     if (typeof value === "string" && value.trim()) params.set(paramName, value.trim());
@@ -74,7 +78,7 @@ function normalizeMediaList(response: MediaItemListResponse): MediaItemListRespo
   };
 }
 
-export function useMediaItems(filters: MediaItemFilters = {}) {
+export function useMediaItems(filters: MediaListParams = {}) {
   const key = mediaListKey(filters);
   return useSWR(key, async (url: string) => normalizeMediaList(await fetcher<MediaItemListResponse>(url)));
 }

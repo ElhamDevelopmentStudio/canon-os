@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.pagination import paginated_response
+
 from .models import BackgroundJob
 from .serializers import BackgroundJobSerializer
 
@@ -18,8 +20,8 @@ class BackgroundJobListView(APIView):
         summary="List background jobs",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        jobs = BackgroundJob.objects.filter(owner=request.user)[:50]
-        return Response(BackgroundJobSerializer(jobs, many=True).data)
+        jobs = BackgroundJob.objects.filter(owner=request.user).order_by("-created_at")
+        return paginated_response(request, jobs, BackgroundJobSerializer)
 
 
 class BackgroundJobDetailView(APIView):

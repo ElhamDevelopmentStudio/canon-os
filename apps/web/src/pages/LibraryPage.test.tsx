@@ -108,6 +108,30 @@ describe("LibraryPage", () => {
     expect(screen.getByRole("button", { name: /add media/i })).toBeInTheDocument();
   });
 
+  it("uses accessible pagination controls for large libraries", async () => {
+    const user = userEvent.setup();
+    mockedUseMediaItems.mockReturnValue({
+      data: { ...sampleList, count: 60, next: "/api/media-items/?page=2", previous: null },
+      error: undefined,
+      isLoading: false,
+      isValidating: false,
+      mutate: vi.fn(),
+    } as unknown as ReturnType<typeof useMediaItems>);
+
+    renderLibrary();
+
+    expect(screen.getByRole("navigation", { name: /media item pagination/i })).toHaveTextContent(
+      "Showing 1-25 of 60 media items",
+    );
+    await user.click(screen.getByRole("button", { name: /next/i }));
+
+    await waitFor(() =>
+      expect(mockedUseMediaItems).toHaveBeenLastCalledWith(
+        expect.objectContaining({ page: "2" }),
+      ),
+    );
+  });
+
 
   it("hydrates advanced filters from the URL and clears active chips", async () => {
     const user = userEvent.setup();
@@ -132,7 +156,9 @@ describe("LibraryPage", () => {
     await user.click(screen.getByRole("button", { name: /clear filters/i }));
 
     await waitFor(() => expect(screen.queryByLabelText(/active filters/i)).not.toBeInTheDocument());
-    expect(mockedUseMediaItems).toHaveBeenLastCalledWith({});
+    expect(mockedUseMediaItems).toHaveBeenLastCalledWith(
+      expect.objectContaining({ page: "1" }),
+    );
   });
 
   it("updates advanced filters through accessible controls", async () => {

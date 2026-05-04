@@ -1,6 +1,7 @@
 import type { BackgroundJob } from "@canonos/contracts";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { useBackgroundJobs } from "@/features/jobs/jobsApi";
@@ -42,16 +43,24 @@ const jobs: BackgroundJob[] = [
 ];
 
 describe("JobsPage", () => {
+  function renderJobsPage() {
+    render(
+      <MemoryRouter initialEntries={["/jobs"]}>
+        <JobsPage />
+      </MemoryRouter>,
+    );
+  }
+
   it("renders recent jobs with status, progress, and result details", () => {
     vi.mocked(useBackgroundJobs).mockReturnValue({
-      data: jobs,
+      data: { count: jobs.length, next: null, previous: null, results: jobs },
       error: undefined,
       isLoading: false,
       isValidating: false,
       mutate: vi.fn(),
     } as unknown as ReturnType<typeof useBackgroundJobs>);
 
-    render(<JobsPage />);
+    renderJobsPage();
 
     expect(screen.getByRole("heading", { name: "Background jobs" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Recent jobs" })).toBeInTheDocument();
@@ -69,14 +78,14 @@ describe("JobsPage", () => {
     const user = userEvent.setup();
     const mutate = vi.fn();
     vi.mocked(useBackgroundJobs).mockReturnValue({
-      data: [],
+      data: { count: 0, next: null, previous: null, results: [] },
       error: undefined,
       isLoading: false,
       isValidating: false,
       mutate,
     } as unknown as ReturnType<typeof useBackgroundJobs>);
 
-    render(<JobsPage />);
+    renderJobsPage();
 
     expect(screen.getByText("No background jobs yet")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Refresh jobs" }));
@@ -93,7 +102,7 @@ describe("JobsPage", () => {
       mutate,
     } as unknown as ReturnType<typeof useBackgroundJobs>);
 
-    render(<JobsPage />);
+    renderJobsPage();
 
     const alert = screen.getByRole("alert");
     expect(within(alert).getByText("Background jobs unavailable")).toBeInTheDocument();

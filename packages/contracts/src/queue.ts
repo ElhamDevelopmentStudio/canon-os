@@ -1,4 +1,5 @@
 import type { MediaType } from "./media";
+import type { PaginatedResponse } from "./pagination";
 
 export const QUEUE_PRIORITIES = ["start_soon", "sample_first", "later"] as const;
 export type QueuePriority = (typeof QUEUE_PRIORITIES)[number];
@@ -46,12 +47,7 @@ export type QueueItemCreateRequest = {
 
 export type QueueItemUpdateRequest = Partial<QueueItemCreateRequest & { queuePosition: number }>;
 
-export type QueueItemListResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: QueueItem[];
-};
+export type QueueItemListResponse = PaginatedResponse<QueueItem>;
 
 export type QueueReorderRequest = {
   itemIds: string[];

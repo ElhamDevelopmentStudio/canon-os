@@ -61,6 +61,12 @@ class MediaItem(models.Model):
         ordering = ["-updated_at", "title"]
         indexes = [
             models.Index(fields=["owner", "status"], name="media_owner_status_idx"),
+            models.Index(
+                fields=["owner", "media_type", "status"], name="media_owner_type_status_idx"
+            ),
+            models.Index(fields=["owner", "-updated_at"], name="media_owner_updated_idx"),
+            models.Index(fields=["owner", "completed_date"], name="media_owner_completed_idx"),
+            models.Index(fields=["owner", "personal_rating"], name="media_owner_rating_idx"),
             models.Index(fields=["media_type"], name="media_type_idx"),
             models.Index(Lower("title"), name="media_title_lower_idx"),
         ]

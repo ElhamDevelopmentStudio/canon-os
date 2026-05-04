@@ -8,7 +8,8 @@ import { backgroundJobTypeLabels } from "@/features/jobs/jobLabels";
 import { useBackgroundJobs } from "@/features/jobs/jobsApi";
 
 export function NotificationsDropdown() {
-  const { data: jobs = [], error, isLoading } = useBackgroundJobs();
+  const { data, error, isLoading } = useBackgroundJobs();
+  const jobs = data?.results ?? [];
   const recentJobs = jobs.slice(0, 5);
   const activeCount = jobs.filter((job) => job.status === "queued" || job.status === "processing").length;
 

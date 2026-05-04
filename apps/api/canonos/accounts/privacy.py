@@ -11,6 +11,7 @@ from canonos.aftertaste.models import AftertasteEntry
 from canonos.anti_generic.models import AntiGenericEvaluation, AntiGenericRule
 from canonos.candidates.models import Candidate, CandidateEvaluation
 from canonos.canon.models import CanonSeason, CanonSeasonItem
+from canonos.common.cache import invalidate_user_data_cache
 from canonos.council.models import CouncilSession, CriticPersona
 from canonos.detox.models import DetoxDecision, DetoxRule
 from canonos.discovery.models import DiscoveryTrail
@@ -129,4 +130,5 @@ def delete_personal_canonos_data(user: User) -> DataDeletionResult:
         ]
     )
     seed_default_taste_dimensions(user)
+    invalidate_user_data_cache(user)
     return DataDeletionResult(deleted_counts=deleted_counts)

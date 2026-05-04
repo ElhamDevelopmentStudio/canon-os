@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -102,6 +103,37 @@ def test_empty_dashboard_summary() -> None:
     assert payload["highestRated"] == []
     assert payload["topTasteSignals"] == []
     assert payload["latestTasteEvolutionInsight"] is None
+
+
+def test_dashboard_summary_cache_is_invalidated_after_media_mutation() -> None:
+    cache.clear()
+    client, user = authenticated_client()
+
+    initial_response = client.get(reverse("dashboard-summary"))
+    assert initial_response.status_code == status.HTTP_200_OK
+    assert initial_response.json()["counts"]["totalMedia"] == 0
+
+    MediaItem.objects.create(
+        owner=user, title="Direct fixture", media_type="movie", status="planned"
+    )
+    cached_response = client.get(reverse("dashboard-summary"))
+    assert cached_response.status_code == status.HTTP_200_OK
+    assert cached_response.json()["counts"]["totalMedia"] == 0
+
+    created_response = client.post(
+        reverse("mediaitem-list"),
+        {
+            "title": "API mutation",
+            "mediaType": "movie",
+            "status": "planned",
+        },
+        format="json",
+    )
+    assert created_response.status_code == status.HTTP_201_CREATED
+
+    refreshed_response = client.get(reverse("dashboard-summary"))
+    assert refreshed_response.status_code == status.HTTP_200_OK
+    assert refreshed_response.json()["counts"]["totalMedia"] == 2
 
 
 def test_dashboard_endpoint_appears_in_openapi_schema() -> None:

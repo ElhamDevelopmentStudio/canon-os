@@ -1,7 +1,8 @@
-import type { BackgroundJob } from "@canonos/contracts";
+import type { BackgroundJob, BackgroundJobListResponse, PaginationParams } from "@canonos/contracts";
 import useSWR from "swr";
 
 import { API_ROUTES } from "@/lib/apiRouteConstants";
+import { normalizePaginatedResponse, paginationParams } from "@/lib/pagination";
 import { fetcher } from "@/lib/swr";
 import { isActiveBackgroundJobStatus } from "@/features/jobs/jobLabels";
 
@@ -14,18 +15,29 @@ function normalizeJob(job: BackgroundJob): BackgroundJob {
   };
 }
 
-function hasActiveJobs(jobs: BackgroundJob[] | undefined): boolean {
-  return jobs?.some((job) => isActiveBackgroundJobStatus(job.status)) ?? false;
+function normalizeJobList(response: BackgroundJobListResponse | BackgroundJob[]): BackgroundJobListResponse {
+  const paginated = normalizePaginatedResponse(response);
+  return { ...paginated, results: paginated.results.map(normalizeJob) };
+}
+
+function hasActiveJobs(response: BackgroundJobListResponse | undefined): boolean {
+  return response?.results.some((job) => isActiveBackgroundJobStatus(job.status)) ?? false;
 }
 
 export function backgroundJobKey(jobId: string | null | undefined) {
   return jobId ? `${API_ROUTES.backgroundJobs}${jobId}/` : null;
 }
 
-export function useBackgroundJobs() {
+function backgroundJobsKey(params: PaginationParams = {}) {
+  const query = paginationParams(params).toString();
+  return `${API_ROUTES.backgroundJobs}${query ? `?${query}` : ""}`;
+}
+
+export function useBackgroundJobs(params: PaginationParams = {}) {
   return useSWR(
-    API_ROUTES.backgroundJobs,
-    async (url: string) => (await fetcher<BackgroundJob[]>(url)).map(normalizeJob),
+    backgroundJobsKey(params),
+    async (url: string) =>
+      normalizeJobList(await fetcher<BackgroundJobListResponse | BackgroundJob[]>(url)),
     {
       refreshInterval: (latest) => (hasActiveJobs(latest) ? 1_500 : 0),
     },

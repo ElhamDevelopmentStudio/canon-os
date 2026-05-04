@@ -1,6 +1,7 @@
 import type { AntiGenericEvaluation } from "./antiGeneric";
 import type { MediaItem, MediaItemCreateRequest, MediaType } from "./media";
 import type { CandidateNarrativeSignal } from "./narrative";
+import type { PaginatedResponse } from "./pagination";
 
 export const CANDIDATE_STATUSES = ["unevaluated", "watch_now", "sample", "delay", "skip"] as const;
 export type CandidateStatus = (typeof CANDIDATE_STATUSES)[number];
@@ -55,12 +56,7 @@ export type CandidateCreateRequest = {
 
 export type CandidateUpdateRequest = Partial<CandidateCreateRequest & { status: CandidateStatus }>;
 
-export type CandidateListResponse = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: Candidate[];
-};
+export type CandidateListResponse = PaginatedResponse<Candidate>;
 
 export type CandidateEvaluateRequest = {
   candidate: CandidateCreateRequest;

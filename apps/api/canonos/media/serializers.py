@@ -87,14 +87,21 @@ class MediaItemSerializer(serializers.ModelSerializer):
     def get_scores(self, obj: MediaItem):  # noqa: ANN201
         from canonos.taste.serializers import MediaScoreSerializer
 
-        scores = obj.scores.select_related("taste_dimension").all()
+        scores = getattr(obj, "prefetched_scores", None)
+        if scores is None:
+            scores = obj.scores.select_related("taste_dimension").all()
         return MediaScoreSerializer(scores, many=True).data
 
     @extend_schema_field(serializers.DictField(allow_null=True))
     def get_latestAftertaste(self, obj: MediaItem):  # noqa: ANN201, N802
         from canonos.aftertaste.serializers import AftertasteEntrySerializer
 
-        latest = obj.aftertaste_entries.select_related("media_item").order_by("-created_at").first()
+        prefetched_entries = getattr(obj, "prefetched_aftertaste_entries", None)
+        latest = (
+            prefetched_entries[0]
+            if prefetched_entries
+            else obj.aftertaste_entries.select_related("media_item").order_by("-created_at").first()
+        )
         if latest is None:
             return None
         return AftertasteEntrySerializer(latest, context=self.context).data
@@ -103,7 +110,12 @@ class MediaItemSerializer(serializers.ModelSerializer):
     def get_externalMetadata(self, obj: MediaItem):  # noqa: ANN201, N802
         from canonos.metadata.serializers import ExternalMetadataSerializer
 
-        latest = obj.external_metadata.order_by("-last_refreshed_at").first()
+        prefetched_metadata = getattr(obj, "prefetched_external_metadata", None)
+        latest = (
+            prefetched_metadata[0]
+            if prefetched_metadata
+            else obj.external_metadata.order_by("-last_refreshed_at").first()
+        )
         if latest is None:
             return None
         return ExternalMetadataSerializer(latest, context=self.context).data

@@ -7,9 +7,12 @@ import type {
 import { AFTERTASTE_APPETITE_EFFECTS } from "@canonos/contracts";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
+import { PaginationControls } from "@/components/data-display/PaginationControls";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
@@ -24,6 +27,7 @@ import {
 } from "@/features/aftertaste/aftertasteApi";
 import { appetiteEffectLabels, booleanLabel } from "@/features/aftertaste/aftertasteLabels";
 import { useMediaItems } from "@/features/media/mediaApi";
+import { DEFAULT_PAGE_SIZE, pageFromSearchParams } from "@/lib/pagination";
 import { cn } from "@/lib/utils";
 
 const fieldClassName = cn(
@@ -59,8 +63,10 @@ const emptyDraft: AftertasteDraft = {
 };
 
 export function AftertasteLogPage() {
-  const { data, error, isLoading, mutate } = useAftertasteEntries();
-  const { data: mediaData, error: mediaError, isLoading: isLoadingMedia } = useMediaItems();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = pageFromSearchParams(searchParams);
+  const { data, error, isLoading, mutate } = useAftertasteEntries({ page });
+  const { data: mediaData, error: mediaError, isLoading: isLoadingMedia } = useMediaItems({ pageSize: "100" });
   const { data: prompts, error: promptsError, isLoading: isLoadingPrompts } = useAftertastePrompts();
   const [editingEntry, setEditingEntry] = useState<AftertasteEntry | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,6 +75,13 @@ export function AftertasteLogPage() {
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const entries = useMemo(() => data?.results ?? [], [data]);
   const mediaItems = useMemo(() => mediaData?.results ?? [], [mediaData]);
+
+  function updatePage(nextPage: number) {
+    const next = new URLSearchParams(searchParams);
+    if (nextPage <= 1) next.delete("page");
+    else next.set("page", String(nextPage));
+    setSearchParams(next, { replace: true });
+  }
 
   function openNewModal() {
     setEditingEntry(null);
@@ -121,7 +134,7 @@ export function AftertasteLogPage() {
         </PageActionBar>
       </SectionCard>
 
-      {isLoading ? <LoadingState title="Loading aftertaste log" message="Fetching your reflections." /> : null}
+      {isLoading ? <ListSkeleton label="Loading aftertaste log" rows={6} /> : null}
       {error ? <ErrorState title="Aftertaste log unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {actionError ? <ErrorState title="Aftertaste action failed" message={actionError} /> : null}
       {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
@@ -134,11 +147,20 @@ export function AftertasteLogPage() {
         />
       ) : null}
       {!isLoading && !error && entries.length > 0 ? (
-        <section className="grid gap-4 lg:grid-cols-2">
-          {entries.map((entry) => (
-            <AftertasteEntryCard entry={entry} key={entry.id} onDelete={setDeleteTarget} onEdit={openEditModal} />
-          ))}
-        </section>
+        <>
+          <PaginationControls
+            count={data?.count ?? 0}
+            itemLabel="reflection"
+            page={Number(page)}
+            pageSize={DEFAULT_PAGE_SIZE}
+            onPageChange={updatePage}
+          />
+          <section className="grid gap-4 lg:grid-cols-2">
+            {entries.map((entry) => (
+              <AftertasteEntryCard entry={entry} key={entry.id} onDelete={setDeleteTarget} onEdit={openEditModal} />
+            ))}
+          </section>
+        </>
       ) : null}
 
       <SectionCard title="Default prompts">

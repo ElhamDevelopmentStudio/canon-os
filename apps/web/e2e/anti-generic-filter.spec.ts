@@ -27,15 +27,16 @@ async function fillCandidateForm(
     timeCost: string;
   },
 ) {
-  await page.getByLabel("Title").fill(candidate.title);
-  await page.getByLabel("Media type").selectOption(candidate.mediaType);
-  await page.getByLabel("Release year").fill(candidate.releaseYear);
-  await page.getByLabel("Known creator").fill(candidate.creator);
-  await page.getByLabel("Source of interest").fill(candidate.source);
-  await page.getByLabel("Premise / signal notes").fill(candidate.premise);
-  await page.getByLabel("Hype level (0-10)").fill(candidate.hype);
-  await page.getByLabel("Expected genericness (0-10)").fill(candidate.genericness);
-  await page.getByLabel("Expected time cost (minutes)").fill(candidate.timeCost);
+  const candidateInput = page.getByRole("region", { name: "Candidate input" });
+  await candidateInput.getByLabel("Title").fill(candidate.title);
+  await candidateInput.getByLabel("Media type").selectOption(candidate.mediaType);
+  await candidateInput.getByLabel("Release year").fill(candidate.releaseYear);
+  await candidateInput.getByLabel("Known creator").fill(candidate.creator);
+  await candidateInput.getByLabel("Source of interest").fill(candidate.source);
+  await candidateInput.getByLabel("Premise / signal notes").fill(candidate.premise);
+  await candidateInput.getByLabel("Hype level (0-10)").fill(candidate.hype);
+  await candidateInput.getByLabel("Expected genericness (0-10)").fill(candidate.genericness);
+  await candidateInput.getByLabel("Expected time cost (minutes)").fill(candidate.timeCost);
 }
 
 test.describe("anti-generic filter browser-to-backend flow", () => {

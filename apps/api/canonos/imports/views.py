@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from canonos.accounts.audit import log_audit_event
 from canonos.accounts.models import AuditEvent
+from canonos.common.cache import invalidate_user_data_cache
 
 from .models import ExportJob, ImportBatch
 from .serializers import (
@@ -90,6 +91,7 @@ class ImportConfirmView(APIView):
             batch = confirm_import_batch(user=request.user, batch=batch)
         except ValueError as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        invalidate_user_data_cache(request.user)
         return Response(ImportBatchSerializer(batch).data)
 
 
@@ -116,6 +118,7 @@ class ImportRollbackView(APIView):
             result = rollback_import_batch(user=request.user, batch=batch)
         except ValueError as exc:
             return Response({"detail": str(exc)}, status=status.HTTP_400_BAD_REQUEST)
+        invalidate_user_data_cache(request.user)
         return Response(ImportRollbackResultSerializer(result).data)
 
 

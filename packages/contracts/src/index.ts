@@ -199,6 +199,7 @@ export {
 } from "./tonight";
 export * from "./portability";
 export * from "./privacy";
+export * from "./pagination";
 export type {
   ExternalMediaMatch,
   ExternalMetadataSnapshot,
@@ -275,7 +276,7 @@ export {
   CANON_THEME_KEYS,
 } from "./canon";
 
-export type { BackgroundJob, BackgroundJobStatus, BackgroundJobType } from "./jobs";
+export type { BackgroundJob, BackgroundJobListResponse, BackgroundJobStatus, BackgroundJobType } from "./jobs";
 export { BACKGROUND_JOB_STATUSES, BACKGROUND_JOB_TYPES } from "./jobs";
 export * from "./narrative";
 

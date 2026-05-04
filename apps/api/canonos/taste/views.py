@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from canonos.common.cache import cache_user_payload, invalidate_user_data_cache
 from canonos.media.models import MediaItem
 
 from .models import MediaScore, TasteDimension
@@ -78,6 +79,7 @@ class MediaScoresView(APIView):
                 defaults={"score": item["score"], "note": item.get("note", "")},
             )
 
+        invalidate_user_data_cache(request.user)
         scores = MediaScore.objects.filter(media_item=media_item).select_related("taste_dimension")
         return Response(
             {"results": MediaScoreSerializer(scores, many=True).data},
@@ -94,4 +96,10 @@ class TasteProfileSummaryView(APIView):
         description="Build the deterministic Taste Profile summary from evidence.",
     )
     def get(self, request):  # noqa: ANN001, ANN201
-        return Response(build_taste_profile_summary(request.user))
+        return Response(
+            cache_user_payload(
+                request.user,
+                "taste-profile-summary",
+                lambda: build_taste_profile_summary(request.user),
+            )
+        )

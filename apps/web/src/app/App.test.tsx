@@ -9,7 +9,13 @@ import { protectedRouteChildren } from "@/app/router";
 import { useAuthStore } from "@/stores/authStore";
 
 vi.mock("@/features/jobs/jobsApi", () => ({
-  useBackgroundJobs: () => ({ data: [], error: undefined, isLoading: false, isValidating: false, mutate: vi.fn() }),
+  useBackgroundJobs: () => ({
+    data: { count: 0, next: null, previous: null, results: [] },
+    error: undefined,
+    isLoading: false,
+    isValidating: false,
+    mutate: vi.fn(),
+  }),
 }));
 
 vi.mock("@/features/dashboard/dashboardApi", () => ({
@@ -52,11 +58,11 @@ describe("App", () => {
   it("renders the shared CanonOS app shell for authenticated users", async () => {
     render(<App />);
 
-    expect(screen.getByRole("link", { name: /canonos dashboard/i })).toBeInTheDocument();
+    expect(await screen.findByRole("link", { name: /canonos dashboard/i })).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
     expect(screen.getByRole("navigation", { name: /primary navigation/i })).toBeInTheDocument();
     expect(screen.getByRole("main")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /private media command center/i })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: /private media command center/i })).toBeInTheDocument();
     expect(screen.getByText(/ready for its first media item/i)).toBeInTheDocument();
     expect(screen.getByText(/canon reader/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /log out/i })).toBeInTheDocument();
@@ -72,6 +78,7 @@ describe("App", () => {
     const user = userEvent.setup();
     render(<App />);
 
+    expect(await screen.findByRole("button", { name: /toggle theme mode/i })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: /toggle theme mode/i }));
     expect(document.documentElement).toHaveClass("dark");
 
