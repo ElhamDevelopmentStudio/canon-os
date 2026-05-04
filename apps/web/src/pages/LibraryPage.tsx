@@ -10,6 +10,7 @@ import { ScoreBadge } from "@/components/data-display/ScoreBadge";
 import { StatusPill, type StatusTone } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { PageActionBar } from "@/components/layout/PageActionBar";
@@ -295,16 +296,14 @@ function MediaItemRow({ item, onEdit, onDelete }: { item: MediaItem; onEdit: () 
 function DeleteDialog({ item, onCancel, onConfirm }: { item: MediaItem | null; onCancel: () => void; onConfirm: () => void }) {
   if (!item) return null;
   return (
-    <div aria-labelledby="delete-media-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm" role="dialog">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="delete-media-title">Delete media item?</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes “{item.title}” from your private library.</p>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
-          <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Delete</Button>
-        </div>
+    <DialogShell labelledBy="delete-media-title" onClose={onCancel}>
+      <h2 className="text-lg font-semibold" id="delete-media-title">Delete media item?</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes “{item.title}” from your private library.</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+        <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Delete</Button>
       </div>
-    </div>
+    </DialogShell>
   );
 }
 

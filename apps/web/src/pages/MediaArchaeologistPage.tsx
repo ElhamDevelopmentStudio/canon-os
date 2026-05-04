@@ -32,7 +32,7 @@ import { createQueueItem } from "@/features/queue/queueApi";
 import { cn } from "@/lib/utils";
 
 const fieldClassName =
-  "rounded-xl border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-ring";
+  "rounded-xl border border-border bg-background px-3 py-2 text-sm shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-primary";
 
 type DiscoveryDraft = {
   mode: DiscoveryMode;

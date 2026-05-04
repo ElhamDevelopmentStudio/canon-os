@@ -58,7 +58,7 @@ test.describe("TasteGraph browser-to-backend flow", () => {
 
     const rebuildStatus = page.getByLabel("TasteGraph rebuild status");
     await expect(rebuildStatus.getByRole("heading", { name: "TasteGraph rebuild" })).toBeVisible();
-    await expect(rebuildStatus.getByText("Complete", { exact: true })).toBeVisible();
+    await expect(rebuildStatus.getByLabel("Complete, success status")).toBeVisible();
     await expect(page.getByRole("heading", { name: "Strongest connected creators" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "TasteGraph Director" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Text graph view" })).toBeVisible();

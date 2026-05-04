@@ -13,6 +13,7 @@ import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { PageActionBar } from "@/components/layout/PageActionBar";
@@ -488,9 +489,12 @@ function QueueItemModal({ item, open, onClose, onSaved }: { item: QueueItem | nu
   }
 
   return (
-    <div aria-labelledby="queue-modal-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm" role="dialog">
-      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="queue-modal-title">{item ? "Edit Queue Item" : "Add Queue Item"}</h2>
+    <DialogShell
+      labelledBy="queue-modal-title"
+      onClose={onClose}
+      panelClassName="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl"
+    >
+      <h2 className="text-lg font-semibold" id="queue-modal-title">{item ? "Edit Queue Item" : "Add Queue Item"}</h2>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <TextField label="Title" value={draft.title} onChange={(value) => updateDraft("title", value)} />
           <label className="grid gap-1.5 text-sm font-medium">
@@ -525,8 +529,7 @@ function QueueItemModal({ item, open, onClose, onSaved }: { item: QueueItem | nu
           <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
           <Button disabled={isSaving} type="button" onClick={() => void saveQueueItem()}>{isSaving ? "Saving..." : "Save"}</Button>
         </div>
-      </div>
-    </div>
+    </DialogShell>
   );
 }
 
@@ -542,16 +545,14 @@ function TextField({ label, type = "text", value, onChange }: { label: string; t
 function DeleteQueueItemDialog({ item, onCancel, onConfirm }: { item: QueueItem | null; onCancel: () => void; onConfirm: () => void }) {
   if (!item) return null;
   return (
-    <div aria-labelledby="delete-queue-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm" role="dialog">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="delete-queue-title">Remove queue item?</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes “{item.title}” from the queue only. It does not delete linked media or candidate records.</p>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
-          <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Remove</Button>
-        </div>
+    <DialogShell labelledBy="delete-queue-title" onClose={onCancel}>
+      <h2 className="text-lg font-semibold" id="delete-queue-title">Remove queue item?</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes “{item.title}” from the queue only. It does not delete linked media or candidate records.</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+        <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Remove</Button>
       </div>
-    </div>
+    </DialogShell>
   );
 }
 

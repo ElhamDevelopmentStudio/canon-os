@@ -16,6 +16,7 @@ import { ScoreBadge } from "@/components/data-display/ScoreBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { FormFieldWrapper, TextInput } from "@/components/forms/FormFieldWrapper";
 import { SectionCard } from "@/components/layout/SectionCard";
@@ -423,26 +424,25 @@ function AdaptationRelationModal({
   if (!open) return null;
 
   return (
-    <div
-      aria-labelledby="adaptation-relation-title"
-      aria-modal="true"
-      className="fixed inset-0 z-50 overflow-y-auto bg-foreground/40 p-4 backdrop-blur-sm"
-      role="dialog"
+    <DialogShell
+      className="block overflow-y-auto bg-foreground/40 p-4 backdrop-blur-sm"
+      labelledBy="adaptation-relation-title"
+      onClose={onClose}
+      panelClassName="mx-auto my-8 w-full max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-xl"
     >
-      <div className="mx-auto my-8 w-full max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold" id="adaptation-relation-title">
-              Add adaptation relation
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Compare a source work with an adaptation, remake, audiobook, or alternate version.
-            </p>
-          </div>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold" id="adaptation-relation-title">
+            Add adaptation relation
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Compare a source work with an adaptation, remake, audiobook, or alternate version.
+          </p>
         </div>
+        <Button type="button" variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
+      </div>
 
         {formError ? (
           <div className="mt-4">
@@ -593,8 +593,7 @@ function AdaptationRelationModal({
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+    </DialogShell>
   );
 }
 

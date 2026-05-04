@@ -10,10 +10,23 @@ const toneClasses = {
 
 export type StatusTone = keyof typeof toneClasses;
 
+const toneLabels: Record<StatusTone, string> = {
+  active: "active",
+  danger: "danger",
+  neutral: "neutral",
+  success: "success",
+  warning: "warning",
+};
+
 export function StatusPill({ label, tone = "neutral" }: { label: string; tone?: StatusTone }) {
   return (
-    <span className={cn("inline-flex rounded-full border px-2.5 py-1 text-xs font-medium", toneClasses[tone])}>
+    <span
+      aria-label={`${label}, ${toneLabels[tone]} status`}
+      className={cn("inline-flex rounded-full border px-2.5 py-1 text-xs font-medium shadow-sm", toneClasses[tone])}
+      title={`${label}, ${toneLabels[tone]} status`}
+    >
       {label}
+      <span className="sr-only"> {toneLabels[tone]} status</span>
     </span>
   );
 }

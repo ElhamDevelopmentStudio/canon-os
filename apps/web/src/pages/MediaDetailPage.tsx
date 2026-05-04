@@ -538,7 +538,7 @@ function NarrativeDnaPanel({
         <label className="grid gap-1.5 text-sm font-medium">
           Narrative analysis notes
           <textarea
-            className="min-h-28 resize-y rounded-xl border border-input bg-background px-3 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="min-h-28 resize-y rounded-xl border border-border bg-background px-3 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
             placeholder="Optional notes about pacing, themes, character arcs, atmosphere, ending, or what felt fresh/generic."
             value={notes}
             onChange={(event) => onNotesChange(event.target.value)}

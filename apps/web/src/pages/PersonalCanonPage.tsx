@@ -7,10 +7,10 @@ import { APP_ROUTES } from "@/app/routeConstants";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { createCanonSeason, useCanonSeasons } from "@/features/canon/canonApi";
 import {
@@ -160,46 +160,49 @@ function SeasonFormDialog({
   }
 
   return (
-    <div aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" role="dialog" aria-label="Create Season">
-      <SectionCard className="max-h-[90vh] w-full max-w-2xl overflow-y-auto" title="Create Season">
-        <form
-          className="grid gap-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit({ ...draft, title: draft.title.trim(), description: draft.description?.trim() });
-          }}
-        >
+    <DialogShell
+      labelledBy="create-season-title"
+      onClose={onCancel}
+      panelClassName="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl"
+    >
+      <h2 className="text-lg font-semibold" id="create-season-title">Create Season</h2>
+      <form
+        className="mt-5 grid gap-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit({ ...draft, title: draft.title.trim(), description: draft.description?.trim() });
+        }}
+      >
+        <label className="grid gap-1.5 text-sm font-medium">
+          Title
+          <input className={fieldClassName} required value={draft.title} onChange={(event) => update("title", event.target.value)} />
+        </label>
+        <label className="grid gap-1.5 text-sm font-medium">
+          Theme
+          <select className={fieldClassName} value={draft.theme} onChange={(event) => update("theme", event.target.value as CanonThemeKey)}>
+            {canonThemes.map((theme) => <option key={theme.key} value={theme.key}>{theme.label}</option>)}
+          </select>
+        </label>
+        <label className="grid gap-1.5 text-sm font-medium">
+          Description
+          <textarea className={fieldClassName} rows={4} value={draft.description ?? ""} onChange={(event) => update("description", event.target.value)} />
+        </label>
+        <div className="grid gap-3 sm:grid-cols-2">
           <label className="grid gap-1.5 text-sm font-medium">
-            Title
-            <input className={fieldClassName} required value={draft.title} onChange={(event) => update("title", event.target.value)} />
+            Start date
+            <input className={fieldClassName} type="date" value={draft.startDate ?? ""} onChange={(event) => update("startDate", event.target.value || null)} />
           </label>
           <label className="grid gap-1.5 text-sm font-medium">
-            Theme
-            <select className={fieldClassName} value={draft.theme} onChange={(event) => update("theme", event.target.value as CanonThemeKey)}>
-              {canonThemes.map((theme) => <option key={theme.key} value={theme.key}>{theme.label}</option>)}
-            </select>
+            End date
+            <input className={fieldClassName} type="date" value={draft.endDate ?? ""} onChange={(event) => update("endDate", event.target.value || null)} />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium">
-            Description
-            <textarea className={fieldClassName} rows={4} value={draft.description ?? ""} onChange={(event) => update("description", event.target.value)} />
-          </label>
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="grid gap-1.5 text-sm font-medium">
-              Start date
-              <input className={fieldClassName} type="date" value={draft.startDate ?? ""} onChange={(event) => update("startDate", event.target.value || null)} />
-            </label>
-            <label className="grid gap-1.5 text-sm font-medium">
-              End date
-              <input className={fieldClassName} type="date" value={draft.endDate ?? ""} onChange={(event) => update("endDate", event.target.value || null)} />
-            </label>
-          </div>
-          <div className="flex justify-end gap-3">
-            <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
-            <Button type="submit">Save Season</Button>
-          </div>
-        </form>
-      </SectionCard>
-    </div>
+        </div>
+        <div className="flex justify-end gap-3">
+          <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
+          <Button type="submit">Save Season</Button>
+        </div>
+      </form>
+    </DialogShell>
   );
 }
 
@@ -207,4 +210,4 @@ function SuccessMessage({ message }: { message: string }) {
   return <div className="rounded-2xl border border-worth/30 bg-worth/10 p-4 text-sm font-medium text-worth">{message}</div>;
 }
 
-const fieldClassName = "rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
+const fieldClassName = "rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";

@@ -231,7 +231,7 @@ function DetoxEvaluateForm({
             <label className="grid gap-1.5 text-sm font-medium">
               Media item
               <select
-                className="rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 value={selectedMediaId}
                 onChange={(event) => onSelectedMediaChange(event.target.value)}
               >
@@ -252,7 +252,7 @@ function DetoxEvaluateForm({
             <label className="grid gap-1.5 text-sm font-medium">
               Current progress
               <input
-                className="rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 min="0"
                 type="number"
                 value={progressValue}
@@ -263,7 +263,7 @@ function DetoxEvaluateForm({
             <label className="grid gap-1.5 text-sm font-medium">
               Current motivation
               <input
-                className="rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 max="10"
                 min="1"
                 type="number"

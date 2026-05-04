@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { DialogShell } from "@/components/feedback/DialogShell";
 
 export function ConfirmationDialog({
   open,
@@ -23,26 +24,19 @@ export function ConfirmationDialog({
   }
 
   return (
-    <div
-      aria-labelledby="confirmation-dialog-title"
-      aria-modal="true"
-      className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm"
-      role="dialog"
-    >
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="confirmation-dialog-title">
-          {title}
-        </h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button type="button" variant="ghost" onClick={onCancel}>
-            {cancelLabel}
-          </Button>
-          <Button className={cn("bg-avoid text-white hover:bg-avoid/90")} type="button" onClick={onConfirm}>
-            {confirmLabel}
-          </Button>
-        </div>
+    <DialogShell labelledBy="confirmation-dialog-title" onClose={onCancel}>
+      <h2 className="text-lg font-semibold" id="confirmation-dialog-title">
+        {title}
+      </h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <Button type="button" variant="ghost" onClick={onCancel}>
+          {cancelLabel}
+        </Button>
+        <Button className={cn("bg-avoid text-white hover:bg-avoid/90")} type="button" onClick={onConfirm}>
+          {confirmLabel}
+        </Button>
       </div>
-    </div>
+    </DialogShell>
   );
 }

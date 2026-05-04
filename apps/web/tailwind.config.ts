@@ -17,6 +17,7 @@ const config = {
         "primary-foreground": "hsl(var(--primary-foreground))",
         excellent: "hsl(var(--excellent))",
         promising: "hsl(var(--promising))",
+        worth: "hsl(var(--worth))",
         risky: "hsl(var(--risky))",
         avoid: "hsl(var(--avoid))",
         delayed: "hsl(var(--delayed))",

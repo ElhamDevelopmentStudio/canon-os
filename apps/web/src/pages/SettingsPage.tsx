@@ -33,6 +33,7 @@ import useSWR, { useSWRConfig } from "swr";
 
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { useToast } from "@/components/feedback/toastContext";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
@@ -1350,37 +1351,35 @@ function StrongConfirmationDialog({
   const confirmed = typedPhrase === phrase;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-black/45 p-4">
-      <div
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl"
-        role="dialog"
-      >
-        <h3 className="text-lg font-semibold" id={titleId}>{title}</h3>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
-        <label className="mt-5 grid gap-2 text-sm font-medium">
-          Type {phrase} to confirm
-          <input
-            autoFocus
-            className={fieldClassName}
-            value={typedPhrase}
-            onChange={(event) => setTypedPhrase(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") event.preventDefault();
-            }}
-          />
-        </label>
-        <div className="mt-6 flex flex-wrap justify-end gap-3">
-          <Button disabled={isBusy} type="button" variant="ghost" onClick={onCancel}>
-            Cancel
-          </Button>
-          <DestructiveActionButton disabled={!confirmed || isBusy} onClick={onConfirm}>
-            {confirmLabel}
-          </DestructiveActionButton>
-        </div>
+    <DialogShell
+      className="bg-foreground/45"
+      labelledBy={titleId}
+      onClose={onCancel}
+      panelClassName="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-xl"
+    >
+      <h3 className="text-lg font-semibold" id={titleId}>{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
+      <label className="mt-5 grid gap-2 text-sm font-medium">
+        Type {phrase} to confirm
+        <input
+          autoFocus
+          className={fieldClassName}
+          value={typedPhrase}
+          onChange={(event) => setTypedPhrase(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") event.preventDefault();
+          }}
+        />
+      </label>
+      <div className="mt-6 flex flex-wrap justify-end gap-3">
+        <Button disabled={isBusy} type="button" variant="ghost" onClick={onCancel}>
+          Cancel
+        </Button>
+        <DestructiveActionButton disabled={!confirmed || isBusy} onClick={onConfirm}>
+          {confirmLabel}
+        </DestructiveActionButton>
       </div>
-    </div>
+    </DialogShell>
   );
 }
 

@@ -129,6 +129,17 @@ Treat the existing Lo-Fi documents as implementation references before creating 
 - The frontend displays server-produced scores and explanations; it does not own recommendation truth.
 - Sidebar, header, spacing, typography, and page actions must be shared through the design-system components.
 
+## Accessibility And Responsive UI Contract
+
+- Every modal or confirmation dialog must use `DialogShell` or a wrapper with the same behavior: accessible title/description, `role="dialog"`, `aria-modal="true"`, Escape close handling, focus trap, initial focus, and focus restoration.
+- Dialog forms should mark the first useful field with `data-autofocus="true"` when no explicit initial focus ref is passed.
+- Every visible button, link, icon-only action, input, select, and textarea must have a useful accessible name or label. Prefer visible text and semantic labels over test ids.
+- Keyboard users must be able to reach sidebar navigation, top-header actions, command palette search, dialog controls, destructive confirmations, and primary page actions without a mouse.
+- Mobile layouts must keep primary actions reachable and avoid page-level horizontal overflow at common phone widths.
+- Reduced-motion users should not receive unnecessary transitions or animations; keep `prefers-reduced-motion: reduce` behavior intact in global styles.
+- Scores, statuses, and warning badges must include text or screen-reader copy that communicates meaning without relying on color alone.
+- Browser e2e should cover new responsive/accessibility behavior with real routes and accessible selectors whenever practical.
+
 ## Local Commands
 
 ```bash

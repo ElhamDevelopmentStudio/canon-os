@@ -1,4 +1,4 @@
-import { LogOut, Moon, Sun } from "lucide-react";
+import { LogOut, Moon, Search, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
@@ -43,6 +43,17 @@ export function TopHeader({ onOpenCommandPalette }: { onOpenCommandPalette: () =
               {currentUser.profile.displayName}
             </span>
           ) : null}
+          <Button
+            aria-label="Open command palette"
+            className="md:hidden"
+            size="sm"
+            type="button"
+            variant="secondary"
+            onClick={onOpenCommandPalette}
+          >
+            <Search aria-hidden="true" className="h-4 w-4" />
+            <span className="sr-only">Search CanonOS</span>
+          </Button>
           <NotificationsDropdown />
           <Button aria-label="Toggle theme mode" size="sm" type="button" variant="secondary" onClick={toggleThemeMode}>
             {themeMode === "dark" ? (

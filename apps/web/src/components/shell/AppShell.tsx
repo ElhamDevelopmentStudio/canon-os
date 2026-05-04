@@ -40,7 +40,7 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className={cn("grid min-h-screen lg:grid-cols-[18rem_1fr]", sidebarCollapsed && "lg:grid-cols-[5rem_1fr]")}>
+      <div className={cn("min-h-screen lg:grid lg:grid-cols-[18rem_1fr]", sidebarCollapsed && "lg:grid-cols-[5rem_1fr]")}>
         <LeftSidebar />
         <div className="min-w-0">
           <TopHeader onOpenCommandPalette={() => setCommandPaletteOpen(true)} />

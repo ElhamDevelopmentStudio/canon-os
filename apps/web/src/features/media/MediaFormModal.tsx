@@ -11,6 +11,7 @@ import { FormEvent, useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { FormFieldWrapper, TextInput } from "@/components/forms/FormFieldWrapper";
 import { Button } from "@/components/ui/button";
 import { DimensionScoreGrid } from "@/features/media/DimensionScoreGrid";
@@ -238,26 +239,25 @@ export function MediaFormModal({
   }
 
   return (
-    <div
-      aria-labelledby="media-form-title"
-      aria-modal="true"
-      className="fixed inset-0 z-50 overflow-y-auto bg-foreground/40 p-4 backdrop-blur-sm"
-      role="dialog"
+    <DialogShell
+      className="block overflow-y-auto bg-foreground/40 p-4 backdrop-blur-sm"
+      labelledBy="media-form-title"
+      onClose={onClose}
+      panelClassName="mx-auto my-8 w-full max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-xl"
     >
-      <div className="mx-auto my-8 w-full max-w-3xl rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold" id="media-form-title">
-              {title}
-            </h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Save library details and the private scorecard that explains why it worked.
-            </p>
-          </div>
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 className="text-xl font-semibold" id="media-form-title">
+            {title}
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Save library details and the private scorecard that explains why it worked.
+          </p>
         </div>
+        <Button type="button" variant="ghost" onClick={onClose}>
+          Cancel
+        </Button>
+      </div>
         {error ? (
           <div className="mt-4">
             <ErrorState title="Save failed" message={error} />
@@ -267,6 +267,7 @@ export function MediaFormModal({
           <div className="grid gap-4 md:grid-cols-2">
             <FormFieldWrapper id="media-title" label="Title">
               <TextInput
+                data-autofocus="true"
                 id="media-title"
                 required
                 value={form.title}
@@ -497,8 +498,7 @@ export function MediaFormModal({
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+    </DialogShell>
   );
 }
 

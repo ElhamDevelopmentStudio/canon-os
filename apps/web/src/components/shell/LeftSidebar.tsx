@@ -35,7 +35,7 @@ export function LeftSidebar() {
       ) : null}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 -translate-x-full flex-col border-r border-border bg-card/95 p-4 shadow-xl transition duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:shadow-none",
+          "fixed inset-y-0 left-0 z-50 flex max-h-screen w-72 -translate-x-full flex-col overflow-hidden border-r border-border bg-card/95 p-4 shadow-xl transition duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 lg:shadow-none",
           mobileSidebarOpen && "translate-x-0",
           sidebarCollapsed && "lg:w-20",
         )}
@@ -65,7 +65,7 @@ export function LeftSidebar() {
           </Button>
         </div>
 
-        <nav aria-label="Primary navigation" className="mt-8 grid gap-1">
+        <nav aria-label="Primary navigation" className="mt-8 grid gap-1 overflow-y-auto pb-4 pr-1">
           {APP_NAVIGATION.map((item) => (
             <NavLink
               className={({ isActive }) =>

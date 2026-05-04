@@ -1,5 +1,5 @@
 import type { UnifiedSearchResponse } from "@canonos/contracts";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -96,5 +96,21 @@ describe("CommandPalette", () => {
       "/candidates?candidateId=22222222-2222-4222-8222-222222222222",
     );
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it("focuses search on open and closes from the keyboard", async () => {
+    const user = userEvent.setup();
+    const onClose = vi.fn();
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <CommandPalette open onClose={onClose} />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(screen.getByRole("searchbox", { name: /global search/i })).toHaveFocus());
+
+    await user.keyboard("{Escape}");
+
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

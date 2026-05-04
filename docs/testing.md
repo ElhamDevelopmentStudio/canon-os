@@ -35,6 +35,7 @@ User-facing features must also update the matching manual test document under `d
 | Security/privacy | Backend owner-scope, throttle, audit, deletion, and deploy-check tests; Playwright browser e2e. | `docs/manual-tests/security-privacy.md` |
 | Global search and advanced filters | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/search-and-filters.md` |
 | Performance and scalability | Backend pagination/cache/performance tests plus frontend pagination/skeleton tests. | `docs/manual-tests/performance-scalability.md` |
+| Accessibility and responsive UI | Frontend dialog/focus tests plus Playwright browser e2e for mobile overflow, labelled controls, command palette keyboard flow, and dialog focus behavior. | `docs/manual-tests/accessibility-responsive-ui.md` |
 | API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
 
 ## Browser-to-Backend E2E Contract
@@ -110,6 +111,7 @@ Tests must:
 - Global search and advanced filters: command palette shortcut, media and candidate result navigation from real search responses, URL-persisted Library filters, active chips, and clear-filter behavior.
 - Background Jobs: metadata refresh, Narrative DNA analysis, TasteGraph rebuild, and export jobs appear through `/api/jobs/`, the Jobs page, and header notifications.
 - Insights analytics: empty and sample data browser flows load `/api/analytics/*` endpoints through the Insights page, assert network payloads, and verify mobile readability.
+- Accessibility and responsive UI: mobile route checks for Dashboard, Library, Candidate Evaluator, Tonight Mode, Adaptive Queue, and Media Detail; labelled visible controls; command-palette keyboard open/focus/close; Add Media dialog autofocus/Escape behavior; unexpected console and API failure guards.
 - Health/API smoke: browser-origin health request plus API schema and Scalar docs availability.
 
 ### API-only e2e exceptions

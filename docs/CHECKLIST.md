@@ -2790,38 +2790,38 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Frontend Tasks
 
-- [ ] CP-M20-FE-001 Audit all pages for consistent sidebar usage.
-- [ ] CP-M20-FE-002 Audit all pages for consistent header usage.
-- [ ] CP-M20-FE-003 Audit all pages for consistent page title style.
-- [ ] CP-M20-FE-004 Audit all pages for consistent action bar style.
-- [ ] CP-M20-FE-005 Audit all buttons for clear labels.
-- [ ] CP-M20-FE-006 Audit all icon-only buttons for accessible labels.
-- [ ] CP-M20-FE-007 Audit all form fields for labels.
-- [ ] CP-M20-FE-008 Audit all dialogs for titles.
-- [ ] CP-M20-FE-009 Audit keyboard navigation in sidebar.
-- [ ] CP-M20-FE-010 Audit keyboard navigation in dialogs.
-- [ ] CP-M20-FE-011 Audit keyboard navigation in command palette.
-- [ ] CP-M20-FE-012 Audit focus states.
-- [ ] CP-M20-FE-013 Audit mobile layout for Dashboard.
-- [ ] CP-M20-FE-014 Audit mobile layout for Library.
-- [ ] CP-M20-FE-015 Audit mobile layout for Candidate Evaluator.
-- [ ] CP-M20-FE-016 Audit mobile layout for Tonight Mode.
-- [ ] CP-M20-FE-017 Audit mobile layout for Media Detail.
-- [ ] CP-M20-FE-018 Audit empty states for usefulness.
-- [ ] CP-M20-FE-019 Audit error states for usefulness.
-- [ ] CP-M20-FE-020 Audit loading states for clarity.
-- [ ] CP-M20-FE-021 Add final UI polish pass to score badges.
-- [ ] CP-M20-FE-022 Add final UI polish pass to cards.
-- [ ] CP-M20-FE-023 Add final UI polish pass to modals.
-- [ ] CP-M20-FE-024 Add final UI polish pass to tables/lists.
+- [x] CP-M20-FE-001 Audit all pages for consistent sidebar usage.
+- [x] CP-M20-FE-002 Audit all pages for consistent header usage.
+- [x] CP-M20-FE-003 Audit all pages for consistent page title style.
+- [x] CP-M20-FE-004 Audit all pages for consistent action bar style.
+- [x] CP-M20-FE-005 Audit all buttons for clear labels.
+- [x] CP-M20-FE-006 Audit all icon-only buttons for accessible labels.
+- [x] CP-M20-FE-007 Audit all form fields for labels.
+- [x] CP-M20-FE-008 Audit all dialogs for titles.
+- [x] CP-M20-FE-009 Audit keyboard navigation in sidebar.
+- [x] CP-M20-FE-010 Audit keyboard navigation in dialogs.
+- [x] CP-M20-FE-011 Audit keyboard navigation in command palette.
+- [x] CP-M20-FE-012 Audit focus states.
+- [x] CP-M20-FE-013 Audit mobile layout for Dashboard.
+- [x] CP-M20-FE-014 Audit mobile layout for Library.
+- [x] CP-M20-FE-015 Audit mobile layout for Candidate Evaluator.
+- [x] CP-M20-FE-016 Audit mobile layout for Tonight Mode.
+- [x] CP-M20-FE-017 Audit mobile layout for Media Detail.
+- [x] CP-M20-FE-018 Audit empty states for usefulness.
+- [x] CP-M20-FE-019 Audit error states for usefulness.
+- [x] CP-M20-FE-020 Audit loading states for clarity.
+- [x] CP-M20-FE-021 Add final UI polish pass to score badges.
+- [x] CP-M20-FE-022 Add final UI polish pass to cards.
+- [x] CP-M20-FE-023 Add final UI polish pass to modals.
+- [x] CP-M20-FE-024 Add final UI polish pass to tables/lists.
 
 ### QA Tasks
 
-- [ ] CP-M20-QA-001 Navigate entire app with keyboard only.
-- [ ] CP-M20-QA-002 Confirm main dialogs are keyboard accessible.
-- [ ] CP-M20-QA-003 Confirm forms have clear labels.
-- [ ] CP-M20-QA-004 Confirm mobile layout works at common widths.
-- [ ] CP-M20-QA-005 Confirm no page visually contradicts shared wireframe system.
+- [x] CP-M20-QA-001 Navigate entire app with keyboard only.
+- [x] CP-M20-QA-002 Confirm main dialogs are keyboard accessible.
+- [x] CP-M20-QA-003 Confirm forms have clear labels.
+- [x] CP-M20-QA-004 Confirm mobile layout works at common widths.
+- [x] CP-M20-QA-005 Confirm no page visually contradicts shared wireframe system.
 
 ---
 
@@ -3033,7 +3033,7 @@ The complete product is done only when:
 - [x] Analytics/Insights page works.
 - [x] Security and privacy tasks are complete.
 - [x] Performance tasks are complete.
-- [ ] Accessibility and responsive UI tasks are complete.
+- [x] Accessibility and responsive UI tasks are complete.
 - [ ] Deployment instructions and infrastructure files exist.
 - [ ] All tests/builds pass.
 - [ ] The final product does not have major dead buttons, missing pages, or undocumented critical behavior.
@@ -3046,16 +3046,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M19-QA-005.
-**Last completed task name:** Confirm search remains usable with large dataset.
-**Last completed milestone:** CP-M19 — Performance And Scalability.
+**Last completed task ID:** CP-M20-QA-005.
+**Last completed task name:** Confirm no page visually contradicts shared wireframe system.
+**Last completed milestone:** CP-M20 — Accessibility, Responsiveness, And UI Polish.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M20 — Accessibility, Responsiveness, And UI Polish.
-**Next recommended task:** CP-M20-FE-001 Audit all pages for consistent sidebar usage.
+**Current milestone:** CP-M21 — Deployment And Infrastructure.
+**Next recommended task:** CP-M21-INF-001 Create Dockerfile for backend.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M19 Performance And Scalability is complete. Large owner-scoped lists now use bounded page-number pagination, media/candidate/queue/detail querysets avoid avoidable N+1s, media/score/graph indexes were reviewed and migrated, dashboard/taste/analytics aggregates use short per-user cache entries, and media/score/aftertaste/import/privacy mutations invalidate aggregate caches. Library, Candidate History, Aftertaste Log, and Jobs pages now use URL-backed pagination controls, list skeletons, stable paginated contracts, and debounced search where relevant. Tests cover pagination, 1,000-item media datasets, cache invalidation, and frontend pagination behavior, with docs/manual QA updated.
+CP-M20 Accessibility, Responsiveness, And UI Polish is complete. The app shell now keeps sidebar navigation reachable on smaller screens, the header exposes a labelled mobile command-palette action, shared dialogs use a reusable `DialogShell` with labelled titles, initial focus, Escape handling, focus trapping, and focus restoration, and score/status badges communicate meaning through text as well as color. Browser e2e now checks mobile page overflow, labelled controls, command-palette keyboard behavior, and Add Media dialog focus behavior, with reduced-motion styling and accessibility docs/manual QA updated.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3075,4 +3075,5 @@ CP-M19 Performance And Scalability is complete. Large owner-scoped lists now use
 - CP-M17 completed: advanced personalization settings, frontend controls, recommendation behavior integration, browser e2e, and docs are in place.
 - CP-M18 completed: owner-scoped privacy protections, rate limiting, audit logging, data/account deletion, Settings privacy UI, browser e2e, and docs are in place.
 - CP-M19 completed: pagination, query optimization, indexes, aggregate caching/invalidation, lazy routes, SWR retry/dedupe, skeleton loading, large-list tests, and docs are in place.
-- CP-M20 is next: accessibility, responsiveness, and UI polish, starting with shared sidebar/header/title/action-bar consistency audits.
+- CP-M20 completed: shared shell polish, labelled controls, keyboard-safe dialogs, focus states, reduced-motion support, responsive browser e2e, and manual documentation are in place.
+- CP-M21 is next: deployment and infrastructure, starting with backend/frontend/worker Dockerfiles and Compose app services.

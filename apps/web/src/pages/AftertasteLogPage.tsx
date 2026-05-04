@@ -12,6 +12,7 @@ import { useSearchParams } from "react-router-dom";
 import { PaginationControls } from "@/components/data-display/PaginationControls";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageActionBar } from "@/components/layout/PageActionBar";
@@ -330,11 +331,14 @@ function AftertasteEntryModal({
   }
 
   return (
-    <div aria-labelledby="aftertaste-modal-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm" role="dialog">
-      <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="aftertaste-modal-title">
-          {entry ? "Edit Reflection" : "New Reflection"}
-        </h2>
+    <DialogShell
+      labelledBy="aftertaste-modal-title"
+      onClose={onClose}
+      panelClassName="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl"
+    >
+      <h2 className="text-lg font-semibold" id="aftertaste-modal-title">
+        {entry ? "Edit Reflection" : "New Reflection"}
+      </h2>
         {isLoadingMedia ? <LoadingState title="Loading media choices" message="Fetching media items for this reflection." /> : null}
         {mediaError ? <ErrorState title="Media choices unavailable" message={mediaError} /> : null}
         {!isLoadingMedia && !mediaError && mediaItems.length === 0 ? (
@@ -374,8 +378,7 @@ function AftertasteEntryModal({
             {isSaving ? "Saving reflection…" : "Save reflection"}
           </Button>
         </div>
-      </div>
-    </div>
+    </DialogShell>
   );
 }
 
@@ -426,16 +429,14 @@ function TextArea({ label, value, onChange }: { label: string; value: string; on
 function DeleteAftertasteDialog({ entry, onCancel, onConfirm }: { entry: AftertasteEntry | null; onCancel: () => void; onConfirm: () => void }) {
   if (!entry) return null;
   return (
-    <div aria-labelledby="delete-aftertaste-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-foreground/40 p-4 backdrop-blur-sm" role="dialog">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl">
-        <h2 className="text-lg font-semibold" id="delete-aftertaste-title">Delete aftertaste entry?</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes the reflection for “{entry.mediaTitle}”. The media item remains in your library.</p>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
-          <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Delete</Button>
-        </div>
+    <DialogShell labelledBy="delete-aftertaste-title" onClose={onCancel}>
+      <h2 className="text-lg font-semibold" id="delete-aftertaste-title">Delete aftertaste entry?</h2>
+      <p className="mt-2 text-sm leading-6 text-muted-foreground">This removes the reflection for “{entry.mediaTitle}”. The media item remains in your library.</p>
+      <div className="mt-6 flex justify-end gap-3">
+        <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+        <Button className="bg-avoid text-white hover:bg-avoid/90" type="button" onClick={onConfirm}>Delete</Button>
       </div>
-    </div>
+    </DialogShell>
   );
 }
 

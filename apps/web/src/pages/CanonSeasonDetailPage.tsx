@@ -16,6 +16,7 @@ import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
@@ -414,15 +415,19 @@ function AddItemDialog({
   }
 
   return (
-    <div aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4" role="dialog" aria-label="Add Season Item">
-      <SectionCard className="max-h-[90vh] w-full max-w-2xl overflow-y-auto" title="Add Season Item">
-        <form
-          className="grid gap-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSubmit(buildPayload());
-          }}
-        >
+    <DialogShell
+      labelledBy="add-season-item-title"
+      onClose={onCancel}
+      panelClassName="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-border bg-card p-6 shadow-xl"
+    >
+      <h2 className="text-lg font-semibold" id="add-season-item-title">Add Season Item</h2>
+      <form
+        className="mt-5 grid gap-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          onSubmit(buildPayload());
+        }}
+      >
           <label className="grid gap-1.5 text-sm font-medium">
             Source type
             <select
@@ -509,9 +514,8 @@ function AddItemDialog({
             <Button type="button" variant="secondary" onClick={onCancel}>Cancel</Button>
             <Button type="submit">Save Item</Button>
           </div>
-        </form>
-      </SectionCard>
-    </div>
+      </form>
+    </DialogShell>
   );
 }
 
@@ -519,4 +523,4 @@ function SuccessMessage({ message }: { message: string }) {
   return <div className="rounded-2xl border border-worth/30 bg-worth/10 p-4 text-sm font-medium text-worth">{message}</div>;
 }
 
-const fieldClassName = "rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
+const fieldClassName = "rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
