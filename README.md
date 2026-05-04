@@ -42,7 +42,7 @@ The repository is being built module by module from `docs/CHECKLIST.md`. Run all
 - Node.js 20+
 - Corepack enabled for pnpm (`corepack enable`)
 - Python 3.10+
-- Docker for local PostgreSQL and Redis services
+- Docker for local PostgreSQL, Redis, and full-stack Compose smoke tests
 
 ### Environment Setup
 
@@ -81,7 +81,10 @@ The root `.env` is the frontend and local service environment source of truth. T
 | --- | --- |
 | Web app | `http://localhost:5173` |
 | Django API | `http://localhost:8000/api/` |
-| Health endpoint | `http://localhost:8000/api/health/` |
+| API health endpoint | `http://localhost:8000/api/health/` |
+| Database health endpoint | `http://localhost:8000/api/health/db/` |
+| Redis health endpoint | `http://localhost:8000/api/health/redis/` |
+| Celery health endpoint | `http://localhost:8000/api/health/celery/` |
 | OpenAPI schema | `http://localhost:8000/api/schema/` |
 | Swagger UI | `http://localhost:8000/api/docs/swagger/` |
 | Scalar docs | `http://localhost:8000/api/docs/scalar/` |
@@ -141,6 +144,18 @@ DJANGO_SETTINGS_MODULE=config.settings.local \
 apps/api/.venv/bin/python apps/api/manage.py migrate --noinput
 corepack pnpm e2e
 ```
+
+## Docker Compose App Smoke Test
+
+The default `compose:dev` command starts only PostgreSQL and Redis for host-run development. To verify the deployable service split, build and start the full stack:
+
+```bash
+corepack pnpm compose:app
+corepack pnpm compose:app:ps
+corepack pnpm compose:app:smoke
+```
+
+Full app mode builds the API and frontend images, runs migrations and `collectstatic`, starts the API, Celery worker, Celery beat, PostgreSQL, Redis, and nginx-served frontend, then verifies browser-facing `/api/health/`, `/api/health/db/`, `/api/health/redis/`, and `/api/health/celery/`. Stop it with `corepack pnpm compose:app:down`.
 
 ## API Documentation
 

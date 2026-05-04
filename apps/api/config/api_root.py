@@ -12,6 +12,9 @@ API_ROOT_PAYLOAD = {
     "versionedBasePath": "/api/v1/",
     "endpoints": {
         "health": "/api/health/",
+        "health_db": "/api/health/db/",
+        "health_redis": "/api/health/redis/",
+        "health_celery": "/api/health/celery/",
         "health_v1": "/api/v1/health/",
         "auth": "/api/auth/",
         "settings": "/api/auth/settings/",

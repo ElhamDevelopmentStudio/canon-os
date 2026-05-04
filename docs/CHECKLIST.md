@@ -2831,52 +2831,52 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Infra Tasks
 
-- [ ] CP-M21-INF-001 Create Dockerfile for backend.
-- [ ] CP-M21-INF-002 Create Dockerfile for frontend.
-- [ ] CP-M21-INF-003 Create Dockerfile or command for Celery worker.
+- [x] CP-M21-INF-001 Create Dockerfile for backend.
+- [x] CP-M21-INF-002 Create Dockerfile for frontend.
+- [x] CP-M21-INF-003 Create Dockerfile or command for Celery worker.
 - [x] CP-M21-INF-004 Create local Docker Compose file.
 - [x] CP-M21-INF-005 Add PostgreSQL service to Compose.
 - [x] CP-M21-INF-006 Add Redis service to Compose.
-- [ ] CP-M21-INF-007 Add backend service to Compose.
-- [ ] CP-M21-INF-008 Add frontend service to Compose.
-- [ ] CP-M21-INF-009 Add Celery worker service to Compose.
-- [ ] CP-M21-INF-010 Add Celery beat service if scheduled tasks are used.
-- [ ] CP-M21-INF-011 Add RabbitMQ service only if required.
+- [x] CP-M21-INF-007 Add backend service to Compose.
+- [x] CP-M21-INF-008 Add frontend service to Compose.
+- [x] CP-M21-INF-009 Add Celery worker service to Compose.
+- [x] CP-M21-INF-010 Add Celery beat service if scheduled tasks are used.
+- [x] CP-M21-INF-011 Add RabbitMQ service only if required.
 - [x] CP-M21-INF-012 Add environment variable documentation for Docker.
-- [ ] CP-M21-INF-013 Add production deployment checklist.
-- [ ] CP-M21-INF-014 Add database backup instructions.
-- [ ] CP-M21-INF-015 Add static/media file handling instructions.
+- [x] CP-M21-INF-013 Add production deployment checklist.
+- [x] CP-M21-INF-014 Add database backup instructions.
+- [x] CP-M21-INF-015 Add static/media file handling instructions.
 
 ### Backend Tasks
 
-- [ ] CP-M21-BE-001 Configure production allowed hosts.
-- [ ] CP-M21-BE-002 Configure production CORS.
-- [ ] CP-M21-BE-003 Configure production database URL.
-- [ ] CP-M21-BE-004 Configure production Redis URL.
-- [ ] CP-M21-BE-005 Configure production static files.
-- [ ] CP-M21-BE-006 Configure production logging.
-- [ ] CP-M21-BE-007 Add health endpoint checks for database and Redis.
-- [ ] CP-M21-BE-008 Add migration command to deployment docs.
-- [ ] CP-M21-BE-009 Add collect static command if needed.
+- [x] CP-M21-BE-001 Configure production allowed hosts.
+- [x] CP-M21-BE-002 Configure production CORS.
+- [x] CP-M21-BE-003 Configure production database URL.
+- [x] CP-M21-BE-004 Configure production Redis URL.
+- [x] CP-M21-BE-005 Configure production static files.
+- [x] CP-M21-BE-006 Configure production logging.
+- [x] CP-M21-BE-007 Add health endpoint checks for database and Redis.
+- [x] CP-M21-BE-008 Add migration command to deployment docs.
+- [x] CP-M21-BE-009 Add collect static command if needed.
 
 ### Frontend Tasks
 
-- [ ] CP-M21-FE-001 Configure production API base URL.
-- [ ] CP-M21-FE-002 Add frontend production build command.
-- [ ] CP-M21-FE-003 Confirm Vite build output works.
-- [ ] CP-M21-FE-004 Add static hosting notes.
-- [ ] CP-M21-FE-005 Add runtime environment notes if needed.
+- [x] CP-M21-FE-001 Configure production API base URL.
+- [x] CP-M21-FE-002 Add frontend production build command.
+- [x] CP-M21-FE-003 Confirm Vite build output works.
+- [x] CP-M21-FE-004 Add static hosting notes.
+- [x] CP-M21-FE-005 Add runtime environment notes if needed.
 
 ### QA Tasks
 
-- [ ] CP-M21-QA-001 Build backend Docker image.
-- [ ] CP-M21-QA-002 Build frontend Docker image.
-- [ ] CP-M21-QA-003 Run full app through Docker Compose.
-- [ ] CP-M21-QA-004 Confirm frontend can reach backend in Compose.
-- [ ] CP-M21-QA-005 Confirm backend can reach PostgreSQL in Compose.
-- [ ] CP-M21-QA-006 Confirm backend can reach Redis in Compose.
-- [ ] CP-M21-QA-007 Confirm Celery worker processes a test job.
-- [ ] CP-M21-QA-008 Confirm production build does not fail.
+- [x] CP-M21-QA-001 Build backend Docker image.
+- [x] CP-M21-QA-002 Build frontend Docker image.
+- [x] CP-M21-QA-003 Run full app through Docker Compose.
+- [x] CP-M21-QA-004 Confirm frontend can reach backend in Compose.
+- [x] CP-M21-QA-005 Confirm backend can reach PostgreSQL in Compose.
+- [x] CP-M21-QA-006 Confirm backend can reach Redis in Compose.
+- [x] CP-M21-QA-007 Confirm Celery worker processes a test job.
+- [x] CP-M21-QA-008 Confirm production build does not fail.
 
 ---
 
@@ -3034,7 +3034,7 @@ The complete product is done only when:
 - [x] Security and privacy tasks are complete.
 - [x] Performance tasks are complete.
 - [x] Accessibility and responsive UI tasks are complete.
-- [ ] Deployment instructions and infrastructure files exist.
+- [x] Deployment instructions and infrastructure files exist.
 - [ ] All tests/builds pass.
 - [ ] The final product does not have major dead buttons, missing pages, or undocumented critical behavior.
 
@@ -3046,16 +3046,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M20-QA-005.
-**Last completed task name:** Confirm no page visually contradicts shared wireframe system.
-**Last completed milestone:** CP-M20 — Accessibility, Responsiveness, And UI Polish.
+**Last completed task ID:** CP-M21-QA-008.
+**Last completed task name:** Confirm production build does not fail.
+**Last completed milestone:** CP-M21 — Deployment And Infrastructure.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M21 — Deployment And Infrastructure.
-**Next recommended task:** CP-M21-INF-001 Create Dockerfile for backend.
+**Current milestone:** CP-M22 — Full Product Regression And Final Acceptance.
+**Next recommended task:** CP-M22-BE-001 Run all backend tests.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M20 Accessibility, Responsiveness, And UI Polish is complete. The app shell now keeps sidebar navigation reachable on smaller screens, the header exposes a labelled mobile command-palette action, shared dialogs use a reusable `DialogShell` with labelled titles, initial focus, Escape handling, focus trapping, and focus restoration, and score/status badges communicate meaning through text as well as color. Browser e2e now checks mobile page overflow, labelled controls, command-palette keyboard behavior, and Add Media dialog focus behavior, with reduced-motion styling and accessibility docs/manual QA updated.
+CP-M21 Deployment And Infrastructure is complete. CanonOS now has backend and frontend Dockerfiles, an nginx SPA/proxy runtime, full-app Docker Compose services for API, web, PostgreSQL, Redis, Celery worker, and Celery beat, and production-oriented settings for allowed hosts, CORS/CSRF, database, Redis, logging, Gunicorn, and WhiteNoise static files. Deployment docs now cover environment variables, migrations, collectstatic, static/media handling, backup/restore commands, and local full-stack smoke checks. Health coverage now includes API, database, Redis, and Celery worker checks, with tests and a manual deployment/infrastructure QA doc.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3076,4 +3076,5 @@ CP-M20 Accessibility, Responsiveness, And UI Polish is complete. The app shell n
 - CP-M18 completed: owner-scoped privacy protections, rate limiting, audit logging, data/account deletion, Settings privacy UI, browser e2e, and docs are in place.
 - CP-M19 completed: pagination, query optimization, indexes, aggregate caching/invalidation, lazy routes, SWR retry/dedupe, skeleton loading, large-list tests, and docs are in place.
 - CP-M20 completed: shared shell polish, labelled controls, keyboard-safe dialogs, focus states, reduced-motion support, responsive browser e2e, and manual documentation are in place.
-- CP-M21 is next: deployment and infrastructure, starting with backend/frontend/worker Dockerfiles and Compose app services.
+- CP-M21 completed: backend/frontend Dockerfiles, nginx proxy runtime, full-app Compose services, DB/Redis/Celery health checks, deployment docs, backup/static guidance, and manual infrastructure QA are in place.
+- CP-M22 is next: full product regression and final acceptance, starting with all backend tests and an empty-database migration check.

@@ -31,3 +31,17 @@ def test_redis_cache_uses_configured_service() -> None:
     cache.set(cache_key, "ok", timeout=30)
 
     assert cache.get(cache_key) == "ok"
+
+
+@pytest.mark.django_db
+def test_dependency_health_endpoints_report_live_services(client) -> None:  # noqa: ANN001
+    for path, dependency in [
+        ("/api/health/db/", "database"),
+        ("/api/health/redis/", "redis"),
+    ]:
+        response = client.get(path)
+
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["status"] == "ok"
+        assert payload["dependency"] == dependency

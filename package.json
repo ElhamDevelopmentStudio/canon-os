@@ -24,6 +24,12 @@
     "stop:all": "node scripts/stop-local-services.mjs",
     "compose:dev": "docker compose -f infra/docker-compose.dev.yml up -d postgres redis",
     "compose:dev:down": "docker compose -f infra/docker-compose.dev.yml down",
-    "compose:dev:logs": "docker compose -f infra/docker-compose.dev.yml logs -f postgres redis"
+    "compose:dev:logs": "docker compose -f infra/docker-compose.dev.yml logs -f postgres redis",
+    "compose:app": "docker compose -f infra/docker-compose.dev.yml --profile app up -d --build",
+    "compose:app:logs": "docker compose -f infra/docker-compose.dev.yml --profile app logs -f api worker beat frontend",
+    "compose:app:ps": "docker compose -f infra/docker-compose.dev.yml --profile app ps",
+    "compose:app:down": "docker compose -f infra/docker-compose.dev.yml --profile app down",
+    "compose:app:migrate": "docker compose -f infra/docker-compose.dev.yml --profile app run --rm api python manage.py migrate --noinput",
+    "compose:app:smoke": "docker compose -f infra/docker-compose.dev.yml --profile app exec -T api python manage.py check --settings=config.settings.local && curl -fsS http://localhost:${FRONTEND_HOST_PORT:-5173}/api/health/ && curl -fsS http://localhost:${FRONTEND_HOST_PORT:-5173}/api/health/db/ && curl -fsS http://localhost:${FRONTEND_HOST_PORT:-5173}/api/health/redis/ && curl -fsS http://localhost:${FRONTEND_HOST_PORT:-5173}/api/health/celery/"
   }
 }

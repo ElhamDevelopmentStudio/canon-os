@@ -18,7 +18,7 @@ The API app lives in `apps/api` and uses Django REST Framework, PostgreSQL-ready
 
 | App | Purpose | Main API surface |
 | --- | --- | --- |
-| `canonos.health` | Local readiness/smoke checks. | `GET /api/health/` |
+| `canonos.health` | Local readiness/smoke checks for API, database, Redis, and Celery. | `GET /api/health/`, `/api/health/db/`, `/api/health/redis/`, `/api/health/celery/` |
 | `canonos.accounts` | Session auth, CSRF bootstrap, current user, profile, and settings. | `/api/auth/csrf/`, `/api/auth/register/`, `/api/auth/login/`, `/api/auth/logout/`, `/api/auth/me/`, `/api/auth/profile/`, `/api/auth/settings/` |
 | `canonos.media` | User-owned media library CRUD and media detail payloads. | `/api/media-items/`, `/api/media-items/{id}/` |
 | `canonos.taste` | Default taste dimensions, media score upserts, taste profile summary. | `/api/taste-dimensions/`, `/api/media-items/{media_id}/scores/`, `/api/taste-profile/` |
@@ -80,3 +80,15 @@ The `canonos.anti_generic` app owns `AntiGenericRule` and `AntiGenericEvaluation
 ## Adaptive Queue v2 service
 
 The `canonos.queueing` app owns Queue v2 metrics on `QueueItem`: mood compatibility, intensity, complexity, commitment, freshness, recommendation history, and archive state. The deterministic recalculation service updates priority/order, applies freshness decay, archives fatigued low-fit items, and returns score reasons for the UI. The Celery task `canonos.queueing.recalculate_queue` calls the same service for background recalculation. Tonight Mode excludes archived queue items and uses Queue v2 metrics when ranking current-session recommendations.
+
+
+## Deployment Health Checks
+
+CanonOS exposes unauthenticated health endpoints for local and deployment smoke checks:
+
+- `GET /api/health/` confirms the API process is alive.
+- `GET /api/health/db/` runs a lightweight database query.
+- `GET /api/health/redis/` writes and reads a short-lived cache key.
+- `GET /api/health/celery/` dispatches a tiny Celery task and waits for the worker/result backend.
+
+The full Docker Compose app uses these endpoints to prove the browser-facing frontend proxy, Django API, PostgreSQL, Redis, and Celery worker are connected.

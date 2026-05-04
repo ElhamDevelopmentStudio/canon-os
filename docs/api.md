@@ -4,8 +4,9 @@ The backend API is implemented under `apps/api` with Django REST Framework. Open
 
 ## Current Base Paths
 
-- `/api/health/` for service readiness.
-- `/api/v1/health/` for the versioned service readiness path.
+- `/api/health/` for API process readiness.
+- `/api/health/db/`, `/api/health/redis/`, and `/api/health/celery/` for deployment dependency checks.
+- `/api/v1/health/` and matching versioned dependency health paths for the versioned readiness paths.
 - `/api/schema/` for the generated OpenAPI schema.
 - `/api/v1/schema/` for the versioned OpenAPI schema path.
 - `/api/docs/swagger/` for Swagger UI.
@@ -47,6 +48,9 @@ When an API response shape changes, update serializers, shared contracts, fronte
 
 - `GET /api/` lists available and planned MVP API entry points.
 - `GET /api/health/` returns service health.
+- `GET /api/health/db/` confirms database connectivity.
+- `GET /api/health/redis/` confirms cache/Redis connectivity.
+- `GET /api/health/celery/` confirms a Celery worker can process a tiny task.
 - `GET /api/schema/` returns the OpenAPI schema.
 - `GET /api/docs/swagger/` opens Swagger UI.
 - `GET /api/docs/scalar/` opens Scalar API Reference.
