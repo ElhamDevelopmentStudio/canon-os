@@ -2991,10 +2991,10 @@ The following rhythm should be used for each coding session.
 
 The MVP is done only when:
 
-- [ ] The app runs locally.
-- [ ] A user can register, log in, and log out.
-- [ ] A user can add, edit, delete, search, and filter media.
-- [ ] A user can score media by custom taste dimensions.
+- [x] The app runs locally.
+- [x] A user can register, log in, and log out.
+- [x] A user can add, edit, delete, search, and filter media.
+- [x] A user can score media by custom taste dimensions.
 - [x] A user can create aftertaste entries.
 - [x] A user can evaluate a candidate.
 - [x] A user can add candidates to queue.
