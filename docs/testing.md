@@ -12,7 +12,7 @@ corepack pnpm e2e
 
 User-facing features must also update the matching manual test document under `docs/manual-tests/`.
 
-## MVP Test Coverage Summary
+## Product Test Coverage Summary
 
 | Area | Automated coverage | Manual docs |
 | --- | --- | --- |
@@ -36,7 +36,7 @@ User-facing features must also update the matching manual test document under `d
 | Global search and advanced filters | Backend tests, frontend tests, Playwright browser e2e. | `docs/manual-tests/search-and-filters.md` |
 | Performance and scalability | Backend pagination/cache/performance tests plus frontend pagination/skeleton tests. | `docs/manual-tests/performance-scalability.md` |
 | Accessibility and responsive UI | Frontend dialog/focus tests plus Playwright browser e2e for mobile overflow, labelled controls, command palette keyboard flow, and dialog focus behavior. | `docs/manual-tests/accessibility-responsive-ui.md` |
-| API docs/health | Backend/schema checks and Playwright request smoke. | Covered by developer setup docs. |
+| API docs/health/deployment smoke | Backend/schema checks, dependency health checks, full-stack Compose smoke, and Playwright request smoke. | `docs/manual-tests/deployment-infrastructure.md`, `docs/manual-tests/final-acceptance.md` |
 
 ## Browser-to-Backend E2E Contract
 
@@ -85,6 +85,10 @@ Tests must:
 ### MVP acceptance e2e
 
 `apps/web/e2e/mvp-acceptance.spec.ts` is the MVP sign-off browser test. It verifies that every MVP route renders from the sidebar on desktop and mobile, then completes a persisted user journey: register, add movie/anime/novel, score media, log aftertaste, confirm Taste Profile evidence, evaluate a candidate, add to queue, generate Tonight Mode, start a recommendation, verify Dashboard, update Settings, import CSV, export JSON/CSV, logout, login, and confirm data persisted.
+
+### Final product acceptance evidence
+
+CP-M22 final acceptance is captured in `docs/final-acceptance.md`. It maps the complete product checklist to automated evidence, including backend regression, empty-database migration, demo seed, API docs load, frontend typecheck/build, full Playwright browser-to-backend coverage, import/export, background jobs, cache-dependent behavior, deployment smoke, and manual QA documents.
 
 ### Current browser e2e coverage
 

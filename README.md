@@ -4,19 +4,31 @@ CanonOS is a local-first personal media intelligence system for movies, series, 
 
 CanonOS is intentionally not a generic recommendation app. It is designed to protect attention, explain tradeoffs, identify genericness risk, and still surface genuinely worthwhile modern or obscure works when they fit the user's standards and current state.
 
-## MVP Features
+## Product Features
 
 - Session authentication with browser CSRF, Django sessions, protected routes, and public-route redirects.
 - Dashboard summary with library metrics, recent activity, high-rated media, and taste signals.
 - Media Library CRUD for user-owned movies, series, anime, novels, and audiobooks.
 - Media Detail scoring with reusable taste dimensions and score notes.
-- Candidate Evaluator for pre-watch/read/listen decisions, deterministic explanations, and add-to-library/queue actions.
-- Adaptive Queue with priority/context metadata, edit/delete, and reorder.
+- Candidate Evaluator for pre-watch/read/listen decisions, deterministic explanations, Anti-Generic risk, Narrative DNA signals, Critic Council decisions, and add-to-library/queue actions.
+- Anti-Generic Filter rules that flag hollow hype, protect strong modern exceptions, and shape candidate verdicts.
+- Adaptive Queue with priority/context metadata, edit/delete, reorder, archive/restore, and recalculation.
 - Tonight Mode recommendations using queue, planned media, user settings, time, mood, and energy context.
 - Aftertaste Log for post-completion/drop reflections and prompts.
 - Taste Profile summary with red flags, strengths, dimensions, and influential works.
-- Settings for profile/display/recommendation preferences plus import/export and backup flows.
-- OpenAPI schema, Swagger UI, and Scalar API documentation for the MVP API.
+- TasteGraph rebuilds that connect media, creators, scores, narrative traits, and aftertaste evidence.
+- Media Archaeologist discovery trails for underexplored media, eras, and regions.
+- Narrative DNA Analyzer for trait/evidence extraction and candidate scoring influence.
+- Critic Council debates with configurable critic personas and explainable final decisions.
+- Taste Evolution Journal snapshots and trend insights.
+- Completion Detox sample-boundary decisions, drop/pause/continue outcomes, and time-saved tracking.
+- Personal Canon Builder seasons with custom/media/candidate entries, ordering, completion, and reflection.
+- Cross-Medium Adaptation Intelligence relations and experience-order recommendations.
+- Insights analytics for ratings, media mix, genericness tolerance, regret, completion fatigue, and creator signals.
+- Global command palette search, route navigation, and URL-backed Library filters.
+- Settings for profile/display/recommendation preferences, security/privacy controls, import/export, and backup flows.
+- Background job status through header notifications and the Jobs page.
+- OpenAPI schema, Swagger UI, and Scalar API documentation for the full API.
 - Real browser-to-backend Playwright e2e coverage for API-backed user flows.
 
 ## Stack Overview
@@ -35,7 +47,7 @@ The backend owns business rules, database writes, recommendation scoring, and pr
 
 ## Local Development Setup
 
-The repository is being built module by module from `docs/CHECKLIST.md`. Run all commands from the repository root unless a command explicitly changes directory.
+Delivery status and future follow-up work are tracked in `docs/CHECKLIST.md`. Run all commands from the repository root unless a command explicitly changes directory.
 
 ### Prerequisites
 
@@ -105,6 +117,8 @@ corepack pnpm e2e
 ```
 
 `corepack pnpm e2e` starts Dockerized PostgreSQL/Redis, starts Django on `localhost:8000`, starts Vite on `localhost:5173`, and runs real Playwright browser flows against the API. It verifies browser-origin API calls, CORS, CSRF, cookies, Django sessions, PostgreSQL, and Redis.
+
+The complete CP-M22 regression baseline is documented in `docs/final-acceptance.md`. Use that file as the sign-off map for future release candidates and post-acceptance fixes.
 
 Useful app-specific commands:
 
@@ -193,6 +207,7 @@ Before destructive data-management features are added, users should export a JSO
 - Backend notes: `docs/backend.md`
 - Architecture notes: `docs/architecture.md`
 - Testing notes: `docs/testing.md`
+- Final acceptance baseline: `docs/final-acceptance.md`
 - Deployment and branch protection: `docs/deployment.md`
 - PR checklist: `docs/PR_CHECKLIST.md`
 - Manual test template: `docs/manual-tests/TEMPLATE.md`

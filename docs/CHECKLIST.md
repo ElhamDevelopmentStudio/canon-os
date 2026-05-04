@@ -2886,87 +2886,87 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Backend Regression Tasks
 
-- [ ] CP-M22-BE-001 Run all backend tests.
-- [ ] CP-M22-BE-002 Fix all failing backend tests.
-- [ ] CP-M22-BE-003 Run migration from empty database.
-- [ ] CP-M22-BE-004 Run seed command.
-- [ ] CP-M22-BE-005 Confirm all API docs load.
-- [ ] CP-M22-BE-006 Confirm all endpoints require authentication where needed.
-- [ ] CP-M22-BE-007 Confirm background jobs work.
-- [ ] CP-M22-BE-008 Confirm import/export works.
-- [ ] CP-M22-BE-009 Confirm cache invalidation works.
+- [x] CP-M22-BE-001 Run all backend tests.
+- [x] CP-M22-BE-002 Fix all failing backend tests.
+- [x] CP-M22-BE-003 Run migration from empty database.
+- [x] CP-M22-BE-004 Run seed command.
+- [x] CP-M22-BE-005 Confirm all API docs load.
+- [x] CP-M22-BE-006 Confirm all endpoints require authentication where needed.
+- [x] CP-M22-BE-007 Confirm background jobs work.
+- [x] CP-M22-BE-008 Confirm import/export works.
+- [x] CP-M22-BE-009 Confirm cache invalidation works.
 
 ### Frontend Regression Tasks
 
-- [ ] CP-M22-FE-001 Run frontend type check.
-- [ ] CP-M22-FE-002 Fix all TypeScript errors.
-- [ ] CP-M22-FE-003 Run frontend build.
-- [ ] CP-M22-FE-004 Fix all build errors.
-- [ ] CP-M22-FE-005 Visit every sidebar route.
-- [ ] CP-M22-FE-006 Visit every detail route.
-- [ ] CP-M22-FE-007 Open every modal.
-- [ ] CP-M22-FE-008 Submit every form with valid data.
-- [ ] CP-M22-FE-009 Submit every form with invalid data.
-- [ ] CP-M22-FE-010 Confirm every destructive action has confirmation.
-- [ ] CP-M22-FE-011 Confirm every async job has status feedback.
-- [ ] CP-M22-FE-012 Confirm every primary action has a visible result.
+- [x] CP-M22-FE-001 Run frontend type check.
+- [x] CP-M22-FE-002 Fix all TypeScript errors.
+- [x] CP-M22-FE-003 Run frontend build.
+- [x] CP-M22-FE-004 Fix all build errors.
+- [x] CP-M22-FE-005 Visit every sidebar route.
+- [x] CP-M22-FE-006 Visit every detail route.
+- [x] CP-M22-FE-007 Open every modal.
+- [x] CP-M22-FE-008 Submit every form with valid data.
+- [x] CP-M22-FE-009 Submit every form with invalid data.
+- [x] CP-M22-FE-010 Confirm every destructive action has confirmation.
+- [x] CP-M22-FE-011 Confirm every async job has status feedback.
+- [x] CP-M22-FE-012 Confirm every primary action has a visible result.
 
 ### Full End-To-End Acceptance Tasks
 
-- [ ] CP-M22-E2E-001 Register a new user.
-- [ ] CP-M22-E2E-002 Update user settings.
-- [ ] CP-M22-E2E-003 Import sample media library.
-- [ ] CP-M22-E2E-004 Attach metadata to imported media.
-- [ ] CP-M22-E2E-005 Score several media items.
-- [ ] CP-M22-E2E-006 Create aftertaste entries.
-- [ ] CP-M22-E2E-007 Rebuild TasteGraph.
-- [ ] CP-M22-E2E-008 View TasteGraph summary.
-- [ ] CP-M22-E2E-009 Evaluate a candidate with Anti-Generic Filter.
-- [ ] CP-M22-E2E-010 Run Critic Council on the candidate.
-- [ ] CP-M22-E2E-011 Add candidate to Adaptive Queue.
-- [ ] CP-M22-E2E-012 Recalculate queue.
-- [ ] CP-M22-E2E-013 Generate Tonight Mode plan.
-- [ ] CP-M22-E2E-014 Start recommended media.
-- [ ] CP-M22-E2E-015 Run Completion Detox on a low-value item.
-- [ ] CP-M22-E2E-016 Create a Personal Canon season.
-- [ ] CP-M22-E2E-017 Add items to Canon season.
-- [ ] CP-M22-E2E-018 Create adaptation relation.
-- [ ] CP-M22-E2E-019 Generate adaptation experience path.
-- [ ] CP-M22-E2E-020 Generate Media Archaeologist discovery trail.
-- [ ] CP-M22-E2E-021 Save discovery trail.
-- [ ] CP-M22-E2E-022 Request Narrative DNA analysis.
-- [ ] CP-M22-E2E-023 Confirm analysis job completes.
-- [ ] CP-M22-E2E-024 Open Taste Evolution page.
-- [ ] CP-M22-E2E-025 Generate evolution snapshot.
-- [ ] CP-M22-E2E-026 Open Insights page.
-- [ ] CP-M22-E2E-027 Use command palette to navigate.
-- [ ] CP-M22-E2E-028 Export all user data.
-- [ ] CP-M22-E2E-029 Log out and log back in.
-- [ ] CP-M22-E2E-030 Confirm all important data persisted.
+- [x] CP-M22-E2E-001 Register a new user.
+- [x] CP-M22-E2E-002 Update user settings.
+- [x] CP-M22-E2E-003 Import sample media library.
+- [x] CP-M22-E2E-004 Attach metadata to imported media.
+- [x] CP-M22-E2E-005 Score several media items.
+- [x] CP-M22-E2E-006 Create aftertaste entries.
+- [x] CP-M22-E2E-007 Rebuild TasteGraph.
+- [x] CP-M22-E2E-008 View TasteGraph summary.
+- [x] CP-M22-E2E-009 Evaluate a candidate with Anti-Generic Filter.
+- [x] CP-M22-E2E-010 Run Critic Council on the candidate.
+- [x] CP-M22-E2E-011 Add candidate to Adaptive Queue.
+- [x] CP-M22-E2E-012 Recalculate queue.
+- [x] CP-M22-E2E-013 Generate Tonight Mode plan.
+- [x] CP-M22-E2E-014 Start recommended media.
+- [x] CP-M22-E2E-015 Run Completion Detox on a low-value item.
+- [x] CP-M22-E2E-016 Create a Personal Canon season.
+- [x] CP-M22-E2E-017 Add items to Canon season.
+- [x] CP-M22-E2E-018 Create adaptation relation.
+- [x] CP-M22-E2E-019 Generate adaptation experience path.
+- [x] CP-M22-E2E-020 Generate Media Archaeologist discovery trail.
+- [x] CP-M22-E2E-021 Save discovery trail.
+- [x] CP-M22-E2E-022 Request Narrative DNA analysis.
+- [x] CP-M22-E2E-023 Confirm analysis job completes.
+- [x] CP-M22-E2E-024 Open Taste Evolution page.
+- [x] CP-M22-E2E-025 Generate evolution snapshot.
+- [x] CP-M22-E2E-026 Open Insights page.
+- [x] CP-M22-E2E-027 Use command palette to navigate.
+- [x] CP-M22-E2E-028 Export all user data.
+- [x] CP-M22-E2E-029 Log out and log back in.
+- [x] CP-M22-E2E-030 Confirm all important data persisted.
 
 ### Final Product Sign-Off Tasks
 
-- [ ] CP-M22-SIGN-001 Confirm product includes Library.
-- [ ] CP-M22-SIGN-002 Confirm product includes Taste Profile.
-- [ ] CP-M22-SIGN-003 Confirm product includes Candidate Evaluator.
-- [ ] CP-M22-SIGN-004 Confirm product includes Anti-Generic Filter.
-- [ ] CP-M22-SIGN-005 Confirm product includes Adaptive Queue.
-- [ ] CP-M22-SIGN-006 Confirm product includes Tonight Mode.
-- [ ] CP-M22-SIGN-007 Confirm product includes Aftertaste Log.
-- [ ] CP-M22-SIGN-008 Confirm product includes TasteGraph.
-- [ ] CP-M22-SIGN-009 Confirm product includes Media Archaeologist.
-- [ ] CP-M22-SIGN-010 Confirm product includes Narrative DNA Analyzer.
-- [ ] CP-M22-SIGN-011 Confirm product includes Critic Council.
-- [ ] CP-M22-SIGN-012 Confirm product includes Taste Evolution Journal.
-- [ ] CP-M22-SIGN-013 Confirm product includes Completion Detox.
-- [ ] CP-M22-SIGN-014 Confirm product includes Personal Canon Builder.
-- [ ] CP-M22-SIGN-015 Confirm product includes Cross-Medium Adaptation Intelligence.
-- [ ] CP-M22-SIGN-016 Confirm product includes import/export.
-- [ ] CP-M22-SIGN-017 Confirm product includes full API docs.
-- [ ] CP-M22-SIGN-018 Confirm product includes background jobs.
-- [ ] CP-M22-SIGN-019 Confirm product includes production deployment path.
-- [ ] CP-M22-SIGN-020 Confirm final README explains complete product.
-- [ ] CP-M22-SIGN-021 Confirm Last Completed Task Summary is updated with final completion summary.
+- [x] CP-M22-SIGN-001 Confirm product includes Library.
+- [x] CP-M22-SIGN-002 Confirm product includes Taste Profile.
+- [x] CP-M22-SIGN-003 Confirm product includes Candidate Evaluator.
+- [x] CP-M22-SIGN-004 Confirm product includes Anti-Generic Filter.
+- [x] CP-M22-SIGN-005 Confirm product includes Adaptive Queue.
+- [x] CP-M22-SIGN-006 Confirm product includes Tonight Mode.
+- [x] CP-M22-SIGN-007 Confirm product includes Aftertaste Log.
+- [x] CP-M22-SIGN-008 Confirm product includes TasteGraph.
+- [x] CP-M22-SIGN-009 Confirm product includes Media Archaeologist.
+- [x] CP-M22-SIGN-010 Confirm product includes Narrative DNA Analyzer.
+- [x] CP-M22-SIGN-011 Confirm product includes Critic Council.
+- [x] CP-M22-SIGN-012 Confirm product includes Taste Evolution Journal.
+- [x] CP-M22-SIGN-013 Confirm product includes Completion Detox.
+- [x] CP-M22-SIGN-014 Confirm product includes Personal Canon Builder.
+- [x] CP-M22-SIGN-015 Confirm product includes Cross-Medium Adaptation Intelligence.
+- [x] CP-M22-SIGN-016 Confirm product includes import/export.
+- [x] CP-M22-SIGN-017 Confirm product includes full API docs.
+- [x] CP-M22-SIGN-018 Confirm product includes background jobs.
+- [x] CP-M22-SIGN-019 Confirm product includes production deployment path.
+- [x] CP-M22-SIGN-020 Confirm final README explains complete product.
+- [x] CP-M22-SIGN-021 Confirm Last Completed Task Summary is updated with final completion summary.
 
 ---
 
@@ -3000,33 +3000,33 @@ The MVP is done only when:
 - [x] A user can add candidates to queue.
 - [x] A user can generate a Tonight Mode recommendation.
 - [x] A user can view a basic Taste Profile.
-- [ ] A user can view a useful Dashboard.
+- [x] A user can view a useful Dashboard.
 - [x] A user can update basic Settings.
 - [x] A user can import a CSV or JSON media history with validation preview.
 - [x] A user can export all owned data as JSON.
 - [x] A user can export media library and ratings as CSV.
-- [ ] API docs are available through Swagger/OpenAPI and Scalar.
-- [ ] The frontend uses the shared layout consistently.
+- [x] API docs are available through Swagger/OpenAPI and Scalar.
+- [x] The frontend uses the shared layout consistently.
 - [x] The backend prevents cross-user data leakage.
-- [ ] Manual test docs exist for all MVP user-facing features.
-- [ ] Lint, typecheck, tests, build, and E2E all pass.
-- [ ] The README explains how to run the MVP.
+- [x] Manual test docs exist for all MVP user-facing features.
+- [x] Lint, typecheck, tests, build, and E2E all pass.
+- [x] The README explains how to run the MVP.
 
 ## 8.2 Complete Product Definition Of Done
 
 The complete product is done only when:
 
-- [ ] All MVP features remain working.
-- [ ] TasteGraph works and can be rebuilt.
-- [ ] Anti-Generic Filter works and affects candidate evaluation.
-- [ ] Adaptive Queue works and affects Tonight Mode.
-- [ ] Media Archaeologist can generate discovery trails.
-- [ ] Narrative DNA Analyzer can store and display narrative analysis.
-- [ ] Critic Council can debate candidates and media items.
-- [ ] Taste Evolution Journal can generate snapshots.
-- [ ] Completion Detox can recommend dropping/pausing and track time saved.
-- [ ] Personal Canon Builder can create exploration seasons.
-- [ ] Cross-Medium Adaptation Intelligence can store relations and recommend experience order.
+- [x] All MVP features remain working.
+- [x] TasteGraph works and can be rebuilt.
+- [x] Anti-Generic Filter works and affects candidate evaluation.
+- [x] Adaptive Queue works and affects Tonight Mode.
+- [x] Media Archaeologist can generate discovery trails.
+- [x] Narrative DNA Analyzer can store and display narrative analysis.
+- [x] Critic Council can debate candidates and media items.
+- [x] Taste Evolution Journal can generate snapshots.
+- [x] Completion Detox can recommend dropping/pausing and track time saved.
+- [x] Personal Canon Builder can create exploration seasons.
+- [x] Cross-Medium Adaptation Intelligence can store relations and recommend experience order.
 - [x] Import/export works.
 - [x] Command palette and advanced search work.
 - [x] Background jobs have visible status.
@@ -3035,8 +3035,8 @@ The complete product is done only when:
 - [x] Performance tasks are complete.
 - [x] Accessibility and responsive UI tasks are complete.
 - [x] Deployment instructions and infrastructure files exist.
-- [ ] All tests/builds pass.
-- [ ] The final product does not have major dead buttons, missing pages, or undocumented critical behavior.
+- [x] All tests/builds pass.
+- [x] The final product does not have major dead buttons, missing pages, or undocumented critical behavior.
 
 ---
 
@@ -3046,16 +3046,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M21-QA-008.
-**Last completed task name:** Confirm production build does not fail.
-**Last completed milestone:** CP-M21 — Deployment And Infrastructure.
+**Last completed task ID:** CP-M22-SIGN-021.
+**Last completed task name:** Confirm Last Completed Task Summary is updated with final completion summary.
+**Last completed milestone:** CP-M22 — Full Product Regression And Final Acceptance.
 **Current phase:** Complete Product Phase.
-**Current milestone:** CP-M22 — Full Product Regression And Final Acceptance.
-**Next recommended task:** CP-M22-BE-001 Run all backend tests.
+**Current milestone:** Complete product acceptance baseline.
+**Next recommended task:** Use `docs/final-acceptance.md` as the regression baseline for post-acceptance fixes or deployment-specific hardening.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M21 Deployment And Infrastructure is complete. CanonOS now has backend and frontend Dockerfiles, an nginx SPA/proxy runtime, full-app Docker Compose services for API, web, PostgreSQL, Redis, Celery worker, and Celery beat, and production-oriented settings for allowed hosts, CORS/CSRF, database, Redis, logging, Gunicorn, and WhiteNoise static files. Deployment docs now cover environment variables, migrations, collectstatic, static/media handling, backup/restore commands, and local full-stack smoke checks. Health coverage now includes API, database, Redis, and Celery worker checks, with tests and a manual deployment/infrastructure QA doc.
+CP-M22 Full Product Regression And Final Acceptance is complete. The final regression pass covers backend tests, empty-database migration, demo seed data, API schema/Swagger/Scalar availability, frontend typecheck/build, full browser-to-backend Playwright acceptance, import/export, jobs, cache-dependent health/summary behavior, every delivered product module, manual QA documentation, README product/run guidance, deployment smoke evidence, and the final acceptance evidence document at `docs/final-acceptance.md`.
 
 ## 9.3 Important Notes For The Next Agent
 
@@ -3077,4 +3077,4 @@ CP-M21 Deployment And Infrastructure is complete. CanonOS now has backend and fr
 - CP-M19 completed: pagination, query optimization, indexes, aggregate caching/invalidation, lazy routes, SWR retry/dedupe, skeleton loading, large-list tests, and docs are in place.
 - CP-M20 completed: shared shell polish, labelled controls, keyboard-safe dialogs, focus states, reduced-motion support, responsive browser e2e, and manual documentation are in place.
 - CP-M21 completed: backend/frontend Dockerfiles, nginx proxy runtime, full-app Compose services, DB/Redis/Celery health checks, deployment docs, backup/static guidance, and manual infrastructure QA are in place.
-- CP-M22 is next: full product regression and final acceptance, starting with all backend tests and an empty-database migration check.
+- CP-M22 completed: final full-product regression and acceptance evidence are recorded in `docs/final-acceptance.md`.
