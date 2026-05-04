@@ -179,6 +179,19 @@ SPECTACULAR_SETTINGS = {
     ),
     "VERSION": "v1",
     "SERVE_INCLUDE_SCHEMA": False,
+    "ENUM_NAME_OVERRIDES": {
+        "AdaptationExperienceOrderEnum": (
+            "canonos.adaptations.models.AdaptationRelation.ExperienceOrder"
+        ),
+        "CandidateDecisionEnum": "canonos.candidates.models.CandidateEvaluation.Decision",
+        "ConsumptionStatusEnum": "canonos.media.models.MediaItem.ConsumptionStatus",
+        "ExternalMetadataProviderEnum": (
+            "canonos.metadata.models.ExternalMetadata.ExternalProvider"
+        ),
+        "LowMediumHighEnum": [("low", "Low"), ("medium", "Medium"), ("high", "High")],
+        "MediaTypeEnum": "canonos.media.models.MediaItem.MediaType",
+        "TasteDirectionEnum": "canonos.taste.models.TasteDimension.Direction",
+    },
 }
 
 LOG_LEVEL = os.environ.get("DJANGO_LOG_LEVEL", "INFO")

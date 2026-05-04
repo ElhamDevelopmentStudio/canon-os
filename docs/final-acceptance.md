@@ -11,13 +11,13 @@ Latest CP-M22 regression commands:
 | Backend tests | `corepack pnpm --filter @canonos/api run test` or root `corepack pnpm test` | Django/pytest backend suite passes. |
 | Empty database migration | Temporary PostgreSQL database + `apps/api/.venv/bin/python apps/api/manage.py migrate --noinput` | Every migration applies from zero. |
 | Demo seed | `apps/api/.venv/bin/python apps/api/manage.py seed_demo_data --email <unique-email>` against the temporary DB | Demo user, profile, settings, taste dimensions, and one media item are created. |
-| API docs | `apps/api/.venv/bin/python manage.py spectacular --file /tmp/canonos-schema.yml --settings=config.settings.test --validate` plus Django client checks for `/api/schema/`, `/api/v1/schema/`, `/api/docs/swagger/`, and `/api/docs/scalar/` | Schema validates with zero errors and docs endpoints return HTTP 200. |
+| API docs | `apps/api/.venv/bin/python manage.py spectacular --file /tmp/canonos-schema.yml --settings=config.settings.test --validate` plus Django client checks for `/api/schema/`, `/api/v1/schema/`, `/api/docs/swagger/`, and `/api/docs/scalar/` | Schema validates with zero warnings/errors and docs endpoints return HTTP 200. |
 | Frontend typecheck/build | `corepack pnpm typecheck` and `corepack pnpm build` | TypeScript and production build pass. |
 | Browser e2e | `corepack pnpm e2e` | API health/infrastructure checks pass and all Playwright browser-to-backend specs pass. |
 | Full gate | `corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test && corepack pnpm build && corepack pnpm e2e` | The required module gates all pass. |
 | Deployment smoke | `corepack pnpm compose:app` then `corepack pnpm compose:app:smoke` | Full app Compose stack starts and API/DB/Redis/Celery health endpoints pass through the frontend proxy. |
 
-Known non-blocking output: drf-spectacular emits enum naming warnings and a duplicate API-root operationId warning; schema generation reports zero errors. Test settings may warn if `apps/api/staticfiles/` has not been collected locally; Docker app mode runs `collectstatic`.
+Known non-blocking output: Test settings may warn if `apps/api/staticfiles/` has not been collected locally; Docker app mode runs `collectstatic`. The OpenAPI schema has pinned enum component names and distinct root operation IDs so schema generation should complete with zero warnings/errors.
 
 ## Product Coverage Map
 
@@ -53,5 +53,4 @@ Manual test documents under `docs/manual-tests/` exist for all user-facing featu
 ## Remaining Risks
 
 - HTTPS termination and managed-cloud deployment are documented but not exercised against a live external host in local CI.
-- drf-spectacular enum warning cleanup can improve generated client readability later, but current schema generation has zero errors and docs load.
 - Browser e2e uses deterministic local providers and fixtures; real external metadata/AI provider behavior should be validated separately when production credentials are introduced.

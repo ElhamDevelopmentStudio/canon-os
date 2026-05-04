@@ -34,14 +34,40 @@ def test_api_root_lists_available_mvp_endpoints() -> None:
     }
 
 
-def test_openapi_schema_is_available_and_documents_api_root() -> None:
-    response = APIClient().get(reverse("schema"))
+def test_openapi_schema_is_available_and_documents_api_roots_without_warning_names() -> None:
+    response = APIClient().get(reverse("schema"), HTTP_ACCEPT="application/vnd.oai.openapi+json")
 
     assert response.status_code == status.HTTP_200_OK
-    content = response.content.decode()
-    assert "CanonOS API" in content
-    assert "/api/" in content
-    assert "/api/health/" in content
+    schema = response.data
+    paths = schema["paths"]
+    schemas = schema["components"]["schemas"]
+
+    assert schema["info"]["title"] == "CanonOS API"
+    assert "/api/" in paths
+    assert "/api/v1/" in paths
+    assert "/api/health/" in paths
+    assert paths["/api/"]["get"]["operationId"] == "api_root_retrieve"
+    assert paths["/api/v1/"]["get"]["operationId"] == "api_v1_root_retrieve"
+
+    for enum_name in [
+        "AdaptationExperienceOrderEnum",
+        "CandidateDecisionEnum",
+        "ConsumptionStatusEnum",
+        "ExternalMetadataProviderEnum",
+        "LowMediumHighEnum",
+        "MediaTypeEnum",
+        "TasteDirectionEnum",
+    ]:
+        assert enum_name in schemas
+
+    for generated_warning_name in [
+        "Decision7c9Enum",
+        "Provider0deEnum",
+        "Recommendation7c9Enum",
+        "Recommendation7ffEnum",
+        "StatusB64Enum",
+    ]:
+        assert generated_warning_name not in schemas
 
 
 def test_django_admin_login_loads() -> None:

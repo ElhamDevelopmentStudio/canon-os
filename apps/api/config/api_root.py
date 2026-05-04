@@ -120,3 +120,22 @@ class ApiRootView(APIView):
     )
     def get(self, request):  # noqa: ANN001, ANN201
         return Response(API_ROOT_PAYLOAD)
+
+
+class ApiV1RootView(ApiRootView):
+    @extend_schema(
+        auth=[],
+        description="List stable CanonOS v1 API entry points and documentation URLs.",
+        examples=[
+            OpenApiExample(
+                "API v1 root",
+                value=API_ROOT_PAYLOAD,
+                response_only=True,
+            ),
+        ],
+        operation_id="api_v1_root_retrieve",
+        responses={200: dict},
+        summary="CanonOS API v1 root",
+    )
+    def get(self, request):  # noqa: ANN001, ANN201
+        return Response(API_ROOT_PAYLOAD)
