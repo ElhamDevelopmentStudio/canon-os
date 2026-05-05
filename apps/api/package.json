@@ -14,7 +14,7 @@
     "test": "python3 scripts/ensure_venv.py && .venv/bin/python -m pytest -m \"not e2e\"",
     "build": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py check --settings=config.settings.test",
     "migrations:check": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py check_migrations --settings=config.settings.test && .venv/bin/python manage.py makemigrations --check --dry-run --settings=config.settings.test",
-    "seed": "python3 scripts/ensure_venv.py && .venv/bin/python manage.py seed_demo_data --settings=config.settings.local",
+    "seed": "node ../../scripts/run-with-root-env.mjs bash -lc \"cd apps/api && python3 scripts/ensure_venv.py && .venv/bin/python manage.py seed_demo_data --settings=config.settings.local\"",
     "e2e": "python3 scripts/ensure_venv.py && DATABASE_URL=${DATABASE_URL:-postgresql://canonos:canonos@localhost:15432/canonos} REDIS_URL=${REDIS_URL:-redis://localhost:16379/0} CELERY_BROKER_URL=${CELERY_BROKER_URL:-redis://localhost:16379/0} CELERY_RESULT_BACKEND=${CELERY_RESULT_BACKEND:-redis://localhost:16379/1} .venv/bin/python -m pytest --ds=config.settings.local canonos/health/tests/test_health_api.py canonos/health/tests/test_infrastructure_e2e.py"
   }
 }
