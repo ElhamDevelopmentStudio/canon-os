@@ -1237,6 +1237,9 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M11-FE-013 Add loading state to Taste Profile page.
 - [x] MVP-M11-FE-014 Add empty state to Taste Profile page.
 - [x] MVP-M11-FE-015 Add error state to Taste Profile page.
+- [x] MVP-M11-FE-016 Replace metric-card layout with a page-level taste signal strip.
+- [x] MVP-M11-FE-017 Replace nested taste profile cards with flat ranked evidence sections.
+- [x] MVP-M11-FE-018 Tighten medium preference, red flag, and influential work layouts for scanability.
 
 ### Integration Tasks
 
@@ -1252,6 +1255,7 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M11-QA-003 Confirm Refresh Profile button works.
 - [x] MVP-M11-QA-004 Confirm Taste Profile page matches wireframe.
 - [x] MVP-M11-QA-005 Create or update `docs/manual-tests/taste.md`.
+- [x] MVP-M11-QA-006 Add focused Taste Profile page tests for full, empty, and error states.
 
 ---
 

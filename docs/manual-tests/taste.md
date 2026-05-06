@@ -22,9 +22,12 @@
 2. Add an Aftertaste Log entry for that media item.
    - Expected: The entry appears in Aftertaste Log and on the media detail page.
 3. Open **Taste Profile** from the sidebar.
-   - Expected: The page shows metric cards, generated summary, strongest dimensions, weakest dimensions, medium preference, red flags, and recently influential works.
+   - Expected: The page shows a compact signal strip for strongest signal, red flag, strongest medium, and confidence.
+   - Expected: The generated summary, strongest dimensions, weakest dimensions, medium preference, red flags, and recently influential works are visible as flat ranked sections without nested panels.
 4. Select **Refresh Profile**.
    - Expected: The profile request runs again and the visible data remains consistent.
+5. Select a work in **Recently influential works**.
+   - Expected: The app opens that work's media detail page.
 
 ## Error path
 
@@ -37,6 +40,7 @@
 1. Register a new account.
 2. Open **Taste Profile** before adding scores or aftertaste entries.
    - Expected: The page shows a helpful empty state asking for scored media and reflections.
+   - Expected: The signal strip still explains that the profile needs data instead of showing misleading metrics.
 
 ## Score removal edge case
 

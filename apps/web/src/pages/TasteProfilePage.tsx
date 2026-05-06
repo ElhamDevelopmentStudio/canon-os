@@ -5,20 +5,16 @@ import type {
   TasteProfileSummary,
   TasteSignal,
 } from "@canonos/contracts";
-import { RefreshCw, ShieldAlert, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
+import { BarChart3, RefreshCw, ShieldAlert, Sparkles, TrendingDown, TrendingUp } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
-import { MetricCard } from "@/components/data-display/MetricCard";
 import { ScoreBadge } from "@/components/data-display/ScoreBadge";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageActionBar } from "@/components/layout/PageActionBar";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { appetiteEffectLabels, booleanLabel } from "@/features/aftertaste/aftertasteLabels";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
@@ -34,20 +30,21 @@ export function TasteProfilePage() {
   const { data, error, isLoading, isValidating, mutate } = useTasteProfile();
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageActionBar className="justify-between">
-          <div>
-            <PageTitle>Taste Profile</PageTitle>
-            <PageSubtitle>
-              A transparent summary of what your scores and aftertaste logs say you value, avoid, and prefer by medium.
-            </PageSubtitle>
+    <div className="grid gap-6">
+      <section className="border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Taste desk</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">Taste Profile</h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
+              A transparent read of what your scores and aftertaste logs say you value, avoid, and prefer by medium.
+            </p>
           </div>
           <Button className="gap-2" disabled={isValidating} type="button" onClick={() => void mutate()}>
             <RefreshCw aria-hidden="true" className="h-4 w-4" />
-            {isValidating ? "Refreshing…" : "Refresh Profile"}
+            {isValidating ? "Refreshing..." : "Refresh Profile"}
           </Button>
-        </PageActionBar>
+        </div>
       </section>
 
       {isLoading ? <LoadingState title="Loading Taste Profile" message="Calculating taste signals from scores and aftertaste entries." /> : null}
@@ -59,29 +56,8 @@ export function TasteProfilePage() {
 
 function TasteProfileContent({ profile }: { profile: TasteProfileSummary }) {
   return (
-    <>
-      <section className="grid gap-4 md:grid-cols-4">
-        <MetricCard
-          helper="Highest average positive dimension."
-          label="Strongest Signal"
-          value={profile.strongestDimensions[0]?.dimensionName ?? "Needs data"}
-        />
-        <MetricCard
-          helper="Highest negative evidence count."
-          label="Biggest Red Flag"
-          value={biggestRedFlag(profile.negativeSignals)}
-        />
-        <MetricCard
-          helper="Best average rating by medium."
-          label="Strongest Medium"
-          value={profile.strongestMediumPreference ? mediaTypeLabels[profile.strongestMediumPreference.mediaType] : "Needs data"}
-        />
-        <MetricCard
-          helper={`${profile.evidenceCounts.scoreCount} scores · ${profile.evidenceCounts.aftertasteCount} aftertaste entries`}
-          label="Confidence"
-          value={confidenceLabels[profile.confidence]}
-        />
-      </section>
+    <div className="grid gap-6">
+      <TasteSignalStrip profile={profile} />
 
       {profile.isEmpty ? (
         <EmptyState
@@ -92,44 +68,97 @@ function TasteProfileContent({ profile }: { profile: TasteProfileSummary }) {
         />
       ) : null}
 
-      <SectionCard title="Generated summary">
-        <div className="flex items-start gap-3">
-          <span className="rounded-xl bg-primary/10 p-2 text-primary">
-            <Sparkles aria-hidden="true" className="h-5 w-5" />
-          </span>
-          <div>
-            <h2 className="text-lg font-semibold">Current taste read</h2>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{profile.generatedSummary}</p>
-          </div>
+      <div className="grid gap-8 xl:grid-cols-[minmax(28rem,0.95fr)_minmax(32rem,1.05fr)]">
+        <div className="grid content-start gap-7 xl:border-r xl:border-border xl:pr-8">
+          <TasteSummaryPanel profile={profile} />
+          <SignalListPanel
+            emptyMessage="Add positive dimension scores to reveal what works."
+            icon={<TrendingUp aria-hidden="true" className="h-5 w-5" />}
+            signals={profile.strongestDimensions}
+            title="Strongest dimensions"
+          />
+          <SignalListPanel
+            emptyMessage="Add varied scores to reveal weak or risky areas."
+            icon={<TrendingDown aria-hidden="true" className="h-5 w-5" />}
+            signals={profile.weakestDimensions}
+            title="Weakest dimensions"
+          />
         </div>
-      </SectionCard>
 
-      <section className="grid gap-4 xl:grid-cols-2">
-        <SignalListCard
-          emptyMessage="Add positive dimension scores to reveal what works."
-          icon={<TrendingUp aria-hidden="true" className="h-5 w-5" />}
-          signals={profile.strongestDimensions}
-          title="Strongest dimensions"
-        />
-        <SignalListCard
-          emptyMessage="Add varied scores to reveal weak or risky areas."
-          icon={<TrendingDown aria-hidden="true" className="h-5 w-5" />}
-          signals={profile.weakestDimensions}
-          title="Weakest dimensions"
-        />
-      </section>
-
-      <section className="grid gap-4 xl:grid-cols-2">
-        <MediumPreferenceCard profile={profile} />
-        <NegativeSignalsCard signals={profile.negativeSignals} />
-      </section>
-
-      <InfluentialWorksCard works={profile.recentlyInfluentialWorks} />
-    </>
+        <div className="grid content-start gap-7">
+          <MediumPreferencePanel profile={profile} />
+          <NegativeSignalsPanel signals={profile.negativeSignals} />
+          <InfluentialWorksPanel works={profile.recentlyInfluentialWorks} />
+        </div>
+      </div>
+    </div>
   );
 }
 
-function SignalListCard({
+function TasteSignalStrip({ profile }: { profile: TasteProfileSummary }) {
+  const strongestMedium = profile.strongestMediumPreference
+    ? mediaTypeLabels[profile.strongestMediumPreference.mediaType]
+    : "Needs data";
+
+  return (
+    <section aria-label="Taste signals" className="grid gap-3 border-b border-border pb-6 md:grid-cols-4">
+      <SignalStat
+        helper="Highest positive dimension average."
+        icon={<TrendingUp aria-hidden="true" className="h-4 w-4" />}
+        label="Strongest signal"
+        value={profile.strongestDimensions[0]?.dimensionName ?? "Needs data"}
+      />
+      <SignalStat
+        helper="Most repeated negative evidence."
+        icon={<ShieldAlert aria-hidden="true" className="h-4 w-4" />}
+        label="Biggest red flag"
+        value={biggestRedFlag(profile.negativeSignals)}
+      />
+      <SignalStat
+        helper="Best average rating by medium."
+        icon={<Sparkles aria-hidden="true" className="h-4 w-4" />}
+        label="Strongest medium"
+        value={strongestMedium}
+      />
+      <SignalStat
+        helper={`${profile.evidenceCounts.scoreCount} scores / ${profile.evidenceCounts.aftertasteCount} aftertaste entries`}
+        icon={<BarChart3 aria-hidden="true" className="h-4 w-4" />}
+        label="Confidence"
+        value={confidenceLabels[profile.confidence]}
+      />
+    </section>
+  );
+}
+
+function SignalStat({ helper, icon, label, value }: { helper: string; icon: ReactNode; label: string; value: string }) {
+  return (
+    <div className="border-l border-border pl-4">
+      <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+        <span className="text-primary">{icon}</span>
+        {label}
+      </div>
+      <p className="mt-2 text-xl font-semibold text-foreground">{value}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{helper}</p>
+    </div>
+  );
+}
+
+function TasteSummaryPanel({ profile }: { profile: TasteProfileSummary }) {
+  return (
+    <section aria-label="Taste summary">
+      <PanelHeading icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} kicker="Generated summary" title="Current taste read" />
+      <p className="mt-4 border-l-2 border-primary pl-4 text-base leading-8 text-foreground">{profile.generatedSummary}</p>
+      <dl className="mt-5 grid grid-cols-2 gap-x-5 gap-y-3 border-y border-border py-4 text-sm sm:grid-cols-4">
+        <InlineMetric label="Media" value={String(profile.evidenceCounts.mediaCount)} />
+        <InlineMetric label="Scored" value={String(profile.evidenceCounts.scoredMediaCount)} />
+        <InlineMetric label="Scores" value={String(profile.evidenceCounts.scoreCount)} />
+        <InlineMetric label="Aftertaste" value={String(profile.evidenceCounts.aftertasteCount)} />
+      </dl>
+    </section>
+  );
+}
+
+function SignalListPanel({
   emptyMessage,
   icon,
   signals,
@@ -141,121 +170,128 @@ function SignalListCard({
   title: string;
 }) {
   return (
-    <SectionCard title={title}>
-      <CardHeading icon={icon} title={title} />
+    <section aria-label={title}>
+      <PanelHeading icon={icon} title={title} />
       {signals.length > 0 ? (
-        <div className="mt-4 grid gap-3">
+        <div className="mt-4 divide-y divide-border border-y border-border">
           {signals.map((signal) => (
-            <div className="rounded-xl border border-border bg-background p-4" key={`${title}-${signal.dimensionSlug}`}>
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold">{signal.dimensionName}</h3>
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    {signal.dimensionDirection === "negative" ? "Negative signal" : "Positive signal"} · {signal.evidenceLabel}
-                  </p>
-                </div>
-                <ScoreBadge score={signal.averageScore} tone={signal.averageScore >= 8 ? "excellent" : "promising"} />
+            <div className="flex flex-wrap items-center justify-between gap-4 py-4" key={`${title}-${signal.dimensionSlug}`}>
+              <div className="min-w-0">
+                <h3 className="font-semibold text-foreground">{signal.dimensionName}</h3>
+                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {signal.dimensionDirection === "negative" ? "Negative signal" : "Positive signal"} / {signal.evidenceLabel}
+                </p>
               </div>
+              <ScoreBadge score={signal.averageScore} tone={signal.averageScore >= 8 ? "excellent" : "promising"} />
             </div>
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-sm text-muted-foreground">{emptyMessage}</p>
+        <p className="mt-3 border-y border-border py-4 text-sm text-muted-foreground">{emptyMessage}</p>
       )}
-    </SectionCard>
+    </section>
   );
 }
 
-function MediumPreferenceCard({ profile }: { profile: TasteProfileSummary }) {
+function MediumPreferencePanel({ profile }: { profile: TasteProfileSummary }) {
   return (
-    <SectionCard title="Medium preference">
-      <CardHeading icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} title="Medium preference" />
-      <div className="mt-4 grid gap-3">
+    <section aria-label="Medium preferences">
+      <PanelHeading icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} title="Medium preference" />
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         {profile.strongestMediumPreference ? (
-          <PreferenceCallout label="Strongest" preference={profile.strongestMediumPreference} />
+          <PreferenceHighlight label="Strongest" preference={profile.strongestMediumPreference} />
         ) : null}
         {profile.weakestMediumPreference ? (
-          <PreferenceCallout label="Weakest" preference={profile.weakestMediumPreference} />
+          <PreferenceHighlight label="Weakest" preference={profile.weakestMediumPreference} />
         ) : null}
-        {profile.mediumPreferences.length === 0 ? <p className="text-sm text-muted-foreground">Add rated media to calculate medium tendencies.</p> : null}
-        {profile.mediumPreferences.map((preference) => (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-background p-3" key={preference.mediaType}>
-            <MediaTypeBadge label={mediaTypeLabels[preference.mediaType]} type={preference.mediaType} />
-            <p className="text-sm text-muted-foreground">
-              {preference.averageRating === null ? "No rating" : `${preference.averageRating.toFixed(1)}/10`} · {preference.mediaCount} item{preference.mediaCount === 1 ? "" : "s"} · {preference.scoreCount} scores
-            </p>
-          </div>
-        ))}
       </div>
-    </SectionCard>
+      {profile.mediumPreferences.length === 0 ? (
+        <p className="mt-3 border-y border-border py-4 text-sm text-muted-foreground">Add rated media to calculate medium tendencies.</p>
+      ) : (
+        <div className="mt-4 divide-y divide-border border-y border-border">
+          {profile.mediumPreferences.map((preference) => (
+            <div className="flex flex-wrap items-center justify-between gap-3 py-3" key={preference.mediaType}>
+              <MediaTypeBadge label={mediaTypeLabels[preference.mediaType]} type={preference.mediaType} />
+              <p className="text-sm text-muted-foreground">
+                {formatAverage(preference.averageRating)} / {preference.mediaCount} item{preference.mediaCount === 1 ? "" : "s"} / {preference.scoreCount} scores
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 
-function PreferenceCallout({ label, preference }: { label: string; preference: MediumPreference }) {
+function PreferenceHighlight({ label, preference }: { label: string; preference: MediumPreference }) {
   return (
-    <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-primary">{label}</p>
-      <p className="mt-1 text-sm font-medium">
-        {mediaTypeLabels[preference.mediaType]} · {preference.averageRating?.toFixed(1) ?? "unrated"}/10 average
-      </p>
+    <div className="border-l-2 border-primary pl-4">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">{label}</p>
+      <p className="mt-1 text-base font-semibold text-foreground">{mediaTypeLabels[preference.mediaType]}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{formatAverage(preference.averageRating)} average</p>
     </div>
   );
 }
 
-function NegativeSignalsCard({ signals }: { signals: NegativeTasteSignal[] }) {
+function NegativeSignalsPanel({ signals }: { signals: NegativeTasteSignal[] }) {
   return (
-    <SectionCard title="Red flags">
-      <CardHeading icon={<ShieldAlert aria-hidden="true" className="h-5 w-5" />} title="Red flags" />
-      <div className="mt-4 grid gap-3">
-        {signals.map((signal) => (
-          <div className="rounded-xl border border-border bg-background p-4" key={signal.slug}>
-            <div className="flex items-start justify-between gap-3">
+    <section aria-label="Taste red flags">
+      <PanelHeading icon={<ShieldAlert aria-hidden="true" className="h-5 w-5" />} title="Red flags" />
+      {signals.length > 0 ? (
+        <div className="mt-4 divide-y divide-border border-y border-border">
+          {signals.map((signal) => (
+            <div className="flex items-start justify-between gap-4 py-4" key={signal.slug}>
               <div>
-                <h3 className="font-semibold">{signal.label}</h3>
+                <h3 className="font-semibold text-foreground">{signal.label}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">{signal.evidenceLabel}</p>
+                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  {signal.warningCount} warning{signal.warningCount === 1 ? "" : "s"}
+                </p>
               </div>
               <ScoreBadge score={signal.averageScore ?? undefined} tone={signal.warningCount > 0 ? "risky" : "unknown"} />
             </div>
-          </div>
-        ))}
-      </div>
-    </SectionCard>
+          ))}
+        </div>
+      ) : (
+        <p className="mt-3 border-y border-border py-4 text-sm text-muted-foreground">No recurring genericness or regret warnings yet.</p>
+      )}
+    </section>
   );
 }
 
-function InfluentialWorksCard({ works }: { works: TasteProfileInfluentialWork[] }) {
+function InfluentialWorksPanel({ works }: { works: TasteProfileInfluentialWork[] }) {
   return (
-    <SectionCard title="Recently influential works">
-      <CardHeading icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} title="Recently influential works" />
+    <section aria-label="Influential works">
+      <PanelHeading icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} title="Recently influential works" />
       {works.length > 0 ? (
-        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <div className="mt-4 divide-y divide-border border-y border-border">
           {works.map((work) => (
             <Link
-              className="rounded-xl border border-border bg-background p-4 transition hover:border-primary/40 hover:bg-muted/30"
+              className="block py-4 transition hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               key={work.id}
               to={APP_ROUTES.mediaDetail.replace(":mediaId", work.id)}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-semibold">{work.title}</h3>
+                  <h3 className="font-semibold text-foreground">{work.title}</h3>
                   <p className="mt-1 text-xs text-muted-foreground">Updated {new Date(work.updatedAt).toLocaleDateString()}</p>
                 </div>
                 <MediaTypeBadge label={mediaTypeLabels[work.mediaType]} type={work.mediaType} />
               </div>
               <dl className="mt-3 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-                <InlineMetric label="Rating" value={work.personalRating === null ? "—" : `${work.personalRating.toFixed(1)}/10`} />
-                <InlineMetric label="Stayed" value={work.stayedWithMeScore === null ? "—" : `${work.stayedWithMeScore}/10`} />
-                <InlineMetric label="Worth time" value={work.worthTime === null ? "—" : booleanLabel(work.worthTime)} />
-                <InlineMetric label="Felt generic" value={work.feltGeneric === null ? "—" : booleanLabel(work.feltGeneric)} />
-                <InlineMetric label="Appetite" value={work.appetiteEffect ? appetiteEffectLabels[work.appetiteEffect] : "—"} />
+                <InlineMetric label="Rating" value={work.personalRating === null ? "-" : `${work.personalRating.toFixed(1)}/10`} />
+                <InlineMetric label="Stayed" value={work.stayedWithMeScore === null ? "-" : `${work.stayedWithMeScore}/10`} />
+                <InlineMetric label="Worth time" value={work.worthTime === null ? "-" : booleanLabel(work.worthTime)} />
+                <InlineMetric label="Felt generic" value={work.feltGeneric === null ? "-" : booleanLabel(work.feltGeneric)} />
+                <InlineMetric label="Appetite" value={work.appetiteEffect ? appetiteEffectLabels[work.appetiteEffect] : "-"} />
               </dl>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="mt-3 text-sm text-muted-foreground">No influential works yet. Score media or add aftertaste reflections.</p>
+        <p className="mt-3 border-y border-border py-4 text-sm text-muted-foreground">No influential works yet. Score media or add aftertaste reflections.</p>
       )}
-    </SectionCard>
+    </section>
   );
 }
 
@@ -268,13 +304,20 @@ function InlineMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function CardHeading({ icon, title }: { icon: ReactNode; title: string }) {
+function PanelHeading({ icon, kicker, title }: { icon: ReactNode; kicker?: string; title: string }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="rounded-xl bg-muted p-2 text-muted-foreground">{icon}</span>
-      <h2 className="text-lg font-semibold">{title}</h2>
+    <div className="flex items-start gap-3">
+      <span className="mt-0.5 text-primary">{icon}</span>
+      <div>
+        {kicker ? <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{kicker}</p> : null}
+        <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+      </div>
     </div>
   );
+}
+
+function formatAverage(value: number | null) {
+  return value === null ? "Unrated" : `${value.toFixed(1)}/10`;
 }
 
 function biggestRedFlag(signals: NegativeTasteSignal[]) {
