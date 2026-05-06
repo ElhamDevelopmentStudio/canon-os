@@ -3,7 +3,7 @@
 ## Happy path: create and evaluate a candidate
 
 1. Log in and open **Candidates** from the sidebar.
-   - Expected: The Candidate Evaluator page opens with a quick evaluation area, an empty result area, and candidate history.
+   - Expected: The Candidate Evaluator page opens with a compact evaluation workbench, visible guardrail meters, and a **History** button.
 2. Enter a title, choose a media type, and add a premise.
    - Expected: The main path only asks for the essential fields and all labels are visible.
 3. Open **More context**.
@@ -16,6 +16,15 @@
    - Expected: A success message confirms the candidate was added to the library as Planned.
 7. Open **Library**.
    - Expected: The candidate title appears as a media item owned by the current user.
+
+## Happy path: reopen a saved candidate
+
+1. Open **Candidates**.
+   - Expected: Candidate history is not shown at the bottom of the page.
+2. Select **History**.
+   - Expected: A Candidate history dialog opens with search and filter controls.
+3. Select a saved candidate from the dialog.
+   - Expected: The dialog closes and the selected candidate loads into the evaluator with its latest result.
 
 ## Error path: missing title
 

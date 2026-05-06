@@ -889,6 +889,8 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M07-FE-032 Add error state for candidate operations.
 - [x] MVP-M07-FE-033 Replace the field-heavy candidate form with a quick evaluation path and expandable optional context.
 - [x] MVP-M07-FE-034 Flatten Candidate Evaluator result and history layout to avoid nested card-heavy UI.
+- [x] MVP-M07-FE-035 Move Candidate history into a dedicated dialog with search, filters, and pagination.
+- [x] MVP-M07-FE-036 Promote Candidate guardrails into visible meter controls near the page command area.
 
 ### Integration Tasks
 
@@ -910,6 +912,7 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M07-QA-006 Confirm Candidate page matches wireframe.
 - [x] MVP-M07-QA-007 Create or update `docs/manual-tests/candidate-evaluator.md`.
 - [x] MVP-M07-QA-008 Confirm optional candidate context stays collapsed until requested.
+- [x] MVP-M07-QA-009 Confirm Candidate history opens in a dialog and closes after selecting a candidate.
 
 ---
 

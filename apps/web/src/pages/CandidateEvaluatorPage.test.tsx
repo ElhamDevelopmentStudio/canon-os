@@ -200,6 +200,11 @@ function renderCandidateEvaluator(initialRoute = "/candidates") {
   );
 }
 
+async function openCandidateHistory(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: /history/i }));
+  return screen.getByRole("dialog", { name: /candidate history/i });
+}
+
 function mockCandidates(data: CandidateListResponse = sampleList) {
   mockedUseCandidates.mockReturnValue({
     data,
@@ -292,9 +297,10 @@ describe("CandidateEvaluatorPage", () => {
     renderCandidateEvaluator();
 
     expect(screen.getByRole("heading", { name: /candidate evaluator/i })).toBeInTheDocument();
-    expect(screen.getByText(/Perfect Blue/i)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: /candidate history/i })).not.toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: /perfect blue/i }));
+    const historyDialog = await openCandidateHistory(user);
+    await user.click(within(historyDialog).getByRole("button", { name: /perfect blue/i }));
 
     expect(screen.getByText(/Strong director signal/i)).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /anti-generic filter/i })).toBeInTheDocument();
@@ -332,7 +338,8 @@ describe("CandidateEvaluatorPage", () => {
     const user = userEvent.setup();
     renderCandidateEvaluator();
 
-    await user.click(screen.getByRole("button", { name: /perfect blue/i }));
+    const historyDialog = await openCandidateHistory(user);
+    await user.click(within(historyDialog).getByRole("button", { name: /perfect blue/i }));
     await user.click(screen.getByRole("button", { name: /skip candidate/i }));
 
     expect(mockedUpdateCandidate).toHaveBeenCalledWith(evaluatedCandidate.id, { status: "skip" });
@@ -343,7 +350,8 @@ describe("CandidateEvaluatorPage", () => {
     const user = userEvent.setup();
     renderCandidateEvaluator();
 
-    await user.click(screen.getByRole("button", { name: /perfect blue/i }));
+    const historyDialog = await openCandidateHistory(user);
+    await user.click(within(historyDialog).getByRole("button", { name: /perfect blue/i }));
     await user.click(screen.getByRole("button", { name: /add to queue/i }));
 
     expect(mockedCreateQueueItem).toHaveBeenCalledWith({
@@ -360,7 +368,8 @@ describe("CandidateEvaluatorPage", () => {
     const user = userEvent.setup();
     renderCandidateEvaluator();
 
-    await user.click(screen.getByRole("button", { name: /perfect blue/i }));
+    const historyDialog = await openCandidateHistory(user);
+    await user.click(within(historyDialog).getByRole("button", { name: /perfect blue/i }));
     const resultCard = screen.getByRole("button", { name: /add to library/i }).closest("section");
     expect(resultCard).not.toBeNull();
     await user.click(within(resultCard as HTMLElement).getByRole("button", { name: /add to library/i }));

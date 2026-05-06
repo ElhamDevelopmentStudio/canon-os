@@ -13,9 +13,10 @@ import {
   ChevronDown,
   Clock3,
   Dna,
+  History,
   LibraryBig,
   PlayCircle,
-  RotateCcw,
+  Plus,
   Save,
   ShieldAlert,
   ShieldCheck,
@@ -32,6 +33,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { LoadingState } from "@/components/feedback/LoadingState";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -102,6 +104,7 @@ export function CandidateEvaluatorPage() {
   const [isQueueSaving, setIsQueueSaving] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   const latestEvaluation = evaluation ?? selectedCandidate?.latestEvaluation ?? null;
   const candidates = useMemo(() => data?.results ?? [], [data]);
@@ -161,6 +164,7 @@ export function CandidateEvaluatorPage() {
     setEvaluation(candidate.latestEvaluation);
     setFormError(null);
     setActionMessage(null);
+    setIsHistoryOpen(false);
   }
 
   async function saveCurrentCandidate() {
@@ -273,29 +277,33 @@ export function CandidateEvaluatorPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <section className="border-b border-border pb-6">
-        <div className="flex flex-wrap items-end justify-between gap-4">
+    <div className="flex flex-col gap-5">
+      <section className="grid gap-4 border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Decision desk</p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
               Candidate Evaluator
             </h1>
-            <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
-              Start with a title, add only the context you know, then decide whether it deserves the queue, library, or a skip.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Test a title against fit, regret risk, time cost, and your anti-generic rules.
             </p>
           </div>
-          {userSettings ? (
-            <div className="rounded-full border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
-              Guardrails: genericness {userSettings.recommendation.genericnessSensitivity}/10 · skepticism{" "}
-              {userSettings.recommendation.modernMediaSkepticismLevel}/10 · strictness{" "}
-              {userSettings.recommendation.preferredRecommendationStrictness}/10
-            </div>
-          ) : null}
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="secondary" onClick={() => setIsHistoryOpen(true)}>
+              <History aria-hidden="true" className="mr-2 h-4 w-4" />
+              History{data?.count ? ` (${data.count})` : ""}
+            </Button>
+            <Button type="button" onClick={resetDraft}>
+              <Plus aria-hidden="true" className="mr-2 h-4 w-4" />
+              New Candidate
+            </Button>
+          </div>
         </div>
+        {userSettings ? <GuardrailPanel settings={userSettings.recommendation} /> : null}
       </section>
 
-      <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(30rem,1.05fr)]">
+      <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(26rem,0.85fr)_minmax(34rem,1.15fr)]">
         <CandidateInputPanel
           draft={draft}
           isEvaluating={isEvaluating}
@@ -303,7 +311,6 @@ export function CandidateEvaluatorPage() {
           selectedCandidate={selectedCandidate}
           onChange={updateDraft}
           onEvaluate={() => void runEvaluation()}
-          onReset={resetDraft}
           onSave={() => void saveCurrentCandidate()}
         />
 
@@ -323,38 +330,144 @@ export function CandidateEvaluatorPage() {
         </div>
       </div>
 
-      <CandidateHistoryControls
-        mediaType={selectedMediaType}
-        search={searchDraft}
-        status={selectedStatus}
-        onMediaTypeChange={(value) => updateListFilter("mediaType", value)}
-        onSearchChange={setSearchDraft}
-        onStatusChange={(value) => updateListFilter("status", value)}
-      />
-
-      {isLoading ? <ListSkeleton label="Loading candidates" rows={6} /> : null}
-      {error ? <ErrorState title="Candidate history unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
-      {!isLoading && !error && candidates.length === 0 ? (
-        <EmptyState
-          title="No candidates yet"
-          message="Save or evaluate your first possible media choice, then it will appear here for comparison."
-          actionLabel="New Candidate"
-          onAction={resetDraft}
+      {isHistoryOpen ? (
+        <CandidateHistoryDialog
+          candidates={candidates}
+          data={data}
+          error={error}
+          isLoading={isLoading}
+          mediaType={selectedMediaType}
+          page={Number(page)}
+          search={searchDraft}
+          selectedId={selectedCandidate?.id}
+          status={selectedStatus}
+          onClose={() => setIsHistoryOpen(false)}
+          onMediaTypeChange={(value) => updateListFilter("mediaType", value)}
+          onPageChange={updatePage}
+          onRetry={() => void mutate()}
+          onSearchChange={setSearchDraft}
+          onSelect={loadCandidate}
+          onStatusChange={(value) => updateListFilter("status", value)}
         />
       ) : null}
-      {!isLoading && !error && data && candidates.length > 0 ? (
-        <>
-          <PaginationControls
-            count={data.count}
-            itemLabel="candidate"
-            page={Number(page)}
-            pageSize={DEFAULT_PAGE_SIZE}
-            onPageChange={updatePage}
-          />
-          <CandidateHistory candidates={candidates} selectedId={selectedCandidate?.id} onSelect={loadCandidate} />
-        </>
-      ) : null}
     </div>
+  );
+}
+
+function GuardrailPanel({
+  settings,
+}: {
+  settings: NonNullable<ReturnType<typeof useUserSettings>["data"]>["recommendation"];
+}) {
+  return (
+    <section aria-label="Candidate guardrails" className="grid gap-2 md:grid-cols-4">
+      <GuardrailMeter label="Genericness" value={settings.genericnessSensitivity} />
+      <GuardrailMeter label="Modern skepticism" value={settings.modernMediaSkepticismLevel} />
+      <GuardrailMeter label="Strictness" value={settings.preferredRecommendationStrictness} />
+      <div className="border-l-4 border-promising bg-promising/10 px-3 py-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exceptions</p>
+        <p className="mt-1 text-sm font-semibold">
+          {settings.allowModernExceptions ? "Modern exceptions allowed" : "Modern exceptions blocked"}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function GuardrailMeter({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="border-l-4 border-primary bg-muted/35 px-3 py-2">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+        <p className="text-xl font-semibold tabular-nums">{value}/10</p>
+      </div>
+      <div className="mt-2 h-1.5 bg-border">
+        <div className="h-full bg-primary" style={{ width: `${Math.max(0, Math.min(value, 10)) * 10}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function CandidateHistoryDialog({
+  candidates,
+  data,
+  error,
+  isLoading,
+  mediaType,
+  page,
+  search,
+  selectedId,
+  status,
+  onClose,
+  onMediaTypeChange,
+  onPageChange,
+  onRetry,
+  onSearchChange,
+  onSelect,
+  onStatusChange,
+}: {
+  candidates: Candidate[];
+  data: { count: number } | undefined;
+  error: Error | undefined;
+  isLoading: boolean;
+  mediaType: MediaType | "";
+  page: number;
+  search: string;
+  selectedId?: string;
+  status: CandidateStatus | "";
+  onClose: () => void;
+  onMediaTypeChange: (value: string) => void;
+  onPageChange: (page: number) => void;
+  onRetry: () => void;
+  onSearchChange: (value: string) => void;
+  onSelect: (candidate: Candidate) => void;
+  onStatusChange: (value: string) => void;
+}) {
+  return (
+    <DialogShell labelledBy="candidate-history-title" onClose={onClose} panelClassName="max-w-5xl p-0">
+      <div className="border-b border-border p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Evaluator log</p>
+            <h2 className="mt-2 text-2xl font-semibold" id="candidate-history-title">Candidate history</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Search, filter, and reopen previous evaluations.</p>
+          </div>
+          <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
+        </div>
+        <div className="mt-4">
+          <CandidateHistoryControls
+            mediaType={mediaType}
+            search={search}
+            status={status}
+            onMediaTypeChange={onMediaTypeChange}
+            onSearchChange={onSearchChange}
+            onStatusChange={onStatusChange}
+          />
+        </div>
+      </div>
+      <div className="max-h-[70vh] overflow-y-auto p-5">
+        {isLoading ? <ListSkeleton label="Loading candidates" rows={6} /> : null}
+        {error ? <ErrorState title="Candidate history unavailable" message={error.message} onRetry={onRetry} /> : null}
+        {!isLoading && !error && candidates.length === 0 ? (
+          <EmptyState
+            title="No candidates yet"
+            message="Save or evaluate your first possible media choice, then it will appear here for comparison."
+          />
+        ) : null}
+        {!isLoading && !error && data && candidates.length > 0 ? (
+          <div className="grid gap-4">
+            <PaginationControls
+              count={data.count}
+              itemLabel="candidate"
+              page={page}
+              pageSize={DEFAULT_PAGE_SIZE}
+              onPageChange={onPageChange}
+            />
+            <CandidateHistory candidates={candidates} selectedId={selectedId} onSelect={onSelect} />
+          </div>
+        ) : null}
+      </div>
+    </DialogShell>
   );
 }
 
@@ -423,7 +536,6 @@ function CandidateInputPanel({
   selectedCandidate,
   onChange,
   onEvaluate,
-  onReset,
   onSave,
 }: {
   draft: CandidateDraft;
@@ -432,7 +544,6 @@ function CandidateInputPanel({
   selectedCandidate: Candidate | null;
   onChange: (field: keyof CandidateDraft, value: string) => void;
   onEvaluate: () => void;
-  onReset: () => void;
   onSave: () => void;
 }) {
   const [contextOpen, setContextOpen] = useState(false);
@@ -443,41 +554,42 @@ function CandidateInputPanel({
   ].filter(Boolean);
 
   return (
-    <section aria-label="Candidate input" className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-semibold">Quick evaluation</h2>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            {selectedCandidate ? "Editing saved candidate" : "Three fields are enough to start. Add context only when it helps the verdict."}
-          </p>
+    <section aria-label="Candidate input" className="grid content-start gap-4 border-r border-border pr-6">
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-xl font-semibold">Evaluate</h2>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            {selectedCandidate ? "Editing saved candidate" : "New run"}
+          </span>
         </div>
-        <Button type="button" variant="ghost" onClick={onReset}>
-          <RotateCcw aria-hidden="true" className="mr-2 h-4 w-4" />
-          New Candidate
-        </Button>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Title, type, premise. Everything else is optional context.
+        </p>
       </div>
 
-      <div className="grid gap-4">
-        <TextField label="Title" required value={draft.title} onChange={(value) => onChange("title", value)} />
-        <label className="grid gap-1.5 text-sm font-medium">
-          Media type
-          <select
-            className={fieldClassName}
-            value={draft.mediaType}
-            onChange={(event) => onChange("mediaType", event.target.value)}
-          >
-            {MEDIA_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {mediaTypeLabels[type]}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="grid gap-3">
+        <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_12rem]">
+          <TextField label="Title" required value={draft.title} onChange={(value) => onChange("title", value)} />
+          <label className="grid gap-1.5 text-sm font-medium">
+            Media type
+            <select
+              className={fieldClassName}
+              value={draft.mediaType}
+              onChange={(event) => onChange("mediaType", event.target.value)}
+            >
+              {MEDIA_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {mediaTypeLabels[type]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
         <label className="grid gap-1.5 text-sm font-medium">
           Premise
           <textarea
-            className={cn(fieldClassName, "min-h-36 resize-y py-3 leading-6")}
+            className={cn(fieldClassName, "min-h-28 resize-y py-3 leading-6")}
             placeholder="What is it, why might it work, and what might be generic about it?"
             value={draft.premise}
             onChange={(event) => onChange("premise", event.target.value)}
@@ -485,21 +597,21 @@ function CandidateInputPanel({
         </label>
       </div>
 
-      <div className="border-y border-border py-4">
+      <div className="border-y border-border py-3">
         <button
           aria-expanded={contextOpen}
           className="flex w-full items-center justify-between gap-4 text-left"
           type="button"
           onClick={() => setContextOpen((current) => !current)}
         >
-          <span>
+          <div>
             <span className="block text-sm font-semibold">More context</span>
             <span className="mt-1 block text-sm text-muted-foreground">
               {contextSummary.length > 0
                 ? contextSummary.join(" · ")
                 : "Creator, release year, time cost, and signal strength."}
             </span>
-          </span>
+          </div>
           <ChevronDown
             aria-hidden="true"
             className={cn("h-5 w-5 text-muted-foreground transition", contextOpen ? "rotate-180" : "")}
@@ -507,7 +619,7 @@ function CandidateInputPanel({
         </button>
 
         {contextOpen ? (
-          <div className="mt-5 grid gap-5">
+          <div className="mt-4 grid gap-4">
             <div className="grid gap-4 md:grid-cols-2">
               <TextField label="Release year" type="number" value={draft.releaseYear} onChange={(value) => onChange("releaseYear", value)} />
               <TextField label="Known creator" value={draft.knownCreator} onChange={(value) => onChange("knownCreator", value)} />
@@ -532,7 +644,7 @@ function CandidateInputPanel({
         ) : null}
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 pt-1">
         <Button disabled={isSaving || isEvaluating} type="button" variant="secondary" onClick={onSave}>
           <Save aria-hidden="true" className="mr-2 h-4 w-4" />
           {isSaving ? "Saving..." : "Save Candidate"}
