@@ -60,11 +60,11 @@
 2. Add one planned library media item with a known runtime, page count, or audiobook length.
    - Expected: The item appears in Library with status **Planned**.
 3. Open **Tonight Mode** from the sidebar.
-   - Expected: The page shows available time, energy, focus, desired effect, media type, risk tolerance, and Generate Tonight Plan controls.
+   - Expected: The page shows a compact Tonight desk with visible constraint signals, current-state controls, preferred media type toggles, and Generate Tonight Plan controls.
 4. Enter 120 available minutes, choose medium or deep focus, choose a desired effect, and select preferred media types.
-   - Expected: The form accepts the choices without leaving the page.
+   - Expected: The signal strip updates with the time, energy/focus, intent, risk, and selected media types.
 5. Select **Generate Tonight Plan**.
-   - Expected: Recommendation cards appear with Safe choice, Challenging choice, and/or Wildcard choice labels, reasons, media badges, fit scores, time estimates, mood fit, commitment, and freshness.
+   - Expected: Recommendation rows appear in ranked order with Safe choice, Challenging choice, and/or Wildcard choice labels, reasons, media badges, fit scores, time estimates, mood fit, commitment, and freshness.
 
 ## Tonight Mode edge case: archived items stay out
 
@@ -87,7 +87,7 @@
 ## Tonight Mode error path: invalid time
 
 1. Open **Tonight Mode**.
-   - Expected: The form is visible.
+   - Expected: The current-state controls and empty plan output are visible.
 2. Set available time to 0 or blank and select **Generate Tonight Plan**.
    - Expected: An error message asks for at least 1 available minute and no recommendation request is sent.
 

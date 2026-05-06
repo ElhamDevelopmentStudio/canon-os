@@ -12,16 +12,14 @@ import {
   type TonightModeRecommendation,
   type TonightModeResponse,
 } from "@canonos/contracts";
-import { ListPlus, Moon, Play, ThumbsDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Clock3, Gauge, ListPlus, Moon, Play, SlidersHorizontal, Sparkles, ThumbsDown } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { updateMediaItem } from "@/features/media/mediaApi";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
@@ -178,110 +176,241 @@ export function TonightModePage() {
   }
 
   const recommendations = plan?.recommendations ?? [];
+  const bestRecommendation = recommendations[0] ?? null;
+  const selectedTypeLabels = draft.preferredMediaTypes.map((type) => mediaTypeLabels[type]).join(", ");
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageTitle>Tonight Mode</PageTitle>
-        <PageSubtitle>
-          Run a quick mood, time, energy, and risk check-in to choose what actually fits tonight.
-        </PageSubtitle>
+    <div className="flex flex-col gap-5">
+      <section className="grid gap-4 border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Tonight desk</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Tonight Mode</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Pick something that fits this exact window, not an abstract best-of list.
+            </p>
+          </div>
+          <Button aria-label="Generate plan" disabled={isGenerating} type="button" onClick={() => void generatePlan()}>
+            <Moon aria-hidden="true" className="mr-2 h-4 w-4" />
+            {isGenerating ? "Generating..." : "Generate"}
+          </Button>
+        </div>
+        <TonightSignalStrip draft={draft} bestRecommendation={bestRecommendation} selectedTypeLabels={selectedTypeLabels} />
       </section>
 
-      <SectionCard title="Tonight Mode check-in">
-        <div className="grid gap-4 lg:grid-cols-3">
-          <label className="grid gap-1.5 text-sm font-medium">
-            Available time (minutes)
-            <input
-              className={fieldClassName}
-              min={1}
-              type="number"
-              value={draft.availableMinutes}
-              onChange={(event) => updateDraft("availableMinutes", event.target.value)}
-            />
-          </label>
-          <SelectField
-            label="Energy level"
-            options={ENERGY_LEVELS}
-            value={draft.energyLevel}
-            labels={energyLevelLabels}
-            onChange={(value) => updateDraft("energyLevel", value)}
-          />
-          <SelectField
-            label="Focus level"
-            options={FOCUS_LEVELS}
-            value={draft.focusLevel}
-            labels={focusLevelLabels}
-            onChange={(value) => updateDraft("focusLevel", value)}
-          />
-          <SelectField
-            label="Desired effect"
-            options={DESIRED_EFFECTS}
-            value={draft.desiredEffect}
-            labels={desiredEffectLabels}
-            onChange={(value) => updateDraft("desiredEffect", value)}
-          />
-          <SelectField
-            label="Risk tolerance"
-            options={RISK_TOLERANCES}
-            value={draft.riskTolerance}
-            labels={riskToleranceLabels}
-            onChange={(value) => updateDraft("riskTolerance", value)}
-          />
-        </div>
+      <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(25rem,0.75fr)_minmax(36rem,1.25fr)]">
+        <TonightCheckInPanel
+          draft={draft}
+          isGenerating={isGenerating}
+          onGenerate={() => void generatePlan()}
+          onToggleMediaType={toggleMediaType}
+          onUpdate={updateDraft}
+        />
 
-        <fieldset className="mt-5 grid gap-3">
-          <legend className="text-sm font-semibold">Preferred media types</legend>
-          <div className="flex flex-wrap gap-2">
-            {MEDIA_TYPES.map((type) => (
+        <div className="flex flex-col gap-5">
+          {isGenerating ? (
+            <LoadingState title="Generating Tonight Mode plan" message="Ranking queue and planned media against your current context." />
+          ) : null}
+          {error ? <ErrorState title="Tonight Mode failed" message={error} /> : null}
+          {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
+
+          {!plan && !isGenerating ? <TonightLandingState /> : null}
+
+          {plan && recommendations.length === 0 ? (
+            <EmptyState
+              title="No Tonight Mode recommendations yet"
+              message="Add queue items or planned media that fit the time window, then generate another plan."
+            />
+          ) : null}
+
+          {recommendations.length > 0 ? (
+            <section aria-label="Tonight recommendations" className="grid gap-4 border-l border-border pl-6">
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Recommended order</p>
+                  <h2 className="mt-2 text-2xl font-semibold">Start with {recommendations[0].title}</h2>
+                </div>
+                <StatusPill label={`${recommendations.length} options`} tone="active" />
+              </div>
+              <div className="divide-y divide-border border-y border-border">
+                {recommendations.map((recommendation, index) => (
+                  <RecommendationRow
+                    index={index}
+                    key={`${recommendation.slot}-${recommendation.title}-${recommendation.queueItemId ?? recommendation.mediaItemId}`}
+                    recommendation={recommendation}
+                    onAddToQueue={addRecommendationToQueue}
+                    onDelay={delayRecommendation}
+                    onStart={startRecommendation}
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TonightSignalStrip({
+  bestRecommendation,
+  draft,
+  selectedTypeLabels,
+}: {
+  bestRecommendation: TonightModeRecommendation | null;
+  draft: TonightDraft;
+  selectedTypeLabels: string;
+}) {
+  return (
+    <section aria-label="Tonight constraints" className="grid gap-2 md:grid-cols-4">
+      <SignalStat label="Window" value={`${draft.availableMinutes || "0"} min`} />
+      <SignalStat label="State" value={`${energyLevelLabels[draft.energyLevel]} energy / ${focusLevelLabels[draft.focusLevel]} focus`} />
+      <SignalStat label="Intent" value={`${desiredEffectLabels[draft.desiredEffect]} / ${riskToleranceLabels[draft.riskTolerance]} risk`} />
+      <SignalStat label="Best fit" value={bestRecommendation ? `${Math.round(bestRecommendation.score)} - ${bestRecommendation.title}` : selectedTypeLabels || "No types"} />
+    </section>
+  );
+}
+
+function SignalStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-l-4 border-primary bg-muted/35 px-3 py-2">
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-1 truncate text-sm font-semibold">{value}</p>
+    </div>
+  );
+}
+
+function TonightCheckInPanel({
+  draft,
+  isGenerating,
+  onGenerate,
+  onToggleMediaType,
+  onUpdate,
+}: {
+  draft: TonightDraft;
+  isGenerating: boolean;
+  onGenerate: () => void;
+  onToggleMediaType: (type: MediaType) => void;
+  onUpdate: <K extends keyof TonightDraft>(field: K, value: TonightDraft[K]) => void;
+}) {
+  return (
+    <section aria-label="Tonight check-in" className="grid content-start gap-5 border-r border-border pr-6">
+      <div>
+        <h2 className="flex items-center gap-2 text-xl font-semibold">
+          <SlidersHorizontal aria-hidden="true" className="h-5 w-5 text-primary" />
+          Current state
+        </h2>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Set only the constraints that matter tonight. Settings supply the defaults.
+        </p>
+      </div>
+
+      <TimePicker value={draft.availableMinutes} onChange={(value) => onUpdate("availableMinutes", value)} />
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <SelectField
+          label="Energy level"
+          labels={energyLevelLabels}
+          options={ENERGY_LEVELS}
+          value={draft.energyLevel}
+          onChange={(value) => onUpdate("energyLevel", value)}
+        />
+        <SelectField
+          label="Focus level"
+          labels={focusLevelLabels}
+          options={FOCUS_LEVELS}
+          value={draft.focusLevel}
+          onChange={(value) => onUpdate("focusLevel", value)}
+        />
+        <SelectField
+          label="Desired effect"
+          labels={desiredEffectLabels}
+          options={DESIRED_EFFECTS}
+          value={draft.desiredEffect}
+          onChange={(value) => onUpdate("desiredEffect", value)}
+        />
+        <SelectField
+          label="Risk tolerance"
+          labels={riskToleranceLabels}
+          options={RISK_TOLERANCES}
+          value={draft.riskTolerance}
+          onChange={(value) => onUpdate("riskTolerance", value)}
+        />
+      </div>
+
+      <fieldset className="grid gap-3 border-t border-border pt-4">
+        <legend className="text-sm font-semibold">Preferred media types</legend>
+        <div className="grid grid-cols-2 gap-2">
+          {MEDIA_TYPES.map((type) => {
+            const selected = draft.preferredMediaTypes.includes(type);
+            return (
               <label
-                className="flex cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-sm"
+                className={cn(
+                  "flex cursor-pointer items-center justify-between gap-2 border border-border px-3 py-2 text-sm transition",
+                  selected ? "border-primary bg-primary/10 text-primary" : "bg-background hover:bg-muted",
+                )}
                 key={type}
               >
-                <input
-                  checked={draft.preferredMediaTypes.includes(type)}
-                  type="checkbox"
-                  onChange={() => toggleMediaType(type)}
-                />
-                {mediaTypeLabels[type]}
+                <span>{mediaTypeLabels[type]}</span>
+                <input checked={selected} type="checkbox" onChange={() => onToggleMediaType(type)} />
               </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button className="gap-2" disabled={isGenerating} type="button" onClick={() => void generatePlan()}>
-            <Moon aria-hidden="true" className="h-4 w-4" />
-            {isGenerating ? "Generating..." : "Generate Tonight Plan"}
-          </Button>
-          <p className="text-sm text-muted-foreground">Default risk and media types come from Settings. Unsafe calls use the browser CSRF cookie and session.</p>
+            );
+          })}
         </div>
-      </SectionCard>
+      </fieldset>
 
-      {isGenerating ? <LoadingState title="Generating Tonight Mode plan" message="Ranking queue and planned media against your current context." /> : null}
-      {error ? <ErrorState title="Tonight Mode failed" message={error} /> : null}
-      {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
+      <Button disabled={isGenerating} type="button" onClick={onGenerate}>
+        <Moon aria-hidden="true" className="mr-2 h-4 w-4" />
+        {isGenerating ? "Generating..." : "Generate Tonight Plan"}
+      </Button>
+    </section>
+  );
+}
 
-      {plan && recommendations.length === 0 ? (
-        <EmptyState
-          title="No Tonight Mode recommendations yet"
-          message="Add queue items or planned media that fit the time window, then generate another plan."
+function TimePicker({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const presets = [
+    { label: "30m", value: "30" },
+    { label: "45m", value: "45" },
+    { label: "90m", value: "90" },
+    { label: "2h", value: "120" },
+  ];
+
+  return (
+    <div className="grid gap-2">
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-sm font-medium" htmlFor="available-minutes">
+          Available time (minutes)
+        </label>
+        <span className="flex items-center gap-1 text-sm text-muted-foreground">
+          <Clock3 aria-hidden="true" className="h-4 w-4" />
+          {value.trim() ? `${value} min` : "Not set"}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {presets.map((preset) => (
+          <button
+            className={cn(
+              "border px-3 py-1.5 text-sm transition",
+              value === preset.value
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-background hover:bg-muted",
+            )}
+            key={preset.value}
+            type="button"
+            onClick={() => onChange(preset.value)}
+          >
+            {preset.label}
+          </button>
+        ))}
+        <input
+          className={cn(fieldClassName, "w-28")}
+          id="available-minutes"
+          min={1}
+          type="number"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
         />
-      ) : null}
-
-      {recommendations.length > 0 ? (
-        <section className="grid gap-4 xl:grid-cols-3" aria-label="Tonight recommendations">
-          {recommendations.map((recommendation) => (
-            <RecommendationCard
-              key={`${recommendation.slot}-${recommendation.title}-${recommendation.queueItemId ?? recommendation.mediaItemId}`}
-              recommendation={recommendation}
-              onAddToQueue={addRecommendationToQueue}
-              onDelay={delayRecommendation}
-              onStart={startRecommendation}
-            />
-          ))}
-        </section>
-      ) : null}
+      </div>
     </div>
   );
 }
@@ -309,40 +438,71 @@ function SelectField<T extends string>({
   );
 }
 
-function RecommendationCard({
+function TonightLandingState() {
+  return (
+    <section aria-label="Tonight plan" className="border-l border-border pl-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Plan output</p>
+      <h2 className="mt-3 text-2xl font-semibold">No plan generated yet</h2>
+      <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
+        Generate a plan to rank active queue items and planned library titles against the time, energy, focus, and risk you have now.
+      </p>
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <OutputHint icon={<Gauge aria-hidden="true" className="h-5 w-5" />} label="Fit score" />
+        <OutputHint icon={<Clock3 aria-hidden="true" className="h-5 w-5" />} label="Time match" />
+        <OutputHint icon={<Sparkles aria-hidden="true" className="h-5 w-5" />} label="Freshness" />
+      </div>
+    </section>
+  );
+}
+
+function OutputHint({ icon, label }: { icon: ReactNode; label: string }) {
+  return (
+    <div className="border-t border-border pt-3">
+      <div className="text-primary">{icon}</div>
+      <p className="mt-2 text-sm font-semibold">{label}</p>
+    </div>
+  );
+}
+
+function RecommendationRow({
+  index,
   recommendation,
   onAddToQueue,
   onDelay,
   onStart,
 }: {
+  index: number;
   recommendation: TonightModeRecommendation;
   onAddToQueue: (recommendation: TonightModeRecommendation) => void | Promise<void>;
   onDelay: (recommendation: TonightModeRecommendation) => void | Promise<void>;
   onStart: (recommendation: TonightModeRecommendation) => void | Promise<void>;
 }) {
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-muted-foreground">
-            {recommendationSlotLabels[recommendation.slot]}
-          </p>
-          <h2 className="mt-2 text-lg font-semibold">{recommendation.title}</h2>
+    <article className="grid gap-4 py-5 lg:grid-cols-[2.25rem_minmax(0,1fr)_auto]">
+      <div className="text-2xl font-semibold tabular-nums text-muted-foreground">{index + 1}</div>
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-start gap-3">
+          <div className="min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              {recommendationSlotLabels[recommendation.slot]}
+            </p>
+            <h3 className="mt-1 truncate text-xl font-semibold">{recommendation.title}</h3>
+          </div>
+          <StatusPill label={`${Math.round(recommendation.score)} fit`} tone="success" />
         </div>
-        <StatusPill label={`${Math.round(recommendation.score)} fit`} tone="success" />
+        <div className="mt-3 flex flex-wrap gap-2">
+          <MediaTypeBadge type={recommendation.mediaType} label={mediaTypeLabels[recommendation.mediaType]} />
+          <StatusPill
+            label={recommendation.estimatedTimeMinutes ? `${recommendation.estimatedTimeMinutes} min` : "Flexible time"}
+            tone="neutral"
+          />
+          <StatusPill label={`${recommendation.moodCompatibility}% mood`} tone="active" />
+          <StatusPill label={`${recommendation.commitmentLevel}/10 commitment`} tone={recommendation.commitmentLevel >= 8 ? "warning" : "neutral"} />
+          <StatusPill label={`${Math.round(recommendation.freshnessScore)}% fresh`} tone={recommendation.freshnessScore < 40 ? "warning" : "success"} />
+        </div>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">{recommendation.reason}</p>
       </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <MediaTypeBadge type={recommendation.mediaType} label={mediaTypeLabels[recommendation.mediaType]} />
-        <StatusPill
-          label={recommendation.estimatedTimeMinutes ? `${recommendation.estimatedTimeMinutes} min` : "Flexible time"}
-          tone="neutral"
-        />
-        <StatusPill label={`${recommendation.moodCompatibility}% mood fit`} tone="active" />
-        <StatusPill label={`${recommendation.commitmentLevel}/10 commitment`} tone={recommendation.commitmentLevel >= 8 ? "warning" : "neutral"} />
-        <StatusPill label={`${Math.round(recommendation.freshnessScore)}% fresh`} tone={recommendation.freshnessScore < 40 ? "warning" : "success"} />
-      </div>
-      <p className="mt-4 text-sm leading-6 text-muted-foreground">{recommendation.reason}</p>
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="flex flex-wrap content-start gap-2 lg:justify-end">
         <Button className="gap-2" size="sm" type="button" onClick={() => void onStart(recommendation)}>
           <Play aria-hidden="true" className="h-4 w-4" />
           Start This

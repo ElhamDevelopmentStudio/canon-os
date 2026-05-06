@@ -1073,6 +1073,9 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M09-FE-019 Add loading state while generating plan.
 - [x] MVP-M09-FE-020 Add empty state when no recommendations exist.
 - [x] MVP-M09-FE-021 Add error state for failed generation.
+- [x] MVP-M09-FE-022 Promote Tonight constraints into page-level signal blocks.
+- [x] MVP-M09-FE-023 Replace card-heavy check-in with a compact current-state workspace.
+- [x] MVP-M09-FE-024 Replace recommendation cards with ranked recommendation rows.
 
 ### Integration Tasks
 
@@ -1091,6 +1094,7 @@ The MVP must be useful immediately. It must let the user record media, import an
 - [x] MVP-M09-QA-004 Confirm time limit affects recommendations.
 - [x] MVP-M09-QA-005 Confirm Tonight Mode page matches wireframe.
 - [x] MVP-M09-QA-006 Create or update `docs/manual-tests/queue-tonight.md`.
+- [x] MVP-M09-QA-007 Add focused Tonight Mode page tests for generation, actions, and validation.
 
 ---
 
