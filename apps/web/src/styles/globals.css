@@ -58,7 +58,7 @@
   input,
   select,
   textarea {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary;
+    @apply focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent;
   }
 
   @media (prefers-reduced-motion: reduce) {
