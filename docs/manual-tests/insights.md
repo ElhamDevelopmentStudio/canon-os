@@ -2,7 +2,7 @@
 
 ## Goal
 
-Confirm the Insights page turns the user's real media, rating, taste score, creator, and Narrative DNA evidence into simple readable charts and cards.
+Confirm the Insights page turns the user's real media, rating, taste score, creator, and Narrative DNA evidence into a dense but readable analytics workspace.
 
 ## Preconditions
 
@@ -12,15 +12,17 @@ Confirm the Insights page turns the user's real media, rating, taste score, crea
 ## Happy Path
 
 1. Go to `/insights`.
-   - Expected: The page opens with the heading “Readable patterns from your media history.”
-2. Review the top metric cards.
-   - Expected: Timeline months, rated media, tracked dimensions, and regret time show numbers from the user's data.
-3. Review the Consumption timeline, Rating distribution, and Media type distribution sections.
-   - Expected: Each section shows readable bars and counts.
-4. Review Dimension trends, Genericness vs satisfaction, and Regret vs time cost.
-   - Expected: Taste score averages, outlier titles, regret minutes, and insight text appear without errors.
-5. Review Top creators and Top themes.
-   - Expected: Creator rankings and Narrative DNA theme/trait examples appear when evidence exists.
+   - Expected: The page opens with the heading “Insights” and a compact action row.
+2. Review the top signal strip.
+   - Expected: Timeline months, rated media, dominant medium, and regret time show numbers from the user's data.
+3. Review Consumption timeline and Rating distribution.
+   - Expected: The timeline uses vertical visual columns, rating distribution uses horizontal bars, and both remain readable without nested panels.
+4. Review Media mix, Taste monitor, and Top themes.
+   - Expected: Medium balance, dimension signal density, and Narrative DNA themes appear as compact chart-like modules.
+5. Review Genericness vs satisfaction and Regret vs time cost.
+   - Expected: Average signals, outlier titles, regret minutes, and insight text appear without errors.
+6. Review Top creators and Dimension trends.
+   - Expected: Creator rankings and dimension trend rows show score, detail, and warning evidence when present.
 
 ## Error Path
 
@@ -32,9 +34,9 @@ Confirm the Insights page turns the user's real media, rating, taste score, crea
 ## Edge Case
 
 1. Log in as a new user with no media.
-   - Expected: The Insights page shows a friendly empty state and each chart/card explains what evidence is missing.
+   - Expected: The Insights page shows a friendly empty state and each chart module explains what evidence is missing.
 2. Open the page on a narrow mobile screen.
-   - Expected: All sections stack cleanly, bars remain readable, and no key action or data is cut off.
+   - Expected: All sections stack cleanly, chart labels remain readable, and no key action or data is cut off.
 
 ## Notes
 

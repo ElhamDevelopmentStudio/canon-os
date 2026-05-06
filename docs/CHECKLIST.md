@@ -2642,6 +2642,9 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M16-FE-012 Add loading state.
 - [x] CP-M16-FE-013 Add empty state.
 - [x] CP-M16-FE-014 Add error state.
+- [x] CP-M16-FE-015 Replace generic Insights cards with a scan-first analytics workspace.
+- [x] CP-M16-FE-016 Add compact timeline, rating, media mix, taste monitor, and theme visualization modules.
+- [x] CP-M16-FE-017 Tighten correlation and ranked evidence sections for dense dashboard reading.
 
 ### Integration Tasks
 
@@ -2654,6 +2657,8 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M16-QA-001 Confirm Insights page works with empty data.
 - [x] CP-M16-QA-002 Confirm Insights page works with sample data.
 - [x] CP-M16-QA-003 Confirm visualizations are readable on mobile.
+- [x] CP-M16-QA-004 Update focused Insights page tests for redesigned chart modules.
+- [x] CP-M16-QA-005 Update Insights manual test coverage for the redesigned workspace.
 
 ---
 

@@ -118,18 +118,18 @@ describe("InsightsPage", () => {
   it("renders analytics sections and sample insight data", () => {
     renderPage();
 
-    expect(screen.getByRole("heading", { name: /readable patterns from your media history/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Consumption timeline" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Rating distribution" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Media type distribution" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Dimension trends" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Genericness vs satisfaction" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Regret vs time cost" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Top creators" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Top themes" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Insights" })).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: /insight signals/i })).toHaveTextContent("Rated media");
+    expect(screen.getByRole("region", { name: /consumption overview/i })).toHaveTextContent("Consumption timeline");
+    expect(screen.getByRole("region", { name: /rating distribution/i })).toHaveTextContent("6.8/10");
+    expect(screen.getByRole("region", { name: /media mix/i })).toHaveTextContent("Movie");
+    expect(screen.getByRole("region", { name: /taste monitor/i })).toHaveTextContent("Atmosphere");
+    expect(screen.getByRole("region", { name: /genericness vs satisfaction/i })).toHaveTextContent("Stalker");
+    expect(screen.getByRole("region", { name: /regret vs time cost/i })).toHaveTextContent("Forgettable Filler");
+    expect(screen.getByRole("region", { name: /top creators/i })).toHaveTextContent("Andrei Tarkovsky");
+    expect(screen.getByRole("region", { name: /dimension trends/i })).toHaveTextContent("Latest: Feb 2026");
     expect(screen.getAllByText("Atmosphere").length).toBeGreaterThan(0);
-    expect(screen.getByText("Andrei Tarkovsky")).toBeInTheDocument();
-    expect(screen.getByText("Forgettable Filler")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /add evidence/i })).toHaveAttribute("href", "/library");
   });
 
   it("renders empty insights state", () => {
