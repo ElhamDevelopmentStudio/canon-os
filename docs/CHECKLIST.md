@@ -2970,6 +2970,166 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ---
 
+## CP-M23 — Provider-Assisted Library Acquisition
+
+**Goal:** Reduce manual media entry by letting users search provider catalogs, connect supported accounts, upload platform exports when direct account import is unavailable, and fall back to Advanced Options manual entry while keeping CanonOS as the canonical owner of user preferences.
+
+### Shared / Contract Tasks
+
+- [ ] CP-M23-SH-001 Define provider capability flags for lookup, account import, export upload, and refresh support.
+- [ ] CP-M23-SH-002 Extend metadata/provider contracts with stable external IDs, source URLs, confidence, and raw payload shape.
+- [ ] CP-M23-SH-003 Define account connection contracts for provider name, connection status, scopes, last sync time, and error state.
+- [ ] CP-M23-SH-004 Define provider import preview contracts for account imports and uploaded exports.
+- [ ] CP-M23-SH-005 Define normalized external library signal contracts for status, rating, liked, disliked, favorite, watchlist, list membership, and completed dates.
+- [ ] CP-M23-SH-006 Document deduplication keys by provider: TMDb ID, IMDb ID, Trakt ID, AniList ID, ISBN/Open Library ID/Google Books ID, and title/year/media-type fallback.
+- [ ] CP-M23-SH-007 Document OMDb as lookup-only with no account import behavior.
+- [ ] CP-M23-SH-008 Document the provider search order: TMDb, OMDb fallback, AniList, Open Library or Google Books.
+- [ ] CP-M23-SH-009 Document export tutorial requirements for platforms without allowed account APIs.
+- [ ] CP-M23-SH-010 Update OpenAPI descriptions for provider search, account connections, account import preview, export upload preview, confirm, and rollback flows.
+- [ ] CP-M23-SH-011 Update `docs/metadata-providers.md` with concrete provider onboarding rules after implementation details are finalized.
+- [ ] CP-M23-SH-012 Update `docs/api.md` with supported provider export formats and version handling.
+- [ ] CP-M23-SH-013 Update `docs/architecture.md` with final data flow diagrams for provider search, account import, and export upload.
+- [ ] CP-M23-SH-014 Update `docs/manual-tests/settings-portability.md` or create `docs/manual-tests/provider-library-acquisition.md`.
+
+### Backend Tasks
+
+- [ ] CP-M23-BE-001 Add provider capability registry.
+- [ ] CP-M23-BE-002 Replace placeholder movie/TV provider with a real TMDb adapter.
+- [ ] CP-M23-BE-003 Add TMDb search support for movies and TV shows.
+- [ ] CP-M23-BE-004 Add TMDb detail fetch support with provider IDs, poster, synopsis, runtime, release year, and creator/crew summary.
+- [ ] CP-M23-BE-005 Add TMDb rate-limit, timeout, and unavailable-provider handling.
+- [ ] CP-M23-BE-006 Add OMDb adapter as IMDb ID/title fallback only.
+- [ ] CP-M23-BE-007 Add OMDb lookup tests proving no account import capability is exposed.
+- [ ] CP-M23-BE-008 Add AniList adapter for anime/manga search.
+- [ ] CP-M23-BE-009 Add AniList detail fetch support.
+- [ ] CP-M23-BE-010 Add Open Library or Google Books adapter for book search.
+- [ ] CP-M23-BE-011 Add audiobook lookup support where provider data can distinguish audiobook editions or duration.
+- [ ] CP-M23-BE-012 Add provider search aggregation service with media-type routing.
+- [ ] CP-M23-BE-013 Add provider search result ranking and confidence scoring.
+- [ ] CP-M23-BE-014 Add search result normalization across providers.
+- [ ] CP-M23-BE-015 Add endpoint for provider capabilities.
+- [ ] CP-M23-BE-016 Add endpoint for aggregated provider title search.
+- [ ] CP-M23-BE-017 Add endpoint for provider detail fetch by provider item ID.
+- [ ] CP-M23-BE-018 Add service to create a local `MediaItem` from a provider match.
+- [ ] CP-M23-BE-019 Add service to attach provider metadata snapshot without overwriting personal fields.
+- [ ] CP-M23-BE-020 Add service to merge provider metadata into existing media when user explicitly chooses it.
+- [ ] CP-M23-BE-021 Add duplicate detection using provider IDs before title/year fallback.
+- [ ] CP-M23-BE-022 Add provider ID crosswalk handling for records with both TMDb and IMDb IDs.
+- [ ] CP-M23-BE-023 Add `ExternalAccountConnection` model or equivalent owner-scoped account connection storage.
+- [ ] CP-M23-BE-024 Store account tokens encrypted or through the chosen secret storage strategy.
+- [ ] CP-M23-BE-025 Add connect/disconnect endpoints for supported account providers.
+- [ ] CP-M23-BE-026 Add account connection status endpoint.
+- [ ] CP-M23-BE-027 Add Trakt OAuth connection flow.
+- [ ] CP-M23-BE-028 Add Trakt watched history import preview.
+- [ ] CP-M23-BE-029 Add Trakt ratings import preview.
+- [ ] CP-M23-BE-030 Add Trakt watchlist/list import preview.
+- [ ] CP-M23-BE-031 Add TMDb account import preview where allowed by API capabilities.
+- [ ] CP-M23-BE-032 Add AniList account import preview.
+- [ ] CP-M23-BE-033 Add account import confirm service that writes through existing import transaction rules.
+- [ ] CP-M23-BE-034 Add account import rollback support where imported records can be traced to a batch.
+- [ ] CP-M23-BE-035 Add background job support for large account imports.
+- [ ] CP-M23-BE-036 Add provider sync error states and retry-safe job behavior.
+- [ ] CP-M23-BE-037 Add provider export parser registry.
+- [ ] CP-M23-BE-038 Add IMDb ratings CSV parser.
+- [ ] CP-M23-BE-039 Add IMDb watchlist/list CSV parser.
+- [ ] CP-M23-BE-040 Add Letterboxd export parser for ratings, diary, watched, watchlist, and lists where files are available.
+- [ ] CP-M23-BE-041 Add AniList export parser if a supported export shape is available.
+- [ ] CP-M23-BE-042 Add Trakt export parser if a supported export shape is available.
+- [ ] CP-M23-BE-043 Add provider JSON parser framework for known versioned export bodies.
+- [ ] CP-M23-BE-044 Add clear errors for unknown provider export shapes.
+- [ ] CP-M23-BE-045 Add preview warnings for unknown columns, unsupported fields, and lossy mappings.
+- [ ] CP-M23-BE-046 Add import source metadata so every imported item can trace account import, provider export upload, or manual source.
+- [ ] CP-M23-BE-047 Ensure provider imports never send CanonOS notes, ratings, aftertaste, queue state, or taste scores back to providers.
+- [ ] CP-M23-BE-048 Add audit events for account connection, account disconnect, account import, and provider export upload.
+- [ ] CP-M23-BE-049 Add provider credentials environment configuration and validation.
+- [ ] CP-M23-BE-050 Add backend tests for provider lookup success, provider failure, timeout, and empty result handling.
+- [ ] CP-M23-BE-051 Add backend tests for metadata attach preserving CanonOS-owned fields.
+- [ ] CP-M23-BE-052 Add backend tests for account import preview and confirm.
+- [ ] CP-M23-BE-053 Add backend tests for export upload preview, duplicate detection, and rollback.
+- [ ] CP-M23-BE-054 Add backend tests for cross-user isolation on account connections and imports.
+
+### Frontend Tasks
+
+- [ ] CP-M23-FE-001 Add provider capability API client.
+- [ ] CP-M23-FE-002 Add provider search API client.
+- [ ] CP-M23-FE-003 Add account connection API client.
+- [ ] CP-M23-FE-004 Add provider import preview API client.
+- [ ] CP-M23-FE-005 Redesign Add Media modal to make provider search the default path.
+- [ ] CP-M23-FE-006 Add provider search input with media-type filter.
+- [ ] CP-M23-FE-007 Add provider selector with Best Provider default.
+- [ ] CP-M23-FE-008 Add search result cards with title, poster, year, provider, media type, creator, description, and confidence.
+- [ ] CP-M23-FE-009 Add empty state for no provider matches.
+- [ ] CP-M23-FE-010 Add error state for provider unavailable, timed out, or missing credentials.
+- [ ] CP-M23-FE-011 Add loading and disabled states while provider search runs.
+- [ ] CP-M23-FE-012 Add “Use this title” action that creates a local media item from a provider match.
+- [ ] CP-M23-FE-013 Add “Attach metadata” action for existing media items.
+- [ ] CP-M23-FE-014 Add “Merge metadata into editable fields” action with explicit user confirmation.
+- [ ] CP-M23-FE-015 Add duplicate warning UI when a provider match appears to already exist in the library.
+- [ ] CP-M23-FE-016 Add quick personal signal controls after title selection: status, rating, liked/disliked, notes, and queue action.
+- [ ] CP-M23-FE-017 Add Advanced Options accordion for manual entry fallback.
+- [ ] CP-M23-FE-018 Keep manual entry fully usable when provider search is disabled or fails.
+- [ ] CP-M23-FE-019 Add account connections section to Settings or Import/Export.
+- [ ] CP-M23-FE-020 Show connect/disconnect buttons for TMDb, Trakt, and AniList based on available capabilities.
+- [ ] CP-M23-FE-021 Hide or label OMDb as lookup-only so users do not expect account import.
+- [ ] CP-M23-FE-022 Add account connection status cards with connected, disconnected, expired, and error states.
+- [ ] CP-M23-FE-023 Add account import source selector.
+- [ ] CP-M23-FE-024 Add account import preview table.
+- [ ] CP-M23-FE-025 Add account import duplicate and warning review UI.
+- [ ] CP-M23-FE-026 Add account import confirm action.
+- [ ] CP-M23-FE-027 Add provider export upload source selector.
+- [ ] CP-M23-FE-028 Add platform export tutorial panels for IMDb, Letterboxd, AniList, Trakt, and future supported providers.
+- [ ] CP-M23-FE-029 Add upload control for provider export files.
+- [ ] CP-M23-FE-030 Add provider export preview table.
+- [ ] CP-M23-FE-031 Add clear unsupported-format and unsupported-column error states.
+- [ ] CP-M23-FE-032 Add job progress display for long account imports and export uploads.
+- [ ] CP-M23-FE-033 Add rollback action for confirmed provider imports where rollback metadata exists.
+- [ ] CP-M23-FE-034 Add import completion notification and Library/Dashboard revalidation.
+- [ ] CP-M23-FE-035 Add accessible keyboard navigation for provider result cards and import preview tables.
+- [ ] CP-M23-FE-036 Add responsive layout for mobile provider search and import flows.
+
+### Integration Tasks
+
+- [ ] CP-M23-INT-001 Connect Add Media provider search to aggregated provider search endpoint.
+- [ ] CP-M23-INT-002 Connect provider result selection to local media creation.
+- [ ] CP-M23-INT-003 Connect metadata attach and merge flows to media detail and library refresh.
+- [ ] CP-M23-INT-004 Connect Advanced Options fallback to existing create/update media behavior.
+- [ ] CP-M23-INT-005 Connect Settings account connection UI to provider auth endpoints.
+- [ ] CP-M23-INT-006 Connect Trakt account import preview and confirm.
+- [ ] CP-M23-INT-007 Connect TMDb account import preview and confirm where supported.
+- [ ] CP-M23-INT-008 Connect AniList account import preview and confirm.
+- [ ] CP-M23-INT-009 Connect provider export upload tutorials to the import preview endpoint.
+- [ ] CP-M23-INT-010 Connect provider export upload confirm to existing import confirm flow.
+- [ ] CP-M23-INT-011 Connect provider imports to BackgroundJob notifications.
+- [ ] CP-M23-INT-012 Refresh Library, Dashboard, Taste Profile, Search, and Jobs after provider import completion.
+- [ ] CP-M23-INT-013 Confirm imported provider metadata appears on Media Detail without replacing personal notes or ratings.
+- [ ] CP-M23-INT-014 Confirm duplicate handling works across manual, search-selected, account-imported, and file-imported records.
+
+### QA Tasks
+
+- [ ] CP-M23-QA-001 Search TMDb for a movie and create a local library item.
+- [ ] CP-M23-QA-002 Search TMDb for a TV show and create a local library item.
+- [ ] CP-M23-QA-003 Search OMDb by IMDb ID and confirm it works as lookup-only.
+- [ ] CP-M23-QA-004 Search AniList for anime/manga and create a local library item.
+- [ ] CP-M23-QA-005 Search Open Library or Google Books for a book and create a local library item.
+- [ ] CP-M23-QA-006 Confirm provider search failure shows a recoverable error without clearing user input.
+- [ ] CP-M23-QA-007 Confirm Advanced Options manual entry works when no provider match exists.
+- [ ] CP-M23-QA-008 Connect a Trakt account in a non-production test environment and preview watched/rated items.
+- [ ] CP-M23-QA-009 Confirm account import preview does not write data before confirmation.
+- [ ] CP-M23-QA-010 Confirm confirmed account import creates owner-scoped local records.
+- [ ] CP-M23-QA-011 Upload an IMDb export and confirm preview, dedupe, confirm, and rollback behavior.
+- [ ] CP-M23-QA-012 Upload a Letterboxd export and confirm preview, dedupe, confirm, and rollback behavior.
+- [ ] CP-M23-QA-013 Upload an unsupported file shape and confirm clear errors.
+- [ ] CP-M23-QA-014 Confirm provider imports never overwrite personal notes, ratings, aftertaste, queue state, or taste scores.
+- [ ] CP-M23-QA-015 Confirm another user cannot view or modify provider connections, imports, or imported records.
+- [ ] CP-M23-QA-016 Confirm manual test documentation covers provider search, account import, export upload, and Advanced Options fallback.
+- [ ] CP-M23-QA-017 Run lint.
+- [ ] CP-M23-QA-018 Run typecheck.
+- [ ] CP-M23-QA-019 Run tests.
+- [ ] CP-M23-QA-020 Run build.
+- [ ] CP-M23-QA-021 Run e2e.
+
+---
+
 # 7. Suggested Execution Rhythm For Codex
 
 The following rhythm should be used for each coding session.
