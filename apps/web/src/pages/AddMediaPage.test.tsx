@@ -1,7 +1,7 @@
 import type { ExternalMediaMatch, TasteDimension } from "@canonos/contracts";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { createMediaItem } from "@/features/media/mediaApi";
@@ -58,10 +58,11 @@ const mockedUseTasteDimensions = vi.mocked(useTasteDimensions);
 const mockedUpsertMediaScores = vi.mocked(upsertMediaScores);
 
 function renderAddMediaPage() {
+  window.history.pushState({}, "", "/library/new");
   render(
-    <MemoryRouter initialEntries={["/library/new"]}>
+    <BrowserRouter>
       <AddMediaPage />
-    </MemoryRouter>,
+    </BrowserRouter>,
   );
 }
 
@@ -130,19 +131,26 @@ describe("AddMediaPage", () => {
         provider: "movie_tv",
       }),
     );
+    const searchParams = new URLSearchParams(window.location.search);
+    expect(searchParams.get("q")).toBe("Dune");
+    expect(searchParams.get("type")).toBe("movie");
+    expect(searchParams.get("provider")).toBe("movie_tv");
     await user.click(screen.getByRole("heading", { name: /dune: part two/i }));
 
     const details = screen.getByRole("dialog", { name: /dune: part two/i });
     expect(within(details).getByText(/science fiction/i)).toBeInTheDocument();
+    expect(within(details).queryByText(/rawPayload/i)).not.toBeInTheDocument();
+    expect(within(details).queryByText(/\{"sourceProvider"/i)).not.toBeInTheDocument();
     await user.click(within(details).getByRole("button", { name: /add this title/i }));
     await user.click(within(details).getByRole("button", { name: /close/i }));
 
     await user.click(screen.getByRole("button", { name: /actions for dune: part two/i }));
     await user.click(screen.getByRole("button", { name: /configure/i }));
-    const config = screen.getByRole("dialog", { name: /configure title/i });
+    const config = screen.getByRole("dialog", { name: /dune: part two/i });
     await user.click(within(config).getByRole("button", { name: /strong/i }));
-    await user.click(within(config).getByRole("button", { name: /high/i }));
-    await user.click(within(config).getByRole("button", { name: /apply configuration/i }));
+    await user.click(within(config).getByRole("button", { name: /taste scores/i }));
+    await user.type(within(config).getByLabelText(/story depth numeric score/i), "8");
+    await user.click(within(config).getByRole("button", { name: /apply/i }));
 
     await user.click(screen.getByRole("button", { name: /save 1 title/i }));
 
@@ -170,12 +178,12 @@ describe("AddMediaPage", () => {
     await user.type(within(searchRegion).getByLabelText(/movie title/i), "Dune");
     await user.click(within(searchRegion).getByRole("button", { name: /^search$/i }));
     await user.click(await screen.findByRole("button", { name: /^add$/i }));
-    expect(screen.getByRole("region", { name: /selected movie titles/i })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: /selected movie titles/i })).toBeInTheDocument();
     expect(screen.getAllByText(/dune: part two/i).length).toBeGreaterThan(0);
 
     await user.click(screen.getByRole("button", { name: /^anime/i }));
 
     expect(screen.queryByText(/dune: part two/i)).not.toBeInTheDocument();
-    expect(screen.getByRole("region", { name: /selected anime titles/i })).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: /selected anime titles/i })).toBeInTheDocument();
   });
 });

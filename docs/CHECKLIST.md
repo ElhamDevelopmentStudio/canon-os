@@ -3057,7 +3057,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M23-FE-005 Redesign Add Media modal to make provider search the default path.
 - [x] CP-M23-FE-006 Add provider search input with media-type filter.
 - [x] CP-M23-FE-007 Add provider selector with Best Provider default.
-- [x] CP-M23-FE-008 Add search result cards with title, poster, year, provider, media type, creator, description, and confidence.
+- [x] CP-M23-FE-008 Add search result rows with title, poster, year, provider, media type, creator, description, and confidence.
 - [x] CP-M23-FE-009 Add empty state for no provider matches.
 - [x] CP-M23-FE-010 Add error state for provider unavailable, timed out, or missing credentials.
 - [x] CP-M23-FE-011 Add loading and disabled states while provider search runs.
@@ -3086,6 +3086,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M23-FE-034 Add import completion notification and Library/Dashboard revalidation.
 - [x] CP-M23-FE-035 Add accessible keyboard navigation for provider result cards and import preview tables.
 - [x] CP-M23-FE-036 Add responsive layout for mobile provider search and import flows.
+- [x] CP-M23-FE-037 Replace card-heavy Add Media layout with a dedicated provider-first page, compact selected-title rail, parsed result details modal, URL-backed search state, and focused configuration panels.
 
 ### Integration Tasks
 
@@ -3113,20 +3114,21 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M23-QA-005 Search Open Library or Google Books for a book and create a local library item.
 - [x] CP-M23-QA-006 Confirm provider search failure shows a recoverable error without clearing user input.
 - [x] CP-M23-QA-007 Confirm Advanced Options manual entry works when no provider match exists.
-- [ ] CP-M23-QA-008 Connect a Trakt account in a non-production test environment and preview watched/rated items.
-- [ ] CP-M23-QA-009 Confirm account import preview does not write data before confirmation.
-- [ ] CP-M23-QA-010 Confirm confirmed account import creates owner-scoped local records.
-- [ ] CP-M23-QA-011 Upload an IMDb export and confirm preview, dedupe, confirm, and rollback behavior.
-- [ ] CP-M23-QA-012 Upload a Letterboxd export and confirm preview, dedupe, confirm, and rollback behavior.
-- [ ] CP-M23-QA-013 Upload an unsupported file shape and confirm clear errors.
-- [ ] CP-M23-QA-014 Confirm provider imports never overwrite personal notes, ratings, aftertaste, queue state, or taste scores.
-- [ ] CP-M23-QA-015 Confirm another user cannot view or modify provider connections, imports, or imported records.
-- [ ] CP-M23-QA-016 Confirm manual test documentation covers provider search, account import, export upload, and Advanced Options fallback.
-- [x] CP-M23-QA-017 Run lint.
-- [x] CP-M23-QA-018 Run typecheck.
-- [x] CP-M23-QA-019 Run tests.
-- [x] CP-M23-QA-020 Run build.
-- [ ] CP-M23-QA-021 Run e2e.
+- [x] CP-M23-QA-008 Confirm provider result details render parsed facts instead of raw JSON.
+- [ ] CP-M23-QA-009 Connect a Trakt account in a non-production test environment and preview watched/rated items.
+- [ ] CP-M23-QA-010 Confirm account import preview does not write data before confirmation.
+- [ ] CP-M23-QA-011 Confirm confirmed account import creates owner-scoped local records.
+- [ ] CP-M23-QA-012 Upload an IMDb export and confirm preview, dedupe, confirm, and rollback behavior.
+- [ ] CP-M23-QA-013 Upload a Letterboxd export and confirm preview, dedupe, confirm, and rollback behavior.
+- [ ] CP-M23-QA-014 Upload an unsupported file shape and confirm clear errors.
+- [ ] CP-M23-QA-015 Confirm provider imports never overwrite personal notes, ratings, aftertaste, queue state, or taste scores.
+- [ ] CP-M23-QA-016 Confirm another user cannot view or modify provider connections, imports, or imported records.
+- [ ] CP-M23-QA-017 Confirm manual test documentation covers provider search, account import, export upload, and Advanced Options fallback.
+- [x] CP-M23-QA-018 Run lint.
+- [x] CP-M23-QA-019 Run typecheck.
+- [x] CP-M23-QA-020 Run tests.
+- [x] CP-M23-QA-021 Run build.
+- [ ] CP-M23-QA-022 Run e2e.
 
 ---
 

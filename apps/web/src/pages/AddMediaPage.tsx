@@ -14,6 +14,7 @@ import {
   BookOpen,
   Check,
   Clapperboard,
+  ExternalLink,
   Headphones,
   MoreHorizontal,
   Plus,
@@ -22,21 +23,18 @@ import {
   Sparkles,
   Trash2,
   Tv,
+  X,
 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
-import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { DialogShell } from "@/components/feedback/DialogShell";
 import { FormFieldWrapper, TextInput } from "@/components/forms/FormFieldWrapper";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
-import { DimensionScoreGrid } from "@/features/media/DimensionScoreGrid";
 import { createMediaItem } from "@/features/media/mediaApi";
 import { mediaTypeLabels, statusLabels } from "@/features/media/mediaLabels";
 import {
@@ -76,6 +74,11 @@ type QueueItem = {
   scoreDrafts: ScoreDraftMap;
 };
 
+type ProviderDetailRow = {
+  label: string;
+  value: string;
+};
+
 const providerByType: Record<MediaType, ExternalProvider | ""> = {
   movie: "movie_tv",
   tv_show: "movie_tv",
@@ -84,16 +87,16 @@ const providerByType: Record<MediaType, ExternalProvider | ""> = {
   audiobook: "audiobook",
 };
 
-const categoryCards: Array<{
+const categoryOptions: Array<{
   type: MediaType;
   icon: typeof Clapperboard;
-  description: string;
+  hint: string;
 }> = [
-  { type: "movie", icon: Clapperboard, description: "Films, shorts, documentaries, and feature-length releases." },
-  { type: "tv_show", icon: Tv, description: "Series, seasons, miniseries, and episodic television." },
-  { type: "anime", icon: Sparkles, description: "Anime series, films, OVAs, and manga-adjacent watch records." },
-  { type: "novel", icon: BookOpen, description: "Novels, light novels, nonfiction books, and written works." },
-  { type: "audiobook", icon: Headphones, description: "Audiobook editions and long-form audio reads." },
+  { type: "movie", icon: Clapperboard, hint: "Films and documentaries" },
+  { type: "tv_show", icon: Tv, hint: "Series and miniseries" },
+  { type: "anime", icon: Sparkles, hint: "Anime and OVAs" },
+  { type: "novel", icon: BookOpen, hint: "Books and written works" },
+  { type: "audiobook", icon: Headphones, hint: "Audio editions" },
 ];
 
 const emptyForm: AddFormState = {
@@ -113,12 +116,51 @@ const emptyForm: AddFormState = {
   notes: "",
 };
 
+function isMediaType(value: string | null): value is MediaType {
+  return categoryOptions.some((option) => option.type === value);
+}
+
+function isProvider(value: string | null): value is ExternalProvider {
+  return ["manual", "movie_tv", "anime", "book", "audiobook"].includes(value ?? "");
+}
+
 function nullableNumber(value: string): number | null {
   return value.trim() === "" ? null : Number(value);
 }
 
 function nullableDate(value: string): string | null {
   return value.trim() === "" ? null : value;
+}
+
+function valueFromPayload(payload: Record<string, unknown>, key: string): unknown {
+  const raw = payload.raw && typeof payload.raw === "object" ? payload.raw as Record<string, unknown> : {};
+  return payload[key] ?? raw[key];
+}
+
+function textFromValue(value: unknown): string {
+  if (value === null || value === undefined || value === "") return "Not provided";
+  if (Array.isArray(value)) return value.map(textFromValue).filter((item) => item !== "Not provided").join(", ") || "Not provided";
+  if (typeof value === "object") return "Available from provider";
+  return String(value);
+}
+
+function providerDetailsFor(match: ExternalMediaMatch): ProviderDetailRow[] {
+  const payload = match.rawPayload ?? {};
+  const rows: ProviderDetailRow[] = [
+    { label: "Provider", value: externalProviderLabels[match.provider] },
+    { label: "Provider ID", value: match.providerItemId },
+    { label: "Source", value: textFromValue(valueFromPayload(payload, "sourceProvider")) },
+    { label: "Source media type", value: textFromValue(valueFromPayload(payload, "sourceMediaType")) },
+    { label: "TMDb ID", value: textFromValue(valueFromPayload(payload, "tmdbId")) },
+    { label: "IMDb ID", value: textFromValue(valueFromPayload(payload, "imdbId")) },
+    { label: "AniList ID", value: textFromValue(valueFromPayload(payload, "anilistId")) },
+    { label: "ISBN", value: textFromValue(valueFromPayload(payload, "isbn")) },
+    { label: "Release date", value: textFromValue(valueFromPayload(payload, "release_date")) },
+    { label: "Original language", value: textFromValue(valueFromPayload(payload, "original_language")) },
+    { label: "Genres", value: textFromValue(valueFromPayload(payload, "genres")) },
+    { label: "Vote count", value: textFromValue(valueFromPayload(payload, "vote_count")) },
+  ];
+  return rows.filter((row) => row.value !== "Not provided").slice(0, 8);
 }
 
 function formFromMatch(match: ExternalMediaMatch): AddFormState {
@@ -165,9 +207,14 @@ function newQueueItem(mediaType: MediaType, match: ExternalMediaMatch | null): Q
 
 export function AddMediaPage() {
   const navigate = useNavigate();
-  const [mediaType, setMediaType] = useState<MediaType>("movie");
-  const [query, setQuery] = useState("");
-  const [provider, setProvider] = useState<ExternalProvider | "">(providerByType.movie);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedMediaType = searchParams.get("type");
+  const requestedProvider = searchParams.get("provider");
+  const initialMediaType: MediaType = isMediaType(requestedMediaType) ? requestedMediaType : "movie";
+  const initialProvider: ExternalProvider | "" = isProvider(requestedProvider) ? requestedProvider : providerByType[initialMediaType];
+  const [mediaType, setMediaType] = useState<MediaType>(initialMediaType);
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
+  const [provider, setProvider] = useState<ExternalProvider | "">(initialProvider);
   const [matches, setMatches] = useState<ExternalMediaMatch[]>([]);
   const [queue, setQueue] = useState<QueueItem[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -187,19 +234,45 @@ export function AddMediaPage() {
   );
   const configItem = queue.find((item) => item.tempId === configItemId) ?? null;
 
+  function syncUrl(next: { query?: string; mediaType?: MediaType; provider?: ExternalProvider | "" }) {
+    const params = new URLSearchParams(searchParams);
+    const nextQuery = next.query ?? query;
+    const nextMediaType = next.mediaType ?? mediaType;
+    const nextProvider = next.provider ?? provider;
+    if (nextQuery.trim()) params.set("q", nextQuery.trim());
+    else params.delete("q");
+    params.set("type", nextMediaType);
+    if (nextProvider) params.set("provider", nextProvider);
+    else params.delete("provider");
+    setSearchParams(params, { replace: true });
+  }
+
   function changeMediaType(nextType: MediaType) {
+    const nextProvider = providerByType[nextType];
     setMediaType(nextType);
-    setProvider(providerByType[nextType]);
+    setProvider(nextProvider);
     setMatches([]);
     setSearchError(null);
     setQueue([]);
     setQuery("");
     setManualTitle("");
+    syncUrl({ query: "", mediaType: nextType, provider: nextProvider });
+  }
+
+  function changeQuery(nextQuery: string) {
+    setQuery(nextQuery);
+    syncUrl({ query: nextQuery });
+  }
+
+  function changeProvider(nextProvider: ExternalProvider | "") {
+    setProvider(nextProvider);
+    syncUrl({ provider: nextProvider });
   }
 
   async function handleSearch(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
     const trimmedQuery = query.trim();
+    syncUrl({});
     if (!trimmedQuery) {
       setSearchError("Enter a title to search.");
       return;
@@ -282,46 +355,48 @@ export function AddMediaPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <section className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+      <header className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
         <div>
-          <Button asChild className="mb-4 gap-2" variant="ghost">
-            <Link to={APP_ROUTES.library}>
-              <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-              Library
-            </Link>
-          </Button>
-          <PageTitle>Add media</PageTitle>
-          <PageSubtitle>Choose one category, search providers, inspect details, then add several titles in one pass.</PageSubtitle>
+          <Link className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground" to={APP_ROUTES.library}>
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+            Library
+          </Link>
+          <div className="mt-8 max-w-3xl">
+            <h1 className="text-4xl font-semibold tracking-tight">Add media</h1>
+            <p className="mt-4 text-base leading-7 text-muted-foreground">
+              Pick one library category, search public providers, inspect the match, then save several titles at once.
+            </p>
+          </div>
         </div>
-        <div className="rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
-          Batch category: <span className="font-semibold text-foreground">{mediaTypeLabels[mediaType]}</span>
+        <div className="rounded-full border border-border px-4 py-2 text-sm text-muted-foreground">
+          Batch category <span className="font-semibold text-foreground">{mediaTypeLabels[mediaType]}</span>
         </div>
-      </section>
+      </header>
 
-      <SectionCard title="Choose what you are adding">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          {categoryCards.map((card) => (
-            <CategoryButton
-              card={card}
-              isActive={mediaType === card.type}
-              key={card.type}
-              onClick={() => changeMediaType(card.type)}
+      <section aria-label="Choose what you are adding" className="border-y border-border py-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
+          {categoryOptions.map((option) => (
+            <CategorySegment
+              isActive={mediaType === option.type}
+              key={option.type}
+              option={option}
+              onClick={() => changeMediaType(option.type)}
             />
           ))}
         </div>
-      </SectionCard>
+      </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <main className="grid gap-6">
-          <SectionCard title="Search public metadata">
+          <section aria-label="Search public metadata" className="border-b border-border pb-6">
             <form className="grid gap-3 lg:grid-cols-[minmax(16rem,1fr)_14rem_auto]" onSubmit={handleSearch}>
               <FormFieldWrapper id="provider-title-search" label={`${mediaTypeLabels[mediaType]} title`}>
                 <TextInput
                   id="provider-title-search"
                   placeholder="Search by title"
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => changeQuery(event.target.value)}
                 />
               </FormFieldWrapper>
               <FormFieldWrapper id="provider-source" label="Provider">
@@ -329,7 +404,7 @@ export function AddMediaPage() {
                   className={selectClassName}
                   id="provider-source"
                   value={provider}
-                  onChange={(event) => setProvider(event.target.value as ExternalProvider | "")}
+                  onChange={(event) => changeProvider(event.target.value as ExternalProvider | "")}
                 >
                   <option value="">Best available</option>
                   <option value={providerByType[mediaType]}>{externalProviderLabels[providerByType[mediaType] || "manual"]}</option>
@@ -343,14 +418,14 @@ export function AddMediaPage() {
               </div>
             </form>
             {searchError ? <div className="mt-4"><ErrorState title="Search failed" message={searchError} /></div> : null}
-          </SectionCard>
+          </section>
 
-          <section className="grid gap-3">
+          <section aria-label="Provider results" className="min-h-80">
             {isSearching ? <LoadingState title="Searching providers" message="Looking up public metadata without sending private notes or ratings." /> : null}
             {!isSearching && matches.length ? (
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className="grid gap-1">
                 {matches.map((match) => (
-                  <ResultCard
+                  <ResultRow
                     isQueued={queuedProviderIds.has(match.providerItemId)}
                     key={`${match.provider}:${match.providerItemId}`}
                     match={match}
@@ -361,16 +436,18 @@ export function AddMediaPage() {
               </div>
             ) : null}
             {!isSearching && !matches.length ? (
-              <EmptyState
-                title="Search for titles"
-                message="Results will appear here as compact cards. Open a card to inspect the full metadata before adding it."
-              />
+              <div className="border-y border-dashed border-border py-16 text-center">
+                <h2 className="text-xl font-semibold">Search for titles</h2>
+                <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-muted-foreground">
+                  Results appear as scan-friendly rows. Open any title for source details before adding it.
+                </p>
+              </div>
             ) : null}
           </section>
 
-          <SectionCard title="Advanced options">
+          <section aria-label="Advanced options" className="border-t border-border pt-4">
             <button
-              className="flex w-full items-center justify-between rounded-xl border border-border bg-background px-4 py-3 text-left text-sm font-semibold transition hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex w-full items-center justify-between py-3 text-left text-sm font-semibold text-foreground transition hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary"
               type="button"
               onClick={() => setManualOpen((current) => !current)}
             >
@@ -390,16 +467,20 @@ export function AddMediaPage() {
                 </div>
               </form>
             ) : null}
-          </SectionCard>
+          </section>
         </main>
 
-        <aside className="grid content-start gap-4">
-          <SectionCard title={`Selected ${mediaTypeLabels[mediaType].toLowerCase()} titles`}>
-            {saveError ? <ErrorState title="Save failed" message={saveError} /> : null}
-            {queue.length ? (
-              <div className="grid gap-3">
-                {queue.map((item) => (
-                  <QueuedItemCard
+        <aside aria-label={`Selected ${mediaTypeLabels[mediaType].toLowerCase()} titles`} className="xl:sticky xl:top-6 xl:self-start">
+          <div className="border-l border-border pl-6 max-xl:border-l-0 max-xl:border-t max-xl:pl-0 max-xl:pt-6">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-semibold">Selected titles</h2>
+              <span className="text-sm text-muted-foreground">{queue.length}</span>
+            </div>
+            {saveError ? <div className="mt-4"><ErrorState title="Save failed" message={saveError} /></div> : null}
+            <div className="mt-4 grid gap-2">
+              {queue.length ? (
+                queue.map((item) => (
+                  <QueuedItemRow
                     item={item}
                     key={item.tempId}
                     menuOpen={openMenuId === item.tempId}
@@ -414,15 +495,17 @@ export function AddMediaPage() {
                       setOpenMenuId(null);
                     }}
                   />
-                ))}
-              </div>
-            ) : (
-              <EmptyState title="Nothing selected yet" message="Add one or more results, or use manual entry if a provider cannot find the title." />
-            )}
-            <Button className="mt-4 w-full" disabled={isSaving || !queue.length} type="button" onClick={() => void saveQueue()}>
+                ))
+              ) : (
+                <p className="border-y border-dashed border-border py-8 text-sm leading-6 text-muted-foreground">
+                  Add provider matches or use manual entry. Your selected titles stay here until saved.
+                </p>
+              )}
+            </div>
+            <Button className="mt-5 w-full" disabled={isSaving || !queue.length} type="button" onClick={() => void saveQueue()}>
               {isSaving ? "Saving titles..." : `Save ${queue.length || ""} ${queue.length === 1 ? "title" : "titles"}`}
             </Button>
-          </SectionCard>
+          </div>
         </aside>
       </div>
 
@@ -442,37 +525,35 @@ export function AddMediaPage() {
   );
 }
 
-function CategoryButton({
-  card,
+function CategorySegment({
+  option,
   isActive,
   onClick,
 }: {
-  card: (typeof categoryCards)[number];
+  option: (typeof categoryOptions)[number];
   isActive: boolean;
   onClick: () => void;
 }) {
-  const Icon = card.icon;
+  const Icon = option.icon;
   return (
     <button
       className={cn(
-        "grid min-h-40 gap-3 rounded-xl border p-4 text-left transition focus:outline-none focus:ring-2 focus:ring-primary",
-        isActive ? "border-primary bg-primary/10 shadow-sm" : "border-border bg-background hover:bg-muted/50",
+        "flex min-h-20 items-start gap-3 border-l px-4 py-3 text-left transition focus:outline-none focus:ring-2 focus:ring-primary",
+        isActive ? "border-primary bg-primary/10 text-foreground" : "border-border text-muted-foreground hover:bg-muted/40 hover:text-foreground",
       )}
       type="button"
       onClick={onClick}
     >
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted text-foreground">
-        <Icon aria-hidden="true" className="h-5 w-5" />
-      </span>
+      <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0" />
       <span>
-        <span className="block font-semibold">{mediaTypeLabels[card.type]}</span>
-        <span className="mt-1 block text-sm leading-6 text-muted-foreground">{card.description}</span>
+        <span className="block font-semibold">{mediaTypeLabels[option.type]}</span>
+        <span className="mt-1 block text-sm leading-5">{option.hint}</span>
       </span>
     </button>
   );
 }
 
-function ResultCard({
+function ResultRow({
   match,
   isQueued,
   onAdd,
@@ -484,33 +565,31 @@ function ResultCard({
   onDetails: () => void;
 }) {
   return (
-    <article className="grid gap-3 rounded-xl border border-border bg-card p-3 shadow-sm sm:grid-cols-[5rem_1fr]">
-      <button className="text-left focus:outline-none focus:ring-2 focus:ring-primary" type="button" onClick={onDetails}>
+    <article className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-4 border-b border-border py-4 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center">
+      <button className="justify-self-start text-left focus:outline-none focus:ring-2 focus:ring-primary" type="button" onClick={onDetails}>
         {match.imageUrl ? (
-          <img alt={`Poster for ${match.title}`} className="h-28 w-20 rounded-lg object-cover" src={match.imageUrl} />
+          <img alt={`Poster for ${match.title}`} className="h-24 w-16 rounded-md object-cover" src={match.imageUrl} />
         ) : (
-          <div className="flex h-28 w-20 items-center justify-center rounded-lg bg-muted text-xs text-muted-foreground">No image</div>
+          <span className="flex h-24 w-16 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">No image</span>
         )}
       </button>
-      <div className="grid gap-2">
-        <button className="text-left focus:outline-none focus:ring-2 focus:ring-primary" type="button" onClick={onDetails}>
-          <p className="text-xs font-semibold uppercase text-muted-foreground">
-            {externalProviderLabels[match.provider]} · {Math.round(match.confidence * 100)}%
-          </p>
-          <h3 className="mt-1 font-semibold text-foreground">{match.title}</h3>
-          <p className="text-sm text-muted-foreground">{[match.creator, match.releaseYear].filter(Boolean).join(" · ") || "Creator/year unknown"}</p>
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">{match.description || "No description supplied by this provider."}</p>
-        </button>
-        <Button className="gap-2 justify-self-start" disabled={isQueued} size="sm" type="button" variant={isQueued ? "secondary" : "default"} onClick={onAdd}>
-          {isQueued ? <Check aria-hidden="true" className="h-4 w-4" /> : <Plus aria-hidden="true" className="h-4 w-4" />}
-          {isQueued ? "Selected" : "Add"}
-        </Button>
-      </div>
+      <button className="min-w-0 text-left focus:outline-none focus:ring-2 focus:ring-primary" type="button" onClick={onDetails}>
+        <p className="text-xs font-semibold uppercase text-muted-foreground">
+          {externalProviderLabels[match.provider]} · {Math.round(match.confidence * 100)}% confidence
+        </p>
+        <h3 className="mt-1 text-lg font-semibold text-foreground">{match.title}</h3>
+        <p className="text-sm text-muted-foreground">{[match.creator, match.releaseYear].filter(Boolean).join(" · ") || "Creator/year unknown"}</p>
+        <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">{match.description || "No description supplied by this provider."}</p>
+      </button>
+      <Button className="col-span-2 gap-2 sm:col-span-1 sm:justify-self-end" disabled={isQueued} size="sm" type="button" variant={isQueued ? "secondary" : "default"} onClick={onAdd}>
+        {isQueued ? <Check aria-hidden="true" className="h-4 w-4" /> : <Plus aria-hidden="true" className="h-4 w-4" />}
+        {isQueued ? "Selected" : "Add"}
+      </Button>
     </article>
   );
 }
 
-function QueuedItemCard({
+function QueuedItemRow({
   item,
   menuOpen,
   onConfigure,
@@ -526,24 +605,23 @@ function QueuedItemCard({
   onViewDetails: () => void;
 }) {
   return (
-    <article className="relative rounded-xl border border-border bg-background p-3">
-      <div className="flex gap-3">
+    <article className="relative border-b border-border py-3">
+      <div className="flex items-start gap-3">
         {item.match?.imageUrl ? (
-          <img alt="" className="h-16 w-12 rounded-md object-cover" src={item.match.imageUrl} />
+          <img alt="" className="h-14 w-10 rounded object-cover" src={item.match.imageUrl} />
         ) : (
-          <div className="flex h-16 w-12 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">Manual</div>
+          <div className="flex h-14 w-10 items-center justify-center rounded bg-muted text-[10px] text-muted-foreground">Manual</div>
         )}
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold">{item.form.title || "Untitled"}</h3>
-          <p className="text-sm text-muted-foreground">{statusLabels[item.form.status]}{item.form.personalRating ? ` · ${item.form.personalRating}/10` : ""}</p>
-          <MediaTypeBadge label={mediaTypeLabels[item.mediaType]} type={item.mediaType} />
+          <p className="mt-1 text-sm text-muted-foreground">{statusLabels[item.form.status]}{item.form.personalRating ? ` · ${Number(item.form.personalRating).toFixed(1)}/10` : ""}</p>
         </div>
         <Button aria-label={`Actions for ${item.form.title || "queued title"}`} size="sm" type="button" variant="ghost" onClick={onMenuToggle}>
           <MoreHorizontal aria-hidden="true" className="h-4 w-4" />
         </Button>
       </div>
       {menuOpen ? (
-        <div className="absolute right-3 top-12 z-10 grid min-w-44 gap-1 rounded-xl border border-border bg-card p-2 shadow-xl">
+        <div className="absolute right-0 top-12 z-10 grid min-w-44 gap-1 rounded-xl border border-border bg-card p-2 shadow-xl">
           {item.match ? <MenuButton label="View details" onClick={onViewDetails} /> : null}
           <MenuButton icon={Settings2} label="Configure" onClick={onConfigure} />
           <MenuButton icon={Trash2} label="Remove" tone="danger" onClick={onRemove} />
@@ -582,57 +660,70 @@ function ResultDetailsModal({
 }) {
   if (!match) return null;
   const isQueued = queuedProviderIds.has(match.providerItemId);
-  const rawEntries = Object.entries(match.rawPayload ?? {}).slice(0, 8);
+  const detailRows = providerDetailsFor(match);
   return (
     <DialogShell
       className="block overflow-y-auto"
       labelledBy="metadata-details-title"
       onClose={onClose}
-      panelClassName="mx-auto my-8 w-full max-w-3xl overflow-hidden rounded-xl p-0"
+      panelClassName="mx-auto my-8 h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] w-full max-w-5xl overflow-hidden rounded-xl p-0"
     >
-      <div className="grid gap-5 p-6">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+      <div className="grid h-full min-h-0 lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <div className="relative min-h-0 bg-muted">
           {match.imageUrl ? (
-            <img alt={`Poster for ${match.title}`} className="h-48 w-32 shrink-0 rounded-xl object-cover shadow-sm" src={match.imageUrl} />
+            <img alt={`Poster for ${match.title}`} className="h-full min-h-80 w-full object-cover" src={match.imageUrl} />
           ) : (
-            <div className="flex h-48 w-32 shrink-0 items-center justify-center rounded-xl bg-muted text-sm text-muted-foreground">No image</div>
+            <div className="flex h-full min-h-80 items-center justify-center text-sm text-muted-foreground">No image</div>
           )}
-          <div className="grid min-w-0 flex-1 gap-3">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase text-muted-foreground">{externalProviderLabels[match.provider]}</p>
-                <h2 className="mt-1 break-words text-2xl font-semibold" id="metadata-details-title">{match.title}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{[match.creator, match.releaseYear].filter(Boolean).join(" · ") || "Creator/year unknown"}</p>
-              </div>
-              <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
-            </div>
-            <p className="text-sm leading-7 text-muted-foreground">{match.description || "No description supplied by this provider."}</p>
-          </div>
         </div>
-        <div className="grid gap-5">
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Fact label="Provider rating" value={match.externalRating === null ? "Unknown" : `${match.externalRating}/10`} />
-            <Fact label="Popularity" value={match.externalPopularity === null ? "Unknown" : String(match.externalPopularity)} />
-            <Fact label="Confidence" value={`${Math.round(match.confidence * 100)}%`} />
-          </div>
-          {match.sourceUrl ? <a className="text-sm font-semibold text-primary underline-offset-4 hover:underline" href={match.sourceUrl} rel="noreferrer" target="_blank">Open provider source</a> : null}
-          {rawEntries.length ? (
-            <div className="rounded-xl border border-border bg-background p-4">
-              <h3 className="font-semibold">Provider details</h3>
-              <dl className="mt-3 grid gap-2 text-sm">
-                {rawEntries.map(([key, value]) => (
-                  <div className="grid gap-1 sm:grid-cols-[10rem_1fr]" key={key}>
-                    <dt className="font-medium text-muted-foreground">{key}</dt>
-                    <dd className="min-w-0 break-words text-foreground">{formatRawValue(value)}</dd>
-                  </div>
-                ))}
-              </dl>
+        <div className="flex min-h-0 min-w-0 flex-col">
+          <div className="flex items-start justify-between gap-4 border-b border-border p-6">
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{externalProviderLabels[match.provider]}</p>
+              <h2 className="mt-2 break-words text-3xl font-semibold" id="metadata-details-title">{match.title}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{[match.creator, match.releaseYear].filter(Boolean).join(" · ") || "Creator/year unknown"}</p>
             </div>
-          ) : null}
-          <Button className="gap-2 justify-self-start" disabled={isQueued} type="button" onClick={() => onAdd(match)}>
-            {isQueued ? <Check aria-hidden="true" className="h-4 w-4" /> : <Plus aria-hidden="true" className="h-4 w-4" />}
-            {isQueued ? "Already selected" : "Add this title"}
-          </Button>
+            <Button aria-label="Close result details" size="sm" type="button" variant="ghost" onClick={onClose}>
+              <X aria-hidden="true" className="h-4 w-4" />
+            </Button>
+          </div>
+          <div className="grid min-h-0 gap-6 overflow-y-auto p-6">
+            <p className="max-w-3xl text-sm leading-7 text-muted-foreground">{match.description || "No description supplied by this provider."}</p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Metric label="Rating" value={match.externalRating === null ? "Unknown" : `${match.externalRating}/10`} />
+              <Metric label="Popularity" value={match.externalPopularity === null ? "Unknown" : String(match.externalPopularity)} />
+              <Metric label="Confidence" value={`${Math.round(match.confidence * 100)}%`} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Provider facts</h3>
+              {detailRows.length ? (
+                <dl className="mt-3 grid gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
+                  {detailRows.map((row) => (
+                    <div className="border-t border-border pt-3" key={row.label}>
+                      <dt className="text-muted-foreground">{row.label}</dt>
+                      <dd className="mt-1 font-medium text-foreground">{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">No additional provider facts were supplied.</p>
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button className="gap-2" disabled={isQueued} type="button" onClick={() => onAdd(match)}>
+                {isQueued ? <Check aria-hidden="true" className="h-4 w-4" /> : <Plus aria-hidden="true" className="h-4 w-4" />}
+                {isQueued ? "Already selected" : "Add this title"}
+              </Button>
+              {match.sourceUrl ? (
+                <Button asChild variant="ghost">
+                  <a className="gap-2" href={match.sourceUrl} rel="noreferrer" target="_blank">
+                    <ExternalLink aria-hidden="true" className="h-4 w-4" />
+                    Open source
+                  </a>
+                </Button>
+              ) : null}
+            </div>
+          </div>
         </div>
       </div>
     </DialogShell>
@@ -655,9 +746,11 @@ function ItemConfigModal({
   onSave: (item: QueueItem) => void;
 }) {
   const [draft, setDraft] = useState<QueueItem | null>(item);
+  const [activePanel, setActivePanel] = useState<"signals" | "details" | "scores">("signals");
 
   useEffect(() => {
     setDraft(item);
+    setActivePanel("signals");
   }, [item]);
 
   if (!item || !draft) return null;
@@ -671,60 +764,130 @@ function ItemConfigModal({
       className="block overflow-y-auto"
       labelledBy="item-config-title"
       onClose={onClose}
-      panelClassName="mx-auto my-8 w-full max-w-4xl rounded-xl p-6"
+      panelClassName="mx-auto my-8 h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] w-full max-w-5xl overflow-hidden rounded-xl p-0"
     >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-semibold" id="item-config-title">Configure title</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Tune status, rating, notes, and score signals before saving this item.</p>
+      <div className="grid h-full min-h-0 lg:grid-cols-[18rem_minmax(0,1fr)]">
+        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/30 p-6 lg:border-b-0 lg:border-r">
+          {draft.match?.imageUrl ? (
+            <img alt="" className="h-56 w-40 rounded-xl object-cover shadow-sm" src={draft.match.imageUrl} />
+          ) : (
+            <div className="flex h-56 w-40 items-center justify-center rounded-xl bg-muted text-sm text-muted-foreground">Manual</div>
+          )}
+          <h2 className="mt-5 break-words text-xl font-semibold" id="item-config-title">{draft.form.title || "Untitled"}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">{mediaTypeLabels[draft.mediaType]} · {statusLabels[draft.form.status]}</p>
+          <div className="mt-6 grid gap-2">
+            <ConfigTab active={activePanel === "signals"} label="Signals" onClick={() => setActivePanel("signals")} />
+            <ConfigTab active={activePanel === "details"} label="Details" onClick={() => setActivePanel("details")} />
+            <ConfigTab active={activePanel === "scores"} label="Taste scores" onClick={() => setActivePanel("scores")} />
+          </div>
+        </aside>
+        <div className="flex min-h-0 flex-col">
+          <header className="flex items-center justify-between gap-4 border-b border-border p-6">
+            <div>
+              <p className="text-sm font-semibold text-muted-foreground">Configure before saving</p>
+              <h3 className="mt-1 text-2xl font-semibold">{panelTitle(activePanel)}</h3>
+            </div>
+            <Button aria-label="Close configuration" size="sm" type="button" variant="ghost" onClick={onClose}>
+              <X aria-hidden="true" className="h-4 w-4" />
+            </Button>
+          </header>
+          <div className="min-h-0 flex-1 overflow-y-auto p-6">
+            {activePanel === "signals" ? (
+              <div className="grid gap-6">
+                <StatusPicker value={draft.form.status} onChange={(value) => updateForm("status", value)} />
+                <RatingControl value={draft.form.personalRating} onChange={(value) => updateForm("personalRating", value)} />
+                <FormFieldWrapper id="config-notes" label="Private notes">
+                  <textarea
+                    className="min-h-32 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus:ring-2 focus:ring-primary"
+                    id="config-notes"
+                    value={draft.form.notes}
+                    onChange={(event) => updateForm("notes", event.target.value)}
+                  />
+                </FormFieldWrapper>
+              </div>
+            ) : null}
+
+            {activePanel === "details" ? (
+              <div className="grid gap-4 md:grid-cols-2">
+                <FormFieldWrapper id="config-title" label="Title">
+                  <TextInput id="config-title" required value={draft.form.title} onChange={(event) => updateForm("title", event.target.value)} />
+                </FormFieldWrapper>
+                <FormFieldWrapper id="config-original-title" label="Original title">
+                  <TextInput id="config-original-title" value={draft.form.originalTitle} onChange={(event) => updateForm("originalTitle", event.target.value)} />
+                </FormFieldWrapper>
+                <FormFieldWrapper id="config-year" label="Release year">
+                  <TextInput id="config-year" inputMode="numeric" type="number" value={draft.form.releaseYear} onChange={(event) => updateForm("releaseYear", event.target.value)} />
+                </FormFieldWrapper>
+                <FormFieldWrapper id="config-creator" label="Creator / director / author">
+                  <TextInput id="config-creator" value={draft.form.creator} onChange={(event) => updateForm("creator", event.target.value)} />
+                </FormFieldWrapper>
+                <FormFieldWrapper id="config-country-language" label="Country / language">
+                  <TextInput id="config-country-language" value={draft.form.countryLanguage} onChange={(event) => updateForm("countryLanguage", event.target.value)} />
+                </FormFieldWrapper>
+              </div>
+            ) : null}
+
+            {activePanel === "scores" ? (
+              <CompactScoreEditor
+                dimensions={dimensions}
+                drafts={draft.scoreDrafts}
+                error={dimensionsError}
+                isLoading={isLoadingDimensions}
+                onChange={(scoreDrafts) => setDraft((current) => current ? { ...current, scoreDrafts } : current)}
+              />
+            ) : null}
+          </div>
+          <footer className="flex justify-end gap-3 border-t border-border p-4">
+            <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
+            <Button type="button" onClick={() => onSave(draft)}>Apply</Button>
+          </footer>
         </div>
-        <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
-      </div>
-      <div className="mt-6 grid gap-6">
-        <div className="grid gap-4 md:grid-cols-2">
-          <FormFieldWrapper id="config-title" label="Title">
-            <TextInput id="config-title" required value={draft.form.title} onChange={(event) => updateForm("title", event.target.value)} />
-          </FormFieldWrapper>
-          <FormFieldWrapper id="config-original-title" label="Original title">
-            <TextInput id="config-original-title" value={draft.form.originalTitle} onChange={(event) => updateForm("originalTitle", event.target.value)} />
-          </FormFieldWrapper>
-          <FormFieldWrapper id="config-status" label="Status">
-            <select className={selectClassName} id="config-status" value={draft.form.status} onChange={(event) => updateForm("status", event.target.value as ConsumptionStatus)}>
-              {CONSUMPTION_STATUSES.map((status) => <option key={status} value={status}>{statusLabels[status]}</option>)}
-            </select>
-          </FormFieldWrapper>
-          <FormFieldWrapper id="config-year" label="Release year">
-            <TextInput id="config-year" inputMode="numeric" type="number" value={draft.form.releaseYear} onChange={(event) => updateForm("releaseYear", event.target.value)} />
-          </FormFieldWrapper>
-          <FormFieldWrapper id="config-creator" label="Creator / director / author">
-            <TextInput id="config-creator" value={draft.form.creator} onChange={(event) => updateForm("creator", event.target.value)} />
-          </FormFieldWrapper>
-          <FormFieldWrapper id="config-country-language" label="Country / language">
-            <TextInput id="config-country-language" value={draft.form.countryLanguage} onChange={(event) => updateForm("countryLanguage", event.target.value)} />
-          </FormFieldWrapper>
-        </div>
-        <RatingControl value={draft.form.personalRating} onChange={(value) => updateForm("personalRating", value)} />
-        <FormFieldWrapper id="config-notes" label="Notes">
-          <textarea
-            className="min-h-24 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition placeholder:text-muted-foreground focus:ring-2 focus:ring-primary"
-            id="config-notes"
-            value={draft.form.notes}
-            onChange={(event) => updateForm("notes", event.target.value)}
-          />
-        </FormFieldWrapper>
-        <DimensionScoreGrid
-          dimensions={dimensions}
-          drafts={draft.scoreDrafts}
-          error={dimensionsError}
-          isLoading={isLoadingDimensions}
-          onChange={(scoreDrafts) => setDraft((current) => current ? { ...current, scoreDrafts } : current)}
-        />
-      </div>
-      <div className="mt-6 flex justify-end gap-3">
-        <Button type="button" variant="ghost" onClick={onClose}>Cancel</Button>
-        <Button type="button" onClick={() => onSave(draft)}>Apply configuration</Button>
       </div>
     </DialogShell>
+  );
+}
+
+function ConfigTab({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
+  return (
+    <button
+      className={cn(
+        "rounded-lg px-3 py-2 text-left text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-primary",
+        active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-background hover:text-foreground",
+      )}
+      type="button"
+      onClick={onClick}
+    >
+      {label}
+    </button>
+  );
+}
+
+function panelTitle(panel: "signals" | "details" | "scores") {
+  if (panel === "details") return "Title details";
+  if (panel === "scores") return "Taste scorecard";
+  return "Personal signals";
+}
+
+function StatusPicker({ value, onChange }: { value: ConsumptionStatus; onChange: (value: ConsumptionStatus) => void }) {
+  return (
+    <section>
+      <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Status</h4>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {CONSUMPTION_STATUSES.map((status) => (
+          <button
+            className={cn(
+              "rounded-full border px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-primary",
+              value === status ? "border-primary bg-primary text-primary-foreground" : "border-border hover:bg-muted",
+            )}
+            key={status}
+            type="button"
+            onClick={() => onChange(status)}
+          >
+            {statusLabels[status]}
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -738,10 +901,10 @@ function RatingControl({ value, onChange }: { value: string; onChange: (value: s
     { label: "Canon", emoji: "🏆", value: "10" },
   ];
   return (
-    <section className="rounded-xl border border-border bg-muted/20 p-4">
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="font-semibold">Personal rating</h3>
-        <span className="text-sm font-semibold text-primary">{value.trim() ? `${value}/10` : "Unrated"}</span>
+    <section>
+      <div className="flex items-end justify-between gap-3">
+        <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Personal rating</h4>
+        <span className="text-3xl font-semibold text-foreground">{value.trim() ? Number(value).toFixed(1) : "—"}</span>
       </div>
       <input
         aria-label="Personal rating slider"
@@ -753,12 +916,12 @@ function RatingControl({ value, onChange }: { value: string; onChange: (value: s
         value={numericValue}
         onChange={(event) => onChange(event.target.value)}
       />
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         {presets.map((preset) => (
           <button
             className={cn(
-              "rounded-xl border px-3 py-2 text-sm font-semibold transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary",
-              value === preset.value ? "border-primary bg-primary/10 text-primary" : "border-border bg-background",
+              "rounded-full border px-4 py-2 text-sm font-semibold transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary",
+              value === preset.value ? "border-primary bg-primary/10 text-primary" : "border-border",
             )}
             key={preset.label}
             type="button"
@@ -773,20 +936,88 @@ function RatingControl({ value, onChange }: { value: string; onChange: (value: s
   );
 }
 
-function Fact({ label, value }: { label: string; value: string }) {
+function CompactScoreEditor({
+  dimensions,
+  drafts,
+  isLoading,
+  error,
+  onChange,
+}: {
+  dimensions: TasteDimension[] | undefined;
+  drafts: ScoreDraftMap;
+  isLoading?: boolean;
+  error?: Error;
+  onChange: (drafts: ScoreDraftMap) => void;
+}) {
+  if (isLoading) return <LoadingState title="Loading taste dimensions" message="Preparing compact score controls." />;
+  if (error) return <ErrorState title="Taste dimensions unavailable" message={error.message} />;
+  if (!dimensions?.length) return <EmptyState title="No taste dimensions yet" message="Default dimensions will be created when the API is available." />;
+
+  function updateDraft(dimensionId: string, patch: Partial<ScoreDraft>) {
+    onChange({
+      ...drafts,
+      [dimensionId]: {
+        dimensionId,
+        score: drafts[dimensionId]?.score ?? "",
+        note: drafts[dimensionId]?.note ?? "",
+        ...patch,
+      },
+    });
+  }
+
   return (
-    <div className="rounded-xl border border-border bg-background p-3">
-      <p className="text-xs font-semibold uppercase text-muted-foreground">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+    <div className="grid gap-4">
+      {dimensions.map((dimension) => {
+        const draft = drafts[dimension.id] ?? { dimensionId: dimension.id, score: "", note: "" };
+        const score = draft.score.trim() ? Number(draft.score) : 0;
+        return (
+          <section className="border-b border-border pb-4" key={dimension.id}>
+            <div className="grid gap-3 md:grid-cols-[12rem_minmax(0,1fr)_4rem] md:items-center">
+              <div>
+                <h4 className="font-semibold">{dimension.name}</h4>
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{dimension.description}</p>
+              </div>
+              <input
+                aria-label={`${dimension.name} score slider`}
+                className="w-full accent-primary"
+                max={SCORE_MAX}
+                min={SCORE_MIN}
+                step="0.1"
+                type="range"
+                value={score}
+                onChange={(event) => updateDraft(dimension.id, { score: event.target.value })}
+              />
+              <input
+                aria-label={`${dimension.name} numeric score`}
+                className="h-10 rounded-xl border border-border bg-background px-3 text-sm outline-none transition focus:ring-2 focus:ring-primary"
+                max={SCORE_MAX}
+                min={SCORE_MIN}
+                type="number"
+                value={draft.score}
+                onChange={(event) => updateDraft(dimension.id, { score: event.target.value })}
+              />
+            </div>
+            <input
+              aria-label={`${dimension.name} score note`}
+              className="mt-3 h-10 w-full rounded-xl border border-border bg-background px-3 text-sm outline-none transition placeholder:text-muted-foreground focus:ring-2 focus:ring-primary"
+              placeholder="Optional score note"
+              value={draft.note}
+              onChange={(event) => updateDraft(dimension.id, { note: event.target.value })}
+            />
+          </section>
+        );
+      })}
     </div>
   );
 }
 
-function formatRawValue(value: unknown): string {
-  if (value === null || value === undefined || value === "") return "Not provided";
-  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") return String(value);
-  const serialized = JSON.stringify(value);
-  return serialized.length > 320 ? `${serialized.slice(0, 320)}...` : serialized;
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t border-border pt-3">
+      <p className="text-xs font-semibold uppercase text-muted-foreground">{label}</p>
+      <p className="mt-1 text-2xl font-semibold">{value}</p>
+    </div>
+  );
 }
 
 const selectClassName = cn(

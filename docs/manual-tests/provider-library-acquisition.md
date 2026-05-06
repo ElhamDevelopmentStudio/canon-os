@@ -15,22 +15,24 @@ Confirm a user can find media through provider search, attach provider metadata,
 
 1. Go to `/library`.
    - Expected: Library opens with the Add media action available.
-2. Open the Add media form.
-   - Expected: The form shows a metadata search area and normal media fields.
+2. Open the Add media page.
+   - Expected: A dedicated provider-first page opens with a single category selector, a search row, selected-title rail, and Advanced Options manual fallback.
 3. Search for a known movie title with media type `movie`.
-   - Expected: Results appear with title, provider, confidence, year, description, and poster when available.
-4. Choose a provider result with `Use metadata`.
-   - Expected: The editable media fields are populated from the provider result.
-5. Add personal status, rating, and notes.
-   - Expected: Personal fields remain editable and are not treated as provider data.
-6. Save the media item.
-   - Expected: The item appears in Library with the user's personal status and rating.
-7. Open the media detail page and attach or refresh metadata if available.
+   - Expected: The URL contains the search title, category, and provider query parameters; results appear with title, provider, confidence, year, description, and poster when available.
+4. Open a provider result.
+   - Expected: A details modal shows parsed provider facts such as IDs, source, language, genres, rating, popularity, and source link without showing raw JSON.
+5. Add the result, then open its three-dot `Configure` action.
+   - Expected: A focused configuration modal opens with personal signals, title details, and taste scores in separate panels.
+6. Set status, rating, notes, and at least one taste score, then apply the configuration.
+   - Expected: The selected-title rail reflects the configured personal signals without leaving the page.
+7. Save the selected titles.
+   - Expected: The items appear in Library with the user's personal status and rating.
+8. Open the media detail page and attach or refresh metadata if available.
    - Expected: Provider metadata appears as a snapshot without replacing personal notes or rating.
 
 ## Error Path
 
-1. Open the Add media form.
+1. Open the Add media page.
    - Expected: The form opens.
 2. Search with an empty query.
    - Expected: No provider request is made and no confusing error appears.
@@ -44,10 +46,12 @@ Confirm a user can find media through provider search, attach provider metadata,
 1. Search for an obscure or missing title.
    - Expected: No-match state appears without blocking the form.
 2. Open Advanced Options.
-   - Expected: Manual title, type, year, creator, status, rating, and notes can be entered.
-3. Save the manually entered title.
+   - Expected: A missing title can be added manually for the currently selected batch category.
+3. Configure the manually added title from the selected-title rail.
+   - Expected: Title details, personal signals, and taste scores remain editable even without provider metadata.
+4. Save the manually entered title.
    - Expected: The media item is created as a normal CanonOS-owned library item.
-4. Later search metadata for the same item from its detail page.
+5. Later search metadata for the same item from its detail page.
    - Expected: Metadata can be attached if a provider match becomes available, and personal fields remain unchanged.
 
 ## Notes
