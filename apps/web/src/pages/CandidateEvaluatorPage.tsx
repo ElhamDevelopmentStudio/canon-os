@@ -10,6 +10,8 @@ import type {
 import { CANDIDATE_STATUSES, MEDIA_TYPES } from "@canonos/contracts";
 import {
   BookOpenCheck,
+  ChevronDown,
+  Clock3,
   Dna,
   LibraryBig,
   PlayCircle,
@@ -31,8 +33,6 @@ import { ErrorState } from "@/components/feedback/ErrorState";
 import { ListSkeleton } from "@/components/feedback/ListSkeleton";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import {
   addCandidateToLibrary,
@@ -273,26 +273,30 @@ export function CandidateEvaluatorPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageTitle>Candidate Evaluator</PageTitle>
-        <PageSubtitle>
-          Score a possible watch, read, or listen against your history, genericness risk, time cost, and confidence.
-        </PageSubtitle>
+    <div className="flex flex-col gap-8">
+      <section className="border-b border-border pb-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Decision desk</p>
+            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+              Candidate Evaluator
+            </h1>
+            <p className="mt-3 max-w-3xl text-base leading-7 text-muted-foreground">
+              Start with a title, add only the context you know, then decide whether it deserves the queue, library, or a skip.
+            </p>
+          </div>
+          {userSettings ? (
+            <div className="rounded-full border border-border bg-muted/40 px-4 py-2 text-sm text-muted-foreground">
+              Guardrails: genericness {userSettings.recommendation.genericnessSensitivity}/10 · skepticism{" "}
+              {userSettings.recommendation.modernMediaSkepticismLevel}/10 · strictness{" "}
+              {userSettings.recommendation.preferredRecommendationStrictness}/10
+            </div>
+          ) : null}
+        </div>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]">
-        {userSettings ? (
-          <div className="rounded-2xl border border-risky/30 bg-risky/10 p-4 text-sm text-risky xl:col-span-2">
-            Candidate Evaluator is using your saved genericness sensitivity:{" "}
-            {userSettings.recommendation.genericnessSensitivity}/10, modern media skepticism:{" "}
-            {userSettings.recommendation.modernMediaSkepticismLevel}/10,
-            recommendation strictness: {userSettings.recommendation.preferredRecommendationStrictness}/10,
-            and modern exceptions: {userSettings.recommendation.allowModernExceptions ? "allowed" : "disabled"}.
-          </div>
-        ) : null}
-
-        <CandidateInputCard
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,0.95fr)_minmax(30rem,1.05fr)]">
+        <CandidateInputPanel
           draft={draft}
           isEvaluating={isEvaluating}
           isSaving={isSaving}
@@ -370,7 +374,7 @@ function CandidateHistoryControls({
   onStatusChange: (value: string) => void;
 }) {
   return (
-    <SectionCard title="Candidate history controls">
+    <section aria-label="Candidate history controls" className="border-y border-border py-4">
       <div className="grid gap-3 md:grid-cols-[minmax(14rem,1fr)_12rem_12rem]">
         <CommandSearchInput
           aria-label="Search candidate history"
@@ -408,11 +412,11 @@ function CandidateHistoryControls({
           </select>
         </label>
       </div>
-    </SectionCard>
+    </section>
   );
 }
 
-function CandidateInputCard({
+function CandidateInputPanel({
   draft,
   isEvaluating,
   isSaving,
@@ -431,81 +435,208 @@ function CandidateInputCard({
   onReset: () => void;
   onSave: () => void;
 }) {
-  return (
-    <SectionCard title="Candidate input">
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-semibold">Candidate input</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {selectedCandidate ? "Editing saved candidate" : "Create a candidate and run a first-pass heuristic."}
-            </p>
-          </div>
-          <Button type="button" variant="ghost" onClick={onReset}>
-            <RotateCcw aria-hidden="true" className="mr-2 h-4 w-4" />
-            New Candidate
-          </Button>
-        </div>
+  const [contextOpen, setContextOpen] = useState(false);
+  const contextSummary = [
+    draft.knownCreator.trim() || null,
+    draft.releaseYear.trim() || null,
+    draft.expectedTimeCostMinutes.trim() ? `${draft.expectedTimeCostMinutes.trim()} min` : null,
+  ].filter(Boolean);
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <TextField label="Title" required value={draft.title} onChange={(value) => onChange("title", value)} />
-          <label className="grid gap-1.5 text-sm font-medium">
-            Media type
-            <select
-              className={fieldClassName}
-              value={draft.mediaType}
-              onChange={(event) => onChange("mediaType", event.target.value)}
-            >
-              {MEDIA_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {mediaTypeLabels[type]}
-                </option>
-              ))}
-            </select>
-          </label>
-          <TextField label="Release year" type="number" value={draft.releaseYear} onChange={(value) => onChange("releaseYear", value)} />
-          <TextField label="Known creator" value={draft.knownCreator} onChange={(value) => onChange("knownCreator", value)} />
-          <TextField label="Source of interest" value={draft.sourceOfInterest} onChange={(value) => onChange("sourceOfInterest", value)} />
-          <TextField
-            label="Expected time cost (minutes)"
-            min={0}
-            type="number"
-            value={draft.expectedTimeCostMinutes}
-            onChange={(value) => onChange("expectedTimeCostMinutes", value)}
-          />
-          <TextField label="Hype level (0-10)" max={10} min={0} type="number" value={draft.hypeLevel} onChange={(value) => onChange("hypeLevel", value)} />
-          <TextField
-            label="Expected genericness (0-10)"
-            max={10}
-            min={0}
-            type="number"
-            value={draft.expectedGenericness}
-            onChange={(value) => onChange("expectedGenericness", value)}
-          />
+  return (
+    <section aria-label="Candidate input" className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-semibold">Quick evaluation</h2>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            {selectedCandidate ? "Editing saved candidate" : "Three fields are enough to start. Add context only when it helps the verdict."}
+          </p>
         </div>
+        <Button type="button" variant="ghost" onClick={onReset}>
+          <RotateCcw aria-hidden="true" className="mr-2 h-4 w-4" />
+          New Candidate
+        </Button>
+      </div>
+
+      <div className="grid gap-4">
+        <TextField label="Title" required value={draft.title} onChange={(value) => onChange("title", value)} />
+        <label className="grid gap-1.5 text-sm font-medium">
+          Media type
+          <select
+            className={fieldClassName}
+            value={draft.mediaType}
+            onChange={(event) => onChange("mediaType", event.target.value)}
+          >
+            {MEDIA_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {mediaTypeLabels[type]}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <label className="grid gap-1.5 text-sm font-medium">
-          Premise / signal notes
+          Premise
           <textarea
-            className={cn(fieldClassName, "min-h-28 resize-y py-3")}
+            className={cn(fieldClassName, "min-h-36 resize-y py-3 leading-6")}
             placeholder="What is it, why might it work, and what might be generic about it?"
             value={draft.premise}
             onChange={(event) => onChange("premise", event.target.value)}
           />
         </label>
-
-        <div className="flex flex-wrap gap-3">
-          <Button disabled={isSaving || isEvaluating} type="button" variant="secondary" onClick={onSave}>
-            <Save aria-hidden="true" className="mr-2 h-4 w-4" />
-            {isSaving ? "Saving..." : "Save Candidate"}
-          </Button>
-          <Button disabled={isSaving || isEvaluating} type="button" onClick={onEvaluate}>
-            <PlayCircle aria-hidden="true" className="mr-2 h-4 w-4" />
-            {isEvaluating ? "Evaluating..." : "Run Evaluation"}
-          </Button>
-        </div>
       </div>
-    </SectionCard>
+
+      <div className="border-y border-border py-4">
+        <button
+          aria-expanded={contextOpen}
+          className="flex w-full items-center justify-between gap-4 text-left"
+          type="button"
+          onClick={() => setContextOpen((current) => !current)}
+        >
+          <span>
+            <span className="block text-sm font-semibold">More context</span>
+            <span className="mt-1 block text-sm text-muted-foreground">
+              {contextSummary.length > 0
+                ? contextSummary.join(" · ")
+                : "Creator, release year, time cost, and signal strength."}
+            </span>
+          </span>
+          <ChevronDown
+            aria-hidden="true"
+            className={cn("h-5 w-5 text-muted-foreground transition", contextOpen ? "rotate-180" : "")}
+          />
+        </button>
+
+        {contextOpen ? (
+          <div className="mt-5 grid gap-5">
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField label="Release year" type="number" value={draft.releaseYear} onChange={(value) => onChange("releaseYear", value)} />
+              <TextField label="Known creator" value={draft.knownCreator} onChange={(value) => onChange("knownCreator", value)} />
+            </div>
+            <TextField label="Source of interest" value={draft.sourceOfInterest} onChange={(value) => onChange("sourceOfInterest", value)} />
+            <TimeCostPicker value={draft.expectedTimeCostMinutes} onChange={(value) => onChange("expectedTimeCostMinutes", value)} />
+            <SignalSlider
+              label="Hype level"
+              value={draft.hypeLevel}
+              lowLabel="Mild curiosity"
+              highLabel="Very excited"
+              onChange={(value) => onChange("hypeLevel", value)}
+            />
+            <SignalSlider
+              label="Expected genericness"
+              value={draft.expectedGenericness}
+              lowLabel="Distinctive"
+              highLabel="Likely formulaic"
+              onChange={(value) => onChange("expectedGenericness", value)}
+            />
+          </div>
+        ) : null}
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <Button disabled={isSaving || isEvaluating} type="button" variant="secondary" onClick={onSave}>
+          <Save aria-hidden="true" className="mr-2 h-4 w-4" />
+          {isSaving ? "Saving..." : "Save Candidate"}
+        </Button>
+        <Button disabled={isSaving || isEvaluating} type="button" onClick={onEvaluate}>
+          <PlayCircle aria-hidden="true" className="mr-2 h-4 w-4" />
+          {isEvaluating ? "Evaluating..." : "Run Evaluation"}
+        </Button>
+      </div>
+    </section>
+  );
+}
+
+function TimeCostPicker({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const presets = [
+    { label: "30m", value: "30" },
+    { label: "1h", value: "60" },
+    { label: "90m", value: "90" },
+    { label: "2h", value: "120" },
+    { label: "3h+", value: "180" },
+  ];
+
+  return (
+    <div className="grid gap-2">
+      <div className="flex items-center justify-between gap-3">
+        <label className="text-sm font-medium" htmlFor="expected-time-cost">
+          Expected time cost
+        </label>
+        <span className="flex items-center gap-1 text-sm text-muted-foreground">
+          <Clock3 aria-hidden="true" className="h-4 w-4" />
+          {value.trim() ? `${value} min` : "Not set"}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {presets.map((preset) => (
+          <button
+            className={cn(
+              "rounded-full border px-3 py-1.5 text-sm transition",
+              value === preset.value
+                ? "border-primary bg-primary text-primary-foreground"
+                : "border-border bg-background hover:bg-muted",
+            )}
+            key={preset.value}
+            type="button"
+            onClick={() => onChange(preset.value)}
+          >
+            {preset.label}
+          </button>
+        ))}
+        <input
+          className={cn(fieldClassName, "w-28")}
+          id="expected-time-cost"
+          min={0}
+          type="number"
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SignalSlider({
+  highLabel,
+  label,
+  lowLabel,
+  value,
+  onChange,
+}: {
+  highLabel: string;
+  label: string;
+  lowLabel: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const numericValue = Number.parseInt(value, 10);
+  const displayValue = Number.isNaN(numericValue) ? 0 : numericValue;
+
+  return (
+    <label className="grid gap-2 text-sm font-medium">
+      <span className="flex items-center justify-between gap-3">
+        <span>{label}</span>
+        <span className="text-primary">{Number.isNaN(numericValue) ? "Blank" : `${displayValue}/10`}</span>
+      </span>
+      <input
+        aria-label={label}
+        className="h-2 w-full accent-primary"
+        max={10}
+        min={0}
+        type="range"
+        value={displayValue}
+        onChange={(event) => onChange(event.target.value)}
+      />
+      <span className="flex justify-between text-xs font-normal text-muted-foreground">
+        <span>{lowLabel}</span>
+        <span>{highLabel}</span>
+      </span>
+    </label>
   );
 }
 
@@ -528,44 +659,45 @@ function EvaluationResultCard({
 }) {
   if (!candidate || !evaluation) {
     return (
-      <SectionCard title="Evaluation result">
-        <div className="rounded-2xl border border-dashed border-border p-6 text-center">
-          <h2 className="text-lg font-semibold">No evaluation yet</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Save a candidate or run the evaluator to see confidence, fit, risk, reasons, and a recommended action.
-          </p>
-        </div>
-      </SectionCard>
+      <section aria-label="Evaluation result" className="border-l border-border pl-6">
+        <p className="text-sm font-semibold uppercase tracking-[0.16em] text-muted-foreground">Evaluation result</p>
+        <h2 className="mt-4 text-2xl font-semibold">No verdict yet</h2>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          Run the evaluator to get a decision, confidence, fit, risk, reasons, and the next best action.
+        </p>
+      </section>
     );
   }
 
   return (
-    <SectionCard title="Evaluation result">
-      <div className="flex flex-col gap-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <p className="text-sm font-medium text-muted-foreground">Primary action</p>
-            <h2 className="mt-1 text-2xl font-semibold">{evaluationDecisionLabels[evaluation.decision]}</h2>
-            <p className="mt-1 text-sm text-muted-foreground">{candidate.title}</p>
-          </div>
-          <StatusPill label={candidateStatusLabels[candidate.status]} tone={candidateStatusTone[candidate.status]} />
+    <section aria-label="Evaluation result" className="border-l border-border pl-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">Evaluation result</p>
+          <h2 className="mt-3 text-3xl font-semibold tracking-tight">{evaluationDecisionLabels[evaluation.decision]}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{candidate.title}</p>
         </div>
+        <StatusPill label={candidateStatusLabels[candidate.status]} tone={candidateStatusTone[candidate.status]} />
+      </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
-          <Metric label="Confidence" score={evaluation.confidenceScore} tone="promising" />
-          <Metric label="Likely fit" score={evaluation.likelyFitScore} tone="excellent" />
-          <Metric label="Risk" score={evaluation.riskScore} tone={evaluation.riskScore >= 65 ? "avoid" : "risky"} />
-        </div>
+      <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <Metric label="Confidence" score={evaluation.confidenceScore} tone="promising" />
+        <Metric label="Likely fit" score={evaluation.likelyFitScore} tone="excellent" />
+        <Metric label="Risk" score={evaluation.riskScore} tone={evaluation.riskScore >= 65 ? "avoid" : "risky"} />
+      </div>
 
+      <div className="mt-6 grid gap-6">
         {evaluation.antiGenericEvaluation ? <AntiGenericSection evaluation={evaluation.antiGenericEvaluation} /> : null}
         {evaluation.narrativeSignals.length > 0 ? (
           <NarrativeSignalSection signals={evaluation.narrativeSignals} />
         ) : null}
 
-        <ReasonList title="Why it may work" reasons={evaluation.reasonsFor} />
-        <ReasonList title="Risks / reasons against" reasons={evaluation.reasonsAgainst} />
+        <div className="grid gap-5 lg:grid-cols-2">
+          <ReasonList title="Why it may work" reasons={evaluation.reasonsFor} />
+          <ReasonList title="Risks / reasons against" reasons={evaluation.reasonsAgainst} />
+        </div>
 
-        <div className="rounded-2xl bg-muted/60 p-4 text-sm leading-6">
+        <div className="border-t border-border pt-4 text-sm leading-6">
           <p><span className="font-semibold">Best mood:</span> {evaluation.bestMood}</p>
           <p className="mt-2"><span className="font-semibold">Recommended action:</span> {evaluation.recommendedAction}</p>
         </div>
@@ -585,7 +717,7 @@ function EvaluationResultCard({
           </Button>
         </div>
       </div>
-    </SectionCard>
+    </section>
   );
 }
 
@@ -594,22 +726,22 @@ function CandidateCouncilSessions({ candidateId }: { candidateId: string }) {
   const sessions = data?.results ?? [];
 
   return (
-    <SectionCard title="Critic Council results">
-      <h2 className="text-lg font-semibold">Critic Council results</h2>
+    <section aria-labelledby="critic-council-results" className="border-t border-border pt-6">
+      <h2 className="text-lg font-semibold" id="critic-council-results">Critic Council results</h2>
       <p className="mt-1 text-sm text-muted-foreground">
         Council debates attached to this candidate appear here after you run Critic Council.
       </p>
       {isLoading ? <LoadingState title="Loading council results" message="Fetching candidate debates." /> : null}
       {error ? <ErrorState title="Council results unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
       {!isLoading && !error && sessions.length === 0 ? (
-        <p className="mt-4 rounded-2xl border border-dashed border-border p-4 text-sm text-muted-foreground">
+        <p className="mt-4 border-l border-border pl-4 text-sm text-muted-foreground">
           No Critic Council result is attached to this candidate yet.
         </p>
       ) : null}
       {!isLoading && !error && sessions.length > 0 ? (
         <div className="mt-4 grid gap-3">
           {sessions.slice(0, 3).map((session: CouncilSession) => (
-            <article className="rounded-2xl border border-border bg-background p-4" key={session.id}>
+            <article className="border-t border-border pt-4" key={session.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold">{session.finalDecision.label}</h3>
@@ -626,7 +758,7 @@ function CandidateCouncilSessions({ candidateId }: { candidateId: string }) {
           ))}
         </div>
       ) : null}
-    </SectionCard>
+    </section>
   );
 }
 
@@ -639,7 +771,7 @@ const antiGenericVerdictLabels: Record<AntiGenericEvaluation["finalVerdict"], st
 
 function AntiGenericSection({ evaluation }: { evaluation: AntiGenericEvaluation }) {
   return (
-    <section className="rounded-2xl border border-risky/25 bg-risky/5 p-4" aria-labelledby="anti-generic-heading">
+    <section className="border-t border-risky/30 pt-4" aria-labelledby="anti-generic-heading">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="flex items-center gap-2 font-semibold" id="anti-generic-heading">
@@ -679,7 +811,7 @@ function AntiGenericSection({ evaluation }: { evaluation: AntiGenericEvaluation 
 
 function NarrativeSignalSection({ signals }: { signals: CandidateEvaluation["narrativeSignals"] }) {
   return (
-    <section className="rounded-2xl border border-primary/20 bg-primary/5 p-4" aria-labelledby="narrative-signals-heading">
+    <section className="border-t border-primary/30 pt-4" aria-labelledby="narrative-signals-heading">
       <h3 className="flex items-center gap-2 font-semibold" id="narrative-signals-heading">
         <Dna aria-hidden="true" className="h-4 w-4 text-primary" />
         Narrative DNA signals
@@ -689,7 +821,7 @@ function NarrativeSignalSection({ signals }: { signals: CandidateEvaluation["nar
       </p>
       <ul className="mt-3 grid gap-2 text-sm text-muted-foreground">
         {signals.map((signal) => (
-          <li className="rounded-xl bg-background p-3" key={`${signal.traitKey}-${signal.label}`}>
+          <li className="border-l border-primary/30 pl-3" key={`${signal.traitKey}-${signal.label}`}>
             <span className="font-medium text-foreground">{signal.label}</span>
             <span className="ml-2 text-xs">
               {signal.impact > 0 ? "+" : ""}
@@ -720,7 +852,7 @@ function SignalList({
       {signals.length > 0 ? (
         <ul className="mt-2 grid gap-2 text-sm text-muted-foreground">
           {signals.map((signal) => (
-            <li className="rounded-xl bg-background p-3" key={signal.ruleKey}>
+            <li className="border-l border-border pl-3" key={signal.ruleKey}>
               <span className="font-medium text-foreground">{signal.name}</span>
               <span className="ml-2 text-xs">+{signal.score}</span>
               <p className="mt-1 leading-5">{signal.evidence}</p>
@@ -744,8 +876,8 @@ function CandidateHistory({
   onSelect: (candidate: Candidate) => void;
 }) {
   return (
-    <SectionCard title="Candidate history" className="p-0">
-      <div className="border-b border-border p-5 sm:p-6">
+    <section aria-label="Candidate history">
+      <div className="border-b border-border pb-4">
         <h2 className="text-lg font-semibold">Candidate history</h2>
         <p className="mt-1 text-sm text-muted-foreground">Saved evaluations stay here so you can compare and revisit them.</p>
       </div>
@@ -753,8 +885,8 @@ function CandidateHistory({
         {candidates.map((candidate) => (
           <button
             className={cn(
-              "grid w-full gap-3 p-5 text-left transition hover:bg-muted/50 md:grid-cols-[minmax(0,1fr)_auto] sm:p-6",
-              candidate.id === selectedId ? "bg-muted/60" : "bg-card",
+              "grid w-full gap-3 py-5 text-left transition hover:bg-muted/30 md:grid-cols-[minmax(0,1fr)_auto]",
+              candidate.id === selectedId ? "bg-muted/40 px-4" : "",
             )}
             key={candidate.id}
             type="button"
@@ -777,7 +909,7 @@ function CandidateHistory({
           </button>
         ))}
       </div>
-    </SectionCard>
+    </section>
   );
 }
 
@@ -816,7 +948,7 @@ function TextField({
 
 function Metric({ label, score, tone }: { label: string; score: number; tone: "excellent" | "promising" | "risky" | "avoid" }) {
   return (
-    <div className="rounded-2xl border border-border bg-muted/40 p-4">
+    <div className="border-t border-border pt-3">
       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
       <div className="mt-2"><ScoreBadge score={score} tone={tone} /></div>
     </div>

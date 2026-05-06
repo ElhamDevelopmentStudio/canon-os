@@ -3,14 +3,18 @@
 ## Happy path: create and evaluate a candidate
 
 1. Log in and open **Candidates** from the sidebar.
-   - Expected: The Candidate Evaluator page opens with a candidate form, evaluation result panel, and candidate history area.
-2. Enter a title, choose a media type, add a premise, set hype, genericness, and time cost.
-   - Expected: All fields are keyboard reachable and labels are visible.
-3. Select **Run Evaluation**.
+   - Expected: The Candidate Evaluator page opens with a quick evaluation area, an empty result area, and candidate history.
+2. Enter a title, choose a media type, and add a premise.
+   - Expected: The main path only asks for the essential fields and all labels are visible.
+3. Open **More context**.
+   - Expected: Optional release year, creator, source, time cost, hype, and genericness controls appear without leaving the page.
+4. Set a time cost preset, adjust hype, and adjust expected genericness.
+   - Expected: The optional controls are keyboard reachable and update without exposing a long required form.
+5. Select **Run Evaluation**.
    - Expected: The page saves the candidate, shows a decision, confidence, likely fit, risk, Anti-Generic Filter result, reasons for, reasons against, best mood, and recommended action.
-4. Select **Add To Library**.
+6. Select **Add To Library**.
    - Expected: A success message confirms the candidate was added to the library as Planned.
-5. Open **Library**.
+7. Open **Library**.
    - Expected: The candidate title appears as a media item owned by the current user.
 
 ## Error path: missing title

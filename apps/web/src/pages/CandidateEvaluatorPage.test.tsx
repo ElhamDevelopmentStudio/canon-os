@@ -310,9 +310,11 @@ describe("CandidateEvaluatorPage", () => {
     mockCandidates({ count: 0, next: null, previous: null, results: [] });
     renderCandidateEvaluator();
 
-    const candidateInput = screen.getByLabelText(/candidate input/i);
+    const candidateInput = screen.getByRole("region", { name: /candidate input/i });
     await user.type(screen.getByLabelText(/^title$/i), "Perfect Blue");
     await user.selectOptions(within(candidateInput).getByLabelText(/media type/i), "anime");
+    expect(screen.queryByLabelText(/release year/i)).not.toBeInTheDocument();
+    await user.click(within(candidateInput).getByRole("button", { name: /more context/i }));
     await user.clear(screen.getByLabelText(/release year/i));
     await user.type(screen.getByLabelText(/release year/i), "1997");
     await user.type(screen.getByLabelText(/known creator/i), "Satoshi Kon");
