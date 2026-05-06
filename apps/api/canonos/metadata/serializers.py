@@ -97,6 +97,22 @@ class MetadataMatchListSerializer(serializers.Serializer):
     results = ExternalMediaMatchSerializer(many=True)
 
 
+class ProviderCapabilitySerializer(serializers.Serializer):
+    provider = serializers.ChoiceField(choices=ExternalMetadata.ExternalProvider.choices)
+    label = serializers.CharField()
+    lookupSupported = serializers.BooleanField()
+    lookupConfigured = serializers.BooleanField()
+    accountImportSupported = serializers.BooleanField()
+    exportUploadSupported = serializers.BooleanField()
+    sourceProviders = serializers.ListField(child=serializers.CharField())
+    notes = serializers.CharField(allow_blank=True)
+
+
+class ProviderCapabilityListSerializer(serializers.Serializer):
+    count = serializers.IntegerField()
+    results = ProviderCapabilitySerializer(many=True)
+
+
 class MetadataRefreshJobSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     status = serializers.ChoiceField(choices=["queued", "running", "succeeded", "failed"])

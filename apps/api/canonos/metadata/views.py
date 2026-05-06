@@ -16,15 +16,34 @@ from canonos.metadata.serializers import (
     MetadataMatchListSerializer,
     MetadataRefreshJobSerializer,
     MetadataSearchQuerySerializer,
+    ProviderCapabilityListSerializer,
 )
 from canonos.metadata.services import (
     attach_metadata_to_media,
     match_from_dict,
     match_to_dict,
+    provider_capability_list,
     refresh_job_payload,
     refresh_metadata_with_job,
     search_metadata_matches,
 )
+
+
+@extend_schema(
+    responses=ProviderCapabilityListSerializer,
+    summary="List metadata provider capabilities",
+    description=(
+        "Returns lookup/account-import/export-upload capability flags for supported "
+        "metadata provider buckets without exposing secrets."
+    ),
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def metadata_provider_capabilities(request):  # noqa: ANN001, ANN201, ARG001
+    capabilities = provider_capability_list()
+    return Response(
+        ProviderCapabilityListSerializer({"count": len(capabilities), "results": capabilities}).data
+    )
 
 
 @extend_schema(

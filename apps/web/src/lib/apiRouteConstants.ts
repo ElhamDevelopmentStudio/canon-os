@@ -30,6 +30,7 @@ export const API_ROUTES = {
   detoxTimeSaved: "/detox/time-saved/",
   mediaItems: "/media-items/",
   globalSearch: "/search/",
+  metadataProviders: "/metadata/providers/",
   metadataMatches: "/metadata/matches/",
   narrativeAnalyses: "/narrative-analyses/",
   importBatches: "/imports/",

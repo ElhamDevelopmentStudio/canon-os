@@ -206,6 +206,8 @@ export type {
   ExternalProvider,
   MetadataAttachRequest,
   MetadataMatchListResponse,
+  ProviderCapability,
+  ProviderCapabilityListResponse,
   MetadataRefreshJob,
   MetadataRefreshJobStatus,
   MetadataSearchRequest,

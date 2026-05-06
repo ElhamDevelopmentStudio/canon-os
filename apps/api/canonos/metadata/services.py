@@ -10,7 +10,12 @@ from canonos.jobs.models import BackgroundJob
 from canonos.jobs.services import upsert_background_job
 from canonos.media.models import MediaItem
 from canonos.metadata.models import ExternalMetadata
-from canonos.metadata.providers import ExternalMediaMatch, get_provider, providers_for_media_type
+from canonos.metadata.providers import (
+    ExternalMediaMatch,
+    get_provider,
+    provider_capabilities,
+    providers_for_media_type,
+)
 
 
 def search_metadata_matches(
@@ -197,6 +202,22 @@ def match_to_dict(match: ExternalMediaMatch) -> dict[str, object]:
         "sourceUrl": data["source_url"],
         "rawPayload": data["raw_payload"],
     }
+
+
+def provider_capability_list() -> list[dict[str, object]]:
+    return [
+        {
+            "provider": capability.provider,
+            "label": capability.label,
+            "lookupSupported": capability.lookup_supported,
+            "lookupConfigured": capability.lookup_configured,
+            "accountImportSupported": capability.account_import_supported,
+            "exportUploadSupported": capability.export_upload_supported,
+            "sourceProviders": list(capability.source_providers),
+            "notes": capability.notes,
+        }
+        for capability in provider_capabilities()
+    ]
 
 
 def _decimal_or_none(value: float | int | str | None) -> Decimal | None:

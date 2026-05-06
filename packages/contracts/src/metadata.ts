@@ -50,6 +50,22 @@ export type MetadataMatchListResponse = {
   results: ExternalMediaMatch[];
 };
 
+export type ProviderCapability = {
+  provider: ExternalProvider;
+  label: string;
+  lookupSupported: boolean;
+  lookupConfigured: boolean;
+  accountImportSupported: boolean;
+  exportUploadSupported: boolean;
+  sourceProviders: string[];
+  notes: string;
+};
+
+export type ProviderCapabilityListResponse = {
+  count: number;
+  results: ProviderCapability[];
+};
+
 export type MetadataAttachRequest = {
   provider: ExternalProvider;
   providerItemId: string;

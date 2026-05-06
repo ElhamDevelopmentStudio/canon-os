@@ -464,6 +464,7 @@ Endpoints:
 
 CanonOS supports optional provider enrichment without making provider data canonical user truth.
 
+- `GET /api/metadata/providers/` lists provider capability flags for lookup, account import, export upload, configured source providers, and user-facing notes without exposing secrets.
 - `GET /api/metadata/matches/?query=<title>&mediaType=<type>&provider=<provider>` searches configured adapters and returns normalized `ExternalMediaMatch` records.
 - `POST /api/media-items/{id}/metadata/attach/` stores one provider match as an `ExternalMetadata` snapshot for the authenticated user's media item.
 - `GET /api/media-items/{id}/metadata/` lists attached snapshots.

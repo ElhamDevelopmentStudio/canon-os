@@ -10,6 +10,7 @@ from canonos.media.models import MediaItem
 from canonos.metadata.models import ExternalMetadata
 from canonos.metadata.providers import (
     MovieTvPlaceholderProvider,
+    MovieTvProvider,
     get_provider,
     providers_for_media_type,
 )
@@ -58,6 +59,91 @@ def test_metadata_match_endpoint_filters_by_media_type() -> None:
     assert payload["count"] == 1
     assert payload["results"][0]["provider"] == "anime"
     assert payload["results"][0]["title"] == "Mushishi"
+
+
+def test_metadata_provider_capabilities_hide_secrets() -> None:
+    client, _ = authenticated_client()
+
+    response = client.get(reverse("metadata-providers"))
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["count"] == 4
+    movie_provider = next(
+        provider for provider in payload["results"] if provider["provider"] == "movie_tv"
+    )
+    assert movie_provider["lookupSupported"] is True
+    assert movie_provider["accountImportSupported"] is False
+    assert "TMDb" in movie_provider["notes"]
+    assert "secret" not in str(payload).lower()
+
+
+def test_tmdb_adapter_normalizes_movie_results(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CANONOS_METADATA_ENABLE_NETWORK", "true")
+    monkeypatch.setenv("TMDB_READ_ACCESS_TOKEN", "test-token")
+
+    def fake_request(url: str, **kwargs: object) -> dict[str, object]:
+        assert "api_key" not in url
+        headers = kwargs["headers"]
+        assert isinstance(headers, dict)
+        assert headers["Authorization"] == "Bearer test-token"
+        return {
+            "results": [
+                {
+                    "id": 1396,
+                    "title": "Stalker",
+                    "original_title": "Stalker",
+                    "overview": "A guide leads two men into the Zone.",
+                    "release_date": "1979-05-25",
+                    "poster_path": "/stalker.jpg",
+                    "vote_average": 8.1,
+                    "popularity": 64.3,
+                }
+            ]
+        }
+
+    monkeypatch.setattr("canonos.metadata.providers._json_request", fake_request)
+
+    match = MovieTvProvider().search("Stalker", "movie")[0]
+
+    assert match.provider == "movie_tv"
+    assert match.provider_item_id == "tmdb:movie:1396"
+    assert match.title == "Stalker"
+    assert match.media_type == "movie"
+    assert match.release_year == 1979
+    assert match.image_url == "https://image.tmdb.org/t/p/w500/stalker.jpg"
+    assert match.raw_payload["sourceProvider"] == "tmdb"
+
+
+def test_omdb_adapter_is_lookup_only_fallback(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("CANONOS_METADATA_ENABLE_NETWORK", "true")
+    monkeypatch.delenv("TMDB_READ_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("TMDB_API_KEY", raising=False)
+    monkeypatch.setenv("OMDB_API_KEY", "omdb-key")
+
+    def fake_request(url: str, **kwargs: object) -> dict[str, object]:  # noqa: ARG001
+        assert "apikey=omdb-key" in url
+        return {
+            "Response": "True",
+            "Search": [
+                {
+                    "Title": "The Wire",
+                    "Year": "2002",
+                    "imdbID": "tt0306414",
+                    "Type": "series",
+                    "Poster": "https://example.test/wire.jpg",
+                }
+            ],
+        }
+
+    monkeypatch.setattr("canonos.metadata.providers._json_request", fake_request)
+
+    match = MovieTvProvider().search("The Wire", "tv_show")[0]
+
+    assert match.provider_item_id == "omdb:tt0306414"
+    assert match.media_type == "tv_show"
+    assert match.raw_payload["sourceProvider"] == "omdb"
+    assert match.raw_payload["accountImport"] is False
 
 
 def test_attach_metadata_to_owned_media_item() -> None:

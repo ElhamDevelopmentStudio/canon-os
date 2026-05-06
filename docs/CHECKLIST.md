@@ -2976,42 +2976,42 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Shared / Contract Tasks
 
-- [ ] CP-M23-SH-001 Define provider capability flags for lookup, account import, export upload, and refresh support.
-- [ ] CP-M23-SH-002 Extend metadata/provider contracts with stable external IDs, source URLs, confidence, and raw payload shape.
+- [x] CP-M23-SH-001 Define provider capability flags for lookup, account import, export upload, and refresh support.
+- [x] CP-M23-SH-002 Extend metadata/provider contracts with stable external IDs, source URLs, confidence, and raw payload shape.
 - [ ] CP-M23-SH-003 Define account connection contracts for provider name, connection status, scopes, last sync time, and error state.
 - [ ] CP-M23-SH-004 Define provider import preview contracts for account imports and uploaded exports.
 - [ ] CP-M23-SH-005 Define normalized external library signal contracts for status, rating, liked, disliked, favorite, watchlist, list membership, and completed dates.
 - [ ] CP-M23-SH-006 Document deduplication keys by provider: TMDb ID, IMDb ID, Trakt ID, AniList ID, ISBN/Open Library ID/Google Books ID, and title/year/media-type fallback.
-- [ ] CP-M23-SH-007 Document OMDb as lookup-only with no account import behavior.
-- [ ] CP-M23-SH-008 Document the provider search order: TMDb, OMDb fallback, AniList, Open Library or Google Books.
+- [x] CP-M23-SH-007 Document OMDb as lookup-only with no account import behavior.
+- [x] CP-M23-SH-008 Document the provider search order: TMDb, OMDb fallback, AniList, Open Library or Google Books.
 - [ ] CP-M23-SH-009 Document export tutorial requirements for platforms without allowed account APIs.
 - [ ] CP-M23-SH-010 Update OpenAPI descriptions for provider search, account connections, account import preview, export upload preview, confirm, and rollback flows.
 - [ ] CP-M23-SH-011 Update `docs/metadata-providers.md` with concrete provider onboarding rules after implementation details are finalized.
 - [ ] CP-M23-SH-012 Update `docs/api.md` with supported provider export formats and version handling.
 - [ ] CP-M23-SH-013 Update `docs/architecture.md` with final data flow diagrams for provider search, account import, and export upload.
-- [ ] CP-M23-SH-014 Update `docs/manual-tests/settings-portability.md` or create `docs/manual-tests/provider-library-acquisition.md`.
+- [x] CP-M23-SH-014 Update `docs/manual-tests/settings-portability.md` or create `docs/manual-tests/provider-library-acquisition.md`.
 
 ### Backend Tasks
 
-- [ ] CP-M23-BE-001 Add provider capability registry.
-- [ ] CP-M23-BE-002 Replace placeholder movie/TV provider with a real TMDb adapter.
-- [ ] CP-M23-BE-003 Add TMDb search support for movies and TV shows.
-- [ ] CP-M23-BE-004 Add TMDb detail fetch support with provider IDs, poster, synopsis, runtime, release year, and creator/crew summary.
-- [ ] CP-M23-BE-005 Add TMDb rate-limit, timeout, and unavailable-provider handling.
-- [ ] CP-M23-BE-006 Add OMDb adapter as IMDb ID/title fallback only.
-- [ ] CP-M23-BE-007 Add OMDb lookup tests proving no account import capability is exposed.
-- [ ] CP-M23-BE-008 Add AniList adapter for anime/manga search.
-- [ ] CP-M23-BE-009 Add AniList detail fetch support.
-- [ ] CP-M23-BE-010 Add Open Library or Google Books adapter for book search.
+- [x] CP-M23-BE-001 Add provider capability registry.
+- [x] CP-M23-BE-002 Replace placeholder movie/TV provider with a real TMDb adapter.
+- [x] CP-M23-BE-003 Add TMDb search support for movies and TV shows.
+- [x] CP-M23-BE-004 Add TMDb detail fetch support with provider IDs, poster, synopsis, runtime, release year, and creator/crew summary.
+- [x] CP-M23-BE-005 Add TMDb rate-limit, timeout, and unavailable-provider handling.
+- [x] CP-M23-BE-006 Add OMDb adapter as IMDb ID/title fallback only.
+- [x] CP-M23-BE-007 Add OMDb lookup tests proving no account import capability is exposed.
+- [x] CP-M23-BE-008 Add AniList adapter for anime/manga search.
+- [x] CP-M23-BE-009 Add AniList detail fetch support.
+- [x] CP-M23-BE-010 Add Open Library or Google Books adapter for book search.
 - [ ] CP-M23-BE-011 Add audiobook lookup support where provider data can distinguish audiobook editions or duration.
-- [ ] CP-M23-BE-012 Add provider search aggregation service with media-type routing.
-- [ ] CP-M23-BE-013 Add provider search result ranking and confidence scoring.
-- [ ] CP-M23-BE-014 Add search result normalization across providers.
-- [ ] CP-M23-BE-015 Add endpoint for provider capabilities.
-- [ ] CP-M23-BE-016 Add endpoint for aggregated provider title search.
+- [x] CP-M23-BE-012 Add provider search aggregation service with media-type routing.
+- [x] CP-M23-BE-013 Add provider search result ranking and confidence scoring.
+- [x] CP-M23-BE-014 Add search result normalization across providers.
+- [x] CP-M23-BE-015 Add endpoint for provider capabilities.
+- [x] CP-M23-BE-016 Add endpoint for aggregated provider title search.
 - [ ] CP-M23-BE-017 Add endpoint for provider detail fetch by provider item ID.
 - [ ] CP-M23-BE-018 Add service to create a local `MediaItem` from a provider match.
-- [ ] CP-M23-BE-019 Add service to attach provider metadata snapshot without overwriting personal fields.
+- [x] CP-M23-BE-019 Add service to attach provider metadata snapshot without overwriting personal fields.
 - [ ] CP-M23-BE-020 Add service to merge provider metadata into existing media when user explicitly chooses it.
 - [ ] CP-M23-BE-021 Add duplicate detection using provider IDs before title/year fallback.
 - [ ] CP-M23-BE-022 Add provider ID crosswalk handling for records with both TMDb and IMDb IDs.
@@ -3050,8 +3050,8 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 
 ### Frontend Tasks
 
-- [ ] CP-M23-FE-001 Add provider capability API client.
-- [ ] CP-M23-FE-002 Add provider search API client.
+- [x] CP-M23-FE-001 Add provider capability API client.
+- [x] CP-M23-FE-002 Add provider search API client.
 - [ ] CP-M23-FE-003 Add account connection API client.
 - [ ] CP-M23-FE-004 Add provider import preview API client.
 - [ ] CP-M23-FE-005 Redesign Add Media modal to make provider search the default path.
@@ -3206,16 +3206,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M22-SIGN-021.
-**Last completed task name:** Confirm Last Completed Task Summary is updated with final completion summary.
-**Last completed milestone:** CP-M22 — Full Product Regression And Final Acceptance.
+**Last completed task ID:** CP-M23-FE-002.
+**Last completed task name:** Add provider search API client.
+**Last completed milestone:** CP-M23 — Provider-Assisted Library Acquisition.
 **Current phase:** Complete Product Phase.
-**Current milestone:** Complete product acceptance baseline.
-**Next recommended task:** Use `docs/final-acceptance.md` as the regression baseline for post-acceptance fixes or deployment-specific hardening.
+**Current milestone:** CP-M23 — Provider-Assisted Library Acquisition.
+**Next recommended task:** Continue CP-M23 with provider detail fetch endpoint, local media creation from provider match, duplicate detection, and frontend provider-first Add Media UX.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M22 Full Product Regression And Final Acceptance is complete. The final regression pass covers backend tests, empty-database migration, demo seed data, API schema/Swagger/Scalar availability, frontend typecheck/build, full browser-to-backend Playwright acceptance, import/export, jobs, cache-dependent health/summary behavior, every delivered product module, manual QA documentation, README product/run guidance, deployment smoke evidence, and the final acceptance evidence document at `docs/final-acceptance.md`.
+CP-M23 Provider-Assisted Library Acquisition has started. The first implementation slice replaced deterministic placeholder lookup with real TMDb, OMDb, AniList, Google Books, and Open Library provider search/detail adapters behind deterministic test safeguards; added provider capability contracts and API; forwarded provider env vars through Docker Compose; added frontend capability/search client support; and created `docs/manual-tests/provider-library-acquisition.md`. Account imports and provider export-upload parsers are still pending.
 
 ## 9.3 Important Notes For The Next Agent
 

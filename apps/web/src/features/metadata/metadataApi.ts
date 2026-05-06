@@ -7,6 +7,7 @@ import type {
   MediaType,
   MetadataMatchListResponse,
   MetadataRefreshJob,
+  ProviderCapabilityListResponse,
 } from "@canonos/contracts";
 
 import { getCsrfToken } from "@/features/auth/authApi";
@@ -18,6 +19,11 @@ export type MetadataSearchParams = {
   mediaType?: MediaType | "";
   provider?: ExternalProvider | "";
 };
+
+export async function fetchMetadataProviders(): Promise<ProviderCapabilityListResponse> {
+  const response = await api.get<ProviderCapabilityListResponse>(API_ROUTES.metadataProviders);
+  return response.data;
+}
 
 function normalizeMetadata(metadata: ExternalMetadataSnapshot): ExternalMetadataSnapshot {
   return {

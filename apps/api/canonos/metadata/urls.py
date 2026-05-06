@@ -5,6 +5,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("metadata/providers/", views.metadata_provider_capabilities, name="metadata-providers"),
     path("metadata/matches/", views.metadata_matches, name="metadata-matches"),
     path(
         "media-items/<uuid:media_item_id>/metadata/",
