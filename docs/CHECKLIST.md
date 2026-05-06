@@ -1934,6 +1934,9 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M06-FE-017 Add loading state.
 - [x] CP-M06-FE-018 Add empty state.
 - [x] CP-M06-FE-019 Add error state.
+- [x] CP-M06-FE-020 Replace field-heavy discovery form with compact anchors and expandable optional filters.
+- [x] CP-M06-FE-021 Move saved discovery trails into a dedicated dialog.
+- [x] CP-M06-FE-022 Promote discovery signals into scannable page-level signal blocks.
 
 ### Integration Tasks
 
@@ -1948,6 +1951,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M06-QA-002 Generate discovery trail with media type filter.
 - [x] CP-M06-QA-003 Save a discovery trail.
 - [x] CP-M06-QA-004 Add discovery result to queue.
+- [x] CP-M06-QA-005 Confirm saved trails open in a dialog and are hidden from the main workspace.
 
 ---
 

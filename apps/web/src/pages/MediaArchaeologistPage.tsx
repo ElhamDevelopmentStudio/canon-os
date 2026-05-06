@@ -9,16 +9,15 @@ import type {
   QueuePriority,
 } from "@canonos/contracts";
 import { DISCOVERY_ERAS, DISCOVERY_MODES, MEDIA_TYPES } from "@canonos/contracts";
-import { Compass, ListPlus, Save, Search, Trash2 } from "lucide-react";
+import { ChevronDown, Compass, History, ListPlus, Save, Search, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
 import { ScoreBadge, type ScoreTone } from "@/components/data-display/ScoreBadge";
+import { DialogShell } from "@/components/feedback/DialogShell";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import {
   deleteDiscoveryTrail,
@@ -69,6 +68,7 @@ export function MediaArchaeologistPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [queueTargetId, setQueueTargetId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [isSavedTrailsOpen, setIsSavedTrailsOpen] = useState(false);
 
   function updateDraft<Field extends keyof DiscoveryDraft>(field: Field, value: DiscoveryDraft[Field]) {
     setDraft((current) => ({ ...current, [field]: value }));
@@ -144,169 +144,315 @@ export function MediaArchaeologistPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageTitle>Media Archaeologist</PageTitle>
-        <PageSubtitle>
-          Build explainable deep-cut trails from underexplored media, eras, countries, creators, and themes.
-        </PageSubtitle>
+    <div className="flex flex-col gap-5">
+      <section className="grid gap-4 border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Discovery desk</p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Media Archaeologist</h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+              Generate deep-cut trails from a few useful anchors, then save or queue the results worth testing.
+            </p>
+          </div>
+          <Button type="button" variant="secondary" onClick={() => setIsSavedTrailsOpen(true)}>
+            <History aria-hidden="true" className="mr-2 h-4 w-4" />
+            Saved Trails{data?.count ? ` (${data.count})` : ""}
+          </Button>
+        </div>
+        <DiscoverySignalStrip response={generated} savedCount={data?.count ?? 0} />
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(22rem,0.95fr)]">
-        <SectionCard title="Discovery request" className="space-y-5">
-          <div className="flex items-start gap-3">
-            <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-              <Compass aria-hidden="true" className="h-5 w-5" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold">Discovery request</h2>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                Start broad or provide anchors. The archaeologist favors underexplored, non-obvious paths.
-              </p>
-            </div>
-          </div>
+      <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(28rem,0.85fr)_minmax(34rem,1.15fr)]">
+        <DiscoveryRequestPanel
+          draft={draft}
+          generated={generated}
+          isGenerating={isGenerating}
+          isSaving={isSaving}
+          onChange={updateDraft}
+          onGenerate={() => void runGeneration()}
+          onSave={() => void saveGeneratedTrail()}
+        />
 
-          <div className="grid gap-4 md:grid-cols-2">
+        <div className="flex flex-col gap-5">
+          {actionError ? <ErrorState title="Discovery action failed" message={actionError} /> : null}
+          {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
+          {isGenerating ? <LoadingState title="Generating discovery trail" message="Scoring deep cuts and expansion risks." /> : null}
+          {generated ? (
+            <GeneratedTrailSection
+              generated={generated}
+              queueTargetId={queueTargetId}
+              onAddToQueue={(result) => void addResultToQueue(result)}
+            />
+          ) : (
+            <EmptyState
+              title="No trail generated yet"
+              message="Choose a mode and a few anchors, then generate a trail."
+            />
+          )}
+        </div>
+      </div>
+
+      {isSavedTrailsOpen ? (
+        <SavedTrailsDialog
+          error={error}
+          isLoading={isLoading}
+          savedTrails={savedTrails}
+          deleteTargetId={deleteTargetId}
+          onClose={() => setIsSavedTrailsOpen(false)}
+          onDelete={removeTrail}
+          onRetry={() => void mutate()}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function DiscoverySignalStrip({
+  response,
+  savedCount,
+}: {
+  response: DiscoveryGenerateResponse | null;
+  savedCount: number;
+}) {
+  const analysis = response?.analysis;
+  return (
+    <section aria-label="Discovery signals" className="grid gap-2 md:grid-cols-4">
+      <SignalStat label="Trail" value={response ? response.draft.name : "Not generated"} />
+      <SignalStat
+        label="Underused mediums"
+        value={analysis?.underexploredMediaTypes.length ? analysis.underexploredMediaTypes.map((type) => mediaTypeLabels[type]).join(", ") : "Pending"}
+      />
+      <SignalStat
+        label="Country/language gap"
+        value={analysis?.underexploredCountryLanguages.length ? analysis.underexploredCountryLanguages.slice(0, 2).join(", ") : "Pending"}
+      />
+      <SignalStat label="Saved trails" value={String(savedCount)} />
+    </section>
+  );
+}
+
+function SignalStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-l-4 border-primary bg-muted/35 px-3 py-2">
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-1 truncate text-sm font-semibold">{value}</p>
+    </div>
+  );
+}
+
+function DiscoveryRequestPanel({
+  draft,
+  generated,
+  isGenerating,
+  isSaving,
+  onChange,
+  onGenerate,
+  onSave,
+}: {
+  draft: DiscoveryDraft;
+  generated: DiscoveryGenerateResponse | null;
+  isGenerating: boolean;
+  isSaving: boolean;
+  onChange: <Field extends keyof DiscoveryDraft>(field: Field, value: DiscoveryDraft[Field]) => void;
+  onGenerate: () => void;
+  onSave: () => void;
+}) {
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterSummary = [
+    draft.era ? discoveryEraLabels[draft.era] : null,
+    draft.countryLanguage.trim() || null,
+    draft.creator.trim() || null,
+    draft.favoriteWork.trim() || null,
+  ].filter(Boolean);
+
+  return (
+    <section aria-label="Discovery request" className="grid content-start gap-4 border-r border-border pr-6">
+      <div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="flex items-center gap-2 text-xl font-semibold">
+            <Compass aria-hidden="true" className="h-5 w-5 text-primary" />
+            Build trail
+          </h2>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Deep-cut generator
+          </span>
+        </div>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Start broad. Add hard constraints only when they actually sharpen the search.
+        </p>
+      </div>
+
+      <div className="grid gap-3">
+        <div className="grid gap-3 md:grid-cols-2">
+          <label className="grid gap-1 text-sm font-medium">
+            Discovery mode
+            <select
+              aria-label="Discovery mode"
+              className={fieldClassName}
+              value={draft.mode}
+              onChange={(event) => onChange("mode", event.target.value as DiscoveryMode)}
+            >
+              {DISCOVERY_MODES.map((mode) => (
+                <option key={mode} value={mode}>{discoveryModeLabels[mode]}</option>
+              ))}
+            </select>
+          </label>
+          <label className="grid gap-1 text-sm font-medium">
+            Preferred medium
+            <select
+              aria-label="Preferred medium"
+              className={fieldClassName}
+              value={draft.mediaType}
+              onChange={(event) => onChange("mediaType", event.target.value as MediaType | "")}
+            >
+              <option value="">Any medium</option>
+              {MEDIA_TYPES.map((mediaType) => (
+                <option key={mediaType} value={mediaType}>{mediaTypeLabels[mediaType]}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          <TextField
+            label="Theme"
+            placeholder="identity, memory, exile"
+            value={draft.theme}
+            onChange={(value) => onChange("theme", value)}
+          />
+          <TextField
+            label="Mood"
+            placeholder="patient, strange, reflective"
+            value={draft.mood}
+            onChange={(value) => onChange("mood", value)}
+          />
+        </div>
+      </div>
+
+      <div className="border-y border-border py-3">
+        <button
+          aria-expanded={filtersOpen}
+          className="flex w-full items-center justify-between gap-4 text-left"
+          type="button"
+          onClick={() => setFiltersOpen((current) => !current)}
+        >
+          <span>
+            <span className="block text-sm font-semibold">Narrow the trail</span>
+            <span className="mt-1 block text-sm text-muted-foreground">
+              {filterSummary.length ? filterSummary.join(" · ") : "Era, region, creator, favorite work, and pattern."}
+            </span>
+          </span>
+          <ChevronDown
+            aria-hidden="true"
+            className={cn("h-5 w-5 text-muted-foreground transition", filtersOpen ? "rotate-180" : "")}
+          />
+        </button>
+
+        {filtersOpen ? (
+          <div className="mt-4 grid gap-4">
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="grid gap-1 text-sm font-medium">
+                Era
+                <select
+                  aria-label="Era"
+                  className={fieldClassName}
+                  value={draft.era}
+                  onChange={(event) => onChange("era", event.target.value as DiscoveryEra)}
+                >
+                  {DISCOVERY_ERAS.map((era) => (
+                    <option key={era || "any"} value={era}>{discoveryEraLabels[era]}</option>
+                  ))}
+                </select>
+              </label>
+              <TextField
+                label="Country or language"
+                placeholder="Czech, Japanese, Persian"
+                value={draft.countryLanguage}
+                onChange={(value) => onChange("countryLanguage", value)}
+              />
+              <TextField
+                label="Creator"
+                placeholder="Kobo Abe, Tarkovsky"
+                value={draft.creator}
+                onChange={(value) => onChange("creator", value)}
+              />
+              <TextField
+                label="Favorite work"
+                placeholder="Stalker, Perfect Blue"
+                value={draft.favoriteWork}
+                onChange={(value) => onChange("favoriteWork", value)}
+              />
+            </div>
             <label className="grid gap-1 text-sm font-medium">
-              Discovery mode
-              <select
-                aria-label="Discovery mode"
-                className={fieldClassName}
-                value={draft.mode}
-                onChange={(event) => updateDraft("mode", event.target.value as DiscoveryMode)}
-              >
-                {DISCOVERY_MODES.map((mode) => (
-                  <option key={mode} value={mode}>{discoveryModeLabels[mode]}</option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-1 text-sm font-medium">
-              Preferred medium
-              <select
-                aria-label="Preferred medium"
-                className={fieldClassName}
-                value={draft.mediaType}
-                onChange={(event) => updateDraft("mediaType", event.target.value as MediaType | "")}
-              >
-                <option value="">Any medium</option>
-                {MEDIA_TYPES.map((mediaType) => (
-                  <option key={mediaType} value={mediaType}>{mediaTypeLabels[mediaType]}</option>
-                ))}
-              </select>
-            </label>
-            <TextField
-              label="Theme"
-              placeholder="identity, memory, exile, spiritual dread"
-              value={draft.theme}
-              onChange={(value) => updateDraft("theme", value)}
-            />
-            <TextField
-              label="Mood"
-              placeholder="patient, strange, reflective"
-              value={draft.mood}
-              onChange={(value) => updateDraft("mood", value)}
-            />
-            <label className="grid gap-1 text-sm font-medium">
-              Era
-              <select
-                aria-label="Era"
-                className={fieldClassName}
-                value={draft.era}
-                onChange={(event) => updateDraft("era", event.target.value as DiscoveryEra)}
-              >
-                {DISCOVERY_ERAS.map((era) => (
-                  <option key={era || "any"} value={era}>{discoveryEraLabels[era]}</option>
-                ))}
-              </select>
-            </label>
-            <TextField
-              label="Country or language"
-              placeholder="Czech, Japanese, Persian, Polish"
-              value={draft.countryLanguage}
-              onChange={(value) => updateDraft("countryLanguage", value)}
-            />
-            <TextField
-              label="Creator"
-              placeholder="Kōbō Abe, Tarkovsky, Satoshi Kon"
-              value={draft.creator}
-              onChange={(value) => updateDraft("creator", value)}
-            />
-            <TextField
-              label="Favorite work"
-              placeholder="Stalker, Perfect Blue, Solaris"
-              value={draft.favoriteWork}
-              onChange={(value) => updateDraft("favoriteWork", value)}
-            />
-            <label className="grid gap-1 text-sm font-medium md:col-span-2">
               Narrative pattern
               <textarea
                 aria-label="Narrative pattern"
                 className={cn(fieldClassName, "min-h-24 resize-y")}
                 placeholder="labyrinth stories, unreliable identity, slow metaphysical investigation"
                 value={draft.narrativePattern}
-                onChange={(event) => updateDraft("narrativePattern", event.target.value)}
+                onChange={(event) => onChange("narrativePattern", event.target.value)}
               />
             </label>
           </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Button
-              className="gap-2"
-              disabled={isGenerating}
-              type="button"
-              onClick={() => void runGeneration()}
-            >
-              <Search aria-hidden="true" className="h-4 w-4" />
-              {isGenerating ? "Generating..." : "Generate Discovery Trail"}
-            </Button>
-            <Button
-              className="gap-2"
-              disabled={!generated || isSaving}
-              type="button"
-              variant="secondary"
-              onClick={() => void saveGeneratedTrail()}
-            >
-              <Save aria-hidden="true" className="h-4 w-4" />
-              {isSaving ? "Saving..." : "Save Trail"}
-            </Button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Archaeologist signal map" className="space-y-4">
-          <h2 className="text-lg font-semibold">Archaeologist signal map</h2>
-          {generated ? (
-            <DiscoveryAnalysisCard response={generated} />
-          ) : (
-            <EmptyState
-              title="No trail generated yet"
-              message="Generate a trail to see underexplored mediums, eras, and country/language gaps."
-            />
-          )}
-        </SectionCard>
+        ) : null}
       </div>
 
-      {actionError ? <ErrorState title="Discovery action failed" message={actionError} /> : null}
-      {actionMessage ? <SuccessMessage message={actionMessage} /> : null}
+      <div className="flex flex-wrap gap-3">
+        <Button
+          className="gap-2"
+          disabled={isGenerating}
+          type="button"
+          onClick={onGenerate}
+        >
+          <Search aria-hidden="true" className="h-4 w-4" />
+          {isGenerating ? "Generating..." : "Generate Discovery Trail"}
+        </Button>
+        <Button
+          className="gap-2"
+          disabled={!generated || isSaving}
+          type="button"
+          variant="secondary"
+          onClick={onSave}
+        >
+          <Save aria-hidden="true" className="h-4 w-4" />
+          {isSaving ? "Saving..." : "Save Trail"}
+        </Button>
+      </div>
+    </section>
+  );
+}
 
-      {isGenerating ? <LoadingState title="Generating discovery trail" message="Scoring deep cuts and expansion risks." /> : null}
-
-      {generated ? (
-        <GeneratedTrailSection
-          generated={generated}
-          queueTargetId={queueTargetId}
-          onAddToQueue={(result) => void addResultToQueue(result)}
-        />
-      ) : null}
-
-      <SectionCard title="Saved discovery trails" className="space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold">Saved discovery trails</h2>
-          <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            Keep repeatable maps for future exploration sessions.
-          </p>
+function SavedTrailsDialog({
+  deleteTargetId,
+  error,
+  isLoading,
+  savedTrails,
+  onClose,
+  onDelete,
+  onRetry,
+}: {
+  deleteTargetId: string | null;
+  error: Error | undefined;
+  isLoading: boolean;
+  savedTrails: DiscoveryTrail[];
+  onClose: () => void;
+  onDelete: (trail: DiscoveryTrail) => void;
+  onRetry: () => void;
+}) {
+  return (
+    <DialogShell labelledBy="saved-discovery-trails-title" onClose={onClose} panelClassName="max-w-5xl p-0">
+      <div className="border-b border-border p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Reusable maps</p>
+            <h2 className="mt-2 text-2xl font-semibold" id="saved-discovery-trails-title">Saved discovery trails</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Keep repeatable maps for future exploration sessions.</p>
+          </div>
+          <Button type="button" variant="ghost" onClick={onClose}>Close</Button>
         </div>
+      </div>
+      <div className="max-h-[70vh] overflow-y-auto p-5">
         {isLoading ? <LoadingState title="Loading saved trails" message="Fetching your discovery maps." /> : null}
-        {error ? <ErrorState title="Saved trails unavailable" message={error.message} onRetry={() => void mutate()} /> : null}
+        {error ? <ErrorState title="Saved trails unavailable" message={error.message} onRetry={onRetry} /> : null}
         {!isLoading && !error && savedTrails.length === 0 ? (
           <EmptyState
             title="No saved discovery trails"
@@ -320,13 +466,13 @@ export function MediaArchaeologistPage() {
                 key={trail.id}
                 trail={trail}
                 isDeleting={deleteTargetId === trail.id}
-                onDelete={() => void removeTrail(trail)}
+                onDelete={() => onDelete(trail)}
               />
             ))}
           </div>
         ) : null}
-      </SectionCard>
-    </div>
+      </div>
+    </DialogShell>
   );
 }
 
@@ -356,54 +502,6 @@ function TextField({
   );
 }
 
-function DiscoveryAnalysisCard({ response }: { response: DiscoveryGenerateResponse }) {
-  const { analysis, search } = response;
-  return (
-    <div className="space-y-4 text-sm">
-      <SignalGroup
-        label="Underexplored mediums"
-        values={analysis.underexploredMediaTypes.map((type) => mediaTypeLabels[type])}
-      />
-      <SignalGroup
-        label="Underexplored eras"
-        values={analysis.underexploredEras.map((era) => discoveryEraLabels[era])}
-      />
-      <SignalGroup label="Underexplored country/language" values={analysis.underexploredCountryLanguages} />
-      <SignalGroup
-        label="Strongest current mediums"
-        values={analysis.strongestMediaTypes.map((type) => mediaTypeLabels[type])}
-      />
-      <div className="rounded-2xl border border-border bg-muted/40 p-4">
-        <h3 className="font-semibold">Search frame</h3>
-        <p className="mt-2 leading-6 text-muted-foreground">
-          {discoveryModeLabels[search.mode]} trail
-          {search.theme ? ` for “${search.theme}”` : ""}
-          {search.mediaType ? ` in ${mediaTypeLabels[search.mediaType]}` : " across media"}.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-function SignalGroup({ label, values }: { label: string; values: string[] }) {
-  return (
-    <div>
-      <h3 className="font-semibold">{label}</h3>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {values.length ? values.map((value) => <SignalPill key={value}>{value}</SignalPill>) : <SignalPill>None yet</SignalPill>}
-      </div>
-    </div>
-  );
-}
-
-function SignalPill({ children }: { children: string }) {
-  return (
-    <span className="rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-      {children}
-    </span>
-  );
-}
-
 function GeneratedTrailSection({
   generated,
   queueTargetId,
@@ -414,12 +512,13 @@ function GeneratedTrailSection({
   onAddToQueue: (result: DiscoveryResult) => void;
 }) {
   return (
-    <SectionCard title="Generated discovery trail" className="space-y-5">
-      <div>
+    <section aria-label="Generated discovery trail" className="grid gap-4">
+      <div className="border-b border-border pb-4">
+        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">Generated discovery trail</p>
         <h2 className="text-lg font-semibold">{generated.draft.name}</h2>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">{generated.draft.description}</p>
       </div>
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 2xl:grid-cols-2">
         {generated.results.map((result) => (
           <DiscoveryResultCard
             key={result.id}
@@ -429,7 +528,7 @@ function GeneratedTrailSection({
           />
         ))}
       </div>
-    </SectionCard>
+    </section>
   );
 }
 

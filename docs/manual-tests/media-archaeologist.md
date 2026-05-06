@@ -12,18 +12,22 @@ Confirm Media Archaeologist generates explainable deep-cut trails, saves them, a
 ## Happy Path
 
 1. Go to `/discover`.
-   - Expected: The page opens with the `Media Archaeologist` heading.
+   - Expected: The page opens with the `Media Archaeologist` heading, signal blocks, a compact generator, and a `Saved Trails` button.
 2. Click `Generate Discovery Trail` without entering filters.
    - Expected: A success message appears and result cards are shown.
 3. Enter `memory and identity` in Theme and choose `Novel` as Preferred medium.
    - Expected: The form accepts the filter values.
-4. Click `Generate Discovery Trail` again.
+4. Open `Narrow the trail`.
+   - Expected: Optional filters for Era, country/language, creator, favorite work, and narrative pattern appear.
+5. Click `Generate Discovery Trail` again.
    - Expected: Results are regenerated, and each visible result explains `Why this expands your taste` and `Why it may fail`.
-5. Click `Save Trail`.
-   - Expected: `Discovery trail saved.` appears and the trail shows under `Saved discovery trails`.
-6. Click `Add To Queue` on a result.
+6. Click `Save Trail`.
+   - Expected: `Discovery trail saved.` appears.
+7. Click `Saved Trails`.
+   - Expected: A saved discovery trails dialog opens and shows the saved trail.
+8. Close the dialog, then click `Add To Queue` on a result.
    - Expected: A success message confirms the result was added to the queue.
-7. Go to `/queue`.
+9. Go to `/queue`.
    - Expected: The added discovery result appears as a queue item.
 
 ## Error Path
@@ -41,5 +45,5 @@ Confirm Media Archaeologist generates explainable deep-cut trails, saves them, a
    - Expected: A trail still generates or a friendly empty/error state explains what happened.
 2. Save the trail if results appear.
    - Expected: The saved trail records the generated result list.
-3. Delete the saved trail from `Saved discovery trails`.
+3. Open `Saved Trails` and delete the saved trail.
    - Expected: The trail disappears and the page remains usable.

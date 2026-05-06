@@ -142,6 +142,11 @@ const mockedSaveDiscoveryTrail = vi.mocked(saveDiscoveryTrail);
 const mockedDeleteDiscoveryTrail = vi.mocked(deleteDiscoveryTrail);
 const mockedCreateQueueItem = vi.mocked(createQueueItem);
 
+async function openSavedTrails(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("button", { name: /saved trails/i }));
+  return screen.getByRole("dialog", { name: /saved discovery trails/i });
+}
+
 function mockTrails(data: DiscoveryTrailListResponse = emptyList) {
   mockedUseDiscoveryTrails.mockReturnValue({
     data,
@@ -162,12 +167,16 @@ describe("MediaArchaeologistPage", () => {
     mockedDeleteDiscoveryTrail.mockResolvedValue(undefined);
   });
 
-  it("renders the generator and empty saved trail state", () => {
+  it("renders the generator and opens the empty saved trail dialog", async () => {
+    const user = userEvent.setup();
     render(<MediaArchaeologistPage />);
 
     expect(screen.getByRole("heading", { name: /media archaeologist/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/theme/i)).toBeInTheDocument();
-    expect(screen.getByText(/No saved discovery trails/i)).toBeInTheDocument();
+    expect(screen.queryByText(/No saved discovery trails/i)).not.toBeInTheDocument();
+
+    const savedDialog = await openSavedTrails(user);
+    expect(within(savedDialog).getByText(/No saved discovery trails/i)).toBeInTheDocument();
   });
 
   it("generates, saves, and sends a discovery result to the queue", async () => {
@@ -210,8 +219,9 @@ describe("MediaArchaeologistPage", () => {
     mockTrails(savedList);
     render(<MediaArchaeologistPage />);
 
-    expect(screen.getByText("Memory and identity deep cuts")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /delete memory and identity deep cuts/i }));
+    const savedDialog = await openSavedTrails(user);
+    expect(within(savedDialog).getByText("Memory and identity deep cuts")).toBeInTheDocument();
+    await user.click(within(savedDialog).getByRole("button", { name: /delete memory and identity deep cuts/i }));
 
     expect(mockedDeleteDiscoveryTrail).toHaveBeenCalledWith(savedTrail.id);
     expect(await screen.findByText("Removed “Memory and identity deep cuts”.")).toBeInTheDocument();
