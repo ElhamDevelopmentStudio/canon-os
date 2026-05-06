@@ -232,7 +232,8 @@ describe("CriticCouncilPage", () => {
     });
   });
 
-  it("renders prompt, selectors, critic settings, opinions, and history", () => {
+  it("renders prompt, selectors, signal strip, settings dialog, opinions, and history dialog", async () => {
+    const user = userEvent.setup();
     render(<CriticCouncilPage />);
 
     expect(screen.getByRole("heading", { name: /critic council/i })).toBeInTheDocument();
@@ -240,10 +241,18 @@ describe("CriticCouncilPage", () => {
     expect(screen.getByLabelText(/^candidate$/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/media item/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /run council/i })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /critic settings/i })).toBeInTheDocument();
-    expect(screen.getAllByText(/Ruthless Critic/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Modern Defender/i).length).toBeGreaterThan(0);
+    expect(screen.getByRole("region", { name: /council signals/i })).toHaveTextContent("2/2");
     expect(screen.getAllByText(/Final decision: Sample/i).length).toBeGreaterThan(0);
+
+    await user.click(screen.getByRole("button", { name: /critic settings/i }));
+    const settingsDialog = screen.getByRole("dialog", { name: /critic settings/i });
+    expect(within(settingsDialog).getByText(/Ruthless Critic/i)).toBeInTheDocument();
+    expect(within(settingsDialog).getByText(/Modern Defender/i)).toBeInTheDocument();
+    await user.click(within(settingsDialog).getByRole("button", { name: /close/i }));
+
+    await user.click(screen.getByRole("button", { name: /history/i }));
+    const historyDialog = screen.getByRole("dialog", { name: /council history/i });
+    expect(within(historyDialog).getAllByText(/Modern Exception/i).length).toBeGreaterThan(0);
   });
 
   it("runs a council session and applies the decision to a candidate", async () => {
@@ -271,7 +280,9 @@ describe("CriticCouncilPage", () => {
     const user = userEvent.setup();
     render(<CriticCouncilPage />);
 
-    const settingsSection = screen.getByRole("region", { name: /critic settings/i });
+    await user.click(screen.getByRole("button", { name: /critic settings/i }));
+    const settingsDialog = screen.getByRole("dialog", { name: /critic settings/i });
+    const settingsSection = within(settingsDialog).getByRole("region", { name: /critic settings/i });
     const ruthlessCard = within(settingsSection).getByText("Ruthless Critic").closest("article");
     expect(ruthlessCard).not.toBeNull();
     await user.click(within(ruthlessCard as HTMLElement).getByLabelText(/enabled/i));

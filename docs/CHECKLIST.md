@@ -2101,6 +2101,10 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M08-FE-018 Add critic settings section.
 - [x] CP-M08-FE-019 Add enable/disable critic toggle.
 - [x] CP-M08-FE-020 Add critic weight control.
+- [x] CP-M08-FE-021 Move critic settings into a focused dialog.
+- [x] CP-M08-FE-022 Move council history into a focused dialog.
+- [x] CP-M08-FE-023 Promote critic activity, history, confidence, and disagreement into page-level signal blocks.
+- [x] CP-M08-FE-024 Tighten Critic Council workspace density and remove nested page-card layout.
 
 ### Integration Tasks
 
@@ -2116,6 +2120,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M08-QA-002 Run council on a media item.
 - [x] CP-M08-QA-003 Disable a critic and rerun council.
 - [x] CP-M08-QA-004 Confirm final decision is visible and actionable.
+- [x] CP-M08-QA-005 Confirm critic settings and history stay out of the main workspace until opened.
 
 ---
 

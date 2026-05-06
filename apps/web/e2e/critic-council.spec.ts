@@ -10,13 +10,14 @@ async function createCandidate(page: import("@playwright/test").Page, title: str
   await page.goto("/candidates");
   await candidateListResponse;
   await page.getByLabel("Title").fill(title);
+  await page.getByRole("button", { name: /more context/i }).click();
   await page.getByLabel("Known creator").fill("Critic Council Auteur");
   await page.getByLabel("Release year").fill("2024");
-  await page.getByLabel("Premise / signal notes").fill(
+  await page.getByLabel("Premise").fill(
     "A distinctive modern work with atmosphere, character agency, and enough originality to debate fairly.",
   );
-  await page.getByLabel("Expected genericness (0-10)").fill("2");
-  await page.getByLabel("Expected time cost (minutes)").fill("105");
+  await page.getByLabel("Expected genericness").fill("2");
+  await page.getByLabel("Expected time cost").fill("105");
 
   const createResponse = waitForApiResponse(page, "POST", "/api/candidates/", 201);
   await page.getByRole("button", { name: "Save Candidate" }).click();
@@ -76,13 +77,17 @@ test.describe("Critic Council browser-to-backend flow", () => {
     await expect(page.getByRole("heading", { name: "Critic opinions" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Add Decision To Candidate" })).toBeVisible();
 
-    const wildcardCard = page.locator("article").filter({ hasText: "Wildcard" }).first();
+    await page.getByRole("button", { name: "Critic Settings" }).click();
+    const settingsDialog = page.getByRole("dialog", { name: "Critic settings" });
+    await expect(settingsDialog).toBeVisible();
+    const wildcardCard = settingsDialog.locator("article").filter({ hasText: "Wildcard" }).first();
     await wildcardCard.getByLabel("Enabled").uncheck();
     const patchResponse = waitForApiResponse(page, "PATCH", /\/api\/critic-personas\/[^/]+\/$/, 200);
     await wildcardCard.getByRole("button", { name: "Save Critic" }).click();
     const updatedPersona = await expectApiJson<CriticPersona>(await patchResponse);
     expect(updatedPersona.role).toBe("wildcard");
     expect(updatedPersona.isEnabled).toBe(false);
+    await settingsDialog.getByRole("button", { name: "Close" }).click();
 
     const rerunResponse = waitForApiResponse(page, "POST", "/api/council-sessions/", 201);
     await page.getByRole("button", { name: "Run Council" }).click();
