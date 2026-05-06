@@ -109,7 +109,7 @@ Use these defaults unless the user explicitly changes them:
 | --- | --- |
 | Runtime model | Local-first private web app, with optional private cloud deployment later. |
 | User model | Single-user MVP behavior, but keep owner/user fields in schemas so multi-user support can be added without rewriting data models. |
-| Initial data entry | Manual entry plus CSV/JSON import and JSON/CSV export in the MVP. Metadata providers come later. |
+| Initial data entry | Provider-assisted title search plus manual Advanced Options fallback, CSV/JSON import, provider export upload adapters, optional account imports where provider APIs allow it, and JSON/CSV export. |
 | AI provider | Provider abstraction only. Product behavior must remain deterministic and inspectable first. |
 | Rating depth | Quick scorecard for normal use, with advanced fields where the SRS requires them. |
 | Social features | Out of scope. |

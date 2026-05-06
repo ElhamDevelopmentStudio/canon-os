@@ -368,6 +368,13 @@ The endpoint is user-scoped and must not include another user's media, scores, o
 
 CanonOS supports local data portability through authenticated, CSRF-protected endpoints. Browser flows must preview imports before writing data, surface job progress, support rollback for confirmed imports, and validate restores before applying backup content.
 
+Imports support two acquisition paths:
+
+- CanonOS-native CSV/JSON imports and exports.
+- Provider export uploads for platforms that do not expose an allowed account API. These uploads are parsed by explicit provider adapters, previewed, deduplicated, and confirmed before they create local library or preference records.
+
+Direct account imports, when available, must follow the same preview and confirmation rules. OMDb is excluded from account import because it is metadata lookup only.
+
 ### Supported CSV import columns
 
 CSV import is media-first for the MVP. The header row may include:
