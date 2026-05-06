@@ -3054,20 +3054,20 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M23-FE-002 Add provider search API client.
 - [ ] CP-M23-FE-003 Add account connection API client.
 - [ ] CP-M23-FE-004 Add provider import preview API client.
-- [ ] CP-M23-FE-005 Redesign Add Media modal to make provider search the default path.
-- [ ] CP-M23-FE-006 Add provider search input with media-type filter.
-- [ ] CP-M23-FE-007 Add provider selector with Best Provider default.
-- [ ] CP-M23-FE-008 Add search result cards with title, poster, year, provider, media type, creator, description, and confidence.
-- [ ] CP-M23-FE-009 Add empty state for no provider matches.
-- [ ] CP-M23-FE-010 Add error state for provider unavailable, timed out, or missing credentials.
-- [ ] CP-M23-FE-011 Add loading and disabled states while provider search runs.
-- [ ] CP-M23-FE-012 Add “Use this title” action that creates a local media item from a provider match.
-- [ ] CP-M23-FE-013 Add “Attach metadata” action for existing media items.
+- [x] CP-M23-FE-005 Redesign Add Media modal to make provider search the default path.
+- [x] CP-M23-FE-006 Add provider search input with media-type filter.
+- [x] CP-M23-FE-007 Add provider selector with Best Provider default.
+- [x] CP-M23-FE-008 Add search result cards with title, poster, year, provider, media type, creator, description, and confidence.
+- [x] CP-M23-FE-009 Add empty state for no provider matches.
+- [x] CP-M23-FE-010 Add error state for provider unavailable, timed out, or missing credentials.
+- [x] CP-M23-FE-011 Add loading and disabled states while provider search runs.
+- [x] CP-M23-FE-012 Add “Use this title” action that creates a local media item from a provider match.
+- [x] CP-M23-FE-013 Add “Attach metadata” action for existing media items.
 - [ ] CP-M23-FE-014 Add “Merge metadata into editable fields” action with explicit user confirmation.
 - [ ] CP-M23-FE-015 Add duplicate warning UI when a provider match appears to already exist in the library.
-- [ ] CP-M23-FE-016 Add quick personal signal controls after title selection: status, rating, liked/disliked, notes, and queue action.
-- [ ] CP-M23-FE-017 Add Advanced Options accordion for manual entry fallback.
-- [ ] CP-M23-FE-018 Keep manual entry fully usable when provider search is disabled or fails.
+- [x] CP-M23-FE-016 Add quick personal signal controls after title selection: status, rating, liked/disliked, notes, and queue action.
+- [x] CP-M23-FE-017 Add Advanced Options accordion for manual entry fallback.
+- [x] CP-M23-FE-018 Keep manual entry fully usable when provider search is disabled or fails.
 - [ ] CP-M23-FE-019 Add account connections section to Settings or Import/Export.
 - [ ] CP-M23-FE-020 Show connect/disconnect buttons for TMDb, Trakt, and AniList based on available capabilities.
 - [ ] CP-M23-FE-021 Hide or label OMDb as lookup-only so users do not expect account import.
@@ -3084,15 +3084,15 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M23-FE-032 Add job progress display for long account imports and export uploads.
 - [ ] CP-M23-FE-033 Add rollback action for confirmed provider imports where rollback metadata exists.
 - [ ] CP-M23-FE-034 Add import completion notification and Library/Dashboard revalidation.
-- [ ] CP-M23-FE-035 Add accessible keyboard navigation for provider result cards and import preview tables.
-- [ ] CP-M23-FE-036 Add responsive layout for mobile provider search and import flows.
+- [x] CP-M23-FE-035 Add accessible keyboard navigation for provider result cards and import preview tables.
+- [x] CP-M23-FE-036 Add responsive layout for mobile provider search and import flows.
 
 ### Integration Tasks
 
-- [ ] CP-M23-INT-001 Connect Add Media provider search to aggregated provider search endpoint.
-- [ ] CP-M23-INT-002 Connect provider result selection to local media creation.
+- [x] CP-M23-INT-001 Connect Add Media provider search to aggregated provider search endpoint.
+- [x] CP-M23-INT-002 Connect provider result selection to local media creation.
 - [ ] CP-M23-INT-003 Connect metadata attach and merge flows to media detail and library refresh.
-- [ ] CP-M23-INT-004 Connect Advanced Options fallback to existing create/update media behavior.
+- [x] CP-M23-INT-004 Connect Advanced Options fallback to existing create/update media behavior.
 - [ ] CP-M23-INT-005 Connect Settings account connection UI to provider auth endpoints.
 - [ ] CP-M23-INT-006 Connect Trakt account import preview and confirm.
 - [ ] CP-M23-INT-007 Connect TMDb account import preview and confirm where supported.
@@ -3111,8 +3111,8 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M23-QA-003 Search OMDb by IMDb ID and confirm it works as lookup-only.
 - [ ] CP-M23-QA-004 Search AniList for anime/manga and create a local library item.
 - [ ] CP-M23-QA-005 Search Open Library or Google Books for a book and create a local library item.
-- [ ] CP-M23-QA-006 Confirm provider search failure shows a recoverable error without clearing user input.
-- [ ] CP-M23-QA-007 Confirm Advanced Options manual entry works when no provider match exists.
+- [x] CP-M23-QA-006 Confirm provider search failure shows a recoverable error without clearing user input.
+- [x] CP-M23-QA-007 Confirm Advanced Options manual entry works when no provider match exists.
 - [ ] CP-M23-QA-008 Connect a Trakt account in a non-production test environment and preview watched/rated items.
 - [ ] CP-M23-QA-009 Confirm account import preview does not write data before confirmation.
 - [ ] CP-M23-QA-010 Confirm confirmed account import creates owner-scoped local records.
@@ -3122,10 +3122,10 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [ ] CP-M23-QA-014 Confirm provider imports never overwrite personal notes, ratings, aftertaste, queue state, or taste scores.
 - [ ] CP-M23-QA-015 Confirm another user cannot view or modify provider connections, imports, or imported records.
 - [ ] CP-M23-QA-016 Confirm manual test documentation covers provider search, account import, export upload, and Advanced Options fallback.
-- [ ] CP-M23-QA-017 Run lint.
-- [ ] CP-M23-QA-018 Run typecheck.
-- [ ] CP-M23-QA-019 Run tests.
-- [ ] CP-M23-QA-020 Run build.
+- [x] CP-M23-QA-017 Run lint.
+- [x] CP-M23-QA-018 Run typecheck.
+- [x] CP-M23-QA-019 Run tests.
+- [x] CP-M23-QA-020 Run build.
 - [ ] CP-M23-QA-021 Run e2e.
 
 ---
@@ -3206,16 +3206,16 @@ This section must always be updated at the end of each coding session. It exists
 
 ## 9.1 Current Task State
 
-**Last completed task ID:** CP-M23-FE-002.
+**Last completed task ID:** CP-M23-QA-020.
 **Last completed task name:** Add provider search API client.
 **Last completed milestone:** CP-M23 — Provider-Assisted Library Acquisition.
 **Current phase:** Complete Product Phase.
 **Current milestone:** CP-M23 — Provider-Assisted Library Acquisition.
-**Next recommended task:** Continue CP-M23 with provider detail fetch endpoint, local media creation from provider match, duplicate detection, and frontend provider-first Add Media UX.
+**Next recommended task:** Continue CP-M23 with provider detail fetch endpoint, backend local media creation/deduplication services, account connection contracts, and provider export upload previews.
 
 ## 9.2 Brief Summary Of What Was Done In The Last Completed Task
 
-CP-M23 Provider-Assisted Library Acquisition has started. The first implementation slice replaced deterministic placeholder lookup with real TMDb, OMDb, AniList, Google Books, and Open Library provider search/detail adapters behind deterministic test safeguards; added provider capability contracts and API; forwarded provider env vars through Docker Compose; added frontend capability/search client support; and created `docs/manual-tests/provider-library-acquisition.md`. Account imports and provider export-upload parsers are still pending.
+CP-M23 Provider-Assisted Library Acquisition now has a provider-first Add Media page at `/library/new`: users choose one batch category, search configured providers, inspect result details in a modal, select multiple titles, configure per-title status/rating/notes/taste scores through a three-dot action menu, and use Advanced Options for manual fallback. Existing edit flows still support metadata attach for saved items. Account imports, export-upload parsers, backend dedupe, and provider detail-fetch endpoint work remain pending.
 
 ## 9.3 Important Notes For The Next Agent
 

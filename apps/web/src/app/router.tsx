@@ -9,6 +9,7 @@ import { RouteErrorFallback } from "@/components/feedback/RouteErrorFallback";
 
 const DashboardPage = lazy(() => import("@/pages/DashboardPage").then((module) => ({ default: module.DashboardPage })));
 const LibraryPage = lazy(() => import("@/pages/LibraryPage").then((module) => ({ default: module.LibraryPage })));
+const AddMediaPage = lazy(() => import("@/pages/AddMediaPage").then((module) => ({ default: module.AddMediaPage })));
 const MediaDetailPage = lazy(() => import("@/pages/MediaDetailPage").then((module) => ({ default: module.MediaDetailPage })));
 const CandidateEvaluatorPage = lazy(() => import("@/pages/CandidateEvaluatorPage").then((module) => ({ default: module.CandidateEvaluatorPage })));
 const MediaArchaeologistPage = lazy(() => import("@/pages/MediaArchaeologistPage").then((module) => ({ default: module.MediaArchaeologistPage })));
@@ -47,6 +48,7 @@ function pageElement(Page: RoutablePage) {
 export const protectedRouteChildren: RouteObject[] = [
   { index: true, element: pageElement(DashboardPage) },
   { path: APP_ROUTES.library.slice(1), element: pageElement(LibraryPage) },
+  { path: APP_ROUTES.libraryNew.slice(1), element: pageElement(AddMediaPage) },
   { path: "library/:mediaId", element: pageElement(MediaDetailPage) },
   { path: APP_ROUTES.candidates.slice(1), element: pageElement(CandidateEvaluatorPage) },
   { path: APP_ROUTES.discovery.slice(1), element: pageElement(MediaArchaeologistPage) },

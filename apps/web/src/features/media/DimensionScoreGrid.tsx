@@ -119,9 +119,45 @@ function DimensionScoreRow({
           />
         </FormFieldWrapper>
       </div>
+      <div className="mt-4 grid gap-3">
+        <input
+          aria-label={`${dimension.name} score slider`}
+          className="w-full accent-primary"
+          max={SCORE_MAX}
+          min={SCORE_MIN}
+          step="0.1"
+          type="range"
+          value={scoreNumber ?? 0}
+          onChange={(event) => onChange({ score: event.target.value })}
+        />
+        <div className="flex flex-wrap gap-2">
+          {scorePresets.map((preset) => (
+            <button
+              className={cn(
+                "rounded-xl border px-3 py-2 text-xs font-semibold transition hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary",
+                draft.score === preset.value ? "border-primary bg-primary/10 text-primary" : "border-border bg-card",
+              )}
+              key={preset.label}
+              type="button"
+              onClick={() => onChange({ score: preset.value })}
+            >
+              <span aria-hidden="true" className="mr-1.5">{preset.emoji}</span>
+              {preset.label}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
+
+const scorePresets = [
+  { label: "Blank", emoji: "○", value: "" },
+  { label: "Low", emoji: "😐", value: "2" },
+  { label: "Okay", emoji: "🙂", value: "5" },
+  { label: "High", emoji: "🔥", value: "8" },
+  { label: "Peak", emoji: "💎", value: "10" },
+];
 
 function DimensionIndicator({ dimension, score }: { dimension: TasteDimension; score: number | null }) {
   const specialLabels: Record<string, string> = {

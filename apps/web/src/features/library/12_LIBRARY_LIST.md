@@ -51,7 +51,7 @@ Use `AppShell`. Active sidebar item: Library.
 
 | Element / Control | Required Function |
 |---|---|
-| Add Media | Open shared Add Media drawer or route to `/app/library/new`. |
+| Add Media | Route to `/app/library/new` for provider-first batch entry. |
 | Search | Debounced filter by title, creator, notes, tags. |
 | Medium filter | Movie, series, anime, novel, audiobook. |
 | Status filter | Planned, watching, reading, listening, completed, dropped, paused. |

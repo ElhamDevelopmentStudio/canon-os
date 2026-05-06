@@ -4,8 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { createMediaItem, deleteMediaItem, useMediaItems } from "@/features/media/mediaApi";
-import { upsertMediaScores, useTasteDimensions } from "@/features/media/tasteApi";
+import { deleteMediaItem, useMediaItems } from "@/features/media/mediaApi";
+import { useTasteDimensions } from "@/features/media/tasteApi";
 import { LibraryPage } from "@/pages/LibraryPage";
 
 vi.mock("@/features/media/tasteApi", () => ({
@@ -49,10 +49,8 @@ const sampleList: MediaItemListResponse = {
 };
 
 const mockedUseMediaItems = vi.mocked(useMediaItems);
-const mockedCreateMediaItem = vi.mocked(createMediaItem);
 const mockedDeleteMediaItem = vi.mocked(deleteMediaItem);
 const mockedUseTasteDimensions = vi.mocked(useTasteDimensions);
-const mockedUpsertMediaScores = vi.mocked(upsertMediaScores);
 
 const sampleDimensions: TasteDimension[] = [
   {
@@ -83,7 +81,6 @@ describe("LibraryPage", () => {
       isValidating: false,
       mutate: vi.fn(),
     } as unknown as ReturnType<typeof useTasteDimensions>);
-    mockedUpsertMediaScores.mockResolvedValue({ results: [] });
     mockedUseMediaItems.mockReturnValue({
       data: sampleList,
       error: undefined,
@@ -105,7 +102,7 @@ describe("LibraryPage", () => {
     expect(screen.getAllByText(/completed/i).length).toBeGreaterThan(0);
     expect(screen.getByLabelText(/filter by media type/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/filter by status/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /add media/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /add media/i })).toHaveAttribute("href", "/library/new");
   });
 
   it("uses accessible pagination controls for large libraries", async () => {
@@ -179,27 +176,12 @@ describe("LibraryPage", () => {
     expect(screen.getByLabelText(/active filters/i)).toHaveTextContent("Max regret: 2");
   });
 
-  it("creates and deletes media through connected actions", async () => {
+  it("routes adds to the dedicated page and deletes media through connected actions", async () => {
     const user = userEvent.setup();
-    mockedCreateMediaItem.mockResolvedValue(sampleList.results[0]);
     mockedDeleteMediaItem.mockResolvedValue();
     renderLibrary();
 
-    await user.click(screen.getByRole("button", { name: /add media/i }));
-    const dialog = screen.getByRole("dialog", { name: /add media/i });
-    await user.type(within(dialog).getByLabelText(/^title$/i), "Mushishi");
-    await user.selectOptions(within(dialog).getByLabelText(/media type/i), "anime");
-    await user.clear(within(dialog).getByLabelText(/^score$/i));
-    await user.type(within(dialog).getByLabelText(/^score$/i), "8.5");
-    await user.click(within(dialog).getByRole("button", { name: /save media/i }));
-
-    expect(mockedCreateMediaItem).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Mushishi", mediaType: "anime" }),
-    );
-    expect(mockedUpsertMediaScores).toHaveBeenCalledWith(
-      sampleList.results[0].id,
-      { scores: [{ dimensionId: sampleDimensions[0].id, note: "", score: 8.5 }] },
-    );
+    expect(screen.getByRole("link", { name: /add media/i })).toHaveAttribute("href", "/library/new");
 
     await user.click(screen.getByRole("button", { name: /delete stalker/i }));
     await user.click(screen.getByRole("button", { name: /^delete$/i }));

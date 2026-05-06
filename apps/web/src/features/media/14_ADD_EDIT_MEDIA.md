@@ -10,7 +10,7 @@ Creates or edits a media item across all supported media types.
 
 ## Required Layout
 
-Use `AppShell` for full page. Reuse same `MediaForm` inside global Add Media drawer.
+Use `AppShell` for the add page. Add media must be a dedicated provider-first page; edit can keep a focused one-item edit modal/detail action.
 
 ## ASCII Wireframe
 
@@ -18,26 +18,26 @@ Use `AppShell` for full page. Reuse same `MediaForm` inside global Add Media dra
 +----------------------------+--------------------------------------------------------------------------------------------------------------------------+
 | CanonOS                    | Library / Add Media    [Cmd+K Search]  [+ Add Media] [Evaluate] [Me]                                                     |
 | Private Media Intelligence | ------------------------------------------------------------------------------------------------------------------------ |
-| [Search library/pages]     | Add Media                                                                                                  [Save Media]  |
-|                            | Add a movie, series, anime, novel, or audiobook.                                                                         |
+| [Search library/pages]     | Add Media                                                                                                 [Save Titles] |
+|                            | Choose one category, search providers, inspect details, and add several titles at once.                                  |
 | CORE                       | ------------------------------------------------------------------------------------------------------------------------ |
 |   Dashboard                | +----------------------------------------------------+ +------------------------+                                        |
-|   Tonight Mode             | | Basic Information                                  | | Quick Classification   |                                        |
-|   Candidate Evaluator      | | Title                    [                     ]   | | Medium [Movie v]       |                                        |
-| > Library                  | | Original title           [                     ]   | | Status [Planned v]     |                                        |
-|   Adaptive Queue           | | Year [      ] Runtime/Length [                 ]   | | Ownership [None v]     |                                        |
-|                            | | Country [ v ] Language [ v ]                       | | [Auto Fetch Metadata]  |                                        |
-| INTELLIGENCE               | | Creator/Director/Author [                     ]   | | [ ] Evaluate after save|                                         |
-|   Taste Profile            | | Source URL / External ID [                    ]   | +------------------------+                                         |
-|   TasteGraph               | +----------------------------------------------------+                                                                   |
-|   Anti-Generic Filter      | +----------------------------------------------------+                                                                   |
-|   Media Archaeologist      | | Personal Starting Signals                          |                                                                   |
-|   Critic Council           | | [ ] I expect this to be great                      |                                                                   |
-|   Personal Canon           | | [ ] I suspect this may be generic                  |                                                                   |
-|   Adaptation Intel         | | [ ] I want to sample only                          |                                                                   |
-|                            | | Notes [                                          ] |                                                                   |
-| SYSTEM                     | | [Cancel]                                      [Save]|                                                                  |
-|   Insights                 | +----------------------------------------------------+                                                                   |
+|   Tonight Mode             | | Category: [Movie] [TV] [Anime] [Novel] [Audio]      | | Selected titles        |                                       |
+|   Candidate Evaluator      | | Search [Dune                         ] [Provider v] | | Dune Part Two      ... |                                       |
+| > Library                  | | Results: poster title year creator confidence       | | Configure status/rate  |                                       |
+|   Adaptive Queue           | | Click result -> details modal                       | | Save 3 titles          |                                       |
+|                            | | Advanced Options: manual entry fallback             | +------------------------+                                       |
+| INTELLIGENCE               | +----------------------------------------------------+                                                                   |
+|   Taste Profile            |                                                                                                                          |
+|   TasteGraph               |                                                                                                                          |
+|   Anti-Generic Filter      |                                                                                                                          |
+|   Media Archaeologist      |                                                                                                                          |
+|   Critic Council           |                                                                                                                          |
+|   Personal Canon           |                                                                                                                          |
+|   Adaptation Intel         |                                                                                                                          |
+|                            |                                                                                                                          |
+| SYSTEM                     |                                                                                                                          |
+|   Insights                 |                                                                                                                          |
 |   Import                   |                                                                                                                          |
 |   Activity                 |                                                                                                                          |
 |   Settings                 |                                                                                                                          |
@@ -51,14 +51,16 @@ Use `AppShell` for full page. Reuse same `MediaForm` inside global Add Media dra
 
 | Element / Control | Required Function |
 |---|---|
-| Save Media | Save and route to detail page. |
-| Medium select | Controls type-specific fields. |
+| Save Titles | Save every selected item and route back to Library. |
+| Category selector | Locks one media type per batch and clears selected items when changed. |
+| Provider search | Searches the routed metadata provider for the chosen category. |
+| Result card | Opens a details modal when clicked. |
+| Add result | Adds the result to the selected titles panel. |
+| Three-dot menu | Opens actions for details, configure, and remove. |
+| Configure | Opens status, rating, notes, and score controls for the selected title. |
+| Advanced Options | Allows manual entry when providers cannot find the title. |
 | Status select | Sets planned/watching/reading/listening/completed/dropped/paused. |
-| Auto Fetch Metadata | Call metadata lookup; do not overwrite user fields without confirmation. |
-| Evaluate after save | After save, route to evaluator with item prefilled. |
-| Starting signals | Seed evaluator/TasteGraph. |
 | Cancel | Return previous page; confirm if dirty. |
-| Save | Same as top Save Media action. |
 
 ## Data Needed
 
@@ -73,14 +75,17 @@ Use `AppShell` for full page. Reuse same `MediaForm` inside global Add Media dra
 - creators
 - externalIds
 - notes
-- startingSignals
+- provider match snapshot
+- personal rating
+- taste scores
 
 ## Loading, Empty, and Error States
 
-- **Loading edit:** Skeleton form.
+- **Searching:** Disable search and show provider lookup status.
 - **Saving:** Disable submit buttons.
 - **Validation:** Title and medium are required.
-- **Metadata conflict:** Show confirmation before replacing fields.
+- **No matches:** Show manual fallback.
+- **Metadata detail:** Show source, confidence, rating/popularity, and provider detail fields.
 
 ## Shared Components Used
 
@@ -96,4 +101,4 @@ Use `AppShell` for full page. Reuse same `MediaForm` inside global Add Media dra
 
 ## Implementation Notes
 
-One form component must power create, edit, and drawer usage.
+Create flow is provider-first and batch-oriented. Edit flow can stay focused on one saved item.

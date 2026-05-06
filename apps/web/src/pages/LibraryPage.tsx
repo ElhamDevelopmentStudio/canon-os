@@ -103,11 +103,6 @@ export function LibraryPage() {
     setSearchParams(next, { replace: true });
   }
 
-  function openAddModal() {
-    setModalMedia(null);
-    setIsModalOpen(true);
-  }
-
   function openEditModal(media: MediaItem) {
     setModalMedia(media);
     setIsModalOpen(true);
@@ -156,9 +151,11 @@ export function LibraryPage() {
               <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
               Advanced filters
             </Button>
-            <Button className="w-full gap-2 sm:w-auto" type="button" onClick={openAddModal}>
-              <Plus aria-hidden="true" className="h-4 w-4" />
-              Add Media
+            <Button asChild className="w-full gap-2 sm:w-auto">
+              <Link to={APP_ROUTES.libraryNew}>
+                <Plus aria-hidden="true" className="h-4 w-4" />
+                Add Media
+              </Link>
             </Button>
           </PageActionBar>
 
@@ -188,7 +185,7 @@ export function LibraryPage() {
           actionLabel="Add Media"
           message="Create the first item in your media memory. Later modules will add scoring, aftertaste, and recommendations on top of this library."
           title="No media items match this view"
-          onAction={openAddModal}
+          actionHref={APP_ROUTES.libraryNew}
         />
       ) : null}
       {!isLoading && !error && data && data.results.length > 0 ? (
