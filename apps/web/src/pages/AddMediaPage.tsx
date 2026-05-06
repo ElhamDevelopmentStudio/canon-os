@@ -128,6 +128,14 @@ function nullableNumber(value: string): number | null {
   return value.trim() === "" ? null : Number(value);
 }
 
+function nullableRating(value: string): number | null {
+  if (value.trim() === "") return null;
+  const rating = Number(value);
+  if (!Number.isFinite(rating)) return null;
+  const boundedRating = Math.min(Math.max(rating, SCORE_MIN), SCORE_MAX);
+  return Math.round(boundedRating * 10) / 10;
+}
+
 function nullableDate(value: string): string | null {
   return value.trim() === "" ? null : value;
 }
@@ -170,7 +178,7 @@ function formFromMatch(match: ExternalMediaMatch): AddFormState {
     originalTitle: match.originalTitle,
     releaseYear: match.releaseYear?.toString() ?? "",
     creator: match.creator,
-    personalRating: match.externalRating?.toString() ?? "",
+    personalRating: match.externalRating === null ? "" : nullableRating(match.externalRating.toString())?.toString() ?? "",
     notes: match.description,
   };
 }
@@ -184,7 +192,7 @@ function createRequestFromQueueItem(item: QueueItem): MediaItemCreateRequest {
     countryLanguage: item.form.countryLanguage.trim(),
     creator: item.form.creator.trim(),
     status: item.form.status,
-    personalRating: nullableNumber(item.form.personalRating),
+    personalRating: nullableRating(item.form.personalRating),
     startedDate: nullableDate(item.form.startedDate),
     completedDate: nullableDate(item.form.completedDate),
     runtimeMinutes: nullableNumber(item.form.runtimeMinutes),

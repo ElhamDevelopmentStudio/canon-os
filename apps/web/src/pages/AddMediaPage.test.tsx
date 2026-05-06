@@ -44,7 +44,7 @@ const duneMatch: ExternalMediaMatch = {
   releaseYear: 2024,
   creator: "Denis Villeneuve",
   imageUrl: "https://image.tmdb.org/t/p/w342/poster.jpg",
-  externalRating: 8.4,
+  externalRating: 7.218,
   externalPopularity: 322,
   confidence: 0.96,
   sourceUrl: "https://www.themoviedb.org/movie/438631",
@@ -185,5 +185,27 @@ describe("AddMediaPage", () => {
 
     expect(screen.queryByText(/dune: part two/i)).not.toBeInTheDocument();
     expect(screen.getByRole("complementary", { name: /selected anime titles/i })).toBeInTheDocument();
+  });
+
+  it("rounds provider ratings before saving so the API decimal field accepts them", async () => {
+    const user = userEvent.setup();
+    renderAddMediaPage();
+    const searchRegion = screen.getByRole("region", { name: /search public metadata/i });
+
+    await user.type(within(searchRegion).getByLabelText(/movie title/i), "Dune");
+    await user.click(within(searchRegion).getByRole("button", { name: /^search$/i }));
+    await user.click(await screen.findByRole("button", { name: /^add$/i }));
+    expect(screen.getByText(/planned · 7.2\/10/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /save 1 title/i }));
+
+    await waitFor(() =>
+      expect(mockedCreateMediaItem).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "Dune: Part Two",
+          personalRating: 7.2,
+        }),
+      ),
+    );
   });
 });
