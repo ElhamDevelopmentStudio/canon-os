@@ -223,7 +223,7 @@ The media add/edit dialog includes an external metadata search section. Search r
 
 ## TasteGraph UI
 
-The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exposes a **Rebuild TasteGraph** action, and renders loading, empty, error, success, rebuild status, summary cards, ranked signal sections, and a simple text graph view.
+The TasteGraph page lives at `/taste-graph`. It uses `useTasteGraphSummary`, exposes a **Rebuild TasteGraph** action, and renders loading, empty, error, success, rebuild status, a compact evidence map, graph counters, ranked signal lanes, weak/negative signal lanes, and a simple text graph ledger.
 
 
 ### Completion Detox UI

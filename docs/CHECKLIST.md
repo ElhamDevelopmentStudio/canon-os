@@ -1737,6 +1737,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M03-FE-013 Add loading state to TasteGraph page.
 - [x] CP-M03-FE-014 Add empty state to TasteGraph page.
 - [x] CP-M03-FE-015 Add error state to TasteGraph page.
+- [x] CP-M03-FE-016 Redesign TasteGraph as a graph console with evidence map and ranked signal lanes.
 
 ### Integration Tasks
 
@@ -1752,6 +1753,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M03-QA-003 Confirm graph connects media to creators.
 - [x] CP-M03-QA-004 Confirm graph connects media to taste dimensions.
 - [x] CP-M03-QA-005 Confirm TasteGraph page follows shared layout.
+- [x] CP-M03-QA-006 Add focused TasteGraph page regression coverage after redesign.
 
 ---
 

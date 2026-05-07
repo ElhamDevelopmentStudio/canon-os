@@ -7,7 +7,7 @@
 2. Add a completed movie with a creator and at least two taste scores.
    - Expected: The media item appears in the library.
 3. Open **TasteGraph** from the sidebar.
-   - Expected: The TasteGraph page loads with summary cards and a **Rebuild TasteGraph** button.
+   - Expected: The TasteGraph page loads with an evidence map, graph counters, ranked evidence lanes, and a **Rebuild TasteGraph** button.
 4. Select **Rebuild TasteGraph**.
    - Expected: A completed rebuild status appears, node and edge counts are greater than zero, and the creator appears in strongest connected creators.
 5. Review **Text graph view**.
