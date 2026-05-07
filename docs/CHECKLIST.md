@@ -2647,6 +2647,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M16-FE-017 Tighten correlation and ranked evidence sections for dense dashboard reading.
 - [x] CP-M16-FE-018 Replace remaining boxed Insights panels with flat worksheet sections.
 - [x] CP-M16-FE-019 Add next-evidence empty states for unpopulated Insights modules.
+- [x] CP-M16-FE-020 Reduce Insights clutter with quieter empty modules and compact media mix bars.
 
 ### Integration Tasks
 
@@ -2662,6 +2663,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M16-QA-004 Update focused Insights page tests for redesigned chart modules.
 - [x] CP-M16-QA-005 Update Insights manual test coverage for the redesigned workspace.
 - [x] CP-M16-QA-006 Revalidate flat Insights workspace after card-heavy redesign feedback.
+- [x] CP-M16-QA-007 Revalidate Insights readability after clutter reduction feedback.
 
 ---
 

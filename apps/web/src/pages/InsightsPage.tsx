@@ -69,8 +69,8 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
   const strongestDimension = [...insights.dimensionTrends.dimensions].sort((a, b) => (b.averageScore ?? 0) - (a.averageScore ?? 0))[0] ?? null;
 
   return (
-    <div className="grid gap-6">
-      <section aria-label="Insight signals" className="grid gap-3 border-b border-border pb-6 md:grid-cols-4">
+    <div className="grid gap-8">
+      <section aria-label="Insight signals" className="grid gap-4 border-y border-border py-4 md:grid-cols-4">
         <InsightStat
           helper="Completed and dropped evidence points."
           icon={<TrendingUp aria-hidden="true" className="h-4 w-4" />}
@@ -104,7 +104,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         />
       ) : null}
 
-      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-[minmax(32rem,1.35fr)_minmax(24rem,0.65fr)]">
+      <section className="grid gap-8 xl:grid-cols-[minmax(32rem,1.35fr)_minmax(24rem,0.65fr)]">
         <WorksheetPanel
           ariaLabel="Consumption overview"
           eyebrow="Momentum"
@@ -112,7 +112,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
           title="Consumption timeline"
         >
           <TimelineColumnChart points={insights.consumptionTimeline.points} />
-          <div className="mt-5 grid gap-2 border-t border-border pt-4 sm:grid-cols-[12rem_1fr]">
+          <div className="mt-5 grid gap-2 rounded-xl bg-muted/20 px-4 py-3 sm:grid-cols-[9rem_1fr]">
             <p className="text-sm font-medium text-foreground">Inspect next</p>
             <p className="text-sm leading-6 text-muted-foreground">
               Compare the month with the highest drop count against ratings, genericness, and regret scores.
@@ -130,7 +130,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         </WorksheetPanel>
       </section>
 
-      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-[minmax(18rem,0.85fr)_minmax(20rem,1fr)_minmax(20rem,1fr)]">
+      <section className="grid gap-8 border-t border-border pt-7 xl:grid-cols-[minmax(18rem,0.85fr)_minmax(20rem,1fr)_minmax(20rem,1fr)]">
         <WorksheetPanel
           ariaLabel="Media mix"
           eyebrow="Mediums"
@@ -159,7 +159,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         </WorksheetPanel>
       </section>
 
-      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-2">
+      <section className="grid gap-8 border-t border-border pt-7 xl:grid-cols-2">
         <CorrelationPanel
           description={insights.genericnessSatisfaction.insight}
           emptyText="Score genericness and rate media to reveal outliers."
@@ -194,7 +194,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section className="grid gap-8 border-t border-border pt-7 xl:grid-cols-2">
         <RankedPanel
           ariaLabel="Top creators"
           emptyText="Add creators to media records to rank trusted and risky sources."
@@ -239,13 +239,13 @@ function FilterPill({ icon, label }: { icon?: ReactNode; label: string }) {
 
 function InsightStat({ helper, icon, label, value }: { helper: string; icon: ReactNode; label: string; value: string }) {
   return (
-    <div className="border-l border-border pl-4">
+    <div className="min-w-0">
       <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
         <span className="text-primary">{icon}</span>
         {label}
       </div>
-      <p className="mt-2 text-2xl font-semibold text-foreground">{value}</p>
-      <p className="mt-1 text-sm text-muted-foreground">{helper}</p>
+      <p className="mt-2 truncate text-2xl font-semibold text-foreground">{value}</p>
+      <p className="mt-1 truncate text-sm text-muted-foreground">{helper}</p>
     </div>
   );
 }
@@ -264,7 +264,7 @@ function WorksheetPanel({
   title: string;
 }) {
   return (
-    <section aria-label={ariaLabel} className="min-w-0 border-t border-border pt-5">
+    <section aria-label={ariaLabel} className="min-w-0">
       <PanelHeading eyebrow={eyebrow} icon={icon} title={title} />
       {children}
     </section>
@@ -285,20 +285,15 @@ function PanelHeading({ eyebrow, icon, title }: { eyebrow: string; icon: ReactNo
 
 function EvidenceEmptyState({ message, steps, title }: { message: string; steps: string[]; title: string }) {
   return (
-    <div className="mt-6 border-y border-border py-5">
-      <div className="grid gap-4 sm:grid-cols-[minmax(11rem,0.8fr)_1.2fr]">
-        <div>
-          <p className="text-sm font-semibold text-foreground">{title}</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {steps.map((step, index) => (
-            <div className="border-l border-border pl-3" key={step}>
-              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Step {index + 1}</p>
-              <p className="mt-1 text-sm font-medium text-foreground">{step}</p>
-            </div>
-          ))}
-        </div>
+    <div className="mt-5 rounded-xl bg-muted/20 px-4 py-3">
+      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">{message}</p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {steps.map((step) => (
+          <span className="rounded-full border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground" key={step}>
+            {step}
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -411,28 +406,17 @@ function MediaMixPanel({ rows, totalCount }: { rows: AnalyticsMediaTypeDistribut
 
   return (
     <div className="mt-6 grid gap-4">
-      <div className="flex h-36 items-end gap-3 border-b border-border pb-3">
-        {rows.map((row, index) => (
-          <div className="flex flex-1 flex-col items-center gap-2" key={row.mediaType}>
-            <div
-              className={`w-full rounded-t-2xl ${chartPalette[index % chartPalette.length]}`}
-              style={{ height: `${Math.max(12, row.sharePercent)}%` }}
-              aria-hidden="true"
-            />
-            <span className="text-xs text-muted-foreground">{mediaTypeLabels[row.mediaType]}</span>
-          </div>
-        ))}
-      </div>
-      <div className="divide-y divide-border border-y border-border">
-        {rows.map((row) => (
-          <div className="flex flex-wrap items-center justify-between gap-3 py-3" key={`row-${row.mediaType}`}>
+      {rows.map((row, index) => (
+        <div className="grid gap-2" key={row.mediaType}>
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <MediaTypeBadge label={mediaTypeLabels[row.mediaType]} type={row.mediaType} />
-            <p className="text-sm text-muted-foreground">
-              {row.count} of {totalCount} / {row.sharePercent}% / Avg {formatScore(row.averageRating)}
-            </p>
+            <p className="text-sm text-muted-foreground">{row.count} of {totalCount} / Avg {formatScore(row.averageRating)}</p>
           </div>
-        ))}
-      </div>
+          <div className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden="true">
+            <div className={`h-full rounded-full ${chartPalette[index % chartPalette.length]}`} style={{ width: `${row.sharePercent}%` }} />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

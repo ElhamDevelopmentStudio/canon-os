@@ -16,9 +16,9 @@ Confirm the Insights page turns the user's real media, rating, taste score, crea
 2. Review the top signal strip.
    - Expected: Timeline months, rated media, dominant medium, and regret time show numbers from the user's data.
 3. Review Consumption timeline and Rating distribution.
-   - Expected: The timeline uses vertical visual columns, rating distribution uses horizontal bars, and both sit in flat worksheet sections rather than boxed cards.
+   - Expected: The timeline and rating distribution are easy to distinguish, with compact empty prompts instead of large empty chart blocks.
 4. Review Media mix, Taste monitor, and Top themes.
-   - Expected: Medium balance, dimension signal density, and Narrative DNA themes appear as compact chart-like modules with clear section hierarchy and no card-in-card framing.
+   - Expected: Medium balance uses compact horizontal bars, and empty taste/theme modules stay visually quiet.
 5. Review Genericness vs satisfaction and Regret vs time cost.
    - Expected: Average signals, outlier titles, regret minutes, and insight text appear without errors.
 6. Review Top creators and Dimension trends.
