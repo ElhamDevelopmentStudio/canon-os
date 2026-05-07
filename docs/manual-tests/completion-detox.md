@@ -7,9 +7,9 @@
 2. Add a TV show with status **Consuming**, episode count **12**, and rating **4**.
    - Expected: The show appears in the library.
 3. Open **Completion Detox**.
-   - Expected: Time saved cards, active rules, and the evaluation form appear.
+   - Expected: A compact time-saved summary strip, active rules, and the evaluation form appear without nested cards.
 4. Select the show, enter progress **2**, motivation **2**, and click **Evaluate Drop/Pause**.
-   - Expected: A drop recommendation appears with a neutral reason and estimated time saved.
+   - Expected: A drop recommendation appears as a clear decision section with a neutral reason and estimated time saved.
 5. Click **Mark As Dropped**.
    - Expected: A success message appears and the media item status changes to dropped.
 
@@ -21,6 +21,6 @@
 ## Edge case: disabled rule
 
 1. Open Completion Detox and disable **TV two episode sample**.
-   - Expected: The rule button changes to an enable action.
+   - Expected: The compact rule row changes to an enable action.
 2. Evaluate another consuming TV show at progress **2** and motivation **2**.
    - Expected: The result is **Continue** because the matching sample rule is disabled.

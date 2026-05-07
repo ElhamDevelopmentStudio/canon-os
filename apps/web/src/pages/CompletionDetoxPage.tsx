@@ -1,18 +1,14 @@
 import type { DetoxDecision, DetoxEvaluateResponse, DetoxRule, MediaItem } from "@canonos/contracts";
-import { Ban, CheckCircle2, Clock, PauseCircle, TimerReset } from "lucide-react";
+import { Ban, CheckCircle2, Clock, Library, PauseCircle, TimerReset } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { APP_ROUTES } from "@/app/routeConstants";
 import { MediaTypeBadge } from "@/components/data-display/MediaTypeBadge";
-import { MetricCard } from "@/components/data-display/MetricCard";
 import { StatusPill, type StatusTone } from "@/components/data-display/StatusPill";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageActionBar } from "@/components/layout/PageActionBar";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import { evaluateDetox, updateDetoxRule, useDetoxDecisions, useDetoxRules, useDetoxTimeSaved } from "@/features/detox/detoxApi";
 import { updateMediaItem, useMediaItems } from "@/features/media/mediaApi";
@@ -118,19 +114,23 @@ export function CompletionDetoxPage() {
   const loadError = rules.error ?? decisions.error ?? timeSaved.error ?? mediaItems.error;
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageActionBar className="justify-between">
-          <div>
-            <PageTitle>Completion Detox</PageTitle>
-            <PageSubtitle>
+    <div className="grid gap-6">
+      <section className="border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Detox desk</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">Completion Detox</h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
               Use neutral sample rules to stop, pause, or continue media without sunk-cost pressure.
-            </PageSubtitle>
+            </p>
           </div>
-          <Button asChild type="button" variant="secondary">
-            <Link to={APP_ROUTES.library}>Open Library</Link>
+          <Button asChild className="gap-2" type="button" variant="secondary">
+            <Link to={APP_ROUTES.library}>
+              <Library aria-hidden="true" className="h-4 w-4" />
+              Open Library
+            </Link>
           </Button>
-        </PageActionBar>
+        </div>
       </section>
 
       {isLoading ? <LoadingState title="Loading Completion Detox" message="Fetching rules, decisions, and library items." /> : null}
@@ -140,13 +140,25 @@ export function CompletionDetoxPage() {
 
       {!isLoading && !loadError ? (
         <>
-          <section className="grid gap-4 md:grid-cols-3">
-            <MetricCard helper="Estimated from drop, pause, delay, and archive decisions." label="Total time saved" value={formatMinutes(timeSaved.data?.totalMinutes ?? 0)} />
-            <MetricCard helper="Time saved by decisions created this month." label="This month" value={formatMinutes(timeSaved.data?.currentMonthMinutes ?? 0)} />
-            <MetricCard helper="Recorded detox decisions with time savings." label="Saved decisions" value={timeSaved.data?.decisionCount ?? 0} />
+          <section aria-label="Detox summary" className="grid gap-4 border-y border-border py-4 md:grid-cols-3">
+            <DetoxStat
+              helper="Drop, pause, delay, and archive estimates."
+              label="Total time saved"
+              value={formatMinutes(timeSaved.data?.totalMinutes ?? 0)}
+            />
+            <DetoxStat
+              helper="Decisions created this month."
+              label="This month"
+              value={formatMinutes(timeSaved.data?.currentMonthMinutes ?? 0)}
+            />
+            <DetoxStat
+              helper="Saved stop/pause decisions."
+              label="Saved decisions"
+              value={String(timeSaved.data?.decisionCount ?? 0)}
+            />
           </section>
 
-          <section className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.8fr)]">
+          <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.75fr)]">
             <DetoxEvaluateForm
               mediaItems={availableMedia}
               motivationScore={motivationScore}
@@ -190,6 +202,16 @@ export function CompletionDetoxPage() {
   }
 }
 
+function DetoxStat({ helper, label, value }: { helper: string; label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
+      <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{value}</p>
+      <p className="mt-1 truncate text-sm text-muted-foreground">{helper}</p>
+    </div>
+  );
+}
+
 function DetoxEvaluateForm({
   mediaItems,
   motivationScore,
@@ -214,24 +236,25 @@ function DetoxEvaluateForm({
   onSelectedMediaChange: (value: string) => void;
 }) {
   return (
-    <SectionCard title="Detox Evaluate form">
-      <div className="grid gap-5">
+    <section aria-label="Detox Evaluate form" className="min-w-0">
+      <div className="flex items-start gap-3">
+        <TimerReset aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
         <div>
-          <div className="flex items-center gap-2">
-            <TimerReset aria-hidden="true" className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold">Evaluate Drop/Pause</h2>
-          </div>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Pick a work, enter current progress, and rate motivation. CanonOS will use active sample rules and neutral language.
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Sample boundary</p>
+          <h2 className="mt-1 text-2xl font-semibold text-foreground">Evaluate Drop/Pause</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+            Pick one active work, enter where you are, then check whether continuing is still a conscious choice.
           </p>
         </div>
+      </div>
 
-        {mediaItems.length > 0 ? (
-          <>
-            <label className="grid gap-1.5 text-sm font-medium">
+      {mediaItems.length > 0 ? (
+        <div className="mt-6 grid gap-6">
+          <div className="grid gap-5 lg:grid-cols-[minmax(14rem,1fr)_minmax(14rem,0.8fr)]">
+            <label className="grid gap-2 text-sm font-medium">
               Media item
               <select
-                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-12 rounded-xl border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 value={selectedMediaId}
                 onChange={(event) => onSelectedMediaChange(event.target.value)}
               >
@@ -242,17 +265,25 @@ function DetoxEvaluateForm({
             </label>
 
             {selectedMedia ? (
-              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-background p-3 text-sm">
+              <div className="grid content-center gap-2 rounded-xl bg-muted/20 px-4 py-3 text-sm">
+                <p className="font-medium text-foreground">{selectedMedia.title}</p>
+                <div className="flex flex-wrap items-center gap-2">
                 <MediaTypeBadge type={selectedMedia.mediaType} label={mediaTypeLabels[selectedMedia.mediaType]} />
                 <StatusPill label={statusLabels[selectedMedia.status]} tone={statusTone[selectedMedia.status]} />
                 <span className="text-muted-foreground">Progress unit: {progressUnitLabel(selectedMedia.mediaType)}</span>
+                </div>
               </div>
             ) : null}
+          </div>
 
-            <label className="grid gap-1.5 text-sm font-medium">
-              Current progress
+          <div className="grid gap-5 md:grid-cols-2">
+            <label className="grid gap-2 text-sm font-medium">
+              <span className="flex items-center justify-between gap-3">
+                Current progress
+                <span className="text-muted-foreground">{progressValue} {selectedMedia ? progressUnitLabel(selectedMedia.mediaType) : "units"}</span>
+              </span>
               <input
-                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-12 rounded-xl border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 min="0"
                 type="number"
                 value={progressValue}
@@ -260,10 +291,13 @@ function DetoxEvaluateForm({
               />
             </label>
 
-            <label className="grid gap-1.5 text-sm font-medium">
-              Current motivation
+            <label className="grid gap-2 text-sm font-medium">
+              <span className="flex items-center justify-between gap-3">
+                Current motivation
+                <span className="text-muted-foreground">{motivationScore}/10</span>
+              </span>
               <input
-                className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="h-12 rounded-xl border border-border bg-background px-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                 max="10"
                 min="1"
                 type="number"
@@ -271,19 +305,24 @@ function DetoxEvaluateForm({
                 onChange={(event) => onMotivationChange(event.target.value)}
               />
             </label>
+          </div>
 
+          <div className="flex flex-wrap items-center gap-3 border-t border-border pt-5">
             <Button disabled={isEvaluating || !selectedMediaId} type="button" onClick={() => void onEvaluate()}>
               {isEvaluating ? "Evaluating…" : "Evaluate Drop/Pause"}
             </Button>
-          </>
-        ) : (
+            <p className="text-sm text-muted-foreground">Neutral output. No penalty for dropping, pausing, or continuing deliberately.</p>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-6">
           <EmptyState
             message="Completion Detox needs at least one library item before it can evaluate a sample boundary."
             title="No media available"
           />
-        )}
-      </div>
-    </SectionCard>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -297,14 +336,18 @@ function ActiveRulesSection({
   onToggle: (rule: DetoxRule) => void;
 }) {
   return (
-    <SectionCard title="Active detox rules">
-      <div className="grid gap-3">
-        <div className="flex items-center gap-2">
-          <Ban aria-hidden="true" className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold">Active detox rules</h2>
+    <section aria-label="Active detox rules" className="min-w-0">
+      <div className="flex items-start gap-3">
+        <Ban aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Rules</p>
+          <h2 className="mt-1 text-2xl font-semibold text-foreground">Active detox rules</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">Enabled sample limits used by the evaluator.</p>
         </div>
+      </div>
+      <div className="mt-6 divide-y divide-border border-y border-border">
         {rules.map((rule) => (
-          <article className="rounded-2xl border border-border bg-background p-4" key={rule.id}>
+          <article className="py-4" key={rule.id}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h3 className="font-semibold">{rule.name}</h3>
@@ -327,7 +370,7 @@ function ActiveRulesSection({
           </article>
         ))}
       </div>
-    </SectionCard>
+    </section>
   );
 }
 
@@ -346,26 +389,32 @@ function DecisionResultCard({
 }) {
   const decision = evaluation.decision;
   return (
-    <SectionCard title="Detox decision result">
-      <div className="grid gap-4">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
+    <section aria-label="Detox decision result" className="border-t border-border pt-6">
+      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto]">
+        <div>
+          <div className="flex items-start gap-3">
+            <span className="mt-1">
               <DecisionIcon decision={decision.decision} />
-              <h2 className="text-lg font-semibold">Detox decision result</h2>
+            </span>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Decision</p>
+              <h2 className="mt-1 text-2xl font-semibold text-foreground">Detox decision result</h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">{decision.reason}</p>
             </div>
-            <p className="mt-2 text-sm leading-6 text-muted-foreground">{decision.reason}</p>
           </div>
+        </div>
+        <div className="flex items-start justify-start md:justify-end">
           <span className={`rounded-full border px-3 py-1 text-sm font-semibold ${decisionTone[decision.decision]}`}>
             {decisionLabels[decision.decision]}
           </span>
         </div>
-        <dl className="grid gap-3 text-sm sm:grid-cols-3">
+      </div>
+      <dl className="mt-5 grid gap-4 border-y border-border py-4 text-sm sm:grid-cols-3">
           <Metadata label="Media item" value={decision.mediaItemTitle} />
           <Metadata label="Matched rule" value={decision.ruleName ?? "No active rule"} />
           <Metadata label="Estimated time saved" value={formatMinutes(decision.estimatedTimeSavedMinutes)} />
-        </dl>
-        <div className="flex flex-wrap gap-3">
+      </dl>
+        <div className="mt-5 flex flex-wrap gap-3">
           <Button disabled={updatingStatus === "dropped"} type="button" onClick={onMarkDropped}>
             {updatingStatus === "dropped" ? "Marking dropped…" : "Mark As Dropped"}
           </Button>
@@ -374,22 +423,24 @@ function DecisionResultCard({
           </Button>
           <Button type="button" variant="ghost" onClick={onContinue}>Continue Anyway</Button>
         </div>
-      </div>
-    </SectionCard>
+    </section>
   );
 }
 
 function DecisionHistory({ decisions }: { decisions: DetoxDecision[] }) {
   return (
-    <SectionCard title="Decision history">
-      <div className="flex items-center gap-2">
-        <Clock aria-hidden="true" className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold">Decision history</h2>
+    <section aria-label="Decision history" className="border-t border-border pt-6">
+      <div className="flex items-start gap-3">
+        <Clock aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Ledger</p>
+          <h2 className="mt-1 text-2xl font-semibold text-foreground">Decision history</h2>
+        </div>
       </div>
       {decisions.length > 0 ? (
-        <ol className="mt-4 grid gap-3">
+        <ol className="mt-5 divide-y divide-border border-y border-border">
           {decisions.map((decision) => (
-            <li className="rounded-2xl border border-border bg-background p-4" key={decision.id}>
+            <li className="py-4" key={decision.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <h3 className="font-semibold">{decision.mediaItemTitle}</h3>
@@ -406,9 +457,11 @@ function DecisionHistory({ decisions }: { decisions: DetoxDecision[] }) {
           ))}
         </ol>
       ) : (
-        <EmptyState title="No detox decisions yet" message="Evaluate a sample boundary to start a neutral decision history." />
+        <p className="mt-5 rounded-xl bg-muted/20 px-4 py-3 text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">No detox decisions yet.</span> Evaluate a sample boundary to start a neutral decision history.
+        </p>
       )}
-    </SectionCard>
+    </section>
   );
 }
 

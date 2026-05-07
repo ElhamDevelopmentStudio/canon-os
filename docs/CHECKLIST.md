@@ -2258,6 +2258,8 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M10-FE-014 Add Mark As Paused button.
 - [x] CP-M10-FE-015 Add Continue Anyway button.
 - [x] CP-M10-FE-016 Add decision history list.
+- [x] CP-M10-FE-017 Redesign Completion Detox with flat summary, evaluator, rules, result, and history sections.
+- [x] CP-M10-FE-018 Replace card-heavy Detox rule/history rows with compact ledger-style surfaces.
 
 ### Integration Tasks
 
@@ -2274,6 +2276,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M10-QA-002 Mark a media item as dropped from detox decision.
 - [x] CP-M10-QA-003 Confirm time saved metric increases.
 - [x] CP-M10-QA-004 Disable a detox rule and confirm behavior changes.
+- [x] CP-M10-QA-005 Revalidate Completion Detox after scan-first UI redesign.
 
 ---
 
