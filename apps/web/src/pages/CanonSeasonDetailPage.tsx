@@ -18,9 +18,6 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageActionBar } from "@/components/layout/PageActionBar";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
-import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
 import {
   addCanonSeasonItem,
@@ -164,20 +161,21 @@ export function CanonSeasonDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <Button asChild className="mb-4 gap-2" variant="ghost">
+    <div className="grid gap-6">
+      <section className="border-b border-border pb-5">
+        <Button asChild className="mb-4 gap-2 px-0" variant="ghost">
           <Link to={APP_ROUTES.seasons}><ArrowLeft aria-hidden="true" className="h-4 w-4" /> Back to Personal Canon</Link>
         </Button>
-        <PageActionBar className="justify-between">
-          <div>
-            <PageTitle>{season.data?.title ?? "Canon Season"}</PageTitle>
-            <PageSubtitle>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Season plan</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">{season.data?.title ?? "Canon Season"}</h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
               {season.data ? `${canonThemeLabels[season.data.theme]} · ${season.data.description || "No description yet."}` : "Loading canon season."}
-            </PageSubtitle>
+            </p>
           </div>
           {season.data ? <StatusPill label={canonSeasonStatusLabels[season.data.status]} tone={canonSeasonStatusTone[season.data.status]} /> : null}
-        </PageActionBar>
+        </div>
       </section>
 
       {isLoading ? <LoadingState title="Loading canon season" message="Fetching season items, media, and candidates." /> : null}
@@ -188,14 +186,18 @@ export function CanonSeasonDetailPage() {
       {!isLoading && !loadError && season.data ? (
         <>
           <SeasonProgress season={season.data} />
-          <SectionCard title="Season items">
-            <PageActionBar className="mb-4 justify-between">
-              <p className="text-sm text-muted-foreground">Order works into the path you want to experience and reflect on.</p>
+          <section aria-label="Season items" className="border-t border-border pt-6">
+            <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Program order</p>
+                <h2 className="mt-1 text-2xl font-semibold text-foreground">Season items</h2>
+                <p className="mt-2 text-sm text-muted-foreground">Order works into the path you want to experience and reflect on.</p>
+              </div>
               <Button className="gap-2" type="button" onClick={() => setIsAddModalOpen(true)}>
                 <Plus aria-hidden="true" className="h-4 w-4" />
                 Add Item
               </Button>
-            </PageActionBar>
+            </div>
             {items.length === 0 ? (
               <EmptyState
                 title="No season items yet"
@@ -204,7 +206,7 @@ export function CanonSeasonDetailPage() {
                 onAction={() => setIsAddModalOpen(true)}
               />
             ) : (
-              <div className="grid gap-4">
+              <div className="divide-y divide-border border-y border-border">
                 {items.map((item, index) => (
                   <SeasonItemCard
                     key={item.id}
@@ -220,11 +222,12 @@ export function CanonSeasonDetailPage() {
                 ))}
               </div>
             )}
-          </SectionCard>
-          <SectionCard title="Season reflection">
-            <div className="grid gap-4 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
-              <div className="rounded-2xl border border-border bg-muted/30 p-4">
-                <h2 className="font-semibold">Reflection prompts</h2>
+          </section>
+          <section aria-label="Season reflection" className="border-t border-border pt-6">
+            <div className="grid gap-6 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1fr)]">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Reflection prompts</p>
+                <h2 className="mt-1 text-2xl font-semibold text-foreground">Season reflection</h2>
                 <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-6 text-muted-foreground">
                   {season.data.reflectionPrompts.map((prompt) => <li key={prompt}>{prompt}</li>)}
                 </ul>
@@ -246,7 +249,7 @@ export function CanonSeasonDetailPage() {
             <div className="mt-4 flex justify-end">
               <Button type="button" onClick={() => void saveReflection()}>Save Reflection</Button>
             </div>
-          </SectionCard>
+          </section>
         </>
       ) : null}
 
@@ -264,7 +267,7 @@ export function CanonSeasonDetailPage() {
 
 function SeasonProgress({ season }: { season: NonNullable<ReturnType<typeof useCanonSeason>["data"]> }) {
   return (
-    <SectionCard title="Season progress">
+    <section aria-label="Season progress" className="grid gap-4 border-y border-border py-4">
       <div className="grid gap-4 md:grid-cols-3">
         <ProgressMetric label="Progress" value={`${season.progressPercent}%`} />
         <ProgressMetric label="Completed" value={`${season.completedItemCount}/${season.itemCount}`} />
@@ -273,15 +276,15 @@ function SeasonProgress({ season }: { season: NonNullable<ReturnType<typeof useC
       <div className="mt-4 h-2 rounded-full bg-muted" aria-label="Season progress">
         <div className="h-2 rounded-full bg-primary" style={{ width: `${season.progressPercent}%` }} />
       </div>
-    </SectionCard>
+    </section>
   );
 }
 
 function ProgressMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/30 p-3">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className="mt-1 text-lg font-semibold">{value}</p>
+    <div className="min-w-0">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 truncate text-2xl font-semibold">{value}</p>
     </div>
   );
 }
@@ -306,9 +309,9 @@ function SeasonItemCard({
   onRemove: () => void;
 }) {
   return (
-    <article className="rounded-2xl border border-border bg-card p-4" aria-label={`Season item ${item.titleSnapshot}`}>
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+    <article className="py-5" aria-label={`Season item ${item.titleSnapshot}`}>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">#{item.order}</span>
             <MediaTypeBadge label={mediaTypeLabels[item.mediaType]} type={item.mediaType} />
@@ -317,7 +320,7 @@ function SeasonItemCard({
           </div>
           <h3 className="mt-3 text-lg font-semibold">{item.titleSnapshot}</h3>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 xl:justify-end">
           <Button aria-label={`Move ${item.titleSnapshot} up`} disabled={!canMoveUp} size="sm" type="button" variant="ghost" onClick={onMoveUp}>
             <ArrowUp aria-hidden="true" className="h-4 w-4" />
           </Button>
@@ -333,24 +336,26 @@ function SeasonItemCard({
           </Button>
         </div>
       </div>
-      <label className="mt-4 grid max-w-sm gap-1.5 text-sm font-medium">
-        Canon status for {item.titleSnapshot}
-        <select
-          aria-label={`Canon status for ${item.titleSnapshot}`}
-          className={fieldClassName}
-          value={item.canonStatus}
-          onChange={(event) => onCanonStatusChange(event.target.value as CanonItemCanonStatus)}
-        >
-          {Object.entries(canonItemCanonStatusLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(14rem,0.45fr)_minmax(0,1fr)]">
+        <label className="grid content-start gap-1.5 text-sm font-medium">
+          Canon status for {item.titleSnapshot}
+          <select
+            aria-label={`Canon status for ${item.titleSnapshot}`}
+            className={fieldClassName}
+            value={item.canonStatus}
+            onChange={(event) => onCanonStatusChange(event.target.value as CanonItemCanonStatus)}
+          >
+            {Object.entries(canonItemCanonStatusLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="grid gap-3 md:grid-cols-2">
         <NoteBlock label="Reason included" text={item.reasonIncluded || "No reason captured yet."} />
         <NoteBlock label="What to pay attention to" text={item.whatToPayAttentionTo || "No attention note captured yet."} />
+        </div>
       </div>
     </article>
   );
@@ -358,9 +363,9 @@ function SeasonItemCard({
 
 function NoteBlock({ label, text }: { label: string; text: string }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/30 p-3">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className="mt-1 text-sm leading-6">{text}</p>
+    <div className="border-l border-border pl-3">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm leading-6 text-foreground">{text}</p>
     </div>
   );
 }

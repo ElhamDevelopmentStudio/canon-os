@@ -2349,6 +2349,8 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M11-FE-019 Add reorder controls.
 - [x] CP-M11-FE-020 Add mark item complete button.
 - [x] CP-M11-FE-021 Add season reflection section.
+- [x] CP-M11-FE-022 Redesign Personal Canon list as a compact season index.
+- [x] CP-M11-FE-023 Redesign Season Detail as a progress strip, ordered ledger, and reflection workspace.
 
 ### Integration Tasks
 
@@ -2366,6 +2368,7 @@ The complete product phase expands CanonOS far beyond a simple MVP. At the end o
 - [x] CP-M11-QA-003 Reorder season items.
 - [x] CP-M11-QA-004 Mark season item complete.
 - [x] CP-M11-QA-005 Confirm season progress updates.
+- [x] CP-M11-QA-006 Revalidate Personal Canon and Season Detail after scan-first redesign.
 
 ---
 

@@ -9,8 +9,6 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { DialogShell } from "@/components/feedback/DialogShell";
 import { LoadingState } from "@/components/feedback/LoadingState";
-import { PageActionBar } from "@/components/layout/PageActionBar";
-import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { Button } from "@/components/ui/button";
 import { createCanonSeason, useCanonSeasons } from "@/features/canon/canonApi";
 import {
@@ -50,20 +48,21 @@ export function PersonalCanonPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <section>
-        <PageActionBar className="justify-between">
-          <div>
-            <PageTitle>Personal Canon</PageTitle>
-            <PageSubtitle>
+    <div className="grid gap-6">
+      <section className="border-b border-border pb-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Season desk</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-foreground">Personal Canon</h1>
+            <p className="mt-3 text-base leading-7 text-muted-foreground">
               Build themed exploration seasons with ordered works, reasons, attention notes, and reflection prompts.
-            </PageSubtitle>
+            </p>
           </div>
           <Button className="gap-2" type="button" onClick={() => setIsModalOpen(true)}>
             <Plus aria-hidden="true" className="h-4 w-4" />
             Create Season
           </Button>
-        </PageActionBar>
+        </div>
       </section>
 
       {isLoading ? <LoadingState title="Loading Personal Canon" message="Fetching your seasons and progress." /> : null}
@@ -81,7 +80,7 @@ export function PersonalCanonPage() {
       ) : null}
 
       {!isLoading && !error && seasons.length > 0 ? (
-        <section className="grid gap-4 lg:grid-cols-2">
+        <section aria-label="Canon seasons" className="divide-y divide-border border-y border-border">
           {seasons.map((season) => <SeasonCard key={season.id} season={season} />)}
         </section>
       ) : null}
@@ -98,40 +97,41 @@ export function PersonalCanonPage() {
 
 function SeasonCard({ season }: { season: CanonSeason }) {
   return (
-    <article className="rounded-2xl border border-border bg-card p-5 shadow-sm">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0">
+    <article className="grid gap-5 py-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="min-w-0">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-sm font-medium text-primary">
             <BookMarked aria-hidden="true" className="h-4 w-4" />
             {canonThemeLabels[season.theme]}
           </div>
-          <h2 className="mt-2 text-xl font-semibold">
-            <Link className="hover:text-primary" to={`${APP_ROUTES.seasons}/${season.id}`}>
-              {season.title}
-            </Link>
-          </h2>
-          <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
-            {season.description || "No description yet. Define the question this season should answer."}
-          </p>
+          <StatusPill label={canonSeasonStatusLabels[season.status]} tone={canonSeasonStatusTone[season.status]} />
         </div>
-        <StatusPill label={canonSeasonStatusLabels[season.status]} tone={canonSeasonStatusTone[season.status]} />
+        <h2 className="mt-2 text-xl font-semibold">
+          <Link className="hover:text-primary" to={`${APP_ROUTES.seasons}/${season.id}`}>
+            {season.title}
+          </Link>
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+          {season.description || "No description yet. Define the question this season should answer."}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <Calendar aria-hidden="true" className="h-3.5 w-3.5" />
+            {season.startDate ? `Starts ${season.startDate}` : "No start date"}
+          </span>
+          <Button asChild size="sm" variant="secondary">
+            <Link to={`${APP_ROUTES.seasons}/${season.id}`}>Open Season</Link>
+          </Button>
+        </div>
       </div>
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <ProgressMetric label="Progress" value={`${season.progressPercent}%`} />
-        <ProgressMetric label="Items" value={`${season.completedItemCount}/${season.itemCount}`} />
-        <ProgressMetric label="Status" value={canonSeasonStatusLabels[season.status]} />
-      </div>
-      <div className="mt-4 h-2 rounded-full bg-muted" aria-label={`${season.title} progress`}>
-        <div className="h-2 rounded-full bg-primary" style={{ width: `${season.progressPercent}%` }} />
-      </div>
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-        <span className="inline-flex items-center gap-1">
-          <Calendar aria-hidden="true" className="h-3.5 w-3.5" />
-          {season.startDate ? `Starts ${season.startDate}` : "No start date"}
-        </span>
-        <Button asChild size="sm" variant="secondary">
-          <Link to={`${APP_ROUTES.seasons}/${season.id}`}>Open Season</Link>
-        </Button>
+      <div className="grid content-center gap-3">
+        <div className="grid grid-cols-2 gap-3">
+          <ProgressMetric label="Progress" value={`${season.progressPercent}%`} />
+          <ProgressMetric label="Items" value={`${season.completedItemCount}/${season.itemCount}`} />
+        </div>
+        <div className="h-2 rounded-full bg-muted" aria-label={`${season.title} progress`}>
+          <div className="h-2 rounded-full bg-primary" style={{ width: `${season.progressPercent}%` }} />
+        </div>
       </div>
     </article>
   );
@@ -139,9 +139,9 @@ function SeasonCard({ season }: { season: CanonSeason }) {
 
 function ProgressMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-muted/30 p-3">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className="mt-1 font-semibold">{value}</p>
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+      <p className="mt-1 text-lg font-semibold">{value}</p>
     </div>
   );
 }

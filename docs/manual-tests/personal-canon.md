@@ -5,17 +5,17 @@
 1. Log in and open **Personal Canon**.
    - Expected: The Personal Canon page loads with either existing seasons or an empty state.
 2. Click **Create Season**, enter a title, choose **Atmosphere over plot**, add a description, and save.
-   - Expected: The season card appears with **0%** progress and an **Open Season** action.
+   - Expected: The season appears as a compact row with **0%** progress and an **Open Season** action.
 3. Open the season and click **Add Item**.
    - Expected: The Add Season Item dialog appears.
 4. Add one custom item, one library media item, and one candidate item with reason and attention notes.
-   - Expected: Three ordered item cards appear with notes and status badges.
+   - Expected: Three ordered ledger rows appear with notes, status badges, and compact actions.
 5. Move the third item up.
    - Expected: The order updates and a success message appears.
 6. Mark one item complete.
    - Expected: The item shows **Completed** and the season progress increases.
 7. Change an item canon status to **Near-canon** or **Personal canon**.
-   - Expected: The item card shows the selected canon status.
+   - Expected: The item row shows the selected canon status.
 8. Add summary notes in **Season reflection** and click **Save Reflection**.
    - Expected: A success message appears and notes remain after refresh.
 
