@@ -110,3 +110,12 @@ temp/
 # --- Project docs/build artifacts (optional common patterns) ---
 *.sqlite3
 *.db
+.omx/
+.codex/*
+!.codex/agents/
+!.codex/agents/**
+!.codex/skills/
+!.codex/skills/**
+.codex/skills/.system/**
+!.codex/prompts/
+!.codex/prompts/**
