@@ -104,64 +104,62 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         />
       ) : null}
 
-      <section className="grid gap-5 xl:grid-cols-[minmax(32rem,1.35fr)_minmax(24rem,0.65fr)]">
-        <ChartPanel
-          action={<PanelMenu />}
+      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-[minmax(32rem,1.35fr)_minmax(24rem,0.65fr)]">
+        <WorksheetPanel
           ariaLabel="Consumption overview"
           eyebrow="Momentum"
           icon={<TrendingUp aria-hidden="true" className="h-5 w-5" />}
           title="Consumption timeline"
         >
           <TimelineColumnChart points={insights.consumptionTimeline.points} />
-          <div className="mt-5 border-t border-border pt-4">
-            <p className="text-sm font-medium text-foreground">Pattern to inspect next</p>
-            <p className="mt-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-muted-foreground">
+          <div className="mt-5 grid gap-2 border-t border-border pt-4 sm:grid-cols-[12rem_1fr]">
+            <p className="text-sm font-medium text-foreground">Inspect next</p>
+            <p className="text-sm leading-6 text-muted-foreground">
               Compare the month with the highest drop count against ratings, genericness, and regret scores.
             </p>
           </div>
-        </ChartPanel>
+        </WorksheetPanel>
 
-        <ChartPanel
-          action={<PanelMenu />}
+        <WorksheetPanel
           ariaLabel="Rating distribution"
           eyebrow="Quality"
           icon={<BarChart3 aria-hidden="true" className="h-5 w-5" />}
           title="Rating distribution"
         >
           <RatingDistributionPanel distribution={insights.ratingDistribution} />
-        </ChartPanel>
+        </WorksheetPanel>
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-[minmax(18rem,0.85fr)_minmax(20rem,1fr)_minmax(20rem,1fr)]">
-        <ChartPanel
+      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-[minmax(18rem,0.85fr)_minmax(20rem,1fr)_minmax(20rem,1fr)]">
+        <WorksheetPanel
           ariaLabel="Media mix"
           eyebrow="Mediums"
           icon={<Compass aria-hidden="true" className="h-5 w-5" />}
           title="Media mix"
         >
           <MediaMixPanel rows={insights.mediaTypeDistribution.results} totalCount={insights.mediaTypeDistribution.totalCount} />
-        </ChartPanel>
+        </WorksheetPanel>
 
-        <ChartPanel
+        <WorksheetPanel
           ariaLabel="Taste monitor"
           eyebrow="Score signals"
           icon={<Grid3X3 aria-hidden="true" className="h-5 w-5" />}
           title="Taste monitor"
         >
           <TasteMonitor dimensions={insights.dimensionTrends.dimensions} strongestDimension={strongestDimension} />
-        </ChartPanel>
+        </WorksheetPanel>
 
-        <ChartPanel
+        <WorksheetPanel
           ariaLabel="Narrative themes"
           eyebrow="Narrative DNA"
           icon={<Tags aria-hidden="true" className="h-5 w-5" />}
           title="Top themes"
         >
           <ThemeStack themes={insights.topThemes.results} />
-        </ChartPanel>
+        </WorksheetPanel>
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-2">
+      <section className="grid gap-6 border-b border-border pb-7 xl:grid-cols-2">
         <CorrelationPanel
           description={insights.genericnessSatisfaction.insight}
           emptyText="Score genericness and rate media to reveal outliers."
@@ -196,7 +194,7 @@ function InsightsContent({ insights }: { insights: AnalyticsInsights }) {
         />
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-2">
+      <section className="grid gap-6 xl:grid-cols-2">
         <RankedPanel
           ariaLabel="Top creators"
           emptyText="Add creators to media records to rank trusted and risky sources."
@@ -252,15 +250,13 @@ function InsightStat({ helper, icon, label, value }: { helper: string; icon: Rea
   );
 }
 
-function ChartPanel({
-  action,
+function WorksheetPanel({
   ariaLabel,
   children,
   eyebrow,
   icon,
   title,
 }: {
-  action?: ReactNode;
   ariaLabel: string;
   children: ReactNode;
   eyebrow: string;
@@ -268,11 +264,8 @@ function ChartPanel({
   title: string;
 }) {
   return (
-    <section aria-label={ariaLabel} className="rounded-[1.75rem] border border-border bg-card p-5 shadow-sm">
-      <div className="flex items-start justify-between gap-4">
-        <PanelHeading eyebrow={eyebrow} icon={icon} title={title} />
-        {action}
-      </div>
+    <section aria-label={ariaLabel} className="min-w-0 border-t border-border pt-5">
+      <PanelHeading eyebrow={eyebrow} icon={icon} title={title} />
       {children}
     </section>
   );
@@ -290,11 +283,24 @@ function PanelHeading({ eyebrow, icon, title }: { eyebrow: string; icon: ReactNo
   );
 }
 
-function PanelMenu() {
+function EvidenceEmptyState({ message, steps, title }: { message: string; steps: string[]; title: string }) {
   return (
-    <span aria-hidden="true" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border text-lg text-muted-foreground">
-      ...
-    </span>
+    <div className="mt-6 border-y border-border py-5">
+      <div className="grid gap-4 sm:grid-cols-[minmax(11rem,0.8fr)_1.2fr]">
+        <div>
+          <p className="text-sm font-semibold text-foreground">{title}</p>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">{message}</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {steps.map((step, index) => (
+            <div className="border-l border-border pl-3" key={step}>
+              <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-muted-foreground">Step {index + 1}</p>
+              <p className="mt-1 text-sm font-medium text-foreground">{step}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -302,12 +308,18 @@ function TimelineColumnChart({ points }: { points: AnalyticsConsumptionTimelineP
   const maxValue = maxOrOne(points.map((point) => point.totalCount));
 
   if (points.length === 0) {
-    return <p className="mt-6 border-y border-border py-8 text-sm text-muted-foreground">Finish or drop media to populate the timeline.</p>;
+    return (
+      <EvidenceEmptyState
+        message="Finish or drop media to populate the timeline."
+        steps={["Complete media", "Drop clear misses", "Add completed dates"]}
+        title="No activity trend yet"
+      />
+    );
   }
 
   return (
     <div className="mt-6" aria-label="Consumption timeline chart">
-      <div className="flex h-72 items-end gap-2 border-b border-l border-border px-3 pt-6">
+      <div className="flex h-64 items-end gap-2 border-b border-l border-border px-3 pt-6">
         {points.map((point) => {
           const height = Math.max(14, (point.totalCount / maxValue) * 100);
           const completedShare = point.totalCount === 0 ? 0 : (point.completedCount / point.totalCount) * 100;
@@ -359,7 +371,7 @@ function RatingDistributionPanel({ distribution }: { distribution: AnalyticsInsi
     <div className="mt-6">
       <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-5">
         <div>
-          <p className="text-6xl font-semibold tracking-tight text-foreground">{formatScore(distribution.averageRating)}</p>
+          <p className="text-5xl font-semibold tracking-tight text-foreground">{formatScore(distribution.averageRating)}</p>
           <p className="mt-2 text-sm text-muted-foreground">{distribution.ratedCount} rated media</p>
         </div>
         <span className="rounded-full border border-success/30 bg-success/10 px-3 py-1 text-sm font-semibold text-success">Rated</span>
@@ -388,12 +400,18 @@ function DistributionBar({ bucket, index, maxCount }: { bucket: AnalyticsRatingD
 
 function MediaMixPanel({ rows, totalCount }: { rows: AnalyticsMediaTypeDistributionRow[]; totalCount: number }) {
   if (rows.length === 0) {
-    return <p className="mt-6 border-y border-border py-8 text-sm text-muted-foreground">Add media to see medium balance.</p>;
+    return (
+      <EvidenceEmptyState
+        message="Add media to see medium balance."
+        steps={["Add movies", "Add books", "Finish items"]}
+        title="No medium mix yet"
+      />
+    );
   }
 
   return (
     <div className="mt-6 grid gap-4">
-      <div className="flex h-32 items-end gap-3">
+      <div className="flex h-36 items-end gap-3 border-b border-border pb-3">
         {rows.map((row, index) => (
           <div className="flex flex-1 flex-col items-center gap-2" key={row.mediaType}>
             <div
@@ -421,7 +439,13 @@ function MediaMixPanel({ rows, totalCount }: { rows: AnalyticsMediaTypeDistribut
 
 function TasteMonitor({ dimensions, strongestDimension }: { dimensions: AnalyticsDimensionTrend[]; strongestDimension: AnalyticsDimensionTrend | null }) {
   if (dimensions.length === 0) {
-    return <p className="mt-6 border-y border-border py-8 text-sm text-muted-foreground">Score media against taste dimensions to see trend lines.</p>;
+    return (
+      <EvidenceEmptyState
+        message="Score media against taste dimensions to see trend lines."
+        steps={["Rate titles", "Open scorecard", "Save dimensions"]}
+        title="No score signal grid yet"
+      />
+    );
   }
 
   const cells = Array.from({ length: 45 }, (_, index) => {
@@ -456,7 +480,13 @@ function TasteMonitor({ dimensions, strongestDimension }: { dimensions: Analytic
 
 function ThemeStack({ themes }: { themes: AnalyticsTopTheme[] }) {
   if (themes.length === 0) {
-    return <p className="mt-6 border-y border-border py-8 text-sm text-muted-foreground">Run Narrative DNA analysis to extract recurring story traits.</p>;
+    return (
+      <EvidenceEmptyState
+        message="Run Narrative DNA analysis to extract recurring story traits."
+        steps={["Analyze narrative DNA", "Save traits", "Compare themes"]}
+        title="No theme stack yet"
+      />
+    );
   }
 
   const maxCount = maxOrOne(themes.map((theme) => theme.count));
@@ -502,8 +532,8 @@ function CorrelationPanel({
   tone?: "normal" | "risk";
 }) {
   return (
-    <section aria-label={title} className="overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-sm">
-      <div className={`p-5 ${tone === "risk" ? "bg-risky/10" : "bg-primary/10"}`}>
+    <section aria-label={title} className="min-w-0 border-t border-border pt-5">
+      <div className={`border-l-2 pl-4 ${tone === "risk" ? "border-risky" : "border-primary"}`}>
         <PanelHeading
           eyebrow="Correlation"
           icon={tone === "risk" ? <TriangleAlert aria-hidden="true" className="h-5 w-5" /> : <Compass aria-hidden="true" className="h-5 w-5" />}
@@ -511,7 +541,7 @@ function CorrelationPanel({
         />
         <p className="mt-3 text-sm leading-6 text-muted-foreground">{description}</p>
       </div>
-      <div className="grid gap-5 p-5 md:grid-cols-[0.8fr_1.2fr]">
+      <div className="mt-5 grid gap-5 md:grid-cols-[0.8fr_1.2fr]">
         <div className="grid content-start gap-3">
           <MiniStat label={statA.label} value={statA.value} />
           <MiniStat label={statB.label} value={statB.value} />
@@ -543,7 +573,7 @@ function CorrelationList({
   rightLabel: string;
 }) {
   if (points.length === 0) {
-    return <p className="border-y border-border py-6 text-sm text-muted-foreground">{emptyText}</p>;
+    return <p className="border-y border-border py-5 text-sm leading-6 text-muted-foreground">{emptyText}</p>;
   }
 
   return (
@@ -575,10 +605,10 @@ function RankedPanel({
   title: string;
 }) {
   return (
-    <section aria-label={ariaLabel} className="rounded-[1.75rem] border border-border bg-card p-5 shadow-sm">
+    <section aria-label={ariaLabel} className="min-w-0 border-t border-border pt-5">
       <PanelHeading eyebrow="Ranked evidence" icon={icon} title={title} />
       {items.length === 0 ? (
-        <p className="mt-5 border-y border-border py-6 text-sm text-muted-foreground">{emptyText}</p>
+        <p className="mt-5 border-y border-border py-5 text-sm leading-6 text-muted-foreground">{emptyText}</p>
       ) : (
         <ol className="mt-5 divide-y divide-border border-y border-border">
           {items.slice(0, 8).map((item, index) => (

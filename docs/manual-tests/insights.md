@@ -16,9 +16,9 @@ Confirm the Insights page turns the user's real media, rating, taste score, crea
 2. Review the top signal strip.
    - Expected: Timeline months, rated media, dominant medium, and regret time show numbers from the user's data.
 3. Review Consumption timeline and Rating distribution.
-   - Expected: The timeline uses vertical visual columns, rating distribution uses horizontal bars, and both remain readable without nested panels.
+   - Expected: The timeline uses vertical visual columns, rating distribution uses horizontal bars, and both sit in flat worksheet sections rather than boxed cards.
 4. Review Media mix, Taste monitor, and Top themes.
-   - Expected: Medium balance, dimension signal density, and Narrative DNA themes appear as compact chart-like modules.
+   - Expected: Medium balance, dimension signal density, and Narrative DNA themes appear as compact chart-like modules with clear section hierarchy and no card-in-card framing.
 5. Review Genericness vs satisfaction and Regret vs time cost.
    - Expected: Average signals, outlier titles, regret minutes, and insight text appear without errors.
 6. Review Top creators and Dimension trends.
@@ -34,7 +34,7 @@ Confirm the Insights page turns the user's real media, rating, taste score, crea
 ## Edge Case
 
 1. Log in as a new user with no media.
-   - Expected: The Insights page shows a friendly empty state and each chart module explains what evidence is missing.
+   - Expected: The Insights page shows a friendly empty state and each chart module shows the next evidence steps needed to populate it.
 2. Open the page on a narrow mobile screen.
    - Expected: All sections stack cleanly, chart labels remain readable, and no key action or data is cut off.
 
