@@ -5,7 +5,7 @@
 1. Log in and open **Personal Canon**.
    - Expected: The Personal Canon page loads with either existing seasons or an empty state.
 2. Click **Create Season**, enter a title, choose **Atmosphere over plot**, add a description, and save.
-   - Expected: The season appears as a compact row with **0%** progress and an **Open Season** action.
+   - Expected: The season appears in the season board with overview signals, theme/status, progress, work count, and an **Open Season** action.
 3. Open the season and click **Add Item**.
    - Expected: The Add Season Item dialog appears.
 4. Add one custom item, one library media item, and one candidate item with reason and attention notes.

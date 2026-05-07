@@ -1,5 +1,6 @@
 import type { CanonSeason, CanonSeasonCreateRequest, CanonThemeKey } from "@canonos/contracts";
-import { BookMarked, Calendar, Plus } from "lucide-react";
+import { ArrowRight, BookMarked, Calendar, CheckCircle2, Layers3, Plus } from "lucide-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -33,6 +34,9 @@ export function PersonalCanonPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const activeSeasonCount = seasons.filter((season) => season.status === "active").length;
+  const completedItemCount = seasons.reduce((total, season) => total + season.completedItemCount, 0);
+  const totalItemCount = seasons.reduce((total, season) => total + season.itemCount, 0);
 
   async function handleCreateSeason(draft: CanonSeasonCreateRequest) {
     setActionError(null);
@@ -80,9 +84,17 @@ export function PersonalCanonPage() {
       ) : null}
 
       {!isLoading && !error && seasons.length > 0 ? (
-        <section aria-label="Canon seasons" className="divide-y divide-border border-y border-border">
-          {seasons.map((season) => <SeasonCard key={season.id} season={season} />)}
-        </section>
+        <>
+          <section aria-label="Season overview" className="grid gap-4 border-y border-border py-4 md:grid-cols-3">
+            <SeasonSignal label="Seasons" value={String(seasons.length)} helper="Curated programs on the board." />
+            <SeasonSignal label="Active" value={String(activeSeasonCount)} helper="Exploration paths currently live." />
+            <SeasonSignal label="Works" value={`${completedItemCount}/${totalItemCount}`} helper="Completed across every season." />
+          </section>
+
+          <section aria-label="Canon seasons" className="grid gap-4">
+            {seasons.map((season) => <SeasonCard key={season.id} season={season} />)}
+          </section>
+        </>
       ) : null}
 
       {isModalOpen ? (
@@ -96,53 +108,87 @@ export function PersonalCanonPage() {
 }
 
 function SeasonCard({ season }: { season: CanonSeason }) {
+  const progressPercent = Math.min(Math.max(season.progressPercent, 0), 100);
+
   return (
-    <article className="grid gap-5 py-5 lg:grid-cols-[minmax(0,1fr)_18rem]">
-      <div className="min-w-0">
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2 text-sm font-medium text-primary">
-            <BookMarked aria-hidden="true" className="h-4 w-4" />
-            {canonThemeLabels[season.theme]}
+    <article className="group relative overflow-hidden rounded-2xl border border-border bg-card/60 p-5 shadow-sm transition hover:border-primary/45 hover:bg-card/80">
+      <div className="absolute inset-y-5 left-0 w-1 rounded-r-full bg-primary" aria-hidden="true" />
+      <div className="grid gap-5 pl-2 xl:grid-cols-[minmax(0,1fr)_19rem]">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
+              <BookMarked aria-hidden="true" className="h-4 w-4" />
+              {canonThemeLabels[season.theme]}
+            </span>
+            <StatusPill label={canonSeasonStatusLabels[season.status]} tone={canonSeasonStatusTone[season.status]} />
           </div>
-          <StatusPill label={canonSeasonStatusLabels[season.status]} tone={canonSeasonStatusTone[season.status]} />
+          <div className="mt-3 min-w-0">
+            <h2 className="text-2xl font-semibold tracking-tight">
+              <Link className="hover:text-primary" to={`${APP_ROUTES.seasons}/${season.id}`}>
+                {season.title}
+              </Link>
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
+              {season.description || "No description yet. Define the question this season should answer."}
+            </p>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <SeasonMetaChip icon={<Calendar aria-hidden="true" className="h-3.5 w-3.5" />}>
+              {season.startDate ? `Starts ${season.startDate}` : "No start date"}
+            </SeasonMetaChip>
+            <SeasonMetaChip icon={<Layers3 aria-hidden="true" className="h-3.5 w-3.5" />}>
+              {season.itemCount === 1 ? "1 work" : `${season.itemCount} works`}
+            </SeasonMetaChip>
+            <SeasonMetaChip icon={<CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5" />}>
+              {season.completedItemCount} complete
+            </SeasonMetaChip>
+          </div>
         </div>
-        <h2 className="mt-2 text-xl font-semibold">
-          <Link className="hover:text-primary" to={`${APP_ROUTES.seasons}/${season.id}`}>
-            {season.title}
-          </Link>
-        </h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          {season.description || "No description yet. Define the question this season should answer."}
-        </p>
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <Calendar aria-hidden="true" className="h-3.5 w-3.5" />
-            {season.startDate ? `Starts ${season.startDate}` : "No start date"}
-          </span>
-          <Button asChild size="sm" variant="secondary">
-            <Link to={`${APP_ROUTES.seasons}/${season.id}`}>Open Season</Link>
+
+        <div className="grid content-between gap-4 border-t border-border pt-4 xl:border-l xl:border-t-0 xl:pl-5 xl:pt-0">
+          <div>
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Progress</p>
+                <p className="mt-1 text-4xl font-semibold tracking-tight">{progressPercent}%</p>
+              </div>
+              <p className="pb-1 text-sm text-muted-foreground">
+                {season.completedItemCount}/{season.itemCount || 0}
+              </p>
+            </div>
+            <div className="mt-4 h-2 rounded-full bg-muted" aria-label={`${season.title} progress`}>
+              <div className="h-2 rounded-full bg-primary" style={{ width: `${progressPercent}%` }} />
+            </div>
+          </div>
+
+          <Button asChild className="justify-between gap-3" size="sm" variant="secondary">
+            <Link to={`${APP_ROUTES.seasons}/${season.id}`}>
+              Open Season
+              <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-0.5" />
+            </Link>
           </Button>
-        </div>
-      </div>
-      <div className="grid content-center gap-3">
-        <div className="grid grid-cols-2 gap-3">
-          <ProgressMetric label="Progress" value={`${season.progressPercent}%`} />
-          <ProgressMetric label="Items" value={`${season.completedItemCount}/${season.itemCount}`} />
-        </div>
-        <div className="h-2 rounded-full bg-muted" aria-label={`${season.title} progress`}>
-          <div className="h-2 rounded-full bg-primary" style={{ width: `${season.progressPercent}%` }} />
         </div>
       </div>
     </article>
   );
 }
 
-function ProgressMetric({ label, value }: { label: string; value: string }) {
+function SeasonSignal({ label, value, helper }: { label: string; value: string; helper: string }) {
   return (
-    <div>
+    <div className="border-l border-border pl-4">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
-      <p className="mt-1 text-lg font-semibold">{value}</p>
+      <p className="mt-2 text-2xl font-semibold tracking-tight">{value}</p>
+      <p className="mt-1 text-sm text-muted-foreground">{helper}</p>
     </div>
+  );
+}
+
+function SeasonMetaChip({ children, icon }: { children: ReactNode; icon: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+      {icon}
+      {children}
+    </span>
   );
 }
 
