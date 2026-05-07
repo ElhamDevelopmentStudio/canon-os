@@ -158,7 +158,7 @@ export function CompletionDetoxPage() {
             />
           </section>
 
-          <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.75fr)]">
+          <section className="grid gap-10 xl:grid-cols-[minmax(34rem,1.12fr)_minmax(26rem,0.88fr)]">
             <DetoxEvaluateForm
               mediaItems={availableMedia}
               motivationScore={motivationScore}
@@ -249,8 +249,8 @@ function DetoxEvaluateForm({
       </div>
 
       {mediaItems.length > 0 ? (
-        <div className="mt-6 grid gap-6">
-          <div className="grid gap-5 lg:grid-cols-[minmax(14rem,1fr)_minmax(14rem,0.8fr)]">
+        <div className="mt-6 grid gap-5">
+          <div className="grid gap-3">
             <label className="grid gap-2 text-sm font-medium">
               Media item
               <select
@@ -265,18 +265,15 @@ function DetoxEvaluateForm({
             </label>
 
             {selectedMedia ? (
-              <div className="grid content-center gap-2 rounded-xl bg-muted/20 px-4 py-3 text-sm">
-                <p className="font-medium text-foreground">{selectedMedia.title}</p>
-                <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2 text-sm">
                 <MediaTypeBadge type={selectedMedia.mediaType} label={mediaTypeLabels[selectedMedia.mediaType]} />
                 <StatusPill label={statusLabels[selectedMedia.status]} tone={statusTone[selectedMedia.status]} />
                 <span className="text-muted-foreground">Progress unit: {progressUnitLabel(selectedMedia.mediaType)}</span>
-                </div>
               </div>
             ) : null}
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm font-medium">
               <span className="flex items-center justify-between gap-3">
                 Current progress
@@ -307,7 +304,7 @@ function DetoxEvaluateForm({
             </label>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 border-t border-border pt-5">
+          <div className="flex flex-wrap items-center gap-3 rounded-xl bg-muted/20 px-4 py-3">
             <Button disabled={isEvaluating || !selectedMediaId} type="button" onClick={() => void onEvaluate()}>
               {isEvaluating ? "Evaluating…" : "Evaluate Drop/Pause"}
             </Button>
@@ -345,28 +342,31 @@ function ActiveRulesSection({
           <p className="mt-2 text-sm leading-6 text-muted-foreground">Enabled sample limits used by the evaluator.</p>
         </div>
       </div>
-      <div className="mt-6 divide-y divide-border border-y border-border">
+      <div className="mt-5 divide-y divide-border border-y border-border">
         {rules.map((rule) => (
           <article className="py-4" key={rule.id}>
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div>
+            <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+              <div className="min-w-0">
                 <h3 className="font-semibold">{rule.name}</h3>
                 <p className="mt-1 text-sm leading-6 text-muted-foreground">{rule.description}</p>
+                <dl className="mt-3 flex flex-wrap gap-2 text-xs">
+                  <MetadataChip label="Medium" value={rule.mediaType ? mediaTypeLabels[rule.mediaType] : "Any"} />
+                  <MetadataChip label="Sample" value={`${rule.sampleLimit} ${rule.mediaType ? progressUnitLabel(rule.mediaType) : "units"}`} />
+                </dl>
               </div>
               <Button
+                aria-label={updatingRuleId === rule.id ? `Saving ${rule.name}` : rule.isEnabled ? `Disable ${rule.name}` : `Enable ${rule.name}`}
                 aria-pressed={rule.isEnabled}
+                className="justify-self-start sm:justify-self-end"
                 disabled={updatingRuleId === rule.id}
+                size="sm"
                 type="button"
-                variant={rule.isEnabled ? "default" : "secondary"}
+                variant={rule.isEnabled ? "secondary" : "ghost"}
                 onClick={() => onToggle(rule)}
               >
-                {updatingRuleId === rule.id ? "Saving…" : rule.isEnabled ? `Disable ${rule.name}` : `Enable ${rule.name}`}
+                {updatingRuleId === rule.id ? "Saving…" : rule.isEnabled ? "Disable" : "Enable"}
               </Button>
             </div>
-            <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
-              <Metadata label="Medium" value={rule.mediaType ? mediaTypeLabels[rule.mediaType] : "Any"} />
-              <Metadata label="Sample limit" value={`${rule.sampleLimit} ${rule.mediaType ? progressUnitLabel(rule.mediaType) : "units"}`} />
-            </dl>
           </article>
         ))}
       </div>
@@ -410,19 +410,19 @@ function DecisionResultCard({
         </div>
       </div>
       <dl className="mt-5 grid gap-4 border-y border-border py-4 text-sm sm:grid-cols-3">
-          <Metadata label="Media item" value={decision.mediaItemTitle} />
-          <Metadata label="Matched rule" value={decision.ruleName ?? "No active rule"} />
-          <Metadata label="Estimated time saved" value={formatMinutes(decision.estimatedTimeSavedMinutes)} />
+        <Metadata label="Media item" value={decision.mediaItemTitle} />
+        <Metadata label="Matched rule" value={decision.ruleName ?? "No active rule"} />
+        <Metadata label="Estimated time saved" value={formatMinutes(decision.estimatedTimeSavedMinutes)} />
       </dl>
-        <div className="mt-5 flex flex-wrap gap-3">
-          <Button disabled={updatingStatus === "dropped"} type="button" onClick={onMarkDropped}>
-            {updatingStatus === "dropped" ? "Marking dropped…" : "Mark As Dropped"}
-          </Button>
-          <Button disabled={updatingStatus === "paused"} type="button" variant="secondary" onClick={onMarkPaused}>
-            {updatingStatus === "paused" ? "Marking paused…" : "Mark As Paused"}
-          </Button>
-          <Button type="button" variant="ghost" onClick={onContinue}>Continue Anyway</Button>
-        </div>
+      <div className="mt-5 flex flex-wrap gap-3">
+        <Button disabled={updatingStatus === "dropped"} type="button" onClick={onMarkDropped}>
+          {updatingStatus === "dropped" ? "Marking dropped…" : "Mark As Dropped"}
+        </Button>
+        <Button disabled={updatingStatus === "paused"} type="button" variant="secondary" onClick={onMarkPaused}>
+          {updatingStatus === "paused" ? "Marking paused…" : "Mark As Paused"}
+        </Button>
+        <Button type="button" variant="ghost" onClick={onContinue}>Continue Anyway</Button>
+      </div>
     </section>
   );
 }
@@ -480,6 +480,15 @@ function Metadata({ label, value }: { label: string; value: string }) {
     <div>
       <dt className="font-medium text-muted-foreground">{label}</dt>
       <dd className="mt-1 font-medium">{value}</dd>
+    </div>
+  );
+}
+
+function MetadataChip({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-full border border-border px-2.5 py-1">
+      <dt className="sr-only">{label}</dt>
+      <dd className="font-medium text-muted-foreground">{value}</dd>
     </div>
   );
 }
