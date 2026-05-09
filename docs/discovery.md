@@ -1,6 +1,6 @@
 # Media Archaeologist
 
-Media Archaeologist is CanonOS's deep-cut discovery surface. It is intentionally deterministic for the current product phase: no external provider can silently change results, and every recommendation carries visible expansion and risk reasons.
+Media Archaeologist is CanonOS's deep-cut discovery surface. It preserves explainable scoring and hard filters while allowing AI-assisted discovery when MiniMax is configured.
 
 ## Product behavior
 
@@ -22,9 +22,16 @@ Generated trails prioritize:
 4. creator-adjacent or theme-adjacent matches;
 5. high obscurity/deep-cut score without hiding confidence or fit risk.
 
-## Scoring model
+## Generation model
 
-The backend uses a curated first-pass catalog and deterministic scoring. Each result includes:
+The backend has two paths:
+
+1. AI-assisted chat discovery uses MiniMax when `MINIMAX_API_KEY` is configured. It adds live web-search context when `CANONOS_WEB_SEARCH_ENABLED=true`, then validates every result against hard filters before returning it.
+2. Structured form generation and AI fallback use the curated first-pass catalog with deterministic scoring.
+
+Era and medium selections are hard constraints. For example, `modern_exception` only returns results from 2017 or later; the backend must not fill gaps with older catalog items.
+
+Each result includes:
 
 - `discoveryScore`: overall ranking score;
 - `obscurityScore`: how far it sits from obvious recommendation loops;
@@ -34,7 +41,7 @@ The backend uses a curated first-pass catalog and deterministic scoring. Each re
 - `riskRationale`: why it may fail;
 - `suggestedAction`: a concrete next step.
 
-Future provider-backed discovery may add candidates, but must preserve the same explainability fields and owner-scoped persistence.
+Future provider-backed discovery may add more candidate sources, but must preserve the same explainability fields, hard-filter validation, and owner-scoped persistence.
 
 ## Data model
 

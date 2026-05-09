@@ -19,6 +19,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { Button } from "@/components/ui/button";
+import { ModuleChatPanel } from "@/features/chat/ModuleChatPanel";
 import {
   deleteDiscoveryTrail,
   generateDiscoveryTrail,
@@ -162,6 +163,16 @@ export function MediaArchaeologistPage() {
         <DiscoverySignalStrip response={generated} savedCount={data?.count ?? 0} />
       </section>
 
+      <ModuleChatPanel
+        module="discovery"
+        onResult={(result) => {
+          if (isDiscoveryGenerateResponse(result)) {
+            setGenerated(result);
+            setActionMessage("Discovery trail generated from chat.");
+          }
+        }}
+      />
+
       <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(28rem,0.85fr)_minmax(34rem,1.15fr)]">
         <DiscoveryRequestPanel
           draft={draft}
@@ -205,6 +216,10 @@ export function MediaArchaeologistPage() {
       ) : null}
     </div>
   );
+}
+
+function isDiscoveryGenerateResponse(result: Record<string, unknown>): result is DiscoveryGenerateResponse {
+  return Array.isArray(result.results) && typeof result.draft === "object" && result.draft !== null;
 }
 
 function DiscoverySignalStrip({

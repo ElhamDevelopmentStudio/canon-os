@@ -97,6 +97,27 @@ def test_generate_discovery_trail_respects_media_type_filter() -> None:
     assert payload["search"]["mediaType"] == "novel"
 
 
+def test_generate_discovery_trail_respects_modern_exception_era_as_hard_filter() -> None:
+    client, _ = authenticated_client()
+
+    response = client.post(
+        reverse("discovery-generate"),
+        {
+            "mediaType": "movie",
+            "theme": "mindfuck movie",
+            "era": "modern_exception",
+        },
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    payload = response.json()
+    assert payload["results"]
+    assert {result["mediaType"] for result in payload["results"]} == {"movie"}
+    assert all(result["releaseYear"] >= 2017 for result in payload["results"])
+    assert payload["search"]["era"] == "modern_exception"
+
+
 def test_save_list_and_retrieve_discovery_trail_are_owner_scoped() -> None:
     client, user = authenticated_client()
     generated = generate_discovery_trail(user, search=DiscoverySearch(theme="memory"))

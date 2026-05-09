@@ -36,6 +36,7 @@ import { LoadingState } from "@/components/feedback/LoadingState";
 import { DialogShell } from "@/components/feedback/DialogShell";
 import { CommandSearchInput } from "@/components/forms/CommandSearchInput";
 import { Button } from "@/components/ui/button";
+import { ModuleChatPanel } from "@/features/chat/ModuleChatPanel";
 import {
   addCandidateToLibrary,
   createCandidate,
@@ -303,6 +304,19 @@ export function CandidateEvaluatorPage() {
         {userSettings ? <GuardrailPanel settings={userSettings.recommendation} /> : null}
       </section>
 
+      <ModuleChatPanel
+        module="candidate"
+        onResult={(result) => {
+          if (isCandidateChatResult(result)) {
+            setSelectedCandidate(result.candidate);
+            setEvaluation(result.evaluation);
+            setDraft(candidateToDraft(result.candidate));
+            setActionMessage("Candidate evaluated from chat.");
+            void mutate();
+          }
+        }}
+      />
+
       <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(26rem,0.85fr)_minmax(34rem,1.15fr)]">
         <CandidateInputPanel
           draft={draft}
@@ -352,6 +366,12 @@ export function CandidateEvaluatorPage() {
       ) : null}
     </div>
   );
+}
+
+function isCandidateChatResult(
+  result: Record<string, unknown>,
+): result is { candidate: Candidate; evaluation: CandidateEvaluation } {
+  return typeof result.candidate === "object" && result.candidate !== null && typeof result.evaluation === "object" && result.evaluation !== null;
 }
 
 function GuardrailPanel({

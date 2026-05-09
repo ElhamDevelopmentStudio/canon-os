@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { Button } from "@/components/ui/button";
+import { ModuleChatPanel } from "@/features/chat/ModuleChatPanel";
 import { evaluateDetox, updateDetoxRule, useDetoxDecisions, useDetoxRules, useDetoxTimeSaved } from "@/features/detox/detoxApi";
 import { updateMediaItem, useMediaItems } from "@/features/media/mediaApi";
 import { mediaTypeLabels, statusLabels } from "@/features/media/mediaLabels";
@@ -140,6 +141,17 @@ export function CompletionDetoxPage() {
 
       {!isLoading && !loadError ? (
         <>
+          <ModuleChatPanel
+            module="detox"
+            onResult={(result) => {
+              if (isDetoxEvaluateResponse(result)) {
+                setEvaluation(result);
+                setActionMessage("Completion Detox evaluated from chat.");
+                void Promise.all([decisions.mutate(), timeSaved.mutate()]);
+              }
+            }}
+          />
+
           <section aria-label="Detox summary" className="grid gap-4 border-y border-border py-4 md:grid-cols-3">
             <DetoxStat
               helper="Drop, pause, delay, and archive estimates."
@@ -200,6 +212,10 @@ export function CompletionDetoxPage() {
   async function refreshAll() {
     await Promise.all([rules.mutate(), decisions.mutate(), timeSaved.mutate(), mediaItems.mutate()]);
   }
+}
+
+function isDetoxEvaluateResponse(result: Record<string, unknown>): result is DetoxEvaluateResponse {
+  return typeof result.decision === "object" && result.decision !== null && typeof result.mediaItem === "object" && result.mediaItem !== null;
 }
 
 function DetoxStat({ helper, label, value }: { helper: string; label: string; value: string }) {

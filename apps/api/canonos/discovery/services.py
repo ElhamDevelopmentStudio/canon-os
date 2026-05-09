@@ -222,6 +222,96 @@ CATALOG: tuple[DiscoverySeed, ...] = (
         base_obscurity=76,
     ),
     DiscoverySeed(
+        title="The Wolf House",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2018,
+        country_language="Chile / Spanish, German",
+        creator="Cristóbal León and Joaquín Cociña",
+        premise=(
+            "A stop-motion nightmare turns an isolated colony, fairy-tale refuge, and "
+            "political dread into a shifting house of memory."
+        ),
+        themes=("memory", "identity", "cult", "fairy tale", "psychological"),
+        narrative_patterns=("unstable reality", "animated nightmare", "subjective captivity"),
+        estimated_time_minutes=75,
+        base_obscurity=86,
+    ),
+    DiscoverySeed(
+        title="Possessor",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2020,
+        country_language="Canada / English",
+        creator="Brandon Cronenberg",
+        premise=(
+            "An assassin hijacks other people's bodies until the boundary between host, "
+            "handler, and self begins to collapse."
+        ),
+        themes=("identity", "body", "violence", "technology", "alienation"),
+        narrative_patterns=("identity fracture", "body invasion", "corporate nightmare"),
+        estimated_time_minutes=103,
+        base_obscurity=70,
+    ),
+    DiscoverySeed(
+        title="Beyond the Infinite Two Minutes",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2020,
+        country_language="Japan / Japanese",
+        creator="Kanta Yamaguchi",
+        premise=(
+            "A cafe monitor looks two minutes into the future, turning a tiny time loop "
+            "into a precise comic puzzle."
+        ),
+        themes=("time", "loop", "choice", "absurdity", "constraint"),
+        narrative_patterns=("time-loop puzzle", "single-location escalation", "formal constraint"),
+        estimated_time_minutes=70,
+        base_obscurity=75,
+    ),
+    DiscoverySeed(
+        title="We're All Going to the World's Fair",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2021,
+        country_language="United States / English",
+        creator="Jane Schoenbrun",
+        premise=(
+            "An isolated teenager enters an online horror challenge where performance, "
+            "identity, and dissociation blur."
+        ),
+        themes=("identity", "internet", "dissociation", "loneliness", "performance"),
+        narrative_patterns=("unreliable identity", "screenlife drift", "ambiguous transformation"),
+        estimated_time_minutes=86,
+        base_obscurity=73,
+    ),
+    DiscoverySeed(
+        title="Skinamarink",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2022,
+        country_language="Canada / English",
+        creator="Kyle Edward Ball",
+        premise=(
+            "Two children wake to a house without doors or parents, where fear becomes "
+            "architecture and time loses shape."
+        ),
+        themes=("childhood", "fear", "home", "dream", "absence"),
+        narrative_patterns=("liminal horror", "fragmented perception", "ambient nightmare"),
+        estimated_time_minutes=100,
+        base_obscurity=78,
+    ),
+    DiscoverySeed(
+        title="Mars Express",
+        media_type=MediaItem.MediaType.MOVIE,
+        release_year=2023,
+        country_language="France / French",
+        creator="Jérémie Périn",
+        premise=(
+            "A detective story on Mars uses android autonomy, memory, and labor politics "
+            "as a sleek philosophical machine."
+        ),
+        themes=("identity", "memory", "technology", "autonomy", "conspiracy"),
+        narrative_patterns=("future noir", "synthetic identity", "investigation spiral"),
+        estimated_time_minutes=89,
+        base_obscurity=72,
+    ),
+    DiscoverySeed(
         title="Texhnolyze",
         media_type=MediaItem.MediaType.ANIME,
         release_year=2003,
@@ -414,15 +504,16 @@ def generate_discovery_trail(user: User, search: DiscoverySearch) -> dict[str, A
     pool = [seed for seed in CATALOG if seed.title.casefold() not in known_titles]
     if search.media_type:
         typed_pool = [seed for seed in pool if seed.media_type == search.media_type]
-        if typed_pool:
-            pool = typed_pool
+        pool = typed_pool
+    if search.era:
+        pool = [seed for seed in pool if _era_for_year(seed.release_year) == search.era]
 
     scored = sorted(
         (_score_seed(seed, search, analysis, source_item) for seed in pool),
         key=lambda result: (-result["discoveryScore"], -result["obscurityScore"], result["title"]),
     )
     results = scored[:5]
-    if not results:
+    if not results and not search.media_type and not search.era:
         results = [
             _seed_to_result(seed, 50, 50, search, analysis, source_item) for seed in CATALOG[:3]
         ]

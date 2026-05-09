@@ -19,6 +19,7 @@ import { PageActionBar } from "@/components/layout/PageActionBar";
 import { PageSubtitle, PageTitle } from "@/components/layout/PageText";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/ui/button";
+import { ModuleChatPanel } from "@/features/chat/ModuleChatPanel";
 import {
   createAftertasteEntry,
   deleteAftertasteEntry,
@@ -134,6 +135,16 @@ export function AftertasteLogPage() {
           </Button>
         </PageActionBar>
       </SectionCard>
+
+      <ModuleChatPanel
+        module="aftertaste"
+        onResult={(result) => {
+          if (typeof result.aftertaste === "object" && result.aftertaste !== null) {
+            setActionMessage("Aftertaste reflection saved from chat.");
+            void mutate();
+          }
+        }}
+      />
 
       {isLoading ? <ListSkeleton label="Loading aftertaste log" rows={6} /> : null}
       {error ? <ErrorState title="Aftertaste log unavailable" message={error.message} onRetry={() => void mutate()} /> : null}

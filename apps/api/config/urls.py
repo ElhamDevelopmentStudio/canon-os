@@ -36,6 +36,7 @@ def build_api_urlpatterns(root_view, root_name: str):  # noqa: ANN001, ANN201
         path("", include("canonos.aftertaste.urls")),
         path("", include("canonos.candidates.urls")),
         path("", include("canonos.canon.urls")),
+        path("", include("canonos.chat.urls")),
         path("", include("canonos.council.urls")),
         path("", include("canonos.dashboard.urls")),
         path("", include("canonos.detox.urls")),

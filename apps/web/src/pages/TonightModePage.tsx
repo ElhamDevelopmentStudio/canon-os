@@ -21,6 +21,7 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { LoadingState } from "@/components/feedback/LoadingState";
 import { Button } from "@/components/ui/button";
+import { ModuleChatPanel } from "@/features/chat/ModuleChatPanel";
 import { updateMediaItem } from "@/features/media/mediaApi";
 import { mediaTypeLabels } from "@/features/media/mediaLabels";
 import { useUserSettings } from "@/features/settings/settingsApi";
@@ -199,13 +200,24 @@ export function TonightModePage() {
       </section>
 
       <div className="grid min-h-[34rem] gap-6 xl:grid-cols-[minmax(25rem,0.75fr)_minmax(36rem,1.25fr)]">
-        <TonightCheckInPanel
-          draft={draft}
-          isGenerating={isGenerating}
-          onGenerate={() => void generatePlan()}
-          onToggleMediaType={toggleMediaType}
-          onUpdate={updateDraft}
-        />
+        <div className="grid content-start gap-5 border-r border-border pr-6">
+          <ModuleChatPanel
+            module="tonight"
+            onResult={(result) => {
+              if (isTonightModeResponse(result)) {
+                setPlan(result);
+                setActionMessage("Tonight Mode plan generated from chat.");
+              }
+            }}
+          />
+          <TonightCheckInPanel
+            draft={draft}
+            isGenerating={isGenerating}
+            onGenerate={() => void generatePlan()}
+            onToggleMediaType={toggleMediaType}
+            onUpdate={updateDraft}
+          />
+        </div>
 
         <div className="flex flex-col gap-5">
           {isGenerating ? (
@@ -294,7 +306,7 @@ function TonightCheckInPanel({
   onUpdate: <K extends keyof TonightDraft>(field: K, value: TonightDraft[K]) => void;
 }) {
   return (
-    <section aria-label="Tonight check-in" className="grid content-start gap-5 border-r border-border pr-6">
+    <section aria-label="Tonight check-in" className="grid content-start gap-5">
       <div>
         <h2 className="flex items-center gap-2 text-xl font-semibold">
           <SlidersHorizontal aria-hidden="true" className="h-5 w-5 text-primary" />
@@ -527,3 +539,7 @@ function SuccessMessage({ message }: { message: string }) {
 const fieldClassName = cn(
   "h-10 rounded-xl border border-border bg-background px-3 text-sm outline-none transition focus:ring-2 focus:ring-primary",
 );
+
+function isTonightModeResponse(result: Record<string, unknown>): result is TonightModeResponse {
+  return Array.isArray(result.recommendations) && typeof result.session === "object" && result.session !== null;
+}

@@ -202,6 +202,10 @@ Critic Council lives at `/critic-council`. API calls live in `apps/web/src/featu
 
 Queue API calls live in `apps/web/src/features/queue/queueApi.ts`. The Queue page supports search, filters, add/edit modal, remove confirmation, move up/down reorder, Recalculate Queue, Queue v2 metric displays, insight/fatigue cards, low-priority archive visibility, restore, loading, empty, error, and success states. Tonight Mode uses queue v2 fields plus settings defaults to generate deterministic recommendations and supports starting, queueing, and deferring recommendations while excluding archived queue items.
 
+### Module Chat UI
+
+Module chat lives in `apps/web/src/features/chat`. `ModuleChatPanel` is shared by Tonight Mode, Candidate Evaluator, Media Archaeologist, Completion Detox, and Aftertaste Log. The panel uses persisted backend chat sessions, asks for missing context one question at a time, and then renders results through each module's existing backend service output. The frontend must not compute recommendation truth from chat text; chat-generated results should hydrate the normal module state when practical.
+
 ### Aftertaste And Taste Profile UI
 
 Aftertaste API calls live in `apps/web/src/features/aftertaste-log/aftertasteApi.ts`. Taste Profile reads aggregate backend signals and should never recompute recommendation truth on the client.

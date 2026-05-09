@@ -47,6 +47,7 @@ export const API_ROUTES = {
   tasteEvolution: "/taste-evolution/",
   tasteEvolutionGenerate: "/taste-evolution/generate/",
   candidates: "/candidates/",
+  chatSessions: "/chat/sessions/",
   canonSeasons: "/seasons/",
   criticPersonas: "/critic-personas/",
   councilSessions: "/council-sessions/",

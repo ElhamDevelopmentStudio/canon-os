@@ -22,6 +22,18 @@ export type {
   EvaluationDecision,
 } from "./candidates";
 export { CANDIDATE_STATUSES, EVALUATION_DECISIONS } from "./candidates";
+export type {
+  ChatMessage,
+  ChatMessageCreateRequest,
+  ChatMessageMetadata,
+  ChatMessageRole,
+  ChatModule,
+  ChatSession,
+  ChatSessionCreateRequest,
+  ChatSessionDetail,
+  ChatTurnResponse,
+} from "./chat";
+export { CHAT_MESSAGE_ROLES, CHAT_MODULES } from "./chat";
 
 export type {
   AdaptationCompleteness,

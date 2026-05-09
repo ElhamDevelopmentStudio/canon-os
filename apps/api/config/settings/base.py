@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "canonos.aftertaste",
     "canonos.candidates",
     "canonos.canon",
+    "canonos.chat",
     "canonos.common.apps.CommonConfig",
     "canonos.council",
     "canonos.dashboard",
