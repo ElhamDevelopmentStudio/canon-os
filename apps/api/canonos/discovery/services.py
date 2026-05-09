@@ -34,6 +34,8 @@ class DiscoverySearch:
     theme: str = ""
     mood: str = ""
     era: str = ""
+    release_year_min: int | None = None
+    release_year_max: int | None = None
     country_language: str = ""
     media_type: str = ""
     creator: str = ""
@@ -441,6 +443,8 @@ def build_search(payload: dict[str, Any]) -> DiscoverySearch:
         theme=(payload.get("theme") or "").strip(),
         mood=(payload.get("mood") or "").strip(),
         era=payload.get("era") or "",
+        release_year_min=_optional_int(payload.get("release_year_min")),
+        release_year_max=_optional_int(payload.get("release_year_max")),
         country_language=(payload.get("country_language") or "").strip(),
         media_type=payload.get("media_type") or "",
         creator=(payload.get("creator") or "").strip(),
@@ -507,13 +511,31 @@ def generate_discovery_trail(user: User, search: DiscoverySearch) -> dict[str, A
         pool = typed_pool
     if search.era:
         pool = [seed for seed in pool if _era_for_year(seed.release_year) == search.era]
+    if search.release_year_min is not None:
+        pool = [
+            seed
+            for seed in pool
+            if seed.release_year is not None and seed.release_year >= search.release_year_min
+        ]
+    if search.release_year_max is not None:
+        pool = [
+            seed
+            for seed in pool
+            if seed.release_year is not None and seed.release_year <= search.release_year_max
+        ]
 
     scored = sorted(
         (_score_seed(seed, search, analysis, source_item) for seed in pool),
         key=lambda result: (-result["discoveryScore"], -result["obscurityScore"], result["title"]),
     )
     results = scored[:5]
-    if not results and not search.media_type and not search.era:
+    if (
+        not results
+        and not search.media_type
+        and not search.era
+        and search.release_year_min is None
+        and search.release_year_max is None
+    ):
         results = [
             _seed_to_result(seed, 50, 50, search, analysis, source_item) for seed in CATALOG[:3]
         ]
@@ -608,6 +630,12 @@ def _score_seed(
     if search.era and _era_for_year(seed.release_year) == search.era:
         score += 14
         confidence += 4
+    if search.release_year_min is not None and seed.release_year:
+        score += 8 if seed.release_year >= search.release_year_min else -20
+        confidence += 4 if seed.release_year >= search.release_year_min else -12
+    if search.release_year_max is not None and seed.release_year:
+        score += 8 if seed.release_year <= search.release_year_max else -20
+        confidence += 4 if seed.release_year <= search.release_year_max else -12
     if search.media_type and seed.media_type == search.media_type:
         score += 10
         confidence += 5
@@ -815,6 +843,10 @@ def _trail_description(
         pieces.append(f"filtered toward {search.media_type.replace('_', ' ')}")
     if search.era:
         pieces.append(f"aimed at {_era_label(search.era)}")
+    if search.release_year_min is not None:
+        pieces.append(f"released from {search.release_year_min} onward")
+    if search.release_year_max is not None:
+        pieces.append(f"released through {search.release_year_max}")
     if analysis.underexplored_media_types:
         pieces.append(
             "using underexplored media signals: "
@@ -832,6 +864,8 @@ def _search_to_payload(search: DiscoverySearch) -> dict[str, Any]:
         "theme": search.theme,
         "mood": search.mood,
         "era": search.era,
+        "releaseYearMin": search.release_year_min,
+        "releaseYearMax": search.release_year_max,
         "countryLanguage": search.country_language,
         "mediaType": search.media_type,
         "creator": search.creator,
@@ -902,3 +936,10 @@ def _suggested_action(seed: DiscoverySeed, score: int) -> str:
     if (seed.estimated_time_minutes or 0) > 500:
         return "Queue only the first episode or chapter-equivalent as a protected sample."
     return "Save the trail, then sample when you want a non-obvious expansion rather than comfort."
+
+
+def _optional_int(value: object) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from ast import literal_eval
 from dataclasses import dataclass
 from typing import Any
 from urllib import error, request
@@ -50,15 +51,14 @@ class MiniMaxClient:
             temperature=temperature,
         )
         content = response.content.strip()
-        if content.startswith("```"):
-            content = content.strip("`")
-            if content.startswith("json"):
-                content = content[4:].strip()
-        start = content.find("{")
-        end = content.rfind("}")
-        if start != -1 and end != -1 and end > start:
-            content = content[start : end + 1]
-        return json.loads(content)
+        content = _extract_json_object(content)
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError:
+            parsed = literal_eval(content)
+            if isinstance(parsed, dict):
+                return parsed
+            raise
 
     def chat(
         self,
@@ -99,3 +99,21 @@ class MiniMaxClient:
         message = data.get("choices", [{}])[0].get("message", {})
         content = str(message.get("content") or "")
         return MiniMaxResponse(content=content, usage=data.get("usage", {}), raw=data)
+
+
+def _extract_json_object(content: str) -> str:
+    clean = content.strip()
+    if clean.startswith("```"):
+        lines = clean.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        clean = "\n".join(lines).strip()
+        if clean.casefold().startswith("json"):
+            clean = clean[4:].strip()
+    start = clean.find("{")
+    end = clean.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        return clean[start : end + 1]
+    return clean

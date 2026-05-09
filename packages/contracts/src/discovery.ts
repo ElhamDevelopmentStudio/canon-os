@@ -30,6 +30,8 @@ export type DiscoverySearchRequest = {
   theme?: string;
   mood?: string;
   era?: DiscoveryEra;
+  releaseYearMin?: number | null;
+  releaseYearMax?: number | null;
   countryLanguage?: string;
   mediaType?: MediaType | "";
   creator?: string;

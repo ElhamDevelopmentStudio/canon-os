@@ -101,7 +101,13 @@ def _orchestrate(session: ChatSession, latest_user_content: str) -> ChatTurnResu
     }
     provider = "deterministic"
     provider_note = "MiniMax was not configured; deterministic slot extraction handled this turn."
-    if MiniMaxClient().is_configured:
+    minimax_configured = MiniMaxClient().is_configured
+    if minimax_configured and session.module == ChatSession.Module.DISCOVERY:
+        provider_note = (
+            "MiniMax is configured; deterministic parsing built the search frame "
+            "before AI discovery."
+        )
+    elif minimax_configured:
         llm_slots, provider_note = _minimax_slots(session, latest_user_content, slots)
         if llm_slots:
             slots = {**slots, **llm_slots}
@@ -306,17 +312,19 @@ def _discovery_turn(
         "theme": slots.get("theme") or "",
         "mood": slots.get("mood") or "",
         "era": slots.get("era") or "",
+        "release_year_min": slots.get("releaseYearMin"),
+        "release_year_max": slots.get("releaseYearMax"),
         "country_language": slots.get("countryLanguage") or "",
         "media_type": slots.get("mediaType") or "",
         "creator": slots.get("creator") or "",
         "narrative_pattern": slots.get("narrativePattern") or "",
         "favorite_work": slots.get("favoriteWork") or "",
     }
-    if provider == "minimax":
+    if MiniMaxClient().is_configured:
         ai_result, ai_note = _minimax_discovery_trail(user, slots, payload)
         if ai_result:
             result = {"action": "recommend", "module": ChatSession.Module.DISCOVERY, **ai_result}
-            return _done(slots, _discovery_answer(result), result, provider, ai_note)
+            return _done(slots, _discovery_answer(result), result, "minimax", ai_note)
         provider_note = ai_note
 
     result = generate_discovery_trail(user, build_search(payload))
@@ -361,6 +369,15 @@ def _minimax_discovery_trail(
         )
     elif search.era == "pre_1970":
         constraints.append("Hard constraint: every result releaseYear must be before 1970.")
+    if search.release_year_min is not None:
+        constraints.append(
+            f"Hard constraint: every result releaseYear must be {search.release_year_min} or later."
+        )
+    if search.release_year_max is not None:
+        constraints.append(
+            "Hard constraint: every result releaseYear must be "
+            f"{search.release_year_max} or earlier."
+        )
 
     known_titles = sorted(_known_media_titles(user))[:80]
     system_prompt = (
@@ -426,6 +443,8 @@ def _normalize_ai_discovery_payload(
             "theme": search.theme,
             "mood": search.mood,
             "era": search.era,
+            "releaseYearMin": search.release_year_min,
+            "releaseYearMax": search.release_year_max,
             "countryLanguage": search.country_language,
             "mediaType": search.media_type,
             "creator": search.creator,
@@ -465,6 +484,10 @@ def _normalize_ai_discovery_result(
     if search.media_type and media_type != search.media_type:
         return None
     if search.era and not _release_year_matches_era(release_year, search.era):
+        return None
+    if search.release_year_min is not None and release_year < search.release_year_min:
+        return None
+    if search.release_year_max is not None and release_year > search.release_year_max:
         return None
 
     reasons = item.get("reasons") if isinstance(item.get("reasons"), list) else []
@@ -763,6 +786,7 @@ def _deterministic_slots(module: str, content: str) -> dict[str, Any]:
             slots["era"] = "modern_exception"
         elif "cross" in text:
             slots["mode"] = "cross_medium"
+        slots.update(_discovery_year_slots(text))
         if "creator" in text or "director" in text or "author" in text:
             slots["creator"] = content
         elif "like " in text:
@@ -813,6 +837,8 @@ def _clean_slots(slots: dict[str, Any]) -> dict[str, Any]:
             "expectedGenericness",
             "expectedTimeCostMinutes",
             "releaseYear",
+            "releaseYearMin",
+            "releaseYearMax",
         }:
             number = _optional_int(value)
             if number is not None:
@@ -888,6 +914,35 @@ def _media_title_slots(content: str) -> dict[str, Any]:
 def _media_type_slot(text: str) -> dict[str, Any]:
     media = [_normalize_media_type(alias) for alias in MEDIA_TYPE_ALIASES if alias in text]
     return {"mediaType": media[0]} if media and media[0] else {}
+
+
+def _discovery_year_slots(text: str) -> dict[str, Any]:
+    slots: dict[str, Any] = {}
+    after_match = re.search(r"\b(?:post|after|newer than|later than)\s+(19\d{2}|20\d{2})\b", text)
+    if after_match:
+        slots["releaseYearMin"] = int(after_match.group(1)) + 1
+        return slots
+    since_match = re.search(
+        r"\b(?:since|from|starting|released after|released from)\s+(19\d{2}|20\d{2})\b",
+        text,
+    )
+    if since_match:
+        slots["releaseYearMin"] = int(since_match.group(1))
+        return slots
+    or_later_match = re.search(r"\b(19\d{2}|20\d{2})\s+(?:or\s+)?later\b", text)
+    if or_later_match:
+        slots["releaseYearMin"] = int(or_later_match.group(1))
+        return slots
+    before_match = re.search(r"\b(?:pre|before|older than)\s+(19\d{2}|20\d{2})\b", text)
+    if before_match:
+        slots["releaseYearMax"] = int(before_match.group(1)) - 1
+        return slots
+    decade_match = re.search(r"\b(19\d0|20\d0)s\b", text)
+    if decade_match:
+        start = int(decade_match.group(1))
+        slots["releaseYearMin"] = start
+        slots["releaseYearMax"] = start + 9
+    return slots
 
 
 def _media_from_slots(user: AbstractUser, slots: dict[str, Any]) -> MediaItem | None:

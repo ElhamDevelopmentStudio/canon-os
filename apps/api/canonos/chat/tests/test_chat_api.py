@@ -186,3 +186,39 @@ def test_discovery_chat_uses_minimax_generation_with_modern_filter(monkeypatch) 
     assert payload["assistantMessage"]["metadata"]["provider"] == "minimax"
     assert [result["title"] for result in payload["result"]["results"]] == ["The Wolf House"]
     assert all(result["releaseYear"] >= 2017 for result in payload["result"]["results"])
+
+
+def test_discovery_chat_fallback_respects_post_year_when_minimax_fails(monkeypatch) -> None:  # noqa: ANN001
+    class FailingMiniMaxClient:
+        is_configured = True
+
+        def chat_json(self, **kwargs) -> dict[str, object]:  # noqa: ANN003
+            raise TimeoutError("provider timeout")
+
+    class FakeWebSearchClient:
+        def search_text(self, query: str) -> str:
+            return ""
+
+    from canonos.chat import services
+
+    monkeypatch.setattr(services, "MiniMaxClient", FailingMiniMaxClient)
+    monkeypatch.setattr(services, "WebSearchClient", FakeWebSearchClient)
+    client, _ = authenticated_client()
+    session_id = client.post(
+        reverse("chat-session-list"),
+        {"module": "discovery"},
+        format="json",
+    ).json()["id"]
+
+    response = client.post(
+        reverse("chat-session-messages", args=[session_id]),
+        {"content": "Mindfuck movies post 2010"},
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_201_CREATED
+    payload = response.json()
+    assert payload["assistantMessage"]["metadata"]["provider"] == "deterministic"
+    assert payload["assistantMessage"]["metadata"]["slots"]["releaseYearMin"] == 2011
+    assert payload["result"]["results"]
+    assert all(result["releaseYear"] >= 2011 for result in payload["result"]["results"])
