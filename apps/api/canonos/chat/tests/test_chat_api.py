@@ -111,6 +111,7 @@ def test_chat_message_stream_returns_sse_final_payload() -> None:
         reverse("chat-session-messages-stream", args=[session_id]),
         {"content": ("90 minutes, low energy, medium focus, quality, low risk, anime or movie.")},
         format="json",
+        HTTP_ACCEPT="text/event-stream",
     )
 
     assert response.status_code == status.HTTP_200_OK

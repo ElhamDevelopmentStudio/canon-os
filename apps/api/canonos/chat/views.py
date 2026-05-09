@@ -7,8 +7,10 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 
+from canonos.common.renderers import ServerSentEventRenderer
 from canonos.common.throttles import ExpensiveEndpointThrottle
 
 from .models import ChatSession
@@ -75,7 +77,7 @@ class ChatSessionViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         request=ChatMessageCreateSerializer,
-        responses={200: ChatTurnResponseSerializer},
+        responses={201: ChatTurnResponseSerializer},
         summary="Send chat message",
         description=(
             "Send one user message. The assistant either asks one focused follow-up or runs "
@@ -103,7 +105,7 @@ class ChatSessionViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         request=ChatMessageCreateSerializer,
-        responses={201: ChatTurnResponseSerializer},
+        responses={200: ChatTurnResponseSerializer},
         summary="Stream chat message",
         description=(
             "Send one user message and stream the assistant content as Server-Sent Events. "
@@ -113,6 +115,7 @@ class ChatSessionViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=["post"],
+        renderer_classes=[ServerSentEventRenderer, JSONRenderer],
         throttle_classes=[ExpensiveEndpointThrottle],
         url_path="messages/stream",
     )
