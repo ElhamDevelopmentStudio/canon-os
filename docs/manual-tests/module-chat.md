@@ -6,7 +6,7 @@
    Expected result: The page shows the existing Tonight controls and a Tonight chat panel.
 
 2. Send `90 minutes, tired, medium focus, quality, low risk, anime or movie`.
-   Expected result: The assistant returns a recommendation instead of asking unnecessary form questions.
+   Expected result: The assistant streams the answer into the chat panel and returns a recommendation instead of asking unnecessary form questions.
 
 3. Review the recommendation list on the page.
    Expected result: Chat-generated recommendations appear in the normal Tonight recommendation area with scores, reasons, time, mood, and action buttons.
@@ -76,3 +76,6 @@
 
 3. Keep `CANONOS_WEB_SEARCH_ENABLED=true`.
    Expected result: Discovery chat provider notes show that live web context was available. If search fails, the assistant reports the fallback instead of hiding it.
+
+4. Watch the browser Network tab for a chat turn.
+   Expected result: The request uses `/api/chat/sessions/<id>/messages/stream/`, the response content type is `text/event-stream`, and the final event contains the saved session payload.

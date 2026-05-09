@@ -54,3 +54,21 @@ export type ChatTurnResponse = {
   result: Record<string, unknown>;
 };
 
+export type ChatStreamEvent =
+  | {
+      event: "status";
+      data: {
+        message: string;
+        provider?: ChatMessageMetadata["provider"];
+      };
+    }
+  | {
+      event: "content";
+      data: {
+        delta: string;
+      };
+    }
+  | {
+      event: "final";
+      data: ChatTurnResponse;
+    };

@@ -31,6 +31,7 @@ export type {
   ChatSession,
   ChatSessionCreateRequest,
   ChatSessionDetail,
+  ChatStreamEvent,
   ChatTurnResponse,
 } from "./chat";
 export { CHAT_MESSAGE_ROLES, CHAT_MODULES } from "./chat";

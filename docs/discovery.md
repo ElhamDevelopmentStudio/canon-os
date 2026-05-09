@@ -29,6 +29,8 @@ The backend has two paths:
 1. AI-assisted chat discovery uses MiniMax when `MINIMAX_API_KEY` is configured. It adds live web-search context when `CANONOS_WEB_SEARCH_ENABLED=true`, then validates every result against hard filters before returning it.
 2. Structured form generation and AI fallback use the curated first-pass catalog with deterministic scoring.
 
+Module chat uses a dedicated Server-Sent Events endpoint at `/api/chat/sessions/<id>/messages/stream/`. When MiniMax is configured, assistant prose is streamed from MiniMax with `stream: true`; deterministic fallback sends the completed assistant answer once without artificial typing delays.
+
 Era and medium selections are hard constraints. For example, `modern_exception` only returns results from 2017 or later; the backend must not fill gaps with older catalog items.
 
 Each result includes:

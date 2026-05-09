@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -54,6 +55,12 @@ class ChatTurnResult:
     result: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class ChatStreamEvent:
+    event: str
+    data: dict[str, Any]
+
+
 def create_welcome_message(session: ChatSession) -> ChatMessage:
     return ChatMessage.objects.create(
         session=session,
@@ -69,6 +76,49 @@ def create_welcome_message(session: ChatSession) -> ChatMessage:
 
 
 def process_chat_turn(session: ChatSession, content: str) -> ChatMessage:
+    result = _prepare_chat_turn(session, content)
+    return _create_assistant_message(session, result, result.assistant_content)
+
+
+def process_chat_turn_stream(session: ChatSession, content: str) -> Iterator[ChatStreamEvent]:
+    result = _prepare_chat_turn(session, content)
+    yield ChatStreamEvent(
+        "status",
+        {
+            "message": "Recommendation context is ready. Streaming assistant response.",
+            "provider": result.metadata.get("provider", "deterministic"),
+        },
+    )
+    assistant_content = result.assistant_content
+    streamed_content = ""
+    if MiniMaxClient().is_configured:
+        try:
+            for chunk in _stream_assistant_answer(result):
+                streamed_content += chunk
+                yield ChatStreamEvent("content", {"delta": chunk})
+        except Exception as exc:  # noqa: BLE001
+            provider_note = str(result.metadata.get("providerNote") or "")
+            result.metadata["providerNote"] = (
+                f"{provider_note} Assistant streaming failed; deterministic text was used: {exc}"
+            ).strip()
+            yield ChatStreamEvent(
+                "status",
+                {
+                    "message": "MiniMax streaming failed. Returning deterministic answer.",
+                    "provider": result.metadata.get("provider", "deterministic"),
+                },
+            )
+    if streamed_content.strip():
+        assistant_content = streamed_content.strip()
+        result.metadata["streamed"] = True
+    else:
+        yield ChatStreamEvent("content", {"delta": assistant_content})
+        result.metadata["streamed"] = False
+    _create_assistant_message(session, result, assistant_content)
+    yield ChatStreamEvent("final", {})
+
+
+def _prepare_chat_turn(session: ChatSession, content: str) -> ChatTurnResult:
     with transaction.atomic():
         ChatMessage.objects.create(
             session=session,
@@ -86,12 +136,44 @@ def process_chat_turn(session: ChatSession, content: str) -> ChatMessage:
         if not session.title:
             session.title = _title_from_content(session.module, content)
         session.save(update_fields=["latest_result", "state", "title", "updated_at"])
-        return ChatMessage.objects.create(
-            session=session,
-            role=ChatMessage.Role.ASSISTANT,
-            content=result.assistant_content,
-            metadata=result.metadata,
-        )
+        return result
+
+
+def _create_assistant_message(
+    session: ChatSession,
+    result: ChatTurnResult,
+    content: str,
+) -> ChatMessage:
+    return ChatMessage.objects.create(
+        session=session,
+        role=ChatMessage.Role.ASSISTANT,
+        content=content,
+        metadata=result.metadata,
+    )
+
+
+def _stream_assistant_answer(result: ChatTurnResult) -> Iterator[str]:
+    system_prompt = (
+        "You are the CanonOS chat response renderer. Stream a concise assistant answer "
+        "using only the provided deterministic draft and structured result. Do not add new "
+        "recommendations, scores, titles, or facts. Preserve every recommendation title and "
+        "numeric score that appears in the draft."
+    )
+    user_prompt = (
+        "Draft assistant answer:\n"
+        f"{result.assistant_content}\n\n"
+        "Structured result for context only:\n"
+        f"{result.result}\n\n"
+        "Return the user-facing assistant answer now."
+    )
+    yield from MiniMaxClient().chat_stream(
+        messages=[
+            {"role": "system", "name": "CanonOS", "content": system_prompt},
+            {"role": "user", "name": "User", "content": user_prompt},
+        ],
+        max_completion_tokens=900,
+        temperature=0.15,
+    )
 
 
 def _orchestrate(session: ChatSession, latest_user_content: str) -> ChatTurnResult:

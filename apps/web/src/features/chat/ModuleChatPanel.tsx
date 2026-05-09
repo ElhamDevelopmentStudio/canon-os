@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StatusPill } from "@/components/data-display/StatusPill";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { Button } from "@/components/ui/button";
-import { createChatSession, sendChatMessage, useChatSessions } from "@/features/chat/chatApi";
+import { createChatSession, sendChatMessageStream, useChatSessions } from "@/features/chat/chatApi";
 import { cn } from "@/lib/utils";
 
 const moduleLabels: Record<ChatModule, string> = {
@@ -46,6 +46,8 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
   const [isStarting, setIsStarting] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState("");
+  const [streamingStatus, setStreamingStatus] = useState("");
 
   async function ensureSession() {
     if (activeSession) return activeSession;
@@ -64,9 +66,18 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
     if (!trimmed) return;
     setError(null);
     setIsSending(true);
+    setStreamingText("");
+    setStreamingStatus("Preparing recommendation context...");
     try {
       const current = await ensureSession();
-      const response = await sendChatMessage(current.id, { content: trimmed });
+      const response = await sendChatMessageStream(
+        current.id,
+        { content: trimmed },
+        {
+          onContent: (delta) => setStreamingText((value) => `${value}${delta}`),
+          onStatus: setStreamingStatus,
+        },
+      );
       setSession(response.session);
       setDraft("");
       onResult?.(response.result);
@@ -74,6 +85,8 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
       setError(caught instanceof Error ? caught.message : "Chat failed.");
     } finally {
       setIsSending(false);
+      setStreamingText("");
+      setStreamingStatus("");
     }
   }
 
@@ -84,6 +97,8 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
       const created = await createChatSession({ module });
       setSession(created);
       setDraft("");
+      setStreamingText("");
+      setStreamingStatus("");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not start chat.");
     } finally {
@@ -127,19 +142,26 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
 
       <div className={cn("grid gap-3 overflow-y-auto", compact ? "max-h-80" : "max-h-[28rem]")}>
         {messages.length > 0 ? (
-          messages.map((message) => (
-            <div
-              className={cn(
-                "max-w-[92%] rounded-lg border px-3 py-2 text-sm leading-6",
-                message.role === "user"
-                  ? "ml-auto border-primary/30 bg-primary/10 text-foreground"
-                  : "mr-auto border-border bg-muted/45 text-foreground",
-              )}
-              key={message.id}
-            >
-              <p className="whitespace-pre-wrap">{message.content}</p>
-            </div>
-          ))
+          <>
+            {messages.map((message) => (
+              <div
+                className={cn(
+                  "max-w-[92%] rounded-lg border px-3 py-2 text-sm leading-6",
+                  message.role === "user"
+                    ? "ml-auto border-primary/30 bg-primary/10 text-foreground"
+                    : "mr-auto border-border bg-muted/45 text-foreground",
+                )}
+                key={message.id}
+              >
+                <p className="whitespace-pre-wrap">{message.content}</p>
+              </div>
+            ))}
+            {isSending && streamingText ? (
+              <div className="mr-auto max-w-[92%] rounded-lg border border-border bg-muted/45 px-3 py-2 text-sm leading-6 text-foreground">
+                <p className="whitespace-pre-wrap">{streamingText}</p>
+              </div>
+            ) : null}
+          </>
         ) : (
           <div className="rounded-lg border border-dashed border-border p-4">
             <p className="flex items-center gap-2 text-sm font-medium">
@@ -201,6 +223,11 @@ export function ModuleChatPanel({ module, compact = false, onResult }: ModuleCha
         <p className="flex items-start gap-2 text-xs leading-5 text-muted-foreground">
           <Sparkles aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 text-primary" />
           {String(latestMetadata.providerNote)}
+        </p>
+      ) : null}
+      {streamingStatus ? (
+        <p className="text-xs leading-5 text-muted-foreground" aria-live="polite">
+          {streamingStatus}
         </p>
       ) : null}
     </section>

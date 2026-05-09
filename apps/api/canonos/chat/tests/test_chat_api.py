@@ -84,6 +84,43 @@ def test_tonight_chat_runs_existing_recommendation_service() -> None:
     assert payload["assistantMessage"]["metadata"]["provider"] in {"deterministic", "minimax"}
 
 
+def test_chat_message_stream_returns_sse_final_payload() -> None:
+    client, user = authenticated_client()
+    QueueItem.objects.create(
+        owner=user,
+        title="Perfect Blue",
+        media_type=MediaItem.MediaType.ANIME,
+        priority=QueueItem.Priority.START_SOON,
+        reason="Short, intense, authored anime.",
+        estimated_time_minutes=81,
+        best_mood="Focused but tired",
+        queue_position=1,
+        mood_compatibility=86,
+        intensity_level=7,
+        complexity_level=6,
+        commitment_level=3,
+        freshness_score=92,
+    )
+    session_id = client.post(
+        reverse("chat-session-list"),
+        {"module": "tonight"},
+        format="json",
+    ).json()["id"]
+
+    response = client.post(
+        reverse("chat-session-messages-stream", args=[session_id]),
+        {"content": ("90 minutes, low energy, medium focus, quality, low risk, anime or movie.")},
+        format="json",
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response["Content-Type"].startswith("text/event-stream")
+    body = b"".join(response.streaming_content).decode("utf-8")
+    assert "event: content" in body
+    assert "event: final" in body
+    assert "Perfect Blue" in body
+
+
 def test_candidate_chat_creates_and_evaluates_candidate() -> None:
     client, _ = authenticated_client()
     session_id = client.post(

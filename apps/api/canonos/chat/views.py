@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+
+from django.http import StreamingHttpResponse
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -16,7 +19,7 @@ from .serializers import (
     ChatSessionSerializer,
     ChatTurnResponseSerializer,
 )
-from .services import create_welcome_message, process_chat_turn
+from .services import create_welcome_message, process_chat_turn, process_chat_turn_stream
 
 
 @extend_schema_view(
@@ -72,7 +75,7 @@ class ChatSessionViewSet(viewsets.ModelViewSet):
 
     @extend_schema(
         request=ChatMessageCreateSerializer,
-        responses={201: ChatTurnResponseSerializer},
+        responses={200: ChatTurnResponseSerializer},
         summary="Send chat message",
         description=(
             "Send one user message. The assistant either asks one focused follow-up or runs "
@@ -97,3 +100,51 @@ class ChatSessionViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_201_CREATED,
         )
+
+    @extend_schema(
+        request=ChatMessageCreateSerializer,
+        responses={201: ChatTurnResponseSerializer},
+        summary="Stream chat message",
+        description=(
+            "Send one user message and stream the assistant content as Server-Sent Events. "
+            "The final event contains the same payload as the non-streaming endpoint."
+        ),
+    )
+    @action(
+        detail=True,
+        methods=["post"],
+        throttle_classes=[ExpensiveEndpointThrottle],
+        url_path="messages/stream",
+    )
+    def messages_stream(self, request, pk=None):  # noqa: ANN001, ANN201
+        session = self.get_object()
+        serializer = ChatMessageCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        def event_stream():  # noqa: ANN202
+            for event in process_chat_turn_stream(session, serializer.validated_data["content"]):
+                if event.event == "final":
+                    updated_session = ChatSession.objects.prefetch_related("messages").get(
+                        owner=request.user,
+                        pk=session.pk,
+                    )
+                    session_data = ChatSessionDetailSerializer(updated_session).data
+                    yield _sse(
+                        "final",
+                        {
+                            "session": session_data,
+                            "assistantMessage": session_data["messages"][-1],
+                            "result": updated_session.latest_result,
+                        },
+                    )
+                else:
+                    yield _sse(event.event, event.data)
+
+        response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+        response["Cache-Control"] = "no-cache"
+        response["X-Accel-Buffering"] = "no"
+        return response
+
+
+def _sse(event: str, data: dict[str, object]) -> str:
+    return f"event: {event}\ndata: {json.dumps(data, default=str)}\n\n"
